@@ -1,0 +1,93 @@
+import {
+    CSPGraphInteractor
+} from "./GraphVisualizer";
+var widgets = require('jupyter-js-widgets');
+var _ = require('underscore');
+var Backbone = require('backbone');
+
+// Custom Model. Custom widgets models must at least provide default values
+// for model attributes, including
+//
+//  - `_view_name`
+//  - `_view_module`
+//  - `_view_module_version`
+//
+//  - `_model_name`
+//  - `_model_module`
+//  - `_model_module_version`
+//
+//  when different from the base class.
+
+// When serialiazing the entire widget state for embedding, only values that
+// differ from the defaults will be specified.
+var HelloModel = widgets.DOMWidgetModel.extend({
+    defaults: _.extend(_.result(this, 'widgets.DOMWidgetModel.prototype.defaults'), {
+        _model_name: 'HelloModel',
+        _view_name: 'HelloView',
+        _model_module: 'aispace',
+        _view_module: 'aispace',
+        _model_module_version: '0.1.0',
+        _view_module_version: '0.1.0',
+        value: 'Hello World!!!!',
+        process_id: 0
+    })
+});
+
+
+// Custom View. Renders the widget model.
+var HelloView = widgets.DOMWidgetView.extend({
+    initialize: function () {
+        widgets.DOMWidgetView.prototype.initialize.apply(this, arguments);
+        this.eventBus = _.extend({}, Backbone.Events);
+        this.visualizer = new CSPGraphInteractor(this.eventBus);
+        this.eventBus.listenTo(this.eventBus, 'constraint:click', d => {
+            this.send({
+                event: 'constraint:click',
+                constId: d.constId,
+                varId: d.varId
+            });
+        })
+        this.model.listenTo(this.model, 'msg:custom', data => {
+            if (data.action === 'highlightArc') {
+                this.visualizer.highlightArc(data.varName, data.consName, data.style, data.colour);
+            } else if (data.action === 'reduceDomain') {
+                this.visualizer.reduceDomain(data.nodeName, data.newDomain);
+            } else if (data.action === 'output') {
+                this.$('#output').text(data.result);
+            }
+        });
+    },
+    render: function () {
+        this.model.on('change:value', this.value_changed, this);
+        this.listenTo(Backbone, 'action:highlightArc', data => {
+            if (data.process_id === this.model.get('process_id')) {
+                this.visualizer.highlightArc(data.varName, data.consName, data.style, data.colour);
+            }
+        });
+        this.listenTo(Backbone, 'action:reduceDomain', data => {
+            if (data.process_id === this.model.get('process_id')) {
+                this.visualizer.reduceDomain(data.nodeName, data.newDomain);
+            }
+        });
+        this.listenTo(Backbone, 'action:output', data => {
+            if (data.process_id === this.model.get('process_id')) {
+                this.$('#output').text(data.text);
+            }
+            console.log(data)
+        });
+        this.$el.html('<div><div id="svg"></div><span id="output"></span></div>');
+        this.value_changed();
+
+        return this;
+    },
+
+    value_changed: function () {
+        this.visualizer.render(JSON.parse(this.model.get('jsonRepr')), this.$('#svg')[0]);
+    }
+});
+
+
+module.exports = {
+    HelloModel: HelloModel,
+    HelloView: HelloView
+};
