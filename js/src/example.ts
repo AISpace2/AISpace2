@@ -4,7 +4,7 @@ import {
 var widgets = require('jupyter-js-widgets');
 var _ = require('underscore');
 var Backbone = require('backbone');
-
+import {eventBus} from './global';
 // Custom Model. Custom widgets models must at least provide default values
 // for model attributes, including
 //
@@ -48,6 +48,7 @@ var HelloView = widgets.DOMWidgetView.extend({
             });
         })
         this.model.listenTo(this.model, 'msg:custom', data => {
+            console.log(data)
             if (data.action === 'highlightArc') {
                 this.visualizer.highlightArc(data.varName, data.consName, data.style, data.colour);
             } else if (data.action === 'reduceDomain') {
@@ -59,21 +60,18 @@ var HelloView = widgets.DOMWidgetView.extend({
     },
     render: function () {
         this.model.on('change:value', this.value_changed, this);
-        this.listenTo(Backbone, 'action:highlightArc', data => {
+        this.listenTo(eventBus[this.model.get('process_id')], 'action:highlightArc', data => {
             if (data.process_id === this.model.get('process_id')) {
                 this.visualizer.highlightArc(data.varName, data.consName, data.style, data.colour);
             }
         });
-        this.listenTo(Backbone, 'action:reduceDomain', data => {
+        this.listenTo(eventBus[this.model.get('process_id')], 'action:reduceDomain', data => {
             if (data.process_id === this.model.get('process_id')) {
                 this.visualizer.reduceDomain(data.nodeName, data.newDomain);
             }
         });
-        this.listenTo(Backbone, 'action:output', data => {
-            if (data.process_id === this.model.get('process_id')) {
-                this.$('#output').text(data.text);
-            }
-            console.log(data)
+        this.listenTo(eventBus[this.model.get('process_id')], 'action:output', data => {
+            this.$('#output').text(data.text);
         });
         this.$el.html('<div><div id="svg"></div><span id="output"></span></div>');
         this.value_changed();

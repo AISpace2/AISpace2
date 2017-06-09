@@ -1,6 +1,6 @@
 from ._version import version_info, __version__
 
-from .example import *
+from .cspviewer import *
 from aipython.utilities import *
 
 def _jupyter_nbextension_paths():
