@@ -1,6 +1,7 @@
 var widgets = require('jupyter-js-widgets');
 var _ = require('underscore');
 var Backbone = require('backbone');
+import {eventBus} from './global';
 
 // Custom Model. Custom widgets models must at least provide default values
 // for model attributes, including
@@ -28,11 +29,11 @@ var DisplayModel = widgets.WidgetModel.extend({
         this.on('change:value', this.value_changed, this);
         this.listenTo(this, 'msg:custom', data => {
             if (data.action === 'highlightArc') {
-                Backbone.trigger('action:highlightArc', data)
+                eventBus[data.process_id].trigger('action:highlightArc', data)
             } else if (data.action === 'reduceDomain') {
-                Backbone.trigger('action:reduceDomain', data);
+                eventBus[data.process_id].trigger('action:reduceDomain', data);
             } else if (data.action === 'output') {
-                Backbone.trigger('action:output', {text: data.result, process_id: data.process_id});
+                eventBus[data.process_id].trigger('action:output', {text: data.result});
             }
         });
     }

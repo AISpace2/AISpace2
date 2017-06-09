@@ -87,6 +87,9 @@ class Displayable(Widget):
                 'consName': arcList[i][1].__repr__(), 'style': '!bold',
                 'colour': 'blue', 'process_id': threading.current_thread().ident})
         sleep(self.sleep_time)
+
+    def wait_for_arc_selection(self, arcs):
+        pass
         
 def argmax(gen):
     """gen is a generator of (element,value) pairs, where value is a real.

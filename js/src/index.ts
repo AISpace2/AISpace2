@@ -11,6 +11,7 @@ __webpack_public_path__ = document.querySelector('body').getAttribute('data-base
 // Export widget models and views, and the npm package version number.
 module.exports = {};
 var loadedModules = [
+    require('./global'),
     require('./example'),
     require('./display'),
     require('./searchDepthFirst')
