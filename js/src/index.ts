@@ -8,6 +8,8 @@
 declare let __webpack_public_path__: any;
 __webpack_public_path__ = document.querySelector('body').getAttribute('data-base-url') + 'nbextensions/aispace/';
 
+require("./style.css");
+
 // Export widget models and views, and the npm package version number.
 module.exports = {};
 var loadedModules = [
@@ -16,6 +18,7 @@ var loadedModules = [
     require('./display'),
     require('./searchDepthFirst')
 ];
+
 for (var i in loadedModules) {
     if (loadedModules.hasOwnProperty(i)) {
         var loadedModule = loadedModules[i];
