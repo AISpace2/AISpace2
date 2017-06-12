@@ -7,26 +7,26 @@ from time import sleep
 import ipywidgets as widgets
 from IPython.display import display
 from ipywidgets import CallbackDispatcher, DOMWidget, Output, register
-from traitlets import Integer, Unicode, observe
+from traitlets import Integer, Unicode, observe, Float
 
 from aipython.utilities import Displayable, cspToJson
 
 @register('aispace.CSPViewer')
 class CSPViewer(DOMWidget):
     """Visualize and interact with a CSP."""
-    _view_name = Unicode('HelloView').tag(sync=True)
-    _model_name = Unicode('HelloModel').tag(sync=True)
+    _view_name = Unicode('CSPViewer').tag(sync=True)
+    _model_name = Unicode('CSPViewerModel').tag(sync=True)
     _view_module = Unicode('aispace').tag(sync=True)
     _model_module = Unicode('aispace').tag(sync=True)
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
     
-    # value = Unicode('Hello World!!!!').tag(sync=True)
     jsonRepr = Unicode('{}').tag(sync=True)
-    # process_id = Integer(0).tag(sync=True)
+    line_width = Float(2.0).tag(sync=True)
 
     def __init__(self, csp):
         super(CSPViewer, self).__init__()
+
         self.on_msg(self._handle_custom_msgs)
         self.jsonRepr = cspToJson(csp)
         self._desired_level = 4
@@ -60,7 +60,6 @@ class CSPViewer(DOMWidget):
         self._con_solver.wait_for_arc_selection = arc_select
 
         def bootstrap():
-            # self.process_id = threading.current_thread().ident
             self._con_solver.make_arc_consistent()
 
         self.thread = threading.Thread(target=bootstrap)
@@ -111,14 +110,6 @@ class CSPViewer(DOMWidget):
             varChar = content.get('varId')
             const = self._con_solver.csp.constraints[content.get('constId')]
             self._desired_level = 2
-            # Search through to_do to find the one to pop
-            '''if (varChar, const) in self.to_dos:
-                print("FOUND!")
-                self.to_dos.discard((varChar, const))
-                try:
-                    self.to_dos = self.gen.send((varChar, const))
-                except StopIteration:
-                    pass'''
 
             self._selected_arc = (varChar, const)
             self._user_selected_arc = True
@@ -134,13 +125,10 @@ class CSPViewer(DOMWidget):
         shouldWait = True
         if args[0] == 'Domain pruned':
             nodeName = args[2]
+            newDomain = args[4]
             consName = args[6]
-            for key, value in kwargs.items():
-                elementValues = value
-                for elementValue in elementValues:
-                    self.send({'action': 'reduceDomain', 'nodeName': nodeName,
-                        'elementValue': elementValue})
-                   # reduceDomain(nodeName, elementValue)
+            self.send({'action': 'reduceDomain', 'nodeName': nodeName,
+                'newDomain': list(newDomain)})
 
         if args[0] == "Processing arc (":
             varName = args[1]
@@ -153,7 +141,6 @@ class CSPViewer(DOMWidget):
                     self.send({'action': 'highlightArc', 'varName': varName,
                 'consName': consName.__repr__(), 'style': 'bold',
                 'colour': 'na'})
-            # highlightArc(varName, consName.__repr__(), "bold","na")
             
         if args[0] == 'Domain pruned':
             varName = args[2]
@@ -161,7 +148,6 @@ class CSPViewer(DOMWidget):
             self.send({'action': 'highlightArc', 'varName': varName,
                 'consName': consName.__repr__(), 'style': 'bold',
                 'colour': 'green'})
-            # highlightArc(varName, consName.__repr__(), "bold","green")
             
         if args[0] == "Arc: (" and args[4] == ") is inconsistent":
             varName = args[1]
@@ -169,23 +155,21 @@ class CSPViewer(DOMWidget):
             self.send({'action': 'highlightArc', 'varName': varName,
                 'consName': consName.__repr__(), 'style': 'bold',
                 'colour': 'red'})
-            # highlightArc(varName, consName.__repr__(), "bold","red")
             
         if args[0] == "Arc: (" and args[4] == ") now consistent":
             varName = args[1]
             consName = args[3]
             self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': '!bold',
+                'consName': consName.__repr__(), 'style': 'normal',
                 'colour': 'green'})
             shouldWait = False
-            # highlightArc(varName, consName.__repr__(), "!bold","green")
         
         if args[0] == "  adding" and args[2] == "to to_do.":
             if args[1] != "nothing":
                 arcList = list(args[1])
                 for i in range(len(arcList)):
                     self.send({'action': 'highlightArc', 'varName': arcList[i][0],
-                'consName': arcList[i][1].__repr__(), 'style': '!bold',
+                'consName': arcList[i][1].__repr__(), 'style': 'normal',
                 'colour': 'blue'})
 
         text = ' '.join(map(str, args))

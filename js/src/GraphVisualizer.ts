@@ -2,7 +2,8 @@ import {
     CSPGraphJSON,
     GraphNodeJSON,
     CSPGraphNodeJSON,
-    GraphJSON
+    GraphJSON,
+    StyledGraphEdgeJSON
 } from './Graph';
 import * as d3 from 'd3';
 import {
@@ -21,6 +22,7 @@ export default class GraphVisualizer {
     linkContainer: d3.Selection<any, any, any, any>;
     /** A group where all nodes are drawn. */
     nodeContainer: d3.Selection<any, SimulationNodeDatum & GraphNodeJSON, any, any>;
+    lineWidth: number = 2.0;
 
     render(graph: GraphJSON, targetEl: HTMLElement) {
         this.graph = graph;
@@ -28,7 +30,6 @@ export default class GraphVisualizer {
         // Ensures the target element is in the DOM (essentially document.ready) so we can get its width
         this.width = targetEl.clientWidth;
         this.height = this.width * 0.5;
-
         // Remove all children of target element to make this function idempotent
         d3.select(targetEl).selectAll('*').remove();
 
@@ -148,7 +149,7 @@ export default class GraphVisualizer {
 
         updateSelection.enter().append('line')
             .merge(updateSelection)
-            .attr('stroke-width', 2)
+            .attr('stroke-width', this.lineWidth)
             .attr('stroke', 'black');
     }
 
@@ -219,11 +220,11 @@ export class CSPGraphVisualizer extends GraphVisualizer {
         const updateSelection = this.linkContainer
             .selectAll('line')
             .data(this.graph.links);
-
+        
         updateSelection.enter().append('line')
             .merge(updateSelection)
-            .attr('stroke-width', d => d.style === 'bold' ? 5 : 2)
-            .attr('stroke', d => (d.colour != null && d.colour !== 'na') ? d.colour : 'black');
+            .attr('stroke-width', (d: StyledGraphEdgeJSON) => d.style === 'bold' ? this.lineWidth + 5 : this.lineWidth)
+            .attr('stroke', (d: StyledGraphEdgeJSON) => (d.colour != null && d.colour !== 'na') ? d.colour : 'black');
     }
 }
 
@@ -257,25 +258,26 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
     renderLinks() {
         super.renderLinks();
 
+        const that = this;
         this.linkContainer.selectAll('line').on('mouseover', function () {
-            d3.select(this).attr('stroke-width', 5);
+            d3.select(this).attr('stroke-width', that.lineWidth + 5);
         });
 
         this.linkContainer.selectAll('line').on('mouseout', function () {
-            d3.select(this).attr('stroke-width', 2);
+            d3.select(this).attr('stroke-width', that.lineWidth);
         });
 
-        this.linkContainer.selectAll('line').on('click', d => {
+        this.linkContainer.selectAll('line').on('click', (d: StyledGraphEdgeJSON) => {
             this.eventBus.trigger('constraint:click', {
-                constId: d.target.idx,
-                varId: d.source.name
+                constId: (d.target as any).idx,
+                varId: (d.source as any as GraphNodeJSON).name
             });
         });
     }
 
-    highlightArc(varName: string, consName: string, style: string, colour: string) {
+    highlightArc(varName: string, consName: string, style: 'normal' | 'bold', colour: string) {
         if (varName === 'all' && consName === 'all') {
-            this.graph.links.forEach(link => {
+            this.graph.links.forEach((link: StyledGraphEdgeJSON) => {
                 link.style = style;
                 link.colour = colour;
             });
@@ -287,20 +289,23 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
         let constraint = this.graph.nodes.find(el => el.name === consName);
 
         if (constraint != null) {
-            let link = this.graph.links.filter(link => link.target.id === constraint.id)
-                .find(link => link.source.name === varName);
+            let link = (this.graph.links as StyledGraphEdgeJSON[]).filter(link => (link.target as any as GraphNodeJSON).id === constraint.id)
+                .find(link => (link.source as any as GraphNodeJSON).name === varName);
 
             link.style = style;
-            link.colour = colour;
+            if (colour !== 'na') {
+                link.colour = colour;
+            }
+
             this.update();
         }
     }
 
-    reduceDomain(varName: string, newDomain: string) {
+    reduceDomain(varName: string, newDomain: string[]) {
         let node = this.graph.nodes.find(node => node.name === varName);
 
         let sel = d3.select(`[id='${node.id}']`);
-        sel.data()[0].domain = newDomain;
+        (sel.data()[0] as CSPGraphNodeJSON).domain = newDomain;
         this.update();
     }
 }

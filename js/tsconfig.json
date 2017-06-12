@@ -3,6 +3,7 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "amd",
+    "moduleResolution": "node",
     "target": "es6",
     "lib": ["es6", "dom"],
     "allowJs": true
