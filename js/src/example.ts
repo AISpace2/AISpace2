@@ -4,7 +4,11 @@ import {
 var widgets = require('jupyter-js-widgets');
 var _ = require('underscore');
 var Backbone = require('backbone');
-import {eventBus} from './global';
+import {
+    eventBus
+} from './global';
+import * as d3 from "d3";
+
 // Custom Model. Custom widgets models must at least provide default values
 // for model attributes, including
 //
@@ -57,6 +61,13 @@ var HelloView = widgets.DOMWidgetView.extend({
                 this.$('#output').text(data.result);
             } else if (data.action === 'rerender') {
                 this.value_changed();
+                this.model.trigger('msg:custom', {
+                    action: 'highlightArc',
+                    varName: 'all',
+                    consName: 'all',
+                    style: '!bold',
+                    colour: 'blue'
+                })
             }
         });
     },
@@ -76,7 +87,10 @@ var HelloView = widgets.DOMWidgetView.extend({
             this.$('#output').text(data.text);
         });
         this.$el.html('<div><div id="svg"></div><span id="output"></span></div>');
-        this.value_changed();
+
+        d3.timeout(() => this.model.trigger('msg:custom', {
+            action: 'rerender'
+        }));
 
         return this;
     },

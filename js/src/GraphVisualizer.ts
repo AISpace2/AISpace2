@@ -1,6 +1,14 @@
-import {CSPGraphJSON, GraphNodeJSON, CSPGraphNodeJSON, GraphJSON} from "./Graph";
+import {
+    CSPGraphJSON,
+    GraphNodeJSON,
+    CSPGraphNodeJSON,
+    GraphJSON
+} from "./Graph";
 import * as d3 from "d3";
-import {SimulationLinkDatum, SimulationNodeDatum} from "d3-force";
+import {
+    SimulationLinkDatum,
+    SimulationNodeDatum
+} from "d3-force";
 import * as Backbone from "backbone";
 
 export default class GraphVisualizer {
@@ -8,101 +16,99 @@ export default class GraphVisualizer {
     height: number;
     protected graph: GraphJSON;
     /** Represents the root SVG element where the graph is drawn. */
-    svg: d3.Selection<any, any, any, any>;
+    svg: d3.Selection < any, any, any, any > ;
     /** A group where all links are drawn. */
-    linkContainer: d3.Selection<any, any, any, any>;
+    linkContainer: d3.Selection < any, any, any, any > ;
     /** A group where all nodes are drawn. */
-    nodeContainer: d3.Selection<any, SimulationNodeDatum & GraphNodeJSON, any, any>;
+    nodeContainer: d3.Selection < any, SimulationNodeDatum & GraphNodeJSON, any, any > ;
 
     render(graph: GraphJSON, targetEl: HTMLElement) {
         this.graph = graph;
 
         // Ensures the target element is in the DOM (essentially document.ready) so we can get its width
-        d3.timeout(() => {
-            this.width = targetEl.clientWidth;
-            this.height = this.width * 0.5;
+        this.width = targetEl.clientWidth;
+        this.height = this.width * 0.5;
 
-            // Remove all children of target element to make this function idempotent
-            d3.select(targetEl).selectAll('*').remove();
+        // Remove all children of target element to make this function idempotent
+        d3.select(targetEl).selectAll('*').remove();
 
-            this.svg = d3.select(targetEl)
-                .append('svg')
-                .attr('width', this.width)
-                .attr('height', this.height);
+        this.svg = d3.select(targetEl)
+            .append('svg')
+            .attr('width', this.width)
+            .attr('height', this.height);
 
-            // Called whenever node/link positions are updated (either by the force simulation or by dragging)
-            const onTick = () => {
-                this.linkContainer
-                    .selectAll('line')
-                    .data(this.graph.links)
-                    .attr('x1', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.source as SimulationNodeDatum).x)
-                    .attr('y1', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.source as SimulationNodeDatum).y)
-                    .attr('x2', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.target as SimulationNodeDatum).x)
-                    .attr('y2', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.target as SimulationNodeDatum).y);
+        // Called whenever node/link positions are updated (either by the force simulation or by dragging)
+        const onTick = () => {
+            this.linkContainer
+                .selectAll('line')
+                .data(this.graph.links)
+                .attr('x1', (d: SimulationLinkDatum < GraphNodeJSON > ) => (d.source as SimulationNodeDatum).x)
+                .attr('y1', (d: SimulationLinkDatum < GraphNodeJSON > ) => (d.source as SimulationNodeDatum).y)
+                .attr('x2', (d: SimulationLinkDatum < GraphNodeJSON > ) => (d.target as SimulationNodeDatum).x)
+                .attr('y2', (d: SimulationLinkDatum < GraphNodeJSON > ) => (d.target as SimulationNodeDatum).y);
 
-                this.nodeContainer
-                    .selectAll('g')
-                    .data(this.graph.nodes)
-                    .each(d => {
-                        d.x = Math.max(30, Math.min(this.width - 30, d.x));
-                        d.y = Math.max(30, Math.min(this.height - 30, d.y));
-                    })
-                    .attr('transform', (d: SimulationNodeDatum) => `translate(${d.x}, ${d.y})`);
-            };
-
-            const forceSimulation = d3.forceSimulation(graph.nodes)
-                .force('link', d3.forceLink()
-                    .id((node: GraphNodeJSON) => node.id)
-                    .links(graph.links)
-                    .distance(35)
-                    .strength(0.6))
-                .force('charge', d3.forceManyBody().strength(-30))
-                .force('center', d3.forceCenter(this.width / 2, this.height / 2))
-                .force('collision', d3.forceCollide(75))
-                .on('tick', onTick)
-                .stop();
-
-            this.linkContainer = this.svg.append('g')
-                .attr('class', 'links');
-
-            this.nodeContainer = this.svg.append('g')
-                .attr('class', 'nodes');
-
-            this.update();
-
-            // Run simulation synchronously instead of asynchronously to prevent visual jitter
-            for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
-                forceSimulation.tick();
-                onTick();
-            }
-
-            // Fix all nodes, to prevent them from being moved by further simulations
             this.nodeContainer
                 .selectAll('g')
                 .data(this.graph.nodes)
-                .each((d: SimulationNodeDatum) => {
-                    d.fx = d.x;
-                    d.fy = d.y;
-                });
+                .each(d => {
+                    d.x = Math.max(30, Math.min(this.width - 30, d.x));
+                    d.y = Math.max(30, Math.min(this.height - 30, d.y));
+                })
+                .attr('transform', (d: SimulationNodeDatum) => `translate(${d.x}, ${d.y})`);
+        };
 
-            // Enable dragging of nodes
-            this.nodeContainer
-                .selectAll('g')
-                .data(this.graph.nodes)
-                .call(<any>d3.drag()
-                    .on('start', () => {
-                        // The 'simulation' must be started even though all the node positions are fixed,
-                        // or the node positions will not be updated
-                        forceSimulation.alphaTarget(0.3).restart();
-                    })
-                    .on('drag', (d: SimulationNodeDatum) => {
-                        d.fx = Math.max(30, Math.min(this.width - 30, d3.event.x));
-                        d.fy = Math.max(30, Math.min(this.height - 30, d3.event.y));
-                    })
-                    .on('end', () => {
-                        forceSimulation.stop();
-                    }));
-        });
+        const forceSimulation = d3.forceSimulation(graph.nodes)
+            .force('link', d3.forceLink()
+                .id((node: GraphNodeJSON) => node.id)
+                .links(graph.links)
+                .distance(35)
+                .strength(0.6))
+            .force('charge', d3.forceManyBody().strength(-30))
+            .force('center', d3.forceCenter(this.width / 2, this.height / 2))
+            .force('collision', d3.forceCollide(75))
+            .on('tick', onTick)
+            .stop();
+
+        this.linkContainer = this.svg.append('g')
+            .attr('class', 'links');
+
+        this.nodeContainer = this.svg.append('g')
+            .attr('class', 'nodes');
+
+        this.update();
+
+        // Run simulation synchronously instead of asynchronously to prevent visual jitter
+        for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
+            forceSimulation.tick();
+            onTick();
+        }
+
+        // Fix all nodes, to prevent them from being moved by further simulations
+        this.nodeContainer
+            .selectAll('g')
+            .data(this.graph.nodes)
+            .each((d: SimulationNodeDatum) => {
+                d.fx = d.x;
+                d.fy = d.y;
+            });
+
+        // Enable dragging of nodes
+        this.nodeContainer
+            .selectAll('g')
+            .data(this.graph.nodes)
+            .call( < any > d3.drag()
+                .on('start', () => {
+                    // The 'simulation' must be started even though all the node positions are fixed,
+                    // or the node positions will not be updated
+                    forceSimulation.alphaTarget(0.3).restart();
+                })
+                .on('drag', (d: SimulationNodeDatum) => {
+                    d.fx = Math.max(30, Math.min(this.width - 30, d3.event.x));
+                    d.fy = Math.max(30, Math.min(this.height - 30, d3.event.y));
+                })
+                .on('end', () => {
+                    forceSimulation.stop();
+                }));
     }
 
     renderNodes() {
@@ -220,14 +226,14 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
     renderNodes() {
         super.renderNodes();
 
-        this.nodeContainer.selectAll('g').on('mouseover', function() {
+        this.nodeContainer.selectAll('g').on('mouseover', function () {
             const groupSelection = d3.select(this);
             groupSelection.select('rect').attr('fill', 'black');
             groupSelection.select('ellipse').attr('fill', 'black');
             groupSelection.selectAll('text').attr('fill', 'white');
         });
 
-        this.nodeContainer.selectAll('g').on('mouseout', function() {
+        this.nodeContainer.selectAll('g').on('mouseout', function () {
             const groupSelection = d3.select(this);
             groupSelection.select('rect').attr('fill', 'white');
             groupSelection.select('ellipse').attr('fill', 'white');
@@ -247,11 +253,24 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
         });
 
         this.linkContainer.selectAll('line').on('click', d => {
-            this.eventBus.trigger('constraint:click', {constId: d.target.idx, varId: d.source.name});
+            this.eventBus.trigger('constraint:click', {
+                constId: d.target.idx,
+                varId: d.source.name
+            });
         });
     }
 
     highlightArc(varName: string, consName: string, style: string, colour: string) {
+        if (varName === 'all' && consName === 'all') {
+            this.graph.links.forEach(link => {
+                link.style = style;
+                link.colour = colour;
+            });
+
+            this.update();
+            return;
+        }
+
         let constraint = this.graph.nodes.find(el => el.name === consName);
 
         if (constraint != null) {
@@ -264,7 +283,7 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
         }
     }
 
-    reduceDomain(varName: string, newDomain: string ) {
+    reduceDomain(varName: string, newDomain: string) {
         let node = this.graph.nodes.find(node => node.name === varName);
 
         let sel = d3.select(`[id='${node.id}']`);
