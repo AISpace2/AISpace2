@@ -39,7 +39,13 @@ module.exports = [{ // Notebook extension
         devtool: 'source-map',
         module: {
             loaders: loaders,
-            rules: [{ test: /\.tsx?$/, loader: "ts-loader" }]
+            rules: [{
+                test: /\.tsx?$/,
+                loader: "ts-loader"
+            }, {
+                test: /\.css$/,
+                loader: "style-loader!css-loader"
+            }]
         },
         resolve: {
             extensions: [".tsx", ".ts", ".js"]
