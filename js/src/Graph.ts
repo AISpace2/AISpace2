@@ -95,6 +95,8 @@ class GraphEdge {
     source: GraphNode;
     target: GraphNode;
     id: string;
+    name: string;
+
 
     constructor(source: GraphNode, target: GraphNode, id: string = shortid.generate()) {
         this.source = source;
@@ -103,7 +105,7 @@ class GraphEdge {
     }
 
     serializeToJSON(): GraphEdgeJSON {
-        return { id: this.id, source: this.source.id, target: this.target.id };
+        return { id: this.id, source: this.source.id, target: this.target.id, name: this.name };
     }
 }
 
@@ -182,6 +184,15 @@ export class JSONGraphImporter implements GraphImporter {
         return graph;
     }
 }
+
+type Constructor<T = {}> = new (...args: any[]) => T;
+
+interface StyledEdge {
+    colour: string;
+    style: string;
+}
+
+export type StyledGraphEdgeJSON = GraphEdgeJSON & StyledEdge;
 
 let a = new CSPGraphNode('csp:variable');
 a.name = 'A';

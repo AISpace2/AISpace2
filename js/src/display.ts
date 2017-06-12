@@ -23,20 +23,7 @@ var DisplayModel = widgets.WidgetModel.extend({
         _model_name : 'DisplayModel',
         _model_module : 'aispace',
         _model_module_version : '0.1.0',
-    }),
-    initialize: function() {
-        DisplayModel.__super__.initialize.apply(this, arguments);
-        this.on('change:value', this.value_changed, this);
-        this.listenTo(this, 'msg:custom', data => {
-            if (data.action === 'highlightArc') {
-                eventBus[data.process_id].trigger('action:highlightArc', data)
-            } else if (data.action === 'reduceDomain') {
-                eventBus[data.process_id].trigger('action:reduceDomain', data);
-            } else if (data.action === 'output') {
-                eventBus[data.process_id].trigger('action:output', {text: data.result});
-            }
-        });
-    }
+    })
 });
 
 module.exports = {
