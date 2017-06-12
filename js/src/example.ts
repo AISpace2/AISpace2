@@ -55,6 +55,8 @@ var HelloView = widgets.DOMWidgetView.extend({
                 this.visualizer.reduceDomain(data.nodeName, data.newDomain);
             } else if (data.action === 'output') {
                 this.$('#output').text(data.result);
+            } else if (data.action === 'rerender') {
+                this.value_changed();
             }
         });
     },
