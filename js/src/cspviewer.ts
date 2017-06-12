@@ -36,7 +36,6 @@ var CSPViewerModel = widgets.DOMWidgetModel.extend({
     })
 });
 
-
 // Custom View. Renders the widget model.
 var CSPViewer = widgets.DOMWidgetView.extend({
     initialize: function () {
@@ -51,21 +50,22 @@ var CSPViewer = widgets.DOMWidgetView.extend({
             });
         });
 
-        this.model.listenTo(this.model, 'msg:custom', (data: { action: string, [key: string]: any }) => {
-            console.log(data)
-            if (data.action === 'highlightArc') {
-                this.visualizer.highlightArc(data.varName, data.consName, data.style, data.colour);
-            } else if (data.action === 'reduceDomain') {
-                this.visualizer.reduceDomain(data.nodeName, data.newDomain);
-            } else if (data.action === 'output') {
-                this.$('#output').text(data.result);
-            } else if (data.action === 'rerender') {
+        this.model.listenTo(this.model, 'msg:custom', (event: Event) => {
+            console.log(event);
+
+            if (isHighlightArcEvent(event)) {
+                this.visualizer.highlightArc(event.varName, event.consName, event.style, event.colour);
+            } else if (isReduceDomainEvent(event)) {
+                this.visualizer.reduceDomain(event.nodeName, event.newDomain);
+            } else if (isOutputEvent(event)) {
+                this.$('#output').text(event.result);
+            } else if (isRerenderEvent(event)) {
                 this.draw();
                 this.model.trigger('msg:custom', {
                     action: 'highlightArc',
                     varName: 'all',
                     consName: 'all',
-                    style: '!bold',
+                    style: 'normal',
                     colour: 'blue'
                 })
             }
@@ -86,8 +86,47 @@ var CSPViewer = widgets.DOMWidgetView.extend({
     }
 });
 
+interface Event {
+    action: string;
+}
+
+interface CSPHighlightArcEvent extends Event {
+    varName: string;
+    consName: string;
+    style: 'normal' | 'bold';
+    colour: string;
+}
+
+interface CSPReduceDomainEvent extends Event {
+    nodeName: string;
+    newDomain: string[];
+}
+
+interface OutputEvent extends Event {
+    result: string;
+}
+
+interface RerenderEvent extends Event {
+    result: 'rerender';
+}
+
+function isHighlightArcEvent(event: Event): event is CSPHighlightArcEvent {
+    return event.action === 'highlightArc';
+}
+
+function isReduceDomainEvent(event: Event): event is CSPReduceDomainEvent {
+    return event.action === 'reduceDomain';
+}
+
+function isOutputEvent(event: Event): event is OutputEvent {
+    return event.action === 'output';
+}
+
+function isRerenderEvent(event: Event): event is RerenderEvent {
+    return event.action === 'rerender';
+}
 
 module.exports = {
-    HelloModel: CSPViewerModel,
-    HelloView: CSPViewer
+    CSPViewerModel: CSPViewerModel,
+    CSPViewer: CSPViewer
 };
