@@ -28,6 +28,7 @@ class CSPViewer(DOMWidget):
         self.on_msg(self._handle_custom_msgs)
         self.jsonRepr = cspToJson(csp)
         self.desired_level = 4
+        self.sleep_time = 0.2
 
         # If Con_solver is not defined at the time of creation,
         # import the existing one
@@ -105,6 +106,7 @@ class CSPViewer(DOMWidget):
         b3.on_click(e)
         v = widgets.HBox([b1, b2, b3])
         display(v)
+        self.send({'action': 'rerender'})
         # self.con_solver.display = self.display
 
     def _handle_custom_msgs(self, _, content, buffers=None):
@@ -133,7 +135,7 @@ class CSPViewer(DOMWidget):
         level is an integer.
         the other arguments are whatever arguments print can take.
         """
-
+        shouldWait = True
         if args[0] == 'Domain pruned':
             nodeName = args[2]
             consName = args[6]
@@ -179,6 +181,7 @@ class CSPViewer(DOMWidget):
             self.send({'action': 'highlightArc', 'varName': varName,
                 'consName': consName.__repr__(), 'style': '!bold',
                 'colour': 'green'})
+            shouldWait = False
             # highlightArc(varName, consName.__repr__(), "!bold","green")
         
         if args[0] == "  adding" and args[2] == "to to_do.":
@@ -189,10 +192,11 @@ class CSPViewer(DOMWidget):
                 'consName': arcList[i][1].__repr__(), 'style': '!bold',
                 'colour': 'blue'})
 
-        if level <= self.desired_level:
-            self.event.wait()
-        else:
-            sleep(0.2)
-
         text = ' '.join(map(str, args))
         self.send({'action': 'output', 'result': text})
+
+        if level <= self.desired_level:
+            if shouldWait:
+                self.event.wait()
+        else:
+            sleep(self.sleep_time)
