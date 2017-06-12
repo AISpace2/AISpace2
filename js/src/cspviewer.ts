@@ -24,34 +24,34 @@ import * as d3 from "d3";
 
 // When serialiazing the entire widget state for embedding, only values that
 // differ from the defaults will be specified.
-var HelloModel = widgets.DOMWidgetModel.extend({
+var CSPViewerModel = widgets.DOMWidgetModel.extend({
     defaults: _.extend(_.result(this, 'widgets.DOMWidgetModel.prototype.defaults'), {
-        _model_name: 'HelloModel',
-        _view_name: 'HelloView',
+        _model_name: 'CSPViewerModel',
+        _view_name: 'CSPViewer',
         _model_module: 'aispace',
         _view_module: 'aispace',
         _model_module_version: '0.1.0',
         _view_module_version: '0.1.0',
-        value: 'Hello World!!!!',
-        process_id: 0
+        line_width: 2.0
     })
 });
 
 
 // Custom View. Renders the widget model.
-var HelloView = widgets.DOMWidgetView.extend({
+var CSPViewer = widgets.DOMWidgetView.extend({
     initialize: function () {
         widgets.DOMWidgetView.prototype.initialize.apply(this, arguments);
         this.eventBus = _.extend({}, Backbone.Events);
         this.visualizer = new CSPGraphInteractor(this.eventBus);
-        this.eventBus.listenTo(this.eventBus, 'constraint:click', d => {
+        this.eventBus.listenTo(this.eventBus, 'constraint:click', (d: any) => {
             this.send({
                 event: 'constraint:click',
                 constId: d.constId,
                 varId: d.varId
             });
-        })
-        this.model.listenTo(this.model, 'msg:custom', data => {
+        });
+
+        this.model.listenTo(this.model, 'msg:custom', (data: { action: string, [key: string]: any }) => {
             console.log(data)
             if (data.action === 'highlightArc') {
                 this.visualizer.highlightArc(data.varName, data.consName, data.style, data.colour);
@@ -60,7 +60,7 @@ var HelloView = widgets.DOMWidgetView.extend({
             } else if (data.action === 'output') {
                 this.$('#output').text(data.result);
             } else if (data.action === 'rerender') {
-                this.value_changed();
+                this.draw();
                 this.model.trigger('msg:custom', {
                     action: 'highlightArc',
                     varName: 'all',
@@ -72,22 +72,7 @@ var HelloView = widgets.DOMWidgetView.extend({
         });
     },
     render: function () {
-        this.model.on('change:value', this.value_changed, this);
-        this.listenTo(eventBus[this.model.get('process_id')], 'action:highlightArc', data => {
-            if (data.process_id === this.model.get('process_id')) {
-                this.visualizer.highlightArc(data.varName, data.consName, data.style, data.colour);
-            }
-        });
-        this.listenTo(eventBus[this.model.get('process_id')], 'action:reduceDomain', data => {
-            if (data.process_id === this.model.get('process_id')) {
-                this.visualizer.reduceDomain(data.nodeName, data.newDomain);
-            }
-        });
-        this.listenTo(eventBus[this.model.get('process_id')], 'action:output', data => {
-            this.$('#output').text(data.text);
-        });
         this.$el.html('<div><div id="svg"></div><span id="output"></span></div>');
-
         d3.timeout(() => this.model.trigger('msg:custom', {
             action: 'rerender'
         }));
@@ -95,13 +80,14 @@ var HelloView = widgets.DOMWidgetView.extend({
         return this;
     },
 
-    value_changed: function () {
+    draw: function () {
+        this.visualizer.lineWidth = this.model.get('line_width');
         this.visualizer.render(JSON.parse(this.model.get('jsonRepr')), this.$('#svg')[0]);
     }
 });
 
 
 module.exports = {
-    HelloModel: HelloModel,
-    HelloView: HelloView
+    HelloModel: CSPViewerModel,
+    HelloView: CSPViewer
 };
