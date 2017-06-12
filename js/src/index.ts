@@ -12,7 +12,7 @@ __webpack_public_path__ = document.querySelector('body').getAttribute('data-base
 module.exports = {};
 var loadedModules = [
     require('./global'),
-    require('./example'),
+    require('./cspviewer'),
     require('./display'),
     require('./searchDepthFirst')
 ];

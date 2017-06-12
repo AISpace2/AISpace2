@@ -3,24 +3,24 @@ import {
     GraphNodeJSON,
     CSPGraphNodeJSON,
     GraphJSON
-} from "./Graph";
-import * as d3 from "d3";
+} from './Graph';
+import * as d3 from 'd3';
 import {
     SimulationLinkDatum,
     SimulationNodeDatum
-} from "d3-force";
-import * as Backbone from "backbone";
+} from 'd3-force';
+import * as Backbone from 'backbone';
 
 export default class GraphVisualizer {
     width: number;
     height: number;
     protected graph: GraphJSON;
     /** Represents the root SVG element where the graph is drawn. */
-    svg: d3.Selection < any, any, any, any > ;
+    svg: d3.Selection<any, any, any, any>;
     /** A group where all links are drawn. */
-    linkContainer: d3.Selection < any, any, any, any > ;
+    linkContainer: d3.Selection<any, any, any, any>;
     /** A group where all nodes are drawn. */
-    nodeContainer: d3.Selection < any, SimulationNodeDatum & GraphNodeJSON, any, any > ;
+    nodeContainer: d3.Selection<any, SimulationNodeDatum & GraphNodeJSON, any, any>;
 
     render(graph: GraphJSON, targetEl: HTMLElement) {
         this.graph = graph;
@@ -37,15 +37,28 @@ export default class GraphVisualizer {
             .attr('width', this.width)
             .attr('height', this.height);
 
+        // Enable zoom and pan behaviour
+        this.svg.append('rect')
+            .attr('width', this.width)
+            .attr('height', this.height)
+            .style('fill', 'none')
+            .style('pointer-events', 'all')
+            .call(d3.zoom()
+                .scaleExtent([1, 2.5])
+                .on('zoom', () => {
+                    this.linkContainer.attr('transform', d3.event.transform);
+                    this.nodeContainer.attr('transform', d3.event.transform);
+                }));
+
         // Called whenever node/link positions are updated (either by the force simulation or by dragging)
         const onTick = () => {
             this.linkContainer
                 .selectAll('line')
                 .data(this.graph.links)
-                .attr('x1', (d: SimulationLinkDatum < GraphNodeJSON > ) => (d.source as SimulationNodeDatum).x)
-                .attr('y1', (d: SimulationLinkDatum < GraphNodeJSON > ) => (d.source as SimulationNodeDatum).y)
-                .attr('x2', (d: SimulationLinkDatum < GraphNodeJSON > ) => (d.target as SimulationNodeDatum).x)
-                .attr('y2', (d: SimulationLinkDatum < GraphNodeJSON > ) => (d.target as SimulationNodeDatum).y);
+                .attr('x1', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.source as SimulationNodeDatum).x)
+                .attr('y1', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.source as SimulationNodeDatum).y)
+                .attr('x2', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.target as SimulationNodeDatum).x)
+                .attr('y2', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.target as SimulationNodeDatum).y);
 
             this.nodeContainer
                 .selectAll('g')
@@ -96,7 +109,7 @@ export default class GraphVisualizer {
         this.nodeContainer
             .selectAll('g')
             .data(this.graph.nodes)
-            .call( < any > d3.drag()
+            .call(<any>d3.drag()
                 .on('start', () => {
                     // The 'simulation' must be started even though all the node positions are fixed,
                     // or the node positions will not be updated
@@ -140,8 +153,8 @@ export default class GraphVisualizer {
     }
 
     /**
-     * Updates the graph by re-binding to the data and re-rendering nodes and edges.
-     */
+    * Updates the graph by re-binding to the data and re-rendering nodes and edges.
+    */
     update() {
         this.renderLinks();
         this.renderNodes();
