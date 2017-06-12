@@ -27,6 +27,7 @@ class CSPViewer(DOMWidget):
         super(CSPViewer, self).__init__()
         self.on_msg(self._handle_custom_msgs)
         self.jsonRepr = cspToJson(csp)
+        self.desired_level = 4
 
         # If Con_solver is not defined at the time of creation,
         # import the existing one
@@ -38,11 +39,15 @@ class CSPViewer(DOMWidget):
             Con_solver = getattr(module, 'Con_solver')
 
         self.con_solver = Con_solver(csp)
+        self.con_solver.display = self.display
         self.event = threading.Event()
 
         def arc_select(to_do):
-            self.event.wait()
+            if self.desired_level == 1:
+                return to_do.pop()
 
+            self.event.wait()
+            
             if self.userSelected:
                 to_do.discard(self.last_selected_arc)
                 return self.last_selected_arc
@@ -74,12 +79,31 @@ class CSPViewer(DOMWidget):
 
         def d(btn):
             self.userSelected = False
+            self.desired_level = 2
             self.event.set()
             self.event.clear()
+
+        def a(btn):
+            self.userSelected = False
+            self.desired_level = 4
+            self.event.set()
+            self.event.clear()
+
+        def e(btn):
+            self.userSelected = False
+            self.desired_level = 1
+            self.event.set()
+            self.event.clear()
+
         b1 = widgets.Button(description='Fine Step')
         b2 = widgets.Button(description='Step')
+        b3 = widgets.Button(description='AutoSolve')
+        b4 = widgets.Button(description='Reset')
+        
         b2.on_click(d)
-        v = widgets.HBox([b1, b2])
+        b1.on_click(a)
+        b3.on_click(e)
+        v = widgets.HBox([b1, b2, b3])
         display(v)
         # self.con_solver.display = self.display
 
@@ -87,6 +111,7 @@ class CSPViewer(DOMWidget):
         if content.get('event', '') == 'constraint:click':
             varChar = content.get('varId')
             const = self.con_solver.csp.constraints[content.get('constId')]
+            self.desired_level = 2
             # Search through to_do to find the one to pop
             '''if (varChar, const) in self.to_dos:
                 print("FOUND!")
@@ -108,11 +133,6 @@ class CSPViewer(DOMWidget):
         level is an integer.
         the other arguments are whatever arguments print can take.
         """
-
-        if level <= 4:
-            text = ' '.join(map(str, args))
-            self.send({'action': 'output', 'result': text})
-            pass #print(*args)  ##if error you are using Python2 not Python3
 
         if args[0] == 'Domain pruned':
             nodeName = args[2]
@@ -168,4 +188,11 @@ class CSPViewer(DOMWidget):
                     self.send({'action': 'highlightArc', 'varName': arcList[i][0],
                 'consName': arcList[i][1].__repr__(), 'style': '!bold',
                 'colour': 'blue'})
-        sleep(0.2)
+
+        if level <= self.desired_level:
+            self.event.wait()
+        else:
+            sleep(0.2)
+
+        text = ' '.join(map(str, args))
+        self.send({'action': 'output', 'result': text})
