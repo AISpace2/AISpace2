@@ -253,6 +253,11 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
             groupSelection.select('ellipse').attr('fill', 'white');
             groupSelection.selectAll('text').attr('fill', 'black');
         });
+
+        this.nodeContainer.selectAll('g').on('dblclick', function() {
+            const groupSelection = d3.select(this);
+            
+        });
     }
 
     renderLinks() {
