@@ -5,3 +5,8 @@ svg text {
     -ms-user-select: none;
     user-select: none;
 }
+
+#container {
+    border: 1px solid silver;
+    border-radius: 2px;
+}
