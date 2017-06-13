@@ -42,8 +42,55 @@ class CSPViewer(DOMWidget):
             Con_solver = getattr(module, 'Con_solver')
 
         self._con_solver = Con_solver(csp)
-        self._block_for_user_input = threading.Event()
+        self._override_con_solver(Con_solver)
 
+        self._block_for_user_input = threading.Event()
+        self._thread = threading.Thread(target=self._con_solver.make_arc_consistent)
+        self._thread.start()
+        self._selected_arc = None
+        self._user_selected_arc = False
+
+        def step(btn):
+            self._user_selected_arc = False
+            self._desired_level = 2
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
+
+        def fine_step(btn):
+            self._user_selected_arc = False
+            self._desired_level = 4
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
+
+        def auto_arc(btn):
+            self._thread = threading.Thread(target=self._con_solver.make_arc_consistent)
+            self._thread.start()
+            self._user_selected_arc = False
+            self._desired_level = 1
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
+
+        def auto_solve(btn):
+            self._thread = threading.Thread(target=self._con_solver.solve_one)
+            self._thread.start()
+            self._user_selected_arc = False
+            self._desired_level = 1
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
+
+        fine_step_btn = widgets.Button(description='Fine Step')
+        fine_step_btn.on_click(fine_step)
+        step_btn = widgets.Button(description='Step')
+        step_btn.on_click(step)
+        auto_arc_btn = widgets.Button(description='Auto Arc Consistency')
+        auto_arc_btn.on_click(auto_arc)
+        auto_solve_btn = widgets.Button(description='Auto Solve')
+        auto_solve_btn.on_click(auto_solve)
+        
+        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn]))
+
+    def _override_con_solver(self, Con_solver):
+        """Magic that monkey-patches Con_solver to work."""
         def arc_select(self, to_do):
             if self._desired_level == 1:
                 return to_do.pop()
@@ -73,56 +120,6 @@ class CSPViewer(DOMWidget):
 
             return object.__getattribute__(self_, attr)
         Con_solver.__getattribute__ = __getattribute__
-        
-        def bootstrap():
-            self._con_solver.solve_one()
-
-        self.thread = threading.Thread(target=self._con_solver.make_arc_consistent)
-        self.thread.start()
-        self._selected_arc = None
-        self._user_selected_arc = False
-
-        def step(btn):
-            self._user_selected_arc = False
-            self._desired_level = 2
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
-
-        def fine_step(btn):
-            self._user_selected_arc = False
-            self._desired_level = 4
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
-
-        def auto_arc(btn):
-            self.thread = threading.Thread(target=self._con_solver.make_arc_consistent)
-            self.thread.start()
-            self._user_selected_arc = False
-            self._desired_level = 1
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
-
-        def auto_solve(btn):
-            self.thread = threading.Thread(target=self._con_solver.solve_one)
-            self.thread.start()
-            self._user_selected_arc = False
-            self._desired_level = 1
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
-
-
-
-        fine_step_btn = widgets.Button(description='Fine Step')
-        fine_step_btn.on_click(fine_step)
-        step_btn = widgets.Button(description='Step')
-        step_btn.on_click(step)
-        auto_arc_btn = widgets.Button(description='Auto Arc Consistency')
-        auto_arc_btn.on_click(auto_arc)
-        auto_solve_btn = widgets.Button(description='Auto Solve')
-        auto_solve_btn.on_click(auto_solve)
-        reset_btn = widgets.Button(description='Reset')
-        
-        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn]))
 
     def _handle_custom_msgs(self, _, content, buffers=None):
         if content.get('event', '') == 'constraint:click':
