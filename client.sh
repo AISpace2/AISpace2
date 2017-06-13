@@ -1,5 +1,5 @@
 current_dir=$PWD;
 
 cd js
-npm run prepublish
+npm run prepare
 cd $PWD;
