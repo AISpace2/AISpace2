@@ -72,7 +72,9 @@ var CSPViewer = widgets.DOMWidgetView.extend({
         });
     },
     render: function () {
-        this.$el.html('<div><div id="svg"></div><span id="output"></span></div>');
+        this.$el.html('<div id="container"><div id="svg"></div><span id="output"></span></div>');
+
+        // Ensure the DOM element exists (with appropriate sizing) before rendering
         d3.timeout(() => this.model.trigger('msg:custom', {
             action: 'rerender'
         }));
