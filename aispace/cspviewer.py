@@ -77,20 +77,10 @@ class CSPViewer(DOMWidget):
         def bootstrap():
             self._con_solver.solve_one()
 
-        self.thread = threading.Thread(target=bootstrap)
+        self.thread = threading.Thread(target=self._con_solver.make_arc_consistent)
         self.thread.start()
-
         self._selected_arc = None
         self._user_selected_arc = False
-
-        """yield example
-        self.gen = self.con_solver.make_arc_consistent()
-        self.to_dos = next(self.gen)
-        self.a = widgets.Button(description='DANGER!')
-        self.a.on_click(lambda _: self.gen.send(self.to_dos.pop()))
-
-        display(self.a)
-        """
 
         def step(btn):
             self._user_selected_arc = False
@@ -105,10 +95,22 @@ class CSPViewer(DOMWidget):
             self._block_for_user_input.clear()
 
         def auto_arc(btn):
+            self.thread = threading.Thread(target=self._con_solver.make_arc_consistent)
+            self.thread.start()
             self._user_selected_arc = False
             self._desired_level = 1
             self._block_for_user_input.set()
             self._block_for_user_input.clear()
+
+        def auto_solve(btn):
+            self.thread = threading.Thread(target=self._con_solver.solve_one)
+            self.thread.start()
+            self._user_selected_arc = False
+            self._desired_level = 1
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
+
+
 
         fine_step_btn = widgets.Button(description='Fine Step')
         fine_step_btn.on_click(fine_step)
@@ -116,9 +118,11 @@ class CSPViewer(DOMWidget):
         step_btn.on_click(step)
         auto_arc_btn = widgets.Button(description='Auto Arc Consistency')
         auto_arc_btn.on_click(auto_arc)
+        auto_solve_btn = widgets.Button(description='Auto Solve')
+        auto_solve_btn.on_click(auto_solve)
         reset_btn = widgets.Button(description='Reset')
         
-        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn]))
+        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn]))
 
     def _handle_custom_msgs(self, _, content, buffers=None):
         if content.get('event', '') == 'constraint:click':
