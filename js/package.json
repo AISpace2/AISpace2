@@ -33,6 +33,7 @@
     "d3": "^4.9.1",
     "jquery": "^3.2.1",
     "jupyter-js-widgets": "^2.1.4",
+    "picomodal": "^3.0.0",
     "shortid": "^2.2.8",
     "underscore": "^1.8.3"
   }

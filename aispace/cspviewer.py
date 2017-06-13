@@ -1,6 +1,7 @@
 import importlib
 import multiprocessing
 import threading
+import types
 from functools import partial
 from time import sleep
 
@@ -41,10 +42,9 @@ class CSPViewer(DOMWidget):
             Con_solver = getattr(module, 'Con_solver')
 
         self._con_solver = Con_solver(csp)
-        self._con_solver.display = self.display
         self._block_for_user_input = threading.Event()
 
-        def arc_select(to_do):
+        def arc_select(self, to_do):
             if self._desired_level == 1:
                 return to_do.pop()
 
@@ -57,10 +57,25 @@ class CSPViewer(DOMWidget):
                 # User did not select. Return random arc
                 return to_do.pop()
 
-        self._con_solver.wait_for_arc_selection = arc_select
+        Con_solver.wait_for_arc_selection = partial(arc_select, self)
+        Con_solver.display = self.display
 
+        def __getattribute__(self_, attr):
+            if attr == 'solve_one':
+                method = object.__getattribute__(self_, attr)
+                if not method:
+                    raise Exception("Method %s not implemented" % attr)
+                if type(method) == types.MethodType:
+                    for key, val in self_.domains.items():
+                        self.send({'action': 'reduceDomain', 'nodeName': key,
+                            'newDomain': list(val)})
+                return method
+
+            return object.__getattribute__(self_, attr)
+        Con_solver.__getattribute__ = __getattribute__
+        
         def bootstrap():
-            self._con_solver.make_arc_consistent()
+            self._con_solver.solve_one()
 
         self.thread = threading.Thread(target=bootstrap)
         self.thread.start()
@@ -172,6 +187,13 @@ class CSPViewer(DOMWidget):
                 'consName': arcList[i][1].__repr__(), 'style': 'normal',
                 'colour': 'blue'})
 
+        # if args[0] == "...splitting":
+        #     nodeName = args[1]
+        #     newDomain = args[3]
+        #     self.send({'action': 'reduceDomain', 'nodeName': nodeName,
+        #         'newDomain': list(newDomain)})
+
+        
         text = ' '.join(map(str, args))
         self.send({'action': 'output', 'result': text})
 
