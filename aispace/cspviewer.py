@@ -8,9 +8,10 @@ from time import sleep
 import ipywidgets as widgets
 from IPython.display import display
 from ipywidgets import CallbackDispatcher, DOMWidget, Output, register
-from traitlets import Integer, Unicode, observe, Float
+from traitlets import Dict, Float, Integer, Unicode, observe
 
 from aipython.utilities import Displayable, cspToJson
+
 
 @register('aispace.CSPViewer')
 class CSPViewer(DOMWidget):
@@ -22,14 +23,14 @@ class CSPViewer(DOMWidget):
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
     
-    jsonRepr = Unicode('{}').tag(sync=True)
+    graphJSON = Dict().tag(sync=True)
     line_width = Float(2.0).tag(sync=True)
 
     def __init__(self, csp):
         super(CSPViewer, self).__init__()
 
         self.on_msg(self._handle_custom_msgs)
-        self.jsonRepr = cspToJson(csp)
+        self.graphJSON = cspToJson(csp)
         self._desired_level = 4
         self.sleep_time = 0.2
 

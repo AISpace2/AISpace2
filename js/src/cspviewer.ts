@@ -84,7 +84,7 @@ var CSPViewer = widgets.DOMWidgetView.extend({
 
     draw: function () {
         this.visualizer.lineWidth = this.model.get('line_width');
-        this.visualizer.render(JSON.parse(this.model.get('jsonRepr')), this.$('#svg')[0]);
+        this.visualizer.render(JSON.parse(this.model.get('graphJSON')), this.$('#svg')[0]);
     }
 });
 
