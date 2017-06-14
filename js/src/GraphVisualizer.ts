@@ -220,11 +220,11 @@ export class CSPGraphVisualizer extends GraphVisualizer {
         const updateSelection = this.linkContainer
             .selectAll('line')
             .data(this.graph.links);
-        
+
         updateSelection.enter().append('line')
             .merge(updateSelection)
             .attr('stroke-width', (d: StyledGraphEdgeJSON) => d.style === 'bold' ? this.lineWidth + 5 : this.lineWidth)
-            .attr('stroke', (d: StyledGraphEdgeJSON) => (d.colour != null && d.colour !== 'na') ? d.colour : 'black');
+            .attr('stroke', (d: StyledGraphEdgeJSON) => (d.colour != null) ? d.colour : 'black');
     }
 }
 
@@ -254,9 +254,9 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
             groupSelection.selectAll('text').attr('fill', 'black');
         });
 
-        this.nodeContainer.selectAll('g').on('dblclick', function() {
+        this.nodeContainer.selectAll('g').on('dblclick', function () {
             const groupSelection = d3.select(this);
-            
+
         });
     }
 
@@ -273,43 +273,43 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
         });
 
         this.linkContainer.selectAll('line').on('click', (d: StyledGraphEdgeJSON) => {
-            this.eventBus.trigger('constraint:click', {
+            this.eventBus.trigger('arc:click', {
                 constId: (d.target as any).idx,
                 varId: (d.source as any as GraphNodeJSON).name
             });
         });
     }
 
-    highlightArc(varName: string, consName: string, style: 'normal' | 'bold', colour: string) {
-        if (varName === 'all' && consName === 'all') {
+    /**
+     * Visually highlights the arc by giving it the corresponding style and colour.
+     * @param arcId The ID of the arc (that connects a variable node and constraint) to highlight.
+     *              If null, then all arcs will be higlighted.
+     * @param style Sets the line width of the arc.
+     * @param colour The colour of the arc. Any HTML colour string is valid, hex or named.
+     *               If null, then the colour will be left unchange (i.e. same colour as before)
+     */
+    highlightArc(arcId: string, style: 'normal' | 'bold', colour: string = null) {
+        if (arcId != null) {
+            const link = this.graph.links.find(link => link.id === arcId) as StyledGraphEdgeJSON;
+            link.style = style;
+            link.colour = colour;
+        } else {
             this.graph.links.forEach((link: StyledGraphEdgeJSON) => {
                 link.style = style;
                 link.colour = colour;
             });
-
-            this.update();
-            return;
         }
 
-        let constraint = this.graph.nodes.find(el => el.name === consName);
-
-        if (constraint != null) {
-            let link = (this.graph.links as StyledGraphEdgeJSON[]).filter(link => (link.target as any as GraphNodeJSON).id === constraint.id)
-                .find(link => (link.source as any as GraphNodeJSON).name === varName);
-
-            link.style = style;
-            if (colour !== 'na') {
-                link.colour = colour;
-            }
-
-            this.update();
-        }
+        this.update();
     }
 
-    setDomain(varName: string, domain: string[]) {
-        let node = this.graph.nodes.find(node => node.name === varName);
-
-        let sel = d3.select(`[id='${node.id}']`);
+    /**
+     * Sets the variable node identified by its ID to the corresponding domain.
+     * @param nodeId The ID of the node whose domain is to be set. This node must be a variable node.
+     * @param domain The new domain of the variable node.
+     */
+    setDomain(nodeId: string, domain: string[]) {
+        let sel = d3.select(`[id='${nodeId}']`);
         (sel.data()[0] as CSPGraphNodeJSON).domain = domain;
         this.update();
     }
