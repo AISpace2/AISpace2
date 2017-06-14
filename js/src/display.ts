@@ -1,7 +1,6 @@
 var widgets = require('jupyter-js-widgets');
 var _ = require('underscore');
 var Backbone = require('backbone');
-import {eventBus} from './global';
 
 // Custom Model. Custom widgets models must at least provide default values
 // for model attributes, including
