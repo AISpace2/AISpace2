@@ -42,32 +42,22 @@ var CSPViewer = widgets.DOMWidgetView.extend({
         widgets.DOMWidgetView.prototype.initialize.apply(this, arguments);
         this.eventBus = _.extend({}, Backbone.Events);
         this.visualizer = new CSPGraphInteractor(this.eventBus);
-        this.eventBus.listenTo(this.eventBus, 'constraint:click', (d: any) => {
-            this.send({
-                event: 'constraint:click',
-                constId: d.constId,
-                varId: d.varId
-            });
+        this.eventBus.listenTo(this.eventBus, 'arc:click', (d: any) => {
+            this.send({ event: 'arc:click', constId: d.constId, varId: d.varId });
         });
 
         this.model.listenTo(this.model, 'msg:custom', (event: Event) => {
             console.log(event);
 
             if (isHighlightArcEvent(event)) {
-                this.visualizer.highlightArc(event.varName, event.consName, event.style, event.colour);
+                this.visualizer.highlightArc(event.arcId, event.style, event.colour);
             } else if (isSetDomainEvent(event)) {
-                this.visualizer.setDomain(event.nodeName, event.domain);
+                this.visualizer.setDomain(event.nodeId, event.domain);
             } else if (isOutputEvent(event)) {
                 this.$('#output').text(event.result);
             } else if (isRerenderEvent(event)) {
                 this.draw();
-                this.model.trigger('msg:custom', {
-                    action: 'highlightArc',
-                    varName: 'all',
-                    consName: 'all',
-                    style: 'normal',
-                    colour: 'blue'
-                })
+                this.model.trigger('msg:custom', { action: 'highlightArc', arcId: null, style: 'normal', colour: 'blue' });
             }
         });
     },
@@ -84,7 +74,7 @@ var CSPViewer = widgets.DOMWidgetView.extend({
 
     draw: function () {
         this.visualizer.lineWidth = this.model.get('line_width');
-        this.visualizer.render(JSON.parse(this.model.get('graphJSON')), this.$('#svg')[0]);
+        this.visualizer.render(this.model.get('graphJSON'), this.$('#svg')[0]);
     }
 });
 
@@ -93,14 +83,13 @@ interface Event {
 }
 
 interface CSPHighlightArcEvent extends Event {
-    varName: string;
-    consName: string;
+    arcId: string;
     style: 'normal' | 'bold';
     colour: string;
 }
 
 interface CSPSetDomainEvent extends Event {
-    nodeName: string;
+    nodeId: string;
     domain: string[];
 }
 

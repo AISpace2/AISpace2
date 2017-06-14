@@ -30,7 +30,7 @@ class CSPViewer(DOMWidget):
         super(CSPViewer, self).__init__()
 
         self.on_msg(self._handle_custom_msgs)
-        self.graphJSON = cspToJson(csp)
+        (self.graphJSON, self.domainMap, self.linkMap) = cspToJson(csp)
         self._desired_level = 4
         self.sleep_time = 0.2
 
@@ -123,7 +123,7 @@ class CSPViewer(DOMWidget):
         Con_solver.__getattribute__ = __getattribute__
 
     def _handle_custom_msgs(self, _, content, buffers=None):
-        if content.get('event', '') == 'constraint:click':
+        if content.get('event', '') == 'arc:click':
             varChar = content.get('varId')
             const = self._con_solver.csp.constraints[content.get('constId')]
             self._desired_level = 2
@@ -144,57 +144,39 @@ class CSPViewer(DOMWidget):
             nodeName = args[2]
             domain = args[4]
             consName = args[6]
-            self.send({'action': 'setDomain', 'nodeName': nodeName,
-                'domain': list(domain)})
+            self.send({'action': 'setDomain', 'nodeId': self.domainMap[nodeName], 'domain': list(domain)})
 
         if args[0] == "Processing arc (":
             varName = args[1]
             consName = args[3]
-            self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'bold',
-                'colour': 'na'})
-            for i in range(len(self._con_solver.csp.constraints)):
-                if self._con_solver.csp.constraints[i] == consName:
-                    self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'bold',
-                'colour': 'na'})
+            self.send({'action': 'highlightArc',
+                'arcId': self.linkMap[(varName, consName)], 'style': 'bold', 'colour': None})
             
         if args[0] == 'Domain pruned':
             varName = args[2]
             consName = args[6]
-            self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'bold',
-                'colour': 'green'})
+            self.send({'action': 'highlightArc',
+                'arcId': self.linkMap[(varName, consName)], 'style': 'bold', 'colour': 'green'})
             
         if args[0] == "Arc: (" and args[4] == ") is inconsistent":
             varName = args[1]
             consName = args[3]
-            self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'bold',
-                'colour': 'red'})
+            self.send({'action': 'highlightArc',
+                'arcId': self.linkMap[(varName, consName)], 'style': 'bold', 'colour': 'red'})
             
         if args[0] == "Arc: (" and args[4] == ") now consistent":
             varName = args[1]
             consName = args[3]
-            self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'normal',
-                'colour': 'green'})
+            self.send({'action': 'highlightArc',
+                'arcId': self.linkMap[(varName, consName)], 'style': 'normal', 'colour': 'green'})
             shouldWait = False
         
         if args[0] == "  adding" and args[2] == "to to_do.":
             if args[1] != "nothing":
                 arcList = list(args[1])
-                for i in range(len(arcList)):
-                    self.send({'action': 'highlightArc', 'varName': arcList[i][0],
-                'consName': arcList[i][1].__repr__(), 'style': 'normal',
-                'colour': 'blue'})
-
-        # if args[0] == "...splitting":
-        #     nodeName = args[1]
-        #     domain = args[3]
-        #     self.send({'action': 'setDomain', 'nodeName': nodeName,
-        #         'domain': list(domain)})
-
+                for arc in arcList:
+                    self.send({'action': 'highlightArc', 'arcId': self.linkMap[(arc[0], arc[1])], 
+                    'style': 'normal', 'colour': 'blue'})
         
         text = ' '.join(map(str, args))
         self.send({'action': 'output', 'result': text})
