@@ -55,8 +55,8 @@ var CSPViewer = widgets.DOMWidgetView.extend({
 
             if (isHighlightArcEvent(event)) {
                 this.visualizer.highlightArc(event.varName, event.consName, event.style, event.colour);
-            } else if (isReduceDomainEvent(event)) {
-                this.visualizer.reduceDomain(event.nodeName, event.newDomain);
+            } else if (isSetDomainEvent(event)) {
+                this.visualizer.setDomain(event.nodeName, event.domain);
             } else if (isOutputEvent(event)) {
                 this.$('#output').text(event.result);
             } else if (isRerenderEvent(event)) {
@@ -99,9 +99,9 @@ interface CSPHighlightArcEvent extends Event {
     colour: string;
 }
 
-interface CSPReduceDomainEvent extends Event {
+interface CSPSetDomainEvent extends Event {
     nodeName: string;
-    newDomain: string[];
+    domain: string[];
 }
 
 interface OutputEvent extends Event {
@@ -116,8 +116,8 @@ function isHighlightArcEvent(event: Event): event is CSPHighlightArcEvent {
     return event.action === 'highlightArc';
 }
 
-function isReduceDomainEvent(event: Event): event is CSPReduceDomainEvent {
-    return event.action === 'reduceDomain';
+function isSetDomainEvent(event: Event): event is CSPSetDomainEvent {
+    return event.action === 'setDomain';
 }
 
 function isOutputEvent(event: Event): event is OutputEvent {
