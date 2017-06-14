@@ -153,8 +153,7 @@ def cspToJson(cspObject):
             link2 = {'id': str(uuid.uuid4()), 'source': domainMap[cons.scope[1]], 'target': consId}
             pythonRep['links'].append(link2)
 
-    jsonRep = json.dumps(pythonRep)
-    return jsonRep
+    return pythonRep
     
 if __name__ == "__main__":
     test()
