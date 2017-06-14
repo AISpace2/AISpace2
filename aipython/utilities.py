@@ -37,10 +37,10 @@ class Displayable(Widget):
 
         if args[0] == 'Domain pruned':
             nodeName = args[2]
-            newDomain = args[4]
+            domain = args[4]
             consName = args[6]
-            self.send({'action': 'reduceDomain', 'nodeName': nodeName, 'newDomain': newDomain, 'process_id': threading.current_thread().ident})
-                   # reduceDomain(nodeName, elementValue)
+            self.send({'action': 'setDomain', 'nodeName': nodeName, 'domain': domain, 'process_id': threading.current_thread().ident})
+                   # setDomain(nodeName, elementValue)
 
         if args[0] == "Processing arc (":
             varName = args[1]

@@ -306,11 +306,11 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
         }
     }
 
-    reduceDomain(varName: string, newDomain: string[]) {
+    setDomain(varName: string, domain: string[]) {
         let node = this.graph.nodes.find(node => node.name === varName);
 
         let sel = d3.select(`[id='${node.id}']`);
-        (sel.data()[0] as CSPGraphNodeJSON).domain = newDomain;
+        (sel.data()[0] as CSPGraphNodeJSON).domain = domain;
         this.update();
     }
 }
