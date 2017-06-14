@@ -10,3 +10,6 @@ aispace/static/
 
 # OS X
 .DS_Store
+
+# Editors
+.vscode/
