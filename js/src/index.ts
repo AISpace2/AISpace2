@@ -13,7 +13,6 @@ require("./style.css");
 // Export widget models and views, and the npm package version number.
 module.exports = {};
 var loadedModules = [
-    require('./global'),
     require('./cspviewer'),
     require('./display'),
     require('./searchDepthFirst')
