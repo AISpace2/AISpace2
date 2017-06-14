@@ -115,8 +115,7 @@ class CSPViewer(DOMWidget):
                     raise Exception("Method %s not implemented" % attr)
                 if type(method) == types.MethodType:
                     for key, val in self_.domains.items():
-                        self.send({'action': 'setDomain', 'nodeName': key,
-                            'domain': list(val)})
+                        self._send_set_domain_action(key, val)
                 return method
 
             return object.__getattribute__(self_, attr)
