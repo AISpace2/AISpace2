@@ -141,42 +141,37 @@ class CSPViewer(DOMWidget):
         """
         shouldWait = True
         if args[0] == 'Domain pruned':
-            nodeName = args[2]
+            variable = args[2]
             domain = args[4]
-            consName = args[6]
-            self.send({'action': 'setDomain', 'nodeId': self.domainMap[nodeName], 'domain': list(domain)})
+            constraint = args[6]
+            self._send_set_domain_action(variable, domain)
 
         if args[0] == "Processing arc (":
-            varName = args[1]
-            consName = args[3]
-            self.send({'action': 'highlightArc',
-                'arcId': self.linkMap[(varName, consName)], 'style': 'bold', 'colour': None})
+            variable = args[1]
+            constraint = args[3]
+            self._send_highlight_action(variable, constraint, style='bold', colour=None)
             
         if args[0] == 'Domain pruned':
-            varName = args[2]
-            consName = args[6]
-            self.send({'action': 'highlightArc',
-                'arcId': self.linkMap[(varName, consName)], 'style': 'bold', 'colour': 'green'})
+            variable = args[2]
+            constraint = args[6]
+            self._send_highlight_action(variable, constraint, style='bold', colour='green')
             
         if args[0] == "Arc: (" and args[4] == ") is inconsistent":
-            varName = args[1]
-            consName = args[3]
-            self.send({'action': 'highlightArc',
-                'arcId': self.linkMap[(varName, consName)], 'style': 'bold', 'colour': 'red'})
+            variable = args[1]
+            constraint = args[3]
+            self._send_highlight_action(variable, constraint, style='bold', colour='red')
             
         if args[0] == "Arc: (" and args[4] == ") now consistent":
-            varName = args[1]
-            consName = args[3]
-            self.send({'action': 'highlightArc',
-                'arcId': self.linkMap[(varName, consName)], 'style': 'normal', 'colour': 'green'})
+            variable = args[1]
+            constraint = args[3]
+            self._send_highlight_action(variable, constraint, style='normal', colour='green')
             shouldWait = False
         
         if args[0] == "  adding" and args[2] == "to to_do.":
             if args[1] != "nothing":
                 arcList = list(args[1])
                 for arc in arcList:
-                    self.send({'action': 'highlightArc', 'arcId': self.linkMap[(arc[0], arc[1])], 
-                    'style': 'normal', 'colour': 'blue'})
+                    self._send_highlight_action(arc[0], arc[1], style='normal', colour='blue')
         
         text = ' '.join(map(str, args))
         self.send({'action': 'output', 'result': text})
@@ -186,3 +181,10 @@ class CSPViewer(DOMWidget):
                 self._block_for_user_input.wait()
         else:
             sleep(self.sleep_time)
+
+    def _send_highlight_action(self, var, const, style='normal', colour=None):
+        self.send({'action': 'highlightArc', 'arcId': self.linkMap[(var, const)], 
+                    'style': style, 'colour': colour})
+
+    def _send_set_domain_action(self, var, domain):
+        self.send({'action': 'setDomain', 'nodeId': self.domainMap[var], 'domain': list(domain)})
