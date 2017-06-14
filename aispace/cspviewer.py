@@ -114,8 +114,8 @@ class CSPViewer(DOMWidget):
                     raise Exception("Method %s not implemented" % attr)
                 if type(method) == types.MethodType:
                     for key, val in self_.domains.items():
-                        self.send({'action': 'reduceDomain', 'nodeName': key,
-                            'newDomain': list(val)})
+                        self.send({'action': 'setDomain', 'nodeName': key,
+                            'domain': list(val)})
                 return method
 
             return object.__getattribute__(self_, attr)
@@ -141,10 +141,10 @@ class CSPViewer(DOMWidget):
         shouldWait = True
         if args[0] == 'Domain pruned':
             nodeName = args[2]
-            newDomain = args[4]
+            domain = args[4]
             consName = args[6]
-            self.send({'action': 'reduceDomain', 'nodeName': nodeName,
-                'newDomain': list(newDomain)})
+            self.send({'action': 'setDomain', 'nodeName': nodeName,
+                'domain': list(domain)})
 
         if args[0] == "Processing arc (":
             varName = args[1]
@@ -190,9 +190,9 @@ class CSPViewer(DOMWidget):
 
         # if args[0] == "...splitting":
         #     nodeName = args[1]
-        #     newDomain = args[3]
-        #     self.send({'action': 'reduceDomain', 'nodeName': nodeName,
-        #         'newDomain': list(newDomain)})
+        #     domain = args[3]
+        #     self.send({'action': 'setDomain', 'nodeName': nodeName,
+        #         'domain': list(domain)})
 
         
         text = ' '.join(map(str, args))
