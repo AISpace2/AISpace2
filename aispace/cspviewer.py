@@ -50,7 +50,8 @@ class CSPViewer(DOMWidget):
         self._thread.start()
         self._selected_arc = None
         self._user_selected_arc = False
-
+        self._domains = csp.domains.copy()
+        
         def step(btn):
             self._user_selected_arc = False
             self._desired_level = 2
@@ -64,7 +65,7 @@ class CSPViewer(DOMWidget):
             self._block_for_user_input.clear()
 
         def auto_arc(btn):
-            self._thread = threading.Thread(target=self._con_solver.make_arc_consistent, args=(csp, csp.domains.copy()))
+            self._thread = threading.Thread(target=self._con_solver.make_arc_consistent, args=(csp, self._domains))
             self._thread.start()
             self._user_selected_arc = False
             self._desired_level = 1
@@ -72,7 +73,7 @@ class CSPViewer(DOMWidget):
             self._block_for_user_input.clear()
 
         def auto_solve(btn):
-            self._thread = threading.Thread(target=self._con_solver.solve_one, args=(csp, csp.domains.copy()))
+            self._thread = threading.Thread(target=self._con_solver.solve_one, args=(csp, self._domains))
             self._thread.start()
             self._user_selected_arc = False
             self._desired_level = 1
