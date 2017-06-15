@@ -1,13 +1,13 @@
 {
   "name": "jupyterlab-aispace",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A JupyterLab plugin exposing aispace",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "aispace": "0.1.0",
+    "aispace": "0.1.1",
     "@jupyterlab/nbwidgets": "^0.18.0"
   },
   "jupyterlab": {
