@@ -51,7 +51,7 @@ class CSPViewer(DOMWidget):
         self._selected_arc = None
         self._user_selected_arc = False
         self._domains = csp.domains.copy()
-        
+
         def step(btn):
             self._user_selected_arc = False
             self._desired_level = 2
@@ -122,7 +122,7 @@ class CSPViewer(DOMWidget):
         def modified_solve_one(self, csp, domains, to_do=None):
             for key, val in domains.items():
                 self._send_set_domain_action(key, val)
-            solve_one(csp, domains, to_do)
+            return solve_one(csp, domains, to_do)
 
         self._con_solver.solve_one = partial(modified_solve_one, self)
 
