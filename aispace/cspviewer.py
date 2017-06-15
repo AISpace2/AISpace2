@@ -46,7 +46,7 @@ class CSPViewer(DOMWidget):
         self._override_con_solver(Con_solver)
 
         self._block_for_user_input = threading.Event()
-        self._thread = threading.Thread(target=self._con_solver.make_arc_consistent)
+        self._thread = threading.Thread(target=self._con_solver.make_arc_consistent, args=(csp, csp.domains.copy()))
         self._thread.start()
         self._selected_arc = None
         self._user_selected_arc = False
@@ -64,7 +64,7 @@ class CSPViewer(DOMWidget):
             self._block_for_user_input.clear()
 
         def auto_arc(btn):
-            self._thread = threading.Thread(target=self._con_solver.make_arc_consistent)
+            self._thread = threading.Thread(target=self._con_solver.make_arc_consistent, args=(csp, csp.domains.copy()))
             self._thread.start()
             self._user_selected_arc = False
             self._desired_level = 1
@@ -72,12 +72,19 @@ class CSPViewer(DOMWidget):
             self._block_for_user_input.clear()
 
         def auto_solve(btn):
-            self._thread = threading.Thread(target=self._con_solver.solve_one)
+            self._thread = threading.Thread(target=self._con_solver.solve_one, args=(csp, csp.domains.copy()))
             self._thread.start()
             self._user_selected_arc = False
             self._desired_level = 1
             self._block_for_user_input.set()
             self._block_for_user_input.clear()
+
+        def backtrack(btn):
+            self._desired_level = 1
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
+            if not self._thread.is_alive():
+                self.send({'action': 'output', 'result': 'There are no more solutions.'})
 
         fine_step_btn = widgets.Button(description='Fine Step')
         fine_step_btn.on_click(fine_step)
@@ -87,8 +94,10 @@ class CSPViewer(DOMWidget):
         auto_arc_btn.on_click(auto_arc)
         auto_solve_btn = widgets.Button(description='Auto Solve')
         auto_solve_btn.on_click(auto_solve)
+        backtrack_btn = widgets.Button(description='Backtrack')
+        backtrack_btn.on_click(backtrack)
         
-        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn]))
+        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn, backtrack_btn]))
 
     def _override_con_solver(self, Con_solver):
         """Magic that monkey-patches Con_solver to work."""
@@ -114,9 +123,11 @@ class CSPViewer(DOMWidget):
                 if not method:
                     raise Exception("Method %s not implemented" % attr)
                 if type(method) == types.MethodType:
-                    for key, val in self_.domains.items():
-                        self._send_set_domain_action(key, val)
-                return method
+                    def func(csp,domains, to_do=None):
+                        for key, val in domains.items():
+                            self._send_set_domain_action(key, val)
+                        method(csp, domains, to_do)
+                return func
 
             return object.__getattribute__(self_, attr)
         Con_solver.__getattribute__ = __getattribute__
@@ -178,6 +189,8 @@ class CSPViewer(DOMWidget):
         if level <= self._desired_level:
             if shouldWait:
                 self._block_for_user_input.wait()
+        elif args[0] == "solution:":
+            self._block_for_user_input.wait()
         else:
             sleep(self.sleep_time)
 
