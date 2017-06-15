@@ -114,23 +114,16 @@ class CSPViewer(DOMWidget):
                 # User did not select. Return random arc
                 return to_do.pop()
 
-        Con_solver.wait_for_arc_selection = partial(arc_select, self)
-        Con_solver.display = self.display
+        self._con_solver.wait_for_arc_selection = partial(arc_select, self)
+        self._con_solver.display = self.display
 
-        def __getattribute__(self_, attr):
-            if attr == 'solve_one':
-                method = object.__getattribute__(self_, attr)
-                if not method:
-                    raise Exception("Method %s not implemented" % attr)
-                if type(method) == types.MethodType:
-                    def func(csp,domains, to_do=None):
-                        for key, val in domains.items():
-                            self._send_set_domain_action(key, val)
-                        method(csp, domains, to_do)
-                return func
+        solve_one = self._con_solver.solve_one
+        def modified_solve_one(self, csp, domains, to_do=None):
+            for key, val in domains.items():
+                self._send_set_domain_action(key, val)
+            solve_one(csp, domains, to_do)
 
-            return object.__getattribute__(self_, attr)
-        Con_solver.__getattribute__ = __getattribute__
+        self._con_solver.solve_one = partial(modified_solve_one, self)
 
     def _handle_custom_msgs(self, _, content, buffers=None):
         if content.get('event', '') == 'arc:click':
