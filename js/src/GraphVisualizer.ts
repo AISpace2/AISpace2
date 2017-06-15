@@ -292,7 +292,7 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
         if (arcId != null) {
             const link = this.graph.links.find(link => link.id === arcId) as StyledGraphEdgeJSON;
             link.style = style;
-            link.colour = colour;
+            link.colour = colour != null ? colour : link.colour;
         } else {
             this.graph.links.forEach((link: StyledGraphEdgeJSON) => {
                 link.style = style;
