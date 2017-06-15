@@ -22,14 +22,14 @@ export default class GraphVisualizer {
     linkContainer: d3.Selection<any, any, any, any>;
     /** A group where all nodes are drawn. */
     nodeContainer: d3.Selection<any, SimulationNodeDatum & GraphNodeJSON, any, any>;
+    /** The normal width of the line to draw. */
     lineWidth: number = 2.0;
 
     render(graph: GraphJSON, targetEl: HTMLElement) {
         this.graph = graph;
-
-        // Ensures the target element is in the DOM (essentially document.ready) so we can get its width
         this.width = targetEl.clientWidth;
         this.height = this.width * 0.5;
+
         // Remove all children of target element to make this function idempotent
         d3.select(targetEl).selectAll('*').remove();
 
