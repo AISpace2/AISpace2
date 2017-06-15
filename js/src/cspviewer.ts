@@ -31,30 +31,32 @@ export class CSPViewerModel extends widgets.DOMWidgetModel {
 }
 
 export class CSPViewer extends widgets.DOMWidgetView {
+    private static readonly ARC_CLICK = 'arc:click';
+
     model: CSPViewerModel;
-    visualizer: CSPGraphInteractor;
-    eventBus: Backbone.Events;
+    visualization: CSPGraphInteractor;
+    visualizerEvents: Backbone.Events;
 
     initialize(opts: any) {
         super.initialize(opts);
 
-        this.eventBus = _.extend({}, Backbone.Events);
-        this.visualizer = new CSPGraphInteractor(this.eventBus);
-        this.eventBus.listenTo(this.eventBus, 'arc:click', (d: any) => {
-            this.send({ event: 'arc:click', constId: d.constId, varId: d.varId });
+        this.visualizerEvents = _.extend({}, Backbone.Events);
+        this.visualizerEvents.listenTo(this.visualizerEvents, CSPViewer.ARC_CLICK, (d: any) => {
+            this.send({ event: CSPViewer.ARC_CLICK, constId: d.constId, varId: d.varId });
         });
 
+        this.visualization = new CSPGraphInteractor(this.visualizerEvents);
         this.model.listenTo(this.model, 'msg:custom', (event: Event) => {
             console.log(event);
 
             if (isHighlightArcEvent(event)) {
-                this.visualizer.highlightArc(event.arcId, event.style, event.colour);
+                this.visualization.highlightArc(event.arcId, event.style, event.colour);
             } else if (isSetDomainEvent(event)) {
-                this.visualizer.setDomain(event.nodeId, event.domain);
+                this.visualization.setDomain(event.nodeId, event.domain);
             } else if (isOutputEvent(event)) {
                 this.$('#output').text(event.result);
             } else if (isRerenderEvent(event)) {
-                this._draw();
+                this.draw();
                 this.model.trigger('msg:custom', { action: 'highlightArc', arcId: null, style: 'normal', colour: 'blue' });
             }
         });
@@ -71,9 +73,9 @@ export class CSPViewer extends widgets.DOMWidgetView {
         return this;
     }
 
-    _draw() {
-        this.visualizer.lineWidth = this.model.lineWidth;
-        this.visualizer.render(this.model.graphJSON, this.$('#svg')[0]);
+    private draw() {
+        this.visualization.lineWidth = this.model.lineWidth;
+        this.visualization.render(this.model.graphJSON, this.$('#svg')[0]);
     }
 }
 
