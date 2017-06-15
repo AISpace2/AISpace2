@@ -230,12 +230,7 @@ export class CSPGraphVisualizer extends GraphVisualizer {
 
 
 export class CSPGraphInteractor extends CSPGraphVisualizer {
-    eventBus: Backbone.Events;
-
-    constructor(eventBus: Backbone.Events) {
-        super();
-        this.eventBus = eventBus;
-    }
+    onArcClicked?: (varId: string, constId: string) => void;
 
     renderNodes() {
         super.renderNodes();
@@ -273,10 +268,7 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
         });
 
         this.linkContainer.selectAll('line').on('click', (d: StyledGraphEdgeJSON) => {
-            this.eventBus.trigger('arc:click', {
-                constId: (d.target as any).idx,
-                varId: (d.source as any as GraphNodeJSON).name
-            });
+            this.onArcClicked((d.source as any as GraphNodeJSON).name, (d.target as any).idx);
         });
     }
 

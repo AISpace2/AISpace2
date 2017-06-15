@@ -35,17 +35,15 @@ export class CSPViewer extends widgets.DOMWidgetView {
 
     model: CSPViewerModel;
     visualization: CSPGraphInteractor;
-    visualizerEvents: Backbone.Events;
 
     initialize(opts: any) {
         super.initialize(opts);
 
-        this.visualizerEvents = _.extend({}, Backbone.Events);
-        this.visualizerEvents.listenTo(this.visualizerEvents, CSPViewer.ARC_CLICK, (d: any) => {
-            this.send({ event: CSPViewer.ARC_CLICK, constId: d.constId, varId: d.varId });
-        });
+        this.visualization = new CSPGraphInteractor();
+        this.visualization.onArcClicked = (varId, constId) => {
+            this.send({ event: CSPViewer.ARC_CLICK, constId, varId });
+        }
 
-        this.visualization = new CSPGraphInteractor(this.visualizerEvents);
         this.model.listenTo(this.model, 'msg:custom', (event: Event) => {
             console.log(event);
 
