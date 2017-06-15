@@ -11,7 +11,23 @@ from ipywidgets import CallbackDispatcher, DOMWidget, Output, register
 from traitlets import Dict, Float, Integer, Unicode, observe
 
 from aipython.utilities import Displayable, cspToJson
+class threadWR(threading.Thread):
+    """threadWR is a thread extended to allow a return value.
+    To get the return value, use this thread as normal, but assign it to a variable on creation.
+    calling var.join() will return the return value.
+    the return value can also be gotten directly via ._return, but this is not safe.
+    """
+    def __init__(self, *args, **kwargs):
+        super(threadWR, self).__init__(*args, **kwargs)
+        self._return = None
 
+    def run(self):
+        if self._target is not None:
+            self._return = self._target(*self._args, **self._kwargs)
+
+    def join(self, *args, **kwargs):
+        super(threadWR, self).join(*args, **kwargs)
+        return self._return
 
 @register('aispace.CSPViewer')
 class CSPViewer(DOMWidget):
@@ -46,7 +62,7 @@ class CSPViewer(DOMWidget):
         self._override_con_solver(Con_solver)
 
         self._block_for_user_input = threading.Event()
-        self._thread = threading.Thread(target=self._con_solver.make_arc_consistent, args=(csp, csp.domains.copy()))
+        self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(csp, csp.domains.copy()))
         self._thread.start()
         self._selected_arc = None
         self._user_selected_arc = False
@@ -65,7 +81,7 @@ class CSPViewer(DOMWidget):
             self._block_for_user_input.clear()
 
         def auto_arc(btn):
-            self._thread = threading.Thread(target=self._con_solver.make_arc_consistent, args=(csp, self._domains))
+            self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(csp, self._domains))
             self._thread.start()
             self._user_selected_arc = False
             self._desired_level = 1
@@ -73,7 +89,7 @@ class CSPViewer(DOMWidget):
             self._block_for_user_input.clear()
 
         def auto_solve(btn):
-            self._thread = threading.Thread(target=self._con_solver.solve_one, args=(csp, self._domains))
+            self._thread = threadWR(target=self._con_solver.solve_one, args=(csp, self._domains))
             self._thread.start()
             self._user_selected_arc = False
             self._desired_level = 1
@@ -85,7 +101,11 @@ class CSPViewer(DOMWidget):
             self._block_for_user_input.set()
             self._block_for_user_input.clear()
             if not self._thread.is_alive():
-                self.send({'action': 'output', 'result': 'There are no more solutions.'})
+                retValue = self._thread._return
+                if type(retValue) is not list:
+                    retValue = [retValue]
+                self.send({'action': 'output', 
+                    'result': f"There are no more solutions. Solution(s) found: {', '.join(str(x) for x in retValue)}"})
 
         fine_step_btn = widgets.Button(description='Fine Step')
         fine_step_btn.on_click(fine_step)
