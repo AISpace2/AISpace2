@@ -16,7 +16,34 @@ export class CSPViewerModel extends widgets.DOMWidgetModel {
             _view_module: 'aispace',
             _model_module_version: '0.1.0',
             _view_module_version: '0.1.0',
+            initial_render: true
         };
+    }
+
+    initialize(attrs: any, opts: any) {
+        super.initialize(attrs, opts);
+
+        // Forward message to views
+        this.listenTo(this, 'msg:custom', (event: Event) => {
+            // We don't register a listener for Python messages (which go to the model) in the view,
+            // because each new view would attach a new listener. Instead, we register it once here, and broadcast it to views.
+            this.trigger('view:msg', event);
+        });
+    }
+
+    /** True if this model has not been rendered in any cell yet.
+     * 
+     * This is used to work around timing issues: when the model is initialized,
+     * the views may not be created, so sending a re-render message (to trigger the initial state)
+     * doesn't work. Neither does sending a message from Python, for the same reason.
+     * Instead, check if a view has rendered this model yet. If not, render the initial state.
+     */
+    get initial_render(): boolean {
+        return this.get('initial_render');
+    }
+
+    set initial_render(val: boolean) {
+        this.set('initial_render', val);
     }
 
     /** The base line width of the graph to draw. Bold arcs will be several pixels thicker than this. */
@@ -44,7 +71,7 @@ export class CSPViewer extends widgets.DOMWidgetView {
             this.send({ event: CSPViewer.ARC_CLICK, constId, varId });
         }
 
-        this.model.listenTo(this.model, 'msg:custom', (event: Event) => {
+        this.listenTo(this.model, 'view:msg', (event: Event) => {
             console.log(event);
 
             if (isHighlightArcEvent(event)) {
@@ -63,10 +90,15 @@ export class CSPViewer extends widgets.DOMWidgetView {
     render() {
         this.$el.html('<div id="container"><div id="svg"></div><span id="output"></span></div>');
 
-        // Ensure the DOM element exists (with appropriate sizing) before rendering
-        d3.timeout(() => this.model.trigger('msg:custom', {
-            action: 'rerender'
-        }));
+        // Ensure the DOM element has been created and sized
+        d3.timeout(() => {
+            if (this.model.initial_render) {
+                this.model.initial_render = false;
+                this.model.trigger('msg:custom', { action: 'rerender' });
+            } else {
+                this.draw();
+            }
+        });
 
         return this;
     }
