@@ -68,38 +68,28 @@ class CSPViewer(DOMWidget):
         self._user_selected_arc = False
         self._domains = csp.domains.copy()
 
-        def step(btn):
-            self._user_selected_arc = False
-            self._desired_level = 2
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
+        def advance_visualization(desired_level):
+            def advance(btn):
+                self._user_selected_arc = False
+                self._desired_level = desired_level
+                self._block_for_user_input.set()
+                self._block_for_user_input.clear()
 
-        def fine_step(btn):
-            self._user_selected_arc = False
-            self._desired_level = 4
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
+            return advance
 
         def auto_arc(btn):
             self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(csp, self._domains))
             self._thread.start()
-            self._user_selected_arc = False
-            self._desired_level = 1
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
+            advance_visualization(1)(btn)
 
         def auto_solve(btn):
             self._thread = threadWR(target=self._con_solver.solve_one, args=(csp, self._domains))
             self._thread.start()
-            self._user_selected_arc = False
-            self._desired_level = 1
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
+            advance_visualization(1)(btn)
 
         def backtrack(btn):
-            self._desired_level = 1
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
+            advance_visualization(1)(btn)
+            
             if not self._thread.is_alive():
                 retValue = self._thread._return
                 if type(retValue) is not list:
@@ -108,9 +98,9 @@ class CSPViewer(DOMWidget):
                     'result': f"There are no more solutions. Solution(s) found: {', '.join(str(x) for x in retValue)}"})
 
         fine_step_btn = widgets.Button(description='Fine Step')
-        fine_step_btn.on_click(fine_step)
+        fine_step_btn.on_click(advance_visualization(4))
         step_btn = widgets.Button(description='Step')
-        step_btn.on_click(step)
+        step_btn.on_click(advance_visualization(2))
         auto_arc_btn = widgets.Button(description='Auto Arc Consistency')
         auto_arc_btn.on_click(auto_arc)
         auto_solve_btn = widgets.Button(description='Auto Solve')
