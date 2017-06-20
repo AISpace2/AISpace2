@@ -11,6 +11,10 @@ from ipywidgets import CallbackDispatcher, DOMWidget, Output, register
 from traitlets import Dict, Float, Integer, Unicode, observe
 
 from aipython.utilities import Displayable, cspToJson
+
+class KillSwitchException(Exception):
+    pass
+    
 class threadWR(threading.Thread):
     """threadWR is a thread extended to allow a return value.
     To get the return value, use this thread as normal, but assign it to a variable on creation.
@@ -47,8 +51,11 @@ class CSPViewer(DOMWidget):
 
         self.on_msg(self._handle_custom_msgs)
         (self.graphJSON, self.domainMap, self.linkMap) = cspToJson(csp)
+        self._original_graph = self.graphJSON.copy()
         self._desired_level = 4
         self.sleep_time = 0.2
+        self._kill = False
+        self._mode = "auto_arc"
 
         # If Con_solver is not defined at the time of creation, import the existing one
         try:
@@ -62,14 +69,16 @@ class CSPViewer(DOMWidget):
         self._override_con_solver(Con_solver)
 
         self._block_for_user_input = threading.Event()
-        self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(csp, csp.domains.copy()))
-        self._thread.start()
+        self._returned = threading.Event()
+
         self._selected_arc = None
         self._user_selected_arc = False
         self._domains = csp.domains.copy()
 
         def advance_visualization(desired_level):
             def advance(btn):
+                if self._mode == 'none':
+                    self._mode = 'auto_arc'
                 self._user_selected_arc = False
                 self._desired_level = desired_level
                 self._block_for_user_input.set()
@@ -78,24 +87,23 @@ class CSPViewer(DOMWidget):
             return advance
 
         def auto_arc(btn):
-            self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(csp, self._domains))
-            self._thread.start()
+            self._mode = "auto_arc"
+            self._returned.set()
+            self._returned.clear()
             advance_visualization(1)(btn)
 
         def auto_solve(btn):
-            self._thread = threadWR(target=self._con_solver.solve_one, args=(csp, self._domains))
-            self._thread.start()
+            self._mode = "auto_solve"
+            self._returned.set()
+            self._returned.clear()
             advance_visualization(1)(btn)
 
-        def backtrack(btn):
-            advance_visualization(1)(btn)
-            
-            if not self._thread.is_alive():
-                retValue = self._thread._return
-                if type(retValue) is not list:
-                    retValue = [retValue]
-                self.send({'action': 'output', 
-                    'result': f"There are no more solutions. Solution(s) found: {', '.join(str(x) for x in retValue)}"})
+        def kill_switch(a):
+            self._returned.set()
+            self._returned.clear()
+            self._mode = "none"
+            self._send_rerender_action()
+            self._kill = True
 
         fine_step_btn = widgets.Button(description='Fine Step')
         fine_step_btn.on_click(advance_visualization(4))
@@ -105,10 +113,27 @@ class CSPViewer(DOMWidget):
         auto_arc_btn.on_click(auto_arc)
         auto_solve_btn = widgets.Button(description='Auto Solve')
         auto_solve_btn.on_click(auto_solve)
-        backtrack_btn = widgets.Button(description='Backtrack')
-        backtrack_btn.on_click(backtrack)
-        
-        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn, backtrack_btn]))
+        kill_switch_btn = widgets.Button(description='Kill Switch')
+        kill_switch_btn.on_click(kill_switch)
+        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn, kill_switch_btn]))
+
+        def run_loop(*args):
+            while True:
+                try:
+                    if self._mode == "auto_solve":
+                        self._con_solver.solve_one(csp, self._domains)
+                        self._returned.wait()                 
+                    elif self._mode == "auto_arc":
+                        self._con_solver.make_arc_consistent(csp, self._domains)
+                        self._returned.wait()
+                except KillSwitchException:
+                    self._domains = csp.domains.copy()
+                    self._kill = False
+                    self._returned.set()
+                    self._returned.clear()
+                    pass
+        self._thread = threadWR(target=run_loop, args=(csp, csp.domains.copy()))
+        self._thread.start()
 
     def _override_con_solver(self, Con_solver):
         """Magic that monkey-patches Con_solver to work."""
@@ -153,6 +178,10 @@ class CSPViewer(DOMWidget):
         level is an integer.
         the other arguments are whatever arguments print can take.
         """
+        if self._kill:
+            self._kill = False
+            raise KillSwitchException()
+        
         shouldWait = True
         if args[0] == 'Domain pruned':
             variable = args[2]
@@ -204,3 +233,8 @@ class CSPViewer(DOMWidget):
 
     def _send_set_domain_action(self, var, domain):
         self.send({'action': 'setDomain', 'nodeId': self.domainMap[var], 'domain': list(domain)})
+
+    def _send_rerender_action(self):
+        self.graphJSON = self._original_graph
+        self._domains = self._con_solver.csp.domains.copy()
+        self.send({'action': 'rerender', 'graph': self.graphJSON})

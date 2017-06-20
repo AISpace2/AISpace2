@@ -16,7 +16,8 @@ export class CSPViewerModel extends widgets.DOMWidgetModel {
             _view_module: 'aispace',
             _model_module_version: '0.1.0',
             _view_module_version: '0.1.0',
-            initial_render: true
+            initial_render: true,
+            graphJSON: {}
         };
     }
 
@@ -55,6 +56,10 @@ export class CSPViewerModel extends widgets.DOMWidgetModel {
     get graphJSON(): GraphJSON {
         return this.get('graphJSON');
     }
+
+    set graphJSON(graph) {
+        this.set('graphJSON', graph);
+    }
 }
 
 export class CSPViewer extends widgets.DOMWidgetView {
@@ -81,6 +86,7 @@ export class CSPViewer extends widgets.DOMWidgetView {
             } else if (isOutputEvent(event)) {
                 this.$('#output').text(event.result);
             } else if (isRerenderEvent(event)) {
+                this.model.graphJSON = event.graph || this.model.graphJSON;
                 this.draw();
                 this.model.trigger('msg:custom', { action: 'highlightArc', arcId: null, style: 'normal', colour: 'blue' });
             }
@@ -130,6 +136,7 @@ interface OutputEvent extends Event {
 
 interface RerenderEvent extends Event {
     result: 'rerender';
+    graph?: GraphJSON;
 }
 
 function isHighlightArcEvent(event: Event): event is CSPHighlightArcEvent {
