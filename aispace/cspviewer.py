@@ -61,12 +61,12 @@ class CSPViewer(DOMWidget):
         self._con_solver = Con_solver(csp)
         self._override_con_solver(Con_solver)
 
+        self._domains = csp.domains.copy()
         self._block_for_user_input = threading.Event()
-        self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(csp, csp.domains.copy()))
+        self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(self._domains,))
         self._thread.start()
         self._selected_arc = None
         self._user_selected_arc = False
-        self._domains = csp.domains.copy()
 
         def advance_visualization(desired_level):
             def advance(btn):
@@ -78,12 +78,12 @@ class CSPViewer(DOMWidget):
             return advance
 
         def auto_arc(btn):
-            self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(csp, self._domains))
+            self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(self._domains,))
             self._thread.start()
             advance_visualization(1)(btn)
 
         def auto_solve(btn):
-            self._thread = threadWR(target=self._con_solver.solve_one, args=(csp, self._domains))
+            self._thread = threadWR(target=self._con_solver.solve_one, args=(self._domains,))
             self._thread.start()
             advance_visualization(1)(btn)
 
@@ -113,6 +113,7 @@ class CSPViewer(DOMWidget):
     def _override_con_solver(self, Con_solver):
         """Magic that monkey-patches Con_solver to work."""
         def arc_select(self, to_do):
+            # Running in Auto mode. Don't block!
             if self._desired_level == 1:
                 return to_do.pop()
 
@@ -122,17 +123,17 @@ class CSPViewer(DOMWidget):
                 to_do.discard(self._selected_arc)
                 return self._selected_arc
             else:
-                # User did not select. Return random arc
+                # User did not select. Return random arc.
                 return to_do.pop()
 
         self._con_solver.wait_for_arc_selection = partial(arc_select, self)
         self._con_solver.display = self.display
 
         solve_one = self._con_solver.solve_one
-        def modified_solve_one(self, csp, domains, to_do=None):
+        def modified_solve_one(self, domains, to_do=None):
             for key, val in domains.items():
                 self._send_set_domain_action(key, val)
-            return solve_one(csp, domains, to_do)
+            return solve_one(domains, to_do)
 
         self._con_solver.solve_one = partial(modified_solve_one, self)
 
