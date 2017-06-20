@@ -13,13 +13,13 @@ import {
 import * as Backbone from 'backbone';
 
 export default class GraphVisualizer {
+    protected graph: GraphJSON;
     width: number;
     height: number;
-    protected graph: GraphJSON;
     /** Represents the root SVG element where the graph is drawn. */
     svg: d3.Selection<any, any, any, any>;
     /** A group where all links are drawn. */
-    linkContainer: d3.Selection<any, any, any, any>;
+    linkContainer: d3.Selection<any, SimulationLinkDatum<SimulationNodeDatum> & StyledGraphEdgeJSON, any, any>;
     /** A group where all nodes are drawn. */
     nodeContainer: d3.Selection<any, SimulationNodeDatum & GraphNodeJSON, any, any>;
     /** The normal width of the line to draw. */
@@ -211,7 +211,7 @@ export class CSPGraphVisualizer extends GraphVisualizer {
             .attr('y', 10)
             .attr('class', 'domain');
 
-        updateSelection.merge(enterSelection)
+        updateSelection.merge(variableSelection)
             .selectAll('.domain')
             .text((d: CSPGraphNodeJSON) => `{${d.domain.join()}}`);
     }
@@ -230,6 +230,7 @@ export class CSPGraphVisualizer extends GraphVisualizer {
 
 
 export class CSPGraphInteractor extends CSPGraphVisualizer {
+    /** Callback whenever an arc is clicked. */
     onArcClicked?: (varId: string, constId: string) => void;
 
     renderNodes() {
