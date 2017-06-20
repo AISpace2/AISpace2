@@ -12,7 +12,7 @@ from traitlets import Dict, Float, Integer, Unicode, observe
 
 from aipython.utilities import Displayable, cspToJson
 
-class KillSwitchException(Exception):
+class ResetException(Exception):
     pass
     
 class threadWR(threading.Thread):
@@ -54,8 +54,9 @@ class CSPViewer(DOMWidget):
         self._original_graph = self.graphJSON.copy()
         self._desired_level = 4
         self.sleep_time = 0.2
-        self._kill = False
+        self._reset = False
         self._mode = "auto_arc"
+        self._pause = False
 
         # If Con_solver is not defined at the time of creation, import the existing one
         try:
@@ -98,12 +99,15 @@ class CSPViewer(DOMWidget):
             self._returned.clear()
             advance_visualization(1)(btn)
 
-        def kill_switch(a):
+        def stop(btn):
+            self._pause = True
+
+        def reset(a):
             self._returned.set()
             self._returned.clear()
             self._mode = "none"
             self._send_rerender_action()
-            self._kill = True
+            self._reset = True
 
         fine_step_btn = widgets.Button(description='Fine Step')
         fine_step_btn.on_click(advance_visualization(4))
@@ -113,9 +117,11 @@ class CSPViewer(DOMWidget):
         auto_arc_btn.on_click(auto_arc)
         auto_solve_btn = widgets.Button(description='Auto Solve')
         auto_solve_btn.on_click(auto_solve)
-        kill_switch_btn = widgets.Button(description='Kill Switch')
-        kill_switch_btn.on_click(kill_switch)
-        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn, kill_switch_btn]))
+        stop_btn = widgets.Button(description='Stop')
+        stop_btn.on_click(stop)
+        reset_btn = widgets.Button(description='Reset')
+        reset_btn.on_click(reset)
+        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn, stop_btn, reset_btn]))
 
         def run_loop(*args):
             while True:
@@ -126,9 +132,9 @@ class CSPViewer(DOMWidget):
                     elif self._mode == "auto_arc":
                         self._con_solver.make_arc_consistent(csp, self._domains)
                         self._returned.wait()
-                except KillSwitchException:
+                except ResetException:
                     self._domains = csp.domains.copy()
-                    self._kill = False
+                    self._reset = False
                     self._returned.set()
                     self._returned.clear()
                     pass
@@ -178,9 +184,13 @@ class CSPViewer(DOMWidget):
         level is an integer.
         the other arguments are whatever arguments print can take.
         """
-        if self._kill:
-            self._kill = False
-            raise KillSwitchException()
+        if self._reset:
+            self._reset = False
+            raise ResetException()
+
+        if self._pause:
+            self._pause = False
+            self._block_for_user_input.wait()
         
         shouldWait = True
         if args[0] == 'Domain pruned':
@@ -222,6 +232,7 @@ class CSPViewer(DOMWidget):
         if level <= self._desired_level:
             if shouldWait:
                 self._block_for_user_input.wait()
+                self._pause = False # We don't want to block twice
         elif args[0] == "solution:":
             self._block_for_user_input.wait()
         else:
