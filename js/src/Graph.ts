@@ -122,6 +122,7 @@ export interface GraphNodeJSON {
 }
 
 export interface CSPGraphNodeJSON extends GraphNodeJSON {
+    type: 'csp:variable' | 'csp:constraint';
     domain: string[];
 }
 

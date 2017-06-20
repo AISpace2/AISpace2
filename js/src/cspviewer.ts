@@ -114,22 +114,25 @@ interface Event {
 }
 
 interface CSPHighlightArcEvent extends Event {
+    action: 'highlightArc';
     arcId: string;
     style: 'normal' | 'bold';
     colour: string;
 }
 
 interface CSPSetDomainEvent extends Event {
+    action: 'setDomain';
     nodeId: string;
     domain: string[];
 }
 
 interface OutputEvent extends Event {
+    action: 'output';
     result: string;
 }
 
 interface RerenderEvent extends Event {
-    result: 'rerender';
+    action: 'rerender';
 }
 
 function isHighlightArcEvent(event: Event): event is CSPHighlightArcEvent {
