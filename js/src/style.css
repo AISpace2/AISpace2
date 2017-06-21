@@ -1,12 +1,15 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400);
+:root {
+    --font-face: 'Roboto', sans-serif;
+}
+
 svg text {
     cursor: default;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 
-#container {
+#cspviewer {
     border: 1px solid silver;
     border-radius: 2px;
+    font-family: var(--font-face);
 }

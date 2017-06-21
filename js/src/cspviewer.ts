@@ -6,6 +6,8 @@ import * as d3 from "d3";
 import { GraphJSON } from "./Graph";
 import { CSPGraphInteractor } from "./GraphVisualizer";
 
+const template = require('./cspviewer.template.html');
+
 export class CSPViewerModel extends widgets.DOMWidgetModel {
     defaults() {
         return {
@@ -88,7 +90,7 @@ export class CSPViewer extends widgets.DOMWidgetView {
     }
 
     render() {
-        this.$el.html('<div id="container"><div id="svg"></div><span id="output"></span></div>');
+        this.$el.html(template);
 
         // Ensure the DOM element has been created and sized
         d3.timeout(() => {

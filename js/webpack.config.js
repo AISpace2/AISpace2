@@ -40,13 +40,21 @@ module.exports = [{ // Notebook extension
         module: {
             loaders: loaders,
             rules: [{
-                test: /\.tsx?$/,
-                loader: "ts-loader",
-                exclude: path.resolve(__dirname, "node_modules")
-            }, {
-                test: /\.css$/,
-                loader: "style-loader!css-loader"
-            }]
+                    test: /\.tsx?$/,
+                    loader: "ts-loader",
+                    exclude: path.resolve(__dirname, "node_modules")
+                },
+                {
+                    test: /\.html$/,
+                    use: [{
+                        loader: 'html-loader'
+                    }],
+                },
+                {
+                    test: /\.css$/,
+                    loader: "style-loader!css-loader"
+                }
+            ]
         },
         resolve: {
             extensions: [".tsx", ".ts", ".js"]
