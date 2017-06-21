@@ -68,47 +68,7 @@ class CSPViewer(DOMWidget):
         self._selected_arc = None
         self._user_selected_arc = False
 
-        def advance_visualization(desired_level):
-            def advance(btn):
-                self._user_selected_arc = False
-                self._desired_level = desired_level
-                self._block_for_user_input.set()
-                self._block_for_user_input.clear()
-
-            return advance
-
-        def auto_arc(btn):
-            self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(self._domains,))
-            self._thread.start()
-            advance_visualization(1)(btn)
-
-        def auto_solve(btn):
-            self._thread = threadWR(target=self._con_solver.solve_one, args=(self._domains,))
-            self._thread.start()
-            advance_visualization(1)(btn)
-
-        def backtrack(btn):
-            advance_visualization(1)(btn)
-            
-            if not self._thread.is_alive():
-                retValue = self._thread._return
-                if type(retValue) is not list:
-                    retValue = [retValue]
-                self.send({'action': 'output', 
-                    'result': f"There are no more solutions. Solution(s) found: {', '.join(str(x) for x in retValue)}"})
-
-        fine_step_btn = widgets.Button(description='Fine Step')
-        fine_step_btn.on_click(advance_visualization(4))
-        step_btn = widgets.Button(description='Step')
-        step_btn.on_click(advance_visualization(2))
-        auto_arc_btn = widgets.Button(description='Auto Arc Consistency')
-        auto_arc_btn.on_click(auto_arc)
-        auto_solve_btn = widgets.Button(description='Auto Solve')
-        auto_solve_btn.on_click(auto_solve)
-        backtrack_btn = widgets.Button(description='Backtrack')
-        backtrack_btn.on_click(backtrack)
-        
-        display(widgets.HBox([fine_step_btn, step_btn, auto_arc_btn, auto_solve_btn, backtrack_btn]))
+        self._initialize_controls()
 
     def _override_con_solver(self, Con_solver):
         """Magic that monkey-patches Con_solver to work."""
@@ -137,8 +97,51 @@ class CSPViewer(DOMWidget):
 
         self._con_solver.solve_one = partial(modified_solve_one, self)
 
+
+    def _initialize_controls(self):
+        def advance_visualization(desired_level):
+            def advance():
+                self._user_selected_arc = False
+                self._desired_level = desired_level
+                self._block_for_user_input.set()
+                self._block_for_user_input.clear()
+
+            return advance
+
+        advance_visualization1 = advance_visualization(1)
+
+        def auto_arc():
+            self._thread = threadWR(target=self._con_solver.make_arc_consistent, args=(self._domains,))
+            self._thread.start()
+            advance_visualization1()
+
+        def auto_solve():
+            self._thread = threadWR(target=self._con_solver.solve_one, args=(self._domains,))
+            self._thread.start()
+            advance_visualization1()
+
+        def backtrack():
+            advance_visualization1()
+            
+            if not self._thread.is_alive():
+                retValue = self._thread._return
+                if type(retValue) is not list:
+                    retValue = [retValue]
+                self.send({'action': 'output', 
+                    'result': f"There are no more solutions. Solution(s) found: {', '.join(str(x) for x in retValue)}"})
+        
+        self._controls = {
+            'fine-step': advance_visualization(4),
+            'step': advance_visualization(2),
+            'auto-ac': auto_arc,
+            'auto-solve': auto_solve,
+            'backtrack': backtrack
+        }
+
     def _handle_custom_msgs(self, _, content, buffers=None):
-        if content.get('event', '') == 'arc:click':
+        event = content.get('event', '')
+
+        if event == 'arc:click':
             varChar = content.get('varId')
             const = self._con_solver.csp.constraints[content.get('constId')]
             self._desired_level = 2
@@ -147,6 +150,16 @@ class CSPViewer(DOMWidget):
             self._user_selected_arc = True
             self._block_for_user_input.set()
             self._block_for_user_input.clear()
+        elif event == 'fine-step:click':
+            self._controls['fine-step']()
+        elif event == 'step:click':
+            self._controls['step']()
+        elif event == 'auto-ac:click':
+            self._controls['auto-ac']()
+        elif event == 'auto-solve:click':
+            self._controls['auto-solve']()
+        elif event == 'backtrack:click':
+            self._controls['backtrack']()
     
     def display(self, level, *args, **kwargs):
         """print the arguments if level is less than or equal to the

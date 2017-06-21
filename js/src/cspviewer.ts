@@ -61,6 +61,11 @@ export class CSPViewerModel extends widgets.DOMWidgetModel {
 
 export class CSPViewer extends widgets.DOMWidgetView {
     private static readonly ARC_CLICK = 'arc:click';
+    private static readonly FINE_STEP_CLICK = 'fine-step:click';
+    private static readonly STEP_CLICK = 'step:click';
+    private static readonly AUTO_AC_CLICK = 'auto-ac:click';
+    private static readonly AUTO_SOLVE_CLICK = 'auto-solve:click';
+    private static readonly BACKTRACK_CLICK = 'backtrack:click';
 
     model: CSPViewerModel;
     visualization: CSPGraphInteractor;
@@ -87,6 +92,16 @@ export class CSPViewer extends widgets.DOMWidgetView {
                 this.model.trigger('msg:custom', { action: 'highlightArc', arcId: null, style: 'normal', colour: 'blue' });
             }
         });
+    }
+
+    events(): Backbone.EventsHash {
+        return {
+            'click #fine-step': e => this.send({ event: CSPViewer.FINE_STEP_CLICK }),
+            'click #step': e => this.send({ event: CSPViewer.STEP_CLICK }),
+            'click #auto-ac': e => this.send({ event: CSPViewer.AUTO_AC_CLICK }),
+            'click #auto-solve': e => this.send({ event: CSPViewer.AUTO_SOLVE_CLICK }),
+            'click #backtrack': e => this.send({ event: CSPViewer.BACKTRACK_CLICK }),
+        };
     }
 
     render() {
