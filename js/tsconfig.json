@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "noImplicitAny": true,
+    "strict": true,
     "module": "amd",
     "moduleResolution": "node",
     "target": "es6",
     "lib": ["es6", "dom"],
-    "allowJs": true
+    "allowJs": true,
+    "skipLibCheck": true
   },
   "include": [
     "src/*"

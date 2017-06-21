@@ -56,10 +56,10 @@ export default class GraphVisualizer {
             this.linkContainer
                 .selectAll('line')
                 .data(this.graph.links)
-                .attr('x1', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.source as SimulationNodeDatum).x)
-                .attr('y1', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.source as SimulationNodeDatum).y)
-                .attr('x2', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.target as SimulationNodeDatum).x)
-                .attr('y2', (d: SimulationLinkDatum<GraphNodeJSON>) => (d.target as SimulationNodeDatum).y);
+                .attr('x1', d => ((d.source as SimulationNodeDatum).x) as number)
+                .attr('y1', d => ((d.source as SimulationNodeDatum).y) as number)
+                .attr('x2', d => ((d.target as SimulationNodeDatum).x) as number)
+                .attr('y2', d => ((d.target as SimulationNodeDatum).y) as number);
 
             this.nodeContainer
                 .selectAll('g')
@@ -269,7 +269,9 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
         });
 
         this.linkContainer.selectAll('line').on('click', (d: StyledGraphEdgeJSON) => {
-            this.onArcClicked((d.source as any as GraphNodeJSON).name, (d.target as any).idx);
+            if (this.onArcClicked != null) {
+                this.onArcClicked((d.source as any as GraphNodeJSON).name, (d.target as any).idx);
+            }
         });
     }
 
@@ -281,15 +283,15 @@ export class CSPGraphInteractor extends CSPGraphVisualizer {
      * @param colour The colour of the arc. Any HTML colour string is valid, hex or named.
      *               If null, then the colour will be left unchange (i.e. same colour as before)
      */
-    highlightArc(arcId: string, style: 'normal' | 'bold', colour: string = null) {
+    highlightArc(arcId: string, style: 'normal' | 'bold', colour: string | null = null) {
         if (arcId != null) {
             const link = this.graph.links.find(link => link.id === arcId) as StyledGraphEdgeJSON;
             link.style = style;
-            link.colour = colour != null ? colour : link.colour;
+            link.colour = colour || link.colour;
         } else {
             this.graph.links.forEach((link: StyledGraphEdgeJSON) => {
                 link.style = style;
-                link.colour = colour;
+                link.colour = colour || link.colour;
             });
         }
 
