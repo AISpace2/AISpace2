@@ -41,7 +41,8 @@ module.exports = [{ // Notebook extension
             loaders: loaders,
             rules: [{
                 test: /\.tsx?$/,
-                loader: "ts-loader"
+                loader: "ts-loader",
+                exclude: path.resolve(__dirname, "node_modules")
             }, {
                 test: /\.css$/,
                 loader: "style-loader!css-loader"

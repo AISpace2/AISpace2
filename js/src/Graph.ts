@@ -189,7 +189,7 @@ export class JSONGraphImporter implements GraphImporter {
 type Constructor<T = {}> = new (...args: any[]) => T;
 
 interface StyledEdge {
-    colour: string;
+    colour: string | null;
     style: string;
 }
 

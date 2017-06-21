@@ -21,13 +21,13 @@
   },
   "devDependencies": {
     "@types/d3": "^4.9.0",
-    "@types/node": "^7.0.31",
+    "@types/node": "^7.0.32",
     "css-loader": "^0.28.4",
     "json-loader": "^0.5.4",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
     "ts-loader": "^2.1.0",
-    "typescript": "^2.3.0",
+    "typescript": "^2.3.4",
     "webpack": "^2.0.0"
   },
   "dependencies": {
