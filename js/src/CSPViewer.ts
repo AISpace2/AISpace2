@@ -7,15 +7,14 @@ import CSPGraphInteractor from "./CSPGraphInteractor";
 import { IGraphJSON } from "./Graph";
 
 import * as template from "./cspviewer.template.html";
-import { IEvent, isHighlightArcEvent, isOutputEvent, isRerenderEvent, isSetDomainEvent } from "./CSPViewerEvents";
+import { IEvent, isHighlightArcEvent, isOutputEvent, isRerenderEvent, isSetDomainEvent, isBeginFuncEvent } from "./CSPViewerEvents";
 import CSPViewerModel from "./CSPViewerModel";
 
 export default class CSPViewer extends widgets.DOMWidgetView {
     private static readonly ARC_CLICK = "arc:click";
     private static readonly FINE_STEP_CLICK = "fine-step:click";
     private static readonly STEP_CLICK = "step:click";
-    private static readonly AUTO_AC_CLICK = "auto-ac:click";
-    private static readonly AUTO_SOLVE_CLICK = "auto-solve:click";
+    private static readonly AUTO_STEP_CLICK = "auto-step:click";
     private static readonly BACKTRACK_CLICK = "backtrack:click";
 
     public model: CSPViewerModel;
@@ -23,6 +22,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
     public initialize(opts: any) {
         super.initialize(opts);
+
+        if (this.model.initial_render) {
+            this.send({ event: "initial_render" });
+        }
 
         this.visualization = new CSPGraphInteractor();
         this.visualization.onArcClicked = (varId, constId) => {
@@ -43,15 +46,15 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                 this.draw();
                 this.model.trigger("msg:custom",
                     { action: "highlightArc", arcId: null, style: "normal", colour: "blue" });
+            } else if (isBeginFuncEvent(event)) {
+                this.$("#controls").show();
             }
         });
     }
 
     public events(): Backbone.EventsHash {
         return {
-            "click #auto-ac": (e) => this.send({ event: CSPViewer.AUTO_AC_CLICK }),
-            "click #auto-solve": (e) => this.send({ event: CSPViewer.AUTO_SOLVE_CLICK }),
-            "click #backtrack": (e) => this.send({ event: CSPViewer.BACKTRACK_CLICK }),
+            "click #auto-step": (e) => this.send({ event: CSPViewer.AUTO_STEP_CLICK }),
             "click #fine-step": (e) => this.send({ event: CSPViewer.FINE_STEP_CLICK }),
             "click #step": (e) => this.send({ event: CSPViewer.STEP_CLICK }),
 
