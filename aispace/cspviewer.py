@@ -58,8 +58,7 @@ class CSPViewer(DOMWidget):
             module = importlib.import_module('aipython.cspConsistency')
             Con_solver = getattr(module, 'Con_solver')
 
-        self._con_solver = Con_solver(csp)
-        self._override_con_solver(Con_solver)
+        self._con_solver = Con_solver(csp, self)
 
         self._domains = csp.domains.copy()
         self._block_for_user_input = threading.Event()
@@ -70,33 +69,19 @@ class CSPViewer(DOMWidget):
 
         self._initialize_controls()
 
-    def _override_con_solver(self, Con_solver):
-        """Magic that monkey-patches Con_solver to work."""
-        def arc_select(self, to_do):
-            # Running in Auto mode. Don't block!
-            if self._desired_level == 1:
-                return to_do.pop()
+    def wait_for_arc_selection(self, to_do):
+        # Running in Auto mode. Don't block!
+        if self._desired_level == 1:
+            return to_do.pop()
 
-            self._block_for_user_input.wait()
-            
-            if self._user_selected_arc:
-                to_do.discard(self._selected_arc)
-                return self._selected_arc
-            else:
-                # User did not select. Return random arc.
-                return to_do.pop()
-
-        self._con_solver.wait_for_arc_selection = partial(arc_select, self)
-        self._con_solver.display = self.display
-
-        solve_one = self._con_solver.solve_one
-        def modified_solve_one(self, domains, to_do=None):
-            for key, val in domains.items():
-                self._send_set_domain_action(key, val)
-            return solve_one(domains, to_do)
-
-        self._con_solver.solve_one = partial(modified_solve_one, self)
-
+        self._block_for_user_input.wait()
+        
+        if self._user_selected_arc:
+            to_do.discard(self._selected_arc)
+            return self._selected_arc
+        else:
+            # User did not select. Return random arc.
+            return to_do.pop()
 
     def _initialize_controls(self):
         def advance_visualization(desired_level):

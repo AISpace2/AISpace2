@@ -8,19 +8,11 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from ipywidgets import Widget, CallbackDispatcher, register
-from traitlets import Unicode, observe
 from time import sleep
 import random
 import uuid
-import threading
 
-@register('aispace.Displayable')
-class Displayable(Widget):
-    """"""
-    _model_name = Unicode('DisplayModel').tag(sync=True)
-    _model_module = Unicode('aispace').tag(sync=True)
-    _model_module_version = Unicode('^0.1.0').tag(sync=True)
+class Displayable(object):
     max_display_level = 4
     sleep_time = 0.2
 
@@ -30,67 +22,13 @@ class Displayable(Widget):
         level is an integer.
         the other arguments are whatever arguments print can take.
         """
-        if level <= self.max_display_level:
-            text = ' '.join(map(str, args))
-            self.send({'action': 'output', 'result': text, 'process_id': threading.current_thread().ident })
-            pass #print(*args)  ##if error you are using Python2 not Python3
 
-        if args[0] == 'Domain pruned':
-            nodeName = args[2]
-            domain = args[4]
-            consName = args[6]
-            self.send({'action': 'setDomain', 'nodeName': nodeName, 'domain': domain, 'process_id': threading.current_thread().ident})
-                   # setDomain(nodeName, elementValue)
+        if getattr(self, 'visualizer', None) is not None:
+            self.visualizer.display(level, *args, **kwargs)
+        else:
+            if level <= self.max_display_level:
+                print(*args)
 
-        if args[0] == "Processing arc (":
-            varName = args[1]
-            consName = args[3]
-            self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'bold',
-                'colour': 'na', 'process_id': threading.current_thread().ident})
-            for i in range(len(self.csp.constraints)):
-                if self.csp.constraints[i] == consName:
-                    self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'bold',
-                'colour': 'na', 'process_id': threading.current_thread().ident})
-            # highlightArc(varName, consName.__repr__(), "bold","na")
-            
-        if args[0] == 'Domain pruned':
-            varName = args[2]
-            consName = args[6]
-            self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'bold',
-                'colour': 'green', 'process_id': threading.current_thread().ident})
-            # highlightArc(varName, consName.__repr__(), "bold","green")
-            
-        if args[0] == "Arc: (" and args[4] == ") is inconsistent":
-            varName = args[1]
-            consName = args[3]
-            self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': 'bold',
-                'colour': 'red', 'process_id': threading.current_thread().ident})
-            # highlightArc(varName, consName.__repr__(), "bold","red")
-            
-        if args[0] == "Arc: (" and args[4] == ") now consistent":
-            varName = args[1]
-            consName = args[3]
-            self.send({'action': 'highlightArc', 'varName': varName,
-                'consName': consName.__repr__(), 'style': '!bold',
-                'colour': 'green', 'process_id': threading.current_thread().ident})
-            # highlightArc(varName, consName.__repr__(), "!bold","green")
-        
-        if args[0] == "  adding" and args[2] == "to to_do.":
-            if args[1] != "nothing":
-                arcList = list(args[1])
-                for i in range(len(arcList)):
-                    self.send({'action': 'highlightArc', 'varName': arcList[i][0],
-                'consName': arcList[i][1].__repr__(), 'style': '!bold',
-                'colour': 'blue', 'process_id': threading.current_thread().ident})
-        sleep(self.sleep_time)
-
-    def wait_for_arc_selection(self, arcs):
-        pass
-        
 def argmax(gen):
     """gen is a generator of (element,value) pairs, where value is a real.
     argmax returns an element with maximal value.
