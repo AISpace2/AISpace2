@@ -28,6 +28,8 @@
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
     "ts-loader": "^2.1.0",
+    "tslint": "^5.4.3",
+    "tslint-loader": "^3.5.3",
     "typescript": "^2.3.4",
     "webpack": "^2.0.0"
   },

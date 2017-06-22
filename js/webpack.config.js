@@ -1,13 +1,26 @@
 var version = require('./package.json').version;
 const path = require('path');
 
-// Custom webpack loaders are generally the same for all webpack bundles, hence
-// stored in a separate local variable.
-var loaders = [{
+rules = [{
+    test: /\.ts$/,
+    enforce: 'pre',
+    loader: 'tslint-loader'
+}, {
+    test: /\.ts?$/,
+    loader: "ts-loader",
+    exclude: path.resolve(__dirname, "node_modules")
+}, {
+    test: /\.html$/,
+    use: [{
+        loader: 'html-loader'
+    }],
+}, {
+    test: /\.css$/,
+    loader: "style-loader!css-loader"
+}, {
     test: /\.json$/,
     loader: 'json-loader'
-}, ];
-
+}];
 
 module.exports = [{ // Notebook extension
         //
@@ -38,23 +51,7 @@ module.exports = [{ // Notebook extension
         },
         devtool: 'source-map',
         module: {
-            loaders: loaders,
-            rules: [{
-                    test: /\.tsx?$/,
-                    loader: "ts-loader",
-                    exclude: path.resolve(__dirname, "node_modules")
-                },
-                {
-                    test: /\.html$/,
-                    use: [{
-                        loader: 'html-loader'
-                    }],
-                },
-                {
-                    test: /\.css$/,
-                    loader: "style-loader!css-loader"
-                }
-            ]
+            rules: rules
         },
         resolve: {
             extensions: [".tsx", ".ts", ".js"]
@@ -84,7 +81,7 @@ module.exports = [{ // Notebook extension
         },
         devtool: 'source-map',
         module: {
-            loaders: loaders
+            rules: rules
         },
         externals: ['jupyter-js-widgets']
     }
