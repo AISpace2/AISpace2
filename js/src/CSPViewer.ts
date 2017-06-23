@@ -7,7 +7,14 @@ import CSPGraphInteractor from "./CSPGraphInteractor";
 import { IGraphJSON } from "./Graph";
 
 import * as template from "./cspviewer.template.html";
-import { IEvent, isHighlightArcEvent, isOutputEvent, isRerenderEvent, isSetDomainEvent, isBeginFuncEvent } from "./CSPViewerEvents";
+import {
+    IEvent,
+    isBeginFuncEvent,
+    isHighlightArcEvent,
+    isOutputEvent,
+    isRerenderEvent,
+    isSetDomainEvent,
+} from "./CSPViewerEvents";
 import CSPViewerModel from "./CSPViewerModel";
 
 export default class CSPViewer extends widgets.DOMWidgetView {
