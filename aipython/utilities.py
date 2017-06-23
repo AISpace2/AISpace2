@@ -86,18 +86,6 @@ def cspToJson(cspObject):
             linkMap[(cons.scope[1], cons)] = link2Id
     
     return (cspJSON, domainMap, linkMap)
-
-
-def delay_until_render(func_to_delay):
-    def wrapper(self, *args, **vargs):
-        if self.displayed_once is False:
-            tasks = getattr(self, '__tasks', [])
-            self.__tasks = tasks
-            self.__tasks.append({'func': partial(func_to_delay, self), 'args': args, 'kwargs': vargs})
-        else:
-            return func_to_delay(self, *args, **vargs)
-    
-    return wrapper
     
 if __name__ == "__main__":
     test()

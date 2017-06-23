@@ -284,7 +284,7 @@ def cspToJson(cspObject):
     return (cspJSON, domainMap, linkMap)
 
 
-def delay_until_render(func_to_delay):
+def visualize(func_to_delay):
     def wrapper(self, *args, **vargs):
         if self.displayed_once is False:
             tasks = getattr(self, '__tasks', [])
