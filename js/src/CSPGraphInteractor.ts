@@ -11,6 +11,8 @@ import {
 export default class CSPGraphInteractor extends CSPGraphVisualizer {
     /** Callback whenever an arc is clicked. */
     public onArcClicked?: (varId: string, constId: string) => void;
+    /** Callback whenever a variable node is clicked. */
+    public onVarClicked?: (varId: string) => void;
 
     public renderNodes() {
         super.renderNodes();
@@ -29,10 +31,13 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
             groupSelection.selectAll("text").attr("fill", "black");
         });
 
-        this.nodeContainer.selectAll("g").on("dblclick", function() {
-            const groupSelection = d3.select(this);
-
-        });
+        this.nodeContainer.selectAll("g")
+            .filter((d: ICSPGraphNodeJSON) => d.type === "csp:variable")
+            .on("click", (d: ICSPGraphNodeJSON) => {
+                if (this.onVarClicked != null) {
+                    this.onVarClicked(d.name);
+                }
+            });
     }
 
     public renderLinks() {

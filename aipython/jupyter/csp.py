@@ -79,6 +79,8 @@ class Displayable(DOMWidget):
         self._selected_arc = None
         self._user_selected_arc = False
 
+        self._selected_var = None
+
         self._initialize_controls()
 
     def wait_for_arc_selection(self, to_do):
@@ -94,6 +96,13 @@ class Displayable(DOMWidget):
         else:
             # User did not select. Return random arc.
             return to_do.pop()
+
+    def wait_for_var_selection(self, iter_var):
+        self._block_for_user_input.wait()
+        if self._selected_var in list(iter_var):
+            return self._selected_var
+        else:
+            self._block_for_user_input.wait()
 
     def _initialize_controls(self):
         def advance_visualization(desired_level):
@@ -133,6 +142,11 @@ class Displayable(DOMWidget):
 
             self._selected_arc = (varChar, const)
             self._user_selected_arc = True
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
+        elif event == 'var:click':
+            varChar = content.get('varId')
+            self._selected_var = varChar
             self._block_for_user_input.set()
             self._block_for_user_input.clear()
         elif event == 'fine-step:click':

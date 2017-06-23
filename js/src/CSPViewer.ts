@@ -19,6 +19,8 @@ import CSPViewerModel from "./CSPViewerModel";
 
 export default class CSPViewer extends widgets.DOMWidgetView {
     private static readonly ARC_CLICK = "arc:click";
+    private static readonly VAR_CLICK = "var:click";
+
     private static readonly FINE_STEP_CLICK = "fine-step:click";
     private static readonly STEP_CLICK = "step:click";
     private static readonly AUTO_STEP_CLICK = "auto-step:click";
@@ -37,6 +39,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.visualization = new CSPGraphInteractor();
         this.visualization.onArcClicked = (varId, constId) => {
             this.send({ event: CSPViewer.ARC_CLICK, constId, varId });
+        };
+        this.visualization.onVarClicked = (varId) => {
+            this.send({ event: CSPViewer.VAR_CLICK, varId });
         };
 
         this.listenTo(this.model, "view:msg", (event: IEvent) => {
