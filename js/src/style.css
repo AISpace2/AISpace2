@@ -13,3 +13,12 @@ svg text {
     border-radius: 2px;
     font-family: var(--font-face);
 }
+
+#cspviewer > #footer {
+    margin: 10px;
+}
+
+#cspviewer #output {
+    margin-top: 5px;
+    font-size: 14px;
+}

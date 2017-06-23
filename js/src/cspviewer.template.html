@@ -1,12 +1,19 @@
 <div id="cspviewer">
     <div id="svg">
     </div>
-    <div id="controls">
-        <button id="fine-step">Fine Step</button>
-        <button id="step">Step</button>
-        <button id="auto-ac">Auto Arc Consistency</button>
-        <button id="auto-solve">Auto Solve</button>
-        <button id="backtrack">Backtrack</button>
+
+    <div id="footer">
+        <div id="controls">
+            <div class="btn-group" role="group">
+                <button id="fine-step" class="btn btn-default">Fine Step</button>
+                <button id="step" class="btn btn-default">Step</button>
+            </div>
+            <div class="btn-group" role="group">
+                <button id="auto-ac" class="btn btn-default">Auto Arc Consistency</button>
+                <button id="auto-solve" class="btn btn-default">Auto Solve</button>
+            </div>
+            <button id="backtrack" class="btn btn-default">Backtrack</button>
+        </div>
+        <div id="output"></div>
     </div>
-    <span id="output"></span>
 </div>
