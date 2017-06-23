@@ -13,7 +13,7 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
     public renderNodes() {
         const updateSelection = this.nodeContainer
             .selectAll("g")
-            .data(this.graph.nodes);
+            .data(this.graph.nodes, (node: ICSPGraphNodeJSON) => node.id);
 
         const enterSelection = updateSelection
             .enter().append("g")
@@ -56,19 +56,26 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
             .attr("y", 10)
             .attr("class", "domain");
 
-        updateSelection.merge(variableSelection)
-            .selectAll(".domain")
-            .text((d: ICSPGraphNodeJSON) => `{${d.domain.join()}}`);
+        const mergedSelection = updateSelection.merge(variableSelection);
+        mergedSelection.selectAll(".domain").text((d: ICSPGraphNodeJSON) => `{${d.domain.join()}}`);
+        mergedSelection.selectAll("ellipse").attr("fill", "white");
+        mergedSelection.selectAll("rect").attr("fill", "white");
+
+        updateSelection.exit().remove();
     }
 
     public renderLinks() {
+        super.renderLinks();
+
         const updateSelection = this.linkContainer
             .selectAll("line")
-            .data(this.graph.links);
+            .data(this.graph.links, (d: IStyledGraphEdgeJSON) => d.id);
 
         updateSelection.enter().append("line")
             .merge(updateSelection)
             .attr("stroke-width", (d: IStyledGraphEdgeJSON) => d.style === "bold" ? this.lineWidth + 5 : this.lineWidth)
             .attr("stroke", (d: IStyledGraphEdgeJSON) => (d.colour != null) ? d.colour : "black");
+
+        updateSelection.exit().remove();
     }
 }

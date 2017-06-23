@@ -12,8 +12,8 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
     /** Callback whenever an arc is clicked. */
     public onArcClicked?: (varId: string, constId: string) => void;
 
-    public renderNodes() {
-        super.renderNodes();
+    public nodeEvents() {
+        super.nodeEvents();
 
         this.nodeContainer.selectAll("g").on("mouseover", function() {
             const groupSelection = d3.select(this);
@@ -35,8 +35,8 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
         });
     }
 
-    public renderLinks() {
-        super.renderLinks();
+    public linkEvents() {
+        super.linkEvents();
 
         const that = this;
         this.linkContainer.selectAll("line").on("mouseover", function() {

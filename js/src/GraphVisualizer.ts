@@ -12,14 +12,14 @@ import {
 
 export default class GraphVisualizer {
     public lineWidth: number = 2.0;
-
+    /** The root element the graph is drawn in. */
+    protected rootEl: HTMLElement;
     protected graph: IGraphJSON;
     /** A group where all links are drawn. */
     protected linkContainer: d3.Selection<any, SimulationLinkDatum<SimulationNodeDatum> & IGraphEdgeJSON, any, any>;
     /** A group where all nodes are drawn. */
     protected nodeContainer: d3.Selection<any, SimulationNodeDatum & IGraphNodeJSON, any, any>;
     /** The normal width of the line to draw. */
-
     private width: number;
     private height: number;
     /** Represents the root SVG element where the graph is drawn. */
@@ -27,6 +27,7 @@ export default class GraphVisualizer {
 
     public render(graph: IGraphJSON, targetEl: HTMLElement) {
         this.graph = graph;
+        this.rootEl = targetEl;
         this.width = targetEl.clientWidth;
         this.height = this.width * 0.5;
 
@@ -55,7 +56,7 @@ export default class GraphVisualizer {
         const onTick = () => {
             this.linkContainer
                 .selectAll("line")
-                .data(this.graph.links)
+                .data(this.graph.links, (d: IGraphEdgeJSON) => d.id)
                 .attr("x1", (d) => ((d.source as SimulationNodeDatum).x) as number)
                 .attr("y1", (d) => ((d.source as SimulationNodeDatum).y) as number)
                 .attr("x2", (d) => ((d.target as SimulationNodeDatum).x) as number)
@@ -63,7 +64,7 @@ export default class GraphVisualizer {
 
             this.nodeContainer
                 .selectAll("g")
-                .data(this.graph.nodes)
+                .data(this.graph.nodes, (d: IGraphNodeJSON) => d.id)
                 .each((d) => {
                     d.x = Math.max(30, Math.min(this.width - 30, d.x));
                     d.y = Math.max(30, Math.min(this.height - 30, d.y));
@@ -90,6 +91,9 @@ export default class GraphVisualizer {
             .attr("class", "nodes");
 
         this.update();
+        this.graphEvents();
+        this.nodeEvents();
+        this.linkEvents();
 
         // Run simulation synchronously instead of asynchronously to prevent visual jitter
         for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
@@ -100,7 +104,7 @@ export default class GraphVisualizer {
         // Fix all nodes, to prevent them from being moved by further simulations
         this.nodeContainer
             .selectAll("g")
-            .data(this.graph.nodes)
+            .data(this.graph.nodes, (d: IGraphNodeJSON) => d.id)
             .each((d: SimulationNodeDatum) => {
                 d.fx = d.x;
                 d.fy = d.y;
@@ -109,7 +113,7 @@ export default class GraphVisualizer {
         // Enable dragging of nodes
         this.nodeContainer
             .selectAll("g")
-            .data(this.graph.nodes)
+            .data(this.graph.nodes, (d: IGraphNodeJSON) => d.id)
             .call(d3.drag()
                 .on("start", () => {
                     // The 'simulation' must be started even though all the node positions are fixed,
@@ -125,10 +129,34 @@ export default class GraphVisualizer {
                 }) as any);
     }
 
+    /**
+     * One-time setup for events relating to the overall graph.
+     *
+     * @see nodeEvents
+     * @see linkEvents
+     */
+    public graphEvents() {
+        return;
+    }
+
+    /**
+     * One-time setup for events relating to nodes.
+     */
+    public nodeEvents() {
+        return;
+    }
+
+    /**
+     * One-time setup for events relating to links.
+     */
+    public linkEvents() {
+        return;
+    }
+
     public renderNodes() {
         const updateSelection = this.nodeContainer
             .selectAll("g")
-            .data(this.graph.nodes);
+            .data(this.graph.nodes, (d: IGraphNodeJSON) => d.id);
 
         updateSelection.enter().append("circle")
             .attr("r", 30)
@@ -145,7 +173,7 @@ export default class GraphVisualizer {
     public renderLinks() {
         const updateSelection = this.linkContainer
             .selectAll("line")
-            .data(this.graph.links);
+            .data(this.graph.links, (d: IGraphEdgeJSON) => d.id);
 
         updateSelection.enter().append("line")
             .merge(updateSelection)

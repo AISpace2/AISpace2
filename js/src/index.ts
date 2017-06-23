@@ -11,11 +11,15 @@ __webpack_public_path__ = document.querySelector("body")!.getAttribute("data-bas
 import "./style.css";
 
 import * as packageJSON from "../package.json";
+import CSPBuilder from "./CSPBuilder";
+import CSPBuilderModel from "./CSPBuilderModel";
 import CSPViewer from "./CSPViewer";
 import CSPViewerModel from "./CSPViewerModel";
 
 // Export widget models and views, and the npm package version number.
 module.exports = {
+    CSPBuilder,
+    CSPBuilderModel,
     CSPViewer,
     CSPViewerModel,
     version: (packageJSON as any).version,
