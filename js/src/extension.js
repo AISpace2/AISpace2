@@ -6,7 +6,7 @@
 if (window.require) {
     window.require.config({
         map: {
-            "*" : {
+            "*": {
                 "aispace": "nbextensions/aispace/index",
                 "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension"
             }
@@ -16,5 +16,5 @@ if (window.require) {
 
 // Export the required load_ipython_extention
 module.exports = {
-    load_ipython_extension: function() {}
+    load_ipython_extension: function() { }
 };

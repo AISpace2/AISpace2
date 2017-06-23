@@ -7,7 +7,8 @@
     "target": "es6",
     "lib": ["es6", "dom"],
     "allowJs": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "newLine": "LF"
   },
   "include": [
     "src/*"
