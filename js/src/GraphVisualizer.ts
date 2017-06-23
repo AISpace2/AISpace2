@@ -25,6 +25,9 @@ export default class GraphVisualizer {
     /** Represents the root SVG element where the graph is drawn. */
     private svg: d3.Selection<any, any, any, any>;
 
+    protected drag: d3.DragBehavior<any, any, any>;
+    protected forceSim: any;
+
     public render(graph: IGraphJSON, targetEl: HTMLElement) {
         this.graph = graph;
         this.rootEl = targetEl;
@@ -50,7 +53,8 @@ export default class GraphVisualizer {
                 .on("zoom", () => {
                     this.linkContainer.attr("transform", d3.event.transform);
                     this.nodeContainer.attr("transform", d3.event.transform);
-                }));
+                }))
+            .on("dblclick.zoom", null);
 
         // Called whenever node/link positions are updated (either by the force simulation or by dragging)
         const onTick = () => {
@@ -84,11 +88,28 @@ export default class GraphVisualizer {
             .on("tick", onTick)
             .stop();
 
+        this.forceSim = forceSimulation;
+
         this.linkContainer = this.svg.append("g")
             .attr("class", "links");
 
         this.nodeContainer = this.svg.append("g")
             .attr("class", "nodes");
+
+
+        this.drag = d3.drag()
+            .on("start", () => {
+                // The 'simulation' must be started even though all the node positions are fixed,
+                // or the node positions will not be updated
+                forceSimulation.alphaTarget(0.3).restart();
+            })
+            .on("drag", (d: SimulationNodeDatum) => {
+                d.fx = Math.max(30, Math.min(this.width - 30, d3.event.x));
+                d.fy = Math.max(30, Math.min(this.height - 30, d3.event.y));
+            })
+            .on("end", () => {
+                forceSimulation.stop();
+            });
 
         this.update();
         this.graphEvents();
@@ -114,19 +135,7 @@ export default class GraphVisualizer {
         this.nodeContainer
             .selectAll("g")
             .data(this.graph.nodes, (d: IGraphNodeJSON) => d.id)
-            .call(d3.drag()
-                .on("start", () => {
-                    // The 'simulation' must be started even though all the node positions are fixed,
-                    // or the node positions will not be updated
-                    forceSimulation.alphaTarget(0.3).restart();
-                })
-                .on("drag", (d: SimulationNodeDatum) => {
-                    d.fx = Math.max(30, Math.min(this.width - 30, d3.event.x));
-                    d.fy = Math.max(30, Math.min(this.height - 30, d3.event.y));
-                })
-                .on("end", () => {
-                    forceSimulation.stop();
-                }) as any);
+            .call(this.drag);
     }
 
     /**

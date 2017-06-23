@@ -1,9 +1,10 @@
+import * as shortid from "shortid";
 import * as d3 from "d3";
 import CSPGraphVisualizer from "./CSPGraphVisualizer";
 import { IGraphEdgeJSON, IGraphNodeJSON } from "./Graph";
 
 export default class GraphBuilder extends CSPGraphVisualizer {
-    private selectedElement: IGraphNodeJSON | IGraphEdge | null;
+    private selectedElement: IGraphNodeJSON | IGraphEdgeJSON | null;
 
     constructor() {
         super();
@@ -13,6 +14,8 @@ export default class GraphBuilder extends CSPGraphVisualizer {
     public graphEvents() {
         d3.select(this.rootEl).on("keydown", () => {
             if (d3.event.keyCode === 46) {
+                d3.event.preventDefault();
+
                 if (this.selectedElement != null) {
                     this.graph.nodes = this.graph.nodes.filter((node) => node !== this.selectedElement);
                     this.graph.links = this.graph.links.filter((link) => {
@@ -26,6 +29,10 @@ export default class GraphBuilder extends CSPGraphVisualizer {
                 }
             }
         });
+
+        d3.select(this.rootEl).on("dblclick", () => {
+            this.createNode(...d3.mouse(this.rootEl));
+        });
     }
 
     public nodeEvents() {
@@ -33,6 +40,8 @@ export default class GraphBuilder extends CSPGraphVisualizer {
 
         this.nodeContainer.selectAll("g")
             .on("click", (d: IGraphNodeJSON) => {
+                d3.event.stopPropagation();
+
                 if (d !== this.selectedElement) {
                     this.selectedElement = d;
                 } else {
@@ -47,7 +56,9 @@ export default class GraphBuilder extends CSPGraphVisualizer {
         super.linkEvents();
 
         this.linkContainer.selectAll("line")
-            .on("click", (d: IGraphEdgeJSON) {
+            .on("click", (d: IGraphEdgeJSON) => {
+                d3.event.stopPropagation();
+
                 if (d !== this.selectedElement) {
                     this.selectedElement = d;
                 } else {
@@ -68,5 +79,24 @@ export default class GraphBuilder extends CSPGraphVisualizer {
         this.linkContainer.selectAll("line")
             .filter((d: IGraphEdgeJSON) => d === this.selectedElement)
             .attr("stroke", "pink");
+    }
+
+    private createNode(x, y) {
+        this.graph.nodes.push({
+            id: shortid.generate(),
+            x,
+            y,
+            fx: x,
+            fy: y,
+            vx: 0,
+            vy: 0,
+            type: "csp:variable",
+            domain: [1],
+            name: "???",
+        });
+
+        this.forceSim.alphaTarget(0.3).restart();
+        this.update();
+        console.log(this.graph);
     }
 }

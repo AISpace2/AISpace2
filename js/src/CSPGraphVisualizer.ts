@@ -17,7 +17,8 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
 
         const enterSelection = updateSelection
             .enter().append("g")
-            .attr("id", (d) => d.id);
+            .attr("id", (d) => d.id)
+            .call(this.drag);
 
         const variableSelection = enterSelection.filter((d) => d.type === "csp:variable");
         const constraintSelection = enterSelection.filter((d) => d.type === "csp:constraint");
@@ -56,7 +57,7 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
             .attr("y", 10)
             .attr("class", "domain");
 
-        const mergedSelection = updateSelection.merge(variableSelection);
+        const mergedSelection = updateSelection.merge(enterSelection);
         mergedSelection.selectAll(".domain").text((d: ICSPGraphNodeJSON) => `{${d.domain.join()}}`);
         mergedSelection.selectAll("ellipse").attr("fill", "white");
         mergedSelection.selectAll("rect").attr("fill", "white");
