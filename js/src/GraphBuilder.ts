@@ -1,5 +1,5 @@
-import * as shortid from "shortid";
 import * as d3 from "d3";
+import * as shortid from "shortid";
 import CSPGraphVisualizer from "./CSPGraphVisualizer";
 import { IGraphEdgeJSON, IGraphNodeJSON } from "./Graph";
 
@@ -31,7 +31,8 @@ export default class GraphBuilder extends CSPGraphVisualizer {
         });
 
         d3.select(this.rootEl).on("dblclick", () => {
-            this.createNode(...d3.mouse(this.rootEl));
+            const [x, y] = d3.mouse(this.rootEl);
+            this.createNode(x, y);
         });
     }
 
@@ -81,22 +82,18 @@ export default class GraphBuilder extends CSPGraphVisualizer {
             .attr("stroke", "pink");
     }
 
-    private createNode(x, y) {
+    private createNode(x: number, y: number) {
         this.graph.nodes.push({
+            domain: ["1"],
+            fx: x, fy: y,
             id: shortid.generate(),
-            x,
-            y,
-            fx: x,
-            fy: y,
-            vx: 0,
-            vy: 0,
-            type: "csp:variable",
-            domain: [1],
             name: "???",
+            type: "csp:variable",
+            vx: 0, vy: 0,
+            x, y,
         });
 
         this.forceSim.alphaTarget(0.3).restart();
         this.update();
-        console.log(this.graph);
     }
 }

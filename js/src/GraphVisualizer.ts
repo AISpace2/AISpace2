@@ -12,6 +12,7 @@ import {
 
 export default class GraphVisualizer {
     public lineWidth: number = 2.0;
+    public onUpdate?: (graph: IGraphJSON) => void;
     /** The root element the graph is drawn in. */
     protected rootEl: HTMLElement;
     protected graph: IGraphJSON;
@@ -19,14 +20,13 @@ export default class GraphVisualizer {
     protected linkContainer: d3.Selection<any, SimulationLinkDatum<SimulationNodeDatum> & IGraphEdgeJSON, any, any>;
     /** A group where all nodes are drawn. */
     protected nodeContainer: d3.Selection<any, SimulationNodeDatum & IGraphNodeJSON, any, any>;
+    protected drag: d3.DragBehavior<any, any, any>;
+    protected forceSim: any;
     /** The normal width of the line to draw. */
     private width: number;
     private height: number;
     /** Represents the root SVG element where the graph is drawn. */
     private svg: d3.Selection<any, any, any, any>;
-
-    protected drag: d3.DragBehavior<any, any, any>;
-    protected forceSim: any;
 
     public render(graph: IGraphJSON, targetEl: HTMLElement) {
         this.graph = graph;
@@ -95,7 +95,6 @@ export default class GraphVisualizer {
 
         this.nodeContainer = this.svg.append("g")
             .attr("class", "nodes");
-
 
         this.drag = d3.drag()
             .on("start", () => {
@@ -190,10 +189,18 @@ export default class GraphVisualizer {
             .attr("stroke", "black");
     }
 
+    public getJSON() {
+        return this.graph;
+    }
+
     /**
      * Updates the graph by re-binding to the data and re-rendering nodes and edges.
      */
     protected update() {
+        if (this.onUpdate != null) {
+            this.onUpdate(this.getJSON());
+        }
+
         this.renderLinks();
         this.renderNodes();
     }
