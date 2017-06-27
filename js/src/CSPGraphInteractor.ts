@@ -1,11 +1,9 @@
 import * as d3 from "d3";
 import CSPGraphVisualizer from "./CSPGraphVisualizer";
 import {
-    ICSPGraphJSON,
-    ICSPGraphNodeJSON,
-    IGraphJSON,
-    IGraphNodeJSON,
-    IStyledGraphEdgeJSON,
+    ICSPGraphNode,
+    IGraphEdge,
+    IGraphNode,
 } from "./Graph";
 
 export default class CSPGraphInteractor extends CSPGraphVisualizer {
@@ -28,28 +26,23 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
             groupSelection.select("ellipse").attr("fill", "white");
             groupSelection.selectAll("text").attr("fill", "black");
         });
-
-        this.nodeContainer.selectAll("g").on("dblclick", function() {
-            const groupSelection = d3.select(this);
-
-        });
     }
 
-    public linkEvents() {
-        super.linkEvents();
+    public edgeEvents() {
+        super.edgeEvents();
 
         const that = this;
-        this.linkContainer.selectAll("line").on("mouseover", function() {
+        this.edgeContainer.selectAll("line").on("mouseover", function() {
             d3.select(this).attr("stroke-width", that.lineWidth + 5);
         });
 
-        this.linkContainer.selectAll("line").on("mouseout", function() {
+        this.edgeContainer.selectAll("line").on("mouseout", function() {
             d3.select(this).attr("stroke-width", that.lineWidth);
         });
 
-        this.linkContainer.selectAll("line").on("click", (d: IStyledGraphEdgeJSON) => {
+        this.edgeContainer.selectAll("line").on("click", (d: IGraphEdge) => {
             if (this.onArcClicked != null) {
-                this.onArcClicked((d.source as any as IGraphNodeJSON).name, (d.target as any).idx);
+                this.onArcClicked(this.graph.nodes[d.source].name, this.graph.nodes[d.dest].idx);
             }
         });
     }
@@ -64,13 +57,13 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
      */
     public highlightArc(arcId: string, style: "normal" | "bold", colour: string | null = null) {
         if (arcId != null) {
-            const selectedLink = this.graph.links.find((link) => link.id === arcId) as IStyledGraphEdgeJSON;
+            const selectedLink = this.graph.edges[arcId];
             selectedLink.style = style;
             selectedLink.colour = colour || selectedLink.colour;
         } else {
-            this.graph.links.forEach((link: IStyledGraphEdgeJSON) => {
-                link.style = style;
-                link.colour = colour || link.colour;
+            Object.values(this.graph.edges).forEach((edge) => {
+                edge.style = style;
+                edge.colour = colour || edge.colour;
             });
         }
 
@@ -84,7 +77,7 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
      */
     public setDomain(nodeId: string, domain: string[]) {
         const sel = d3.select(`[id='${nodeId}']`);
-        (sel.data()[0] as ICSPGraphNodeJSON).domain = domain;
+        (sel.data()[0] as ICSPGraphNode).domain = domain;
         this.update();
     }
 }

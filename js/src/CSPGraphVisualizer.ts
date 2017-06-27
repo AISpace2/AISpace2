@@ -1,24 +1,31 @@
+import * as d3 from "d3";
 import {
-    ICSPGraphJSON,
-    ICSPGraphNodeJSON,
-    IGraphJSON,
-    IGraphNodeJSON,
-    IStyledGraphEdgeJSON,
+    Graph,
+    ICSPGraphNode,
+    IGraphEdge,
 } from "./Graph";
 import GraphVisualizer from "./GraphVisualizer";
 
 export default class CSPGraphVisualizer extends GraphVisualizer {
-    protected graph: ICSPGraphJSON;
+    protected graph: Graph<ICSPGraphNode>;
 
     public renderNodes() {
         const updateSelection = this.nodeContainer
             .selectAll("g")
-            .data(this.graph.nodes, (node: ICSPGraphNodeJSON) => node.id);
+            .data(Object.values(this.graph.nodes), (node: ICSPGraphNode) => node.id);
 
         const enterSelection = updateSelection
             .enter().append("g")
-            .attr("id", (d) => d.id)
-            .call(this.drag);
+            .attr("id", (d) => d.id);
+
+        enterSelection
+            .call(d3.drag<any, ICSPGraphNode>()
+                .on("drag", (d, i, arr) => {
+                    d.x = d3.event.x;
+                    d.y = d3.event.y;
+
+                    this.update();
+                }));
 
         const variableSelection = enterSelection.filter((d) => d.type === "csp:variable");
         const constraintSelection = enterSelection.filter((d) => d.type === "csp:constraint");
@@ -58,9 +65,8 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
             .attr("class", "domain");
 
         const mergedSelection = updateSelection.merge(enterSelection);
-        mergedSelection.selectAll(".domain").text((d: ICSPGraphNodeJSON) => `{${d.domain.join()}}`);
-        mergedSelection.selectAll("ellipse").attr("fill", "white");
-        mergedSelection.selectAll("rect").attr("fill", "white");
+        mergedSelection.attr("transform", (d) => `translate(${d.x!}, ${d.y!})`);
+        mergedSelection.selectAll(".domain").text((d: ICSPGraphNode) => `{${d.domain.join()}}`);
 
         updateSelection.exit().remove();
     }
@@ -68,14 +74,14 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
     public renderLinks() {
         super.renderLinks();
 
-        const updateSelection = this.linkContainer
+        const updateSelection = this.edgeContainer
             .selectAll("line")
-            .data(this.graph.links, (d: IStyledGraphEdgeJSON) => d.id);
+            .data(Object.values(this.graph.edges), (d: IGraphEdge) => d.id);
 
         updateSelection.enter().append("line")
             .merge(updateSelection)
-            .attr("stroke-width", (d: IStyledGraphEdgeJSON) => d.style === "bold" ? this.lineWidth + 5 : this.lineWidth)
-            .attr("stroke", (d: IStyledGraphEdgeJSON) => (d.colour != null) ? d.colour : "black");
+            .attr("stroke-width", (d: IGraphEdge) => d.style === "bold" ? this.lineWidth + 5 : this.lineWidth)
+            .attr("stroke", (d: IGraphEdge) => (d.colour != null) ? d.colour : "black");
 
         updateSelection.exit().remove();
     }

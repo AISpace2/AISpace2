@@ -4,8 +4,8 @@
     "strict": true,
     "module": "amd",
     "moduleResolution": "node",
-    "target": "es6",
-    "lib": ["es6", "dom"],
+    "target": "es2017",
+    "lib": ["es2017", "dom"],
     "allowJs": true,
     "skipLibCheck": true,
     "newLine": "LF"

@@ -4,7 +4,7 @@ import * as widgets from "jupyter-js-widgets";
 import * as _ from "underscore";
 
 import CSPGraphInteractor from "./CSPGraphInteractor";
-import { IGraphJSON } from "./Graph";
+import { Graph } from "./Graph";
 
 import * as template from "./cspviewer.template.html";
 import { IEvent, isHighlightArcEvent, isOutputEvent, isRerenderEvent, isSetDomainEvent } from "./CSPViewerEvents";
@@ -24,7 +24,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     public initialize(opts: any) {
         super.initialize(opts);
 
-        this.visualization = new CSPGraphInteractor();
+        this.visualization = new CSPGraphInteractor(Graph.fromJSON(this.model.graphJSON));
         this.visualization.onArcClicked = (varId, constId) => {
             this.send({ event: CSPViewer.ARC_CLICK, constId, varId });
         };
@@ -76,6 +76,6 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
     private draw() {
         this.visualization.lineWidth = this.model.lineWidth;
-        this.visualization.render(this.model.graphJSON, this.$("#svg")[0]);
+        this.visualization.render(this.$("#svg")[0]);
     }
 }

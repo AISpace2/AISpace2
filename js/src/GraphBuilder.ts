@@ -1,13 +1,13 @@
 import * as d3 from "d3";
 import * as shortid from "shortid";
 import CSPGraphVisualizer from "./CSPGraphVisualizer";
-import { IGraphEdgeJSON, IGraphNodeJSON } from "./Graph";
+import { Graph, IGraphEdge, IGraphNode } from "./Graph";
 
 export default class GraphBuilder extends CSPGraphVisualizer {
-    private selectedElement: IGraphNodeJSON | IGraphEdgeJSON | null;
+    private selectedElement: IGraphNode | IGraphEdge | null;
 
-    constructor() {
-        super();
+    constructor(graph: Graph) {
+        super(graph);
         this.lineWidth = 5;
     }
 
@@ -17,12 +17,8 @@ export default class GraphBuilder extends CSPGraphVisualizer {
                 d3.event.preventDefault();
 
                 if (this.selectedElement != null) {
-                    this.graph.nodes = this.graph.nodes.filter((node) => node !== this.selectedElement);
-                    this.graph.links = this.graph.links.filter((link) => {
-                        return link !== this.selectedElement &&
-                            (link.source as any) !== this.selectedElement &&
-                            (link.target as any) !== this.selectedElement;
-                    });
+                    this.graph.removeNode(this.selectedElement.id);
+                    delete this.graph.edges[this.selectedElement.id];
 
                     this.selectedElement = null;
                     this.update();
@@ -40,8 +36,10 @@ export default class GraphBuilder extends CSPGraphVisualizer {
         super.nodeEvents();
 
         this.nodeContainer.selectAll("g")
-            .on("click", (d: IGraphNodeJSON) => {
-                d3.event.stopPropagation();
+            .on("click", (d: IGraphNode) => {
+                if (d3.event.defaultPrevented) {
+                    return;
+                }
 
                 if (d !== this.selectedElement) {
                     this.selectedElement = d;
@@ -53,11 +51,11 @@ export default class GraphBuilder extends CSPGraphVisualizer {
             });
     }
 
-    public linkEvents() {
-        super.linkEvents();
+    public edgeEvents() {
+        super.edgeEvents();
 
-        this.linkContainer.selectAll("line")
-            .on("click", (d: IGraphEdgeJSON) => {
+        this.edgeContainer.selectAll("line")
+            .on("click", (d: IGraphEdge) => {
                 d3.event.stopPropagation();
 
                 if (d !== this.selectedElement) {
@@ -74,26 +72,33 @@ export default class GraphBuilder extends CSPGraphVisualizer {
         super.renderNodes();
 
         this.nodeContainer.selectAll("g")
-            .filter((d: IGraphNodeJSON) => d === this.selectedElement)
+            .filter((d: IGraphNode) => d === this.selectedElement)
             .select(":first-child").attr("fill", "pink");
 
-        this.linkContainer.selectAll("line")
-            .filter((d: IGraphEdgeJSON) => d === this.selectedElement)
+        this.nodeContainer.selectAll("g")
+            .filter((d: IGraphNode) => d !== this.selectedElement)
+            .select(":first-child").attr("fill", "white");
+
+        this.edgeContainer.selectAll("line")
+            .filter((d: IGraphEdge) => d === this.selectedElement)
             .attr("stroke", "pink");
+
+        this.edgeContainer.selectAll("line")
+            .filter((d: IGraphEdge) => d !== this.selectedElement)
+            .attr("stroke", "black");
     }
 
     private createNode(x: number, y: number) {
-        this.graph.nodes.push({
+        const id = shortid.generate();
+        this.graph.nodes[id] = {
             domain: ["1"],
-            fx: x, fy: y,
-            id: shortid.generate(),
+            id,
             name: "???",
             type: "csp:variable",
-            vx: 0, vy: 0,
-            x, y,
-        });
+            x,
+            y,
+        };
 
-        this.forceSim.alphaTarget(0.3).restart();
         this.update();
     }
 }

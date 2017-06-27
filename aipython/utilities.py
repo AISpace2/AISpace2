@@ -67,39 +67,40 @@ def test():
     print("Passed unit test in utilities")
 
 import json
-def cspToJson(cspObject):
-    """Converts a CSP to a JSON representation."""
-    cspJSON = {'nodes': [],
-                 'links': []}
+
+def cspToJSON(csp):
+    cspJSON = {'nodes': {}, 'edges': {}}
 
     # Maps variables to their IDs
-    domainMap = {var: str(uuid.uuid4()) for var in cspObject.domains}
+    domainMap = {var: str(uuid.uuid4()) for var in csp.domains}
 
     # Maps (variable, constraint) to their corresponding arc IDs
     linkMap = dict()
 
-    for i, (var, value) in enumerate(cspObject.domains.items()):
-        cspJSON['nodes'].append({'id': domainMap[var], 'name': var, 'type': 'csp:variable', 'idx': i, 'domain': list(value)})
+    for i, (var, value) in enumerate(csp.domains.items()):
+        cspJSON['nodes'][domainMap[var]] = {'id': domainMap[var], 'name': var, 'type': 'csp:variable', 'idx': i, 'domain': list(value)}
 
-    for (i, cons) in enumerate(cspObject.constraints):
+
+    for (i, cons) in enumerate(csp.constraints):
         consId = str(uuid.uuid4())
-        cspJSON['nodes'].append({'id': consId, 'name': cons.__repr__(), 'type': 'csp:constraint', 'idx': i})
+        cspJSON['nodes'][consId] = {'id': consId, 'name': cons.__repr__(), 'type': 'csp:constraint', 'idx': i}
 
         link1Id = str(uuid.uuid4())
-        link1 = {'id': link1Id, 'source': domainMap[cons.scope[0]], 'target': consId}
+        link1 = {'id': link1Id, 'source': domainMap[cons.scope[0]], 'dest': consId}
 
-        cspJSON['links'].append(link1)
+        cspJSON['edges'][link1Id] = link1
         linkMap[(cons.scope[0], cons)] = link1Id
 
         if len(cons.scope) == 2:
             consId2 = str(uuid.uuid4())
             link2Id = str(uuid.uuid4())
-            link2 = {'id': link2Id, 'source': domainMap[cons.scope[1]], 'target': consId}
+            link2 = {'id': link2Id, 'source': domainMap[cons.scope[1]], 'dest': consId}
 
-            cspJSON['links'].append(link2)
+            cspJSON['edges'][link2Id] = link2
             linkMap[(cons.scope[1], cons)] = link2Id
     
     return (cspJSON, domainMap, linkMap)
+
     
 if __name__ == "__main__":
     test()

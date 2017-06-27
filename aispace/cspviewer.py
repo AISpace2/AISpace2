@@ -10,7 +10,7 @@ from IPython.display import display
 from ipywidgets import CallbackDispatcher, DOMWidget, Output, register
 from traitlets import Dict, Float, Integer, Unicode, observe
 
-from aipython.utilities import Displayable, cspToJson
+from aipython.utilities import Displayable, cspToJSON
 class threadWR(threading.Thread):
     """threadWR is a thread extended to allow a return value.
     To get the return value, use this thread as normal, but assign it to a variable on creation.
@@ -46,7 +46,7 @@ class CSPViewer(DOMWidget):
         super(CSPViewer, self).__init__()
 
         self.on_msg(self._handle_custom_msgs)
-        (self.graphJSON, self.domainMap, self.linkMap) = cspToJson(csp)
+        (self.graphJSON, self.domainMap, self.linkMap) = cspToJSON(csp)
         self._desired_level = 4
         self.sleep_time = 0.2
 
