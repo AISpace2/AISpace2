@@ -21,17 +21,16 @@ export default class GraphVisualizer {
     /** Callback whenever the graph has updated. */
     public onUpdate?: (graph: IGraph) => void;
 
-    /** The root element the graph is drawn in. */
-    protected rootEl: HTMLElement;
     /** The graph being drawn. */
     protected graph: Graph;
+    /** The root element the graph is drawn in. */
+    protected rootEl: HTMLElement;
+    /** Represents the root SVG element where the graph is drawn. */
+    protected svg: d3.Selection<any, any, any, any>;
     /** A group where all links are drawn. */
     protected edgeContainer: d3.Selection<any, IGraphEdge, any, any>;
     /** A group where all nodes are drawn. */
     protected nodeContainer: d3.Selection<any, IGraphNode, any, any>;
-
-    /** Represents the root SVG element where the graph is drawn. */
-    private svg: d3.Selection<any, any, any, any>;
 
     constructor(graph: Graph) {
         this.graph = graph;
