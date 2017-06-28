@@ -53,6 +53,6 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
 
     /** The JSON representing the CSP graph. */
     get graphJSON(): IGraph {
-        return this.get("graphJSON");
+        return this.get("graph_json");
     }
 }

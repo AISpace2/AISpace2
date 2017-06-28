@@ -1,20 +1,20 @@
 """
-Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP) 
+Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP)
 and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 """
 
-import json
 import uuid
 from operator import lt
 
 from aipython.cspProblem import CSP, Constraint
+from string import Template
 
 
 def csp_to_json(csp):
     """Converts a Python CSP instance to a dictionary representable as JSON.
 
     When using this function with a Dict traitlet for Jupyter widgets,
-    this dictionary will automatically be converted into JSON for the client side. 
+    this dictionary will automatically be converted into JSON for the client side.
     Therefore, you don't need to convert the return value into a string,
     synchronize the string with a traitlet, then convert it to JSON on the client.
 
@@ -22,64 +22,78 @@ def csp_to_json(csp):
         csp (aipython.cspProblem.CSP): The CSP instance to convert to a dictionary.
 
     Returns:
-        (dict, dict, dict): 
+        (dict, dict, dict):
             The first dictionary returned represents the CSP that is representable in JSON.
             This means the dictionary has no references to object instances.
             This JSON should be immediately usable in creating a new CSP Graph in JavaScript.
 
-            The second dictionary is a domain map, where the keys are node names (strings), and values are
-            the IDs (also strings) of the nodes in the resulting JSON. For example, `domainMap['A'] -> 'a6c!dv33'`.
+            The second dictionary is a domain map, where the keys are node names (strings),
+            and values are the IDs (also strings) of the nodes in the resulting JSON.
+            For example, `domain_map['A'] -> 'a6c!dv33'`.
             You can ignore this dictionary - it is provided for convenience.
 
-            The third dictionary is a edge map, where the keys are a tuple of (node name, constraint instance).
+            The third dictionary is a edge map.
+            The keys are a tuple of (node name, Constraint instance).
             The values are the IDs (string) of the edge connecting them in the resulting JSON.
-            For example, `edgeMap[('A', A_lt_B_constraint)] -> 'wer3jbvcs2'`.
-            You can ignore this dictionary - it is provided for convenience.            
+            For example, `edge_map[('A', A_lt_B_constraint)] -> 'wer3jbvcs2'`.
+            You can ignore this dictionary - it is provided for convenience.
     """
-    cspJSON = {'nodes': {}, 'edges': {}}
+    csp_json = {'nodes': {}, 'edges': {}}
 
     # Maps variables to their IDs
-    domainMap = {var: str(uuid.uuid4()) for var in csp.domains}
+    domain_map = {var: str(uuid.uuid4()) for var in csp.domains}
 
     # Maps (variable, constraint) to their corresponding arc IDs
-    edgeMap = dict()
+    edge_map = dict()
 
     for i, (var, value) in enumerate(csp.domains.items()):
-        cspJSON['nodes'][domainMap[var]] = {
-            'id': domainMap[var], 'name': var, 'type': 'csp:variable', 'idx': i, 'domain': list(value)}
+        csp_json['nodes'][domain_map[var]] = {
+            'id': domain_map[var],
+            'name': var,
+            'type':
+            'csp:variable',
+            'idx': i,
+            'domain': list(value)
+        }
 
-    for (i, cons) in enumerate(csp.constraints):
-        consId = str(uuid.uuid4())
-        cspJSON['nodes'][consId] = {
-            'id': consId, 'name': cons.__repr__(), 'type': 'csp:constraint', 'idx': i}
+    for (i, constraint) in enumerate(csp.constraints):
+        constraint_id = str(uuid.uuid4())
+        csp_json['nodes'][constraint_id] = {
+            'id': constraint_id,
+            'name': constraint.__repr__(),
+            'type': 'csp:constraint',
+            'idx': i
+        }
 
-        link1Id = str(uuid.uuid4())
-        link1 = {'id': link1Id,
-                 'source': domainMap[cons.scope[0]], 'dest': consId}
+        link1_id = str(uuid.uuid4())
+        link1 = {
+            'id': link1_id,
+            'source': domain_map[constraint.scope[0]],
+            'dest': constraint_id
+        }
 
-        cspJSON['edges'][link1Id] = link1
-        edgeMap[(cons.scope[0], cons)] = link1Id
+        csp_json['edges'][link1_id] = link1
+        edge_map[(constraint.scope[0], constraint)] = link1_id
 
-        if len(cons.scope) == 2:
-            consId2 = str(uuid.uuid4())
-            link2Id = str(uuid.uuid4())
-            link2 = {'id': link2Id,
-                     'source': domainMap[cons.scope[1]], 'dest': consId}
+        if len(constraint.scope) == 2:
+            link2_id = str(uuid.uuid4())
+            link2 = {'id': link2_id,
+                     'source': domain_map[constraint.scope[1]], 'dest': constraint_id}
 
-            cspJSON['edges'][link2Id] = link2
-            edgeMap[(cons.scope[1], cons)] = link2Id
+            csp_json['edges'][link2_id] = link2
+            edge_map[(constraint.scope[1], constraint)] = link2_id
 
-    return (cspJSON, domainMap, edgeMap)
+    return (csp_json, domain_map, edge_map)
 
 
-def csp_from_json(graphJSON):
+def csp_from_json(graph_json):
     """Converts a CSP represented by a JSON dictionary into a Python CSP instance.
 
-    Note that because a CSP doesn't use the concept of IDs, which the JSON graph representation does,
+    Note that because a CSP doesn't use the concept of IDs, unlike the JSON graph representation,
     IDs will be lost and will be different if you convert the result of this function back to JSON.
 
     Args:
-        graphJSON (dict): A dictionary representing JSON to be converted into a CSP instance.
+        graph_json (dict): A dictionary representing JSON to be converted into a CSP instance.
 
     Returns:
         (aipython.cspProblem.CSP):
@@ -87,22 +101,22 @@ def csp_from_json(graphJSON):
     """
     domains = {
         node['name']: set(node['domain'])
-        for node in graphJSON['nodes'].values() if node['type'] == 'csp:variable'
+        for node in graph_json['nodes'].values() if node['type'] == 'csp:variable'
     }
 
     constraints = []
 
-    for node in graphJSON['nodes'].values():
+    for node in graph_json['nodes'].values():
         scope = []
         if node['type'] == 'csp:constraint':
             # Find the links with the target as this constraint
-            for link in graphJSON['edges'].values():
+            for link in graph_json['edges'].values():
                 if link['dest'] == node['id']:
-                    sourceNode = graphJSON['nodes'][link['source']]
-                    scope.append(sourceNode['name'])
+                    source_node = graph_json['nodes'][link['source']]
+                    scope.append(source_node['name'])
                 elif link['source'] == node['id']:
-                    sourceNode = graphJSON['nodes'][link['dest']]
-                    scope.append(sourceNode['name'])
+                    source_node = graph_json['nodes'][link['dest']]
+                    scope.append(source_node['name'])
 
             if scope:
                 constraints.append(Constraint(tuple(scope), lt))
@@ -116,7 +130,8 @@ def csp_to_python_code(csp):
     Example:
         ::
             >>> csp_to_python_code(csp)
-            'from aipython.cspProblem import CSP, Constraint\ncsp = CSP({"A": [1, 2, 3], "B": [1, 2, 3]}, Constraint(("A", "B"), lt))'
+            'from aipython.cspProblem import CSP, Constraint
+            csp = CSP({"A": [1, 2, 3], "B": [1, 2, 3]}, Constraint(("A", "B"), lt))'
 
     Args:
         csp (aipython.cspProblem.CSP): The CSP instance to convert to Python code.
@@ -125,12 +140,15 @@ def csp_to_python_code(csp):
         (string):
             A string containing Python code. Executing this string will cause a CSP to be created.
     """
-    constStrList = []
+    constraint_strings = []
     for constraint in csp.constraints:
-        constStrList.append(f"Constraint({constraint.scope}, {constraint.condition.__name__})")
+        scope = constraint.scope
+        name = constraint.condition.__name__
+        constraint_strings.append(f"Constraint({scope}, {name})")
 
     template = """from aipython.cspProblem import CSP, Constraint
 from operator import lt
 csp = CSP($domains, [$constraints])"""
 
-    return template
+    return Template(template).substitute(domains=csp.domains,
+                                         constraints=', '.join(constraint_strings))

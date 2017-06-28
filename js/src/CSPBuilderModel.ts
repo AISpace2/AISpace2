@@ -14,7 +14,7 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
             _view_module: "aispace",
             _view_module_version: "0.1.0",
             _view_name: "CSPBuilder",
-            graphJSON: ({} as IGraph),
+            graph_json: ({} as IGraph),
         };
     }
 
@@ -27,10 +27,10 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
     }
 
     get graphJSON(): IGraph {
-        return this.get("graphJSON");
+        return this.get("graph_json");
     }
 
     set graphJSON(val) {
-        this.set("graphJSON", val);
+        this.set("graph_json", val);
     }
 }
