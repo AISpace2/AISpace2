@@ -8,7 +8,7 @@ svg text {
     user-select: none;
 }
 
-#cspviewer {
+.output-container {
     border: 1px solid silver;
     border-radius: 2px;
     font-family: var(--font-face);
