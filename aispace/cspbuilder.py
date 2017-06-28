@@ -1,11 +1,11 @@
+from string import Template
+
 import ipywidgets as widgets
 from IPython.display import display
 from ipywidgets import CallbackDispatcher, DOMWidget, Output, register
 from traitlets import Dict, Float, Integer, Unicode, observe
-from aipython.utilities import cspToJSON
-from aipython.cspProblem import CSP, Constraint
-from operator import lt
-from string import Template
+
+from .cspjsonbridge import csp_from_json, csp_to_json, csp_to_python_code
 
 
 @register('aispace.CSPBuilder')
@@ -21,42 +21,14 @@ class CSPBuilder(DOMWidget):
 
     def __init__(self, csp=None):
         super().__init__()
-        (self.graphJSON, _, _) = cspToJSON(csp)
+        (self.graphJSON, _, _) = csp_to_json(csp)
 
     def csp(self):
         """Converts the CSP represented by this builder into a Python CSP object."""
-        domains = {
-            node['name']: set(node['domain'])
-            for node in self.graphJSON['nodes'].values() if node['type'] == 'csp:variable'
-        }
-
-        constraints = []
-
-        for node in self.graphJSON['nodes'].values():
-            scope = []
-            if node['type'] == 'csp:constraint':
-                # By convention, the source is the variable, and the target is the constraint
-                # Find the links with the target as this constraint
-                for link in self.graphJSON['edges'].values():
-                    if link['dest'] == node['id']:
-                        sourceNode = self.graphJSON['nodes'][link['source']]
-                        scope.append(sourceNode['name'])
-
-                if scope:
-                    constraints.append(Constraint(tuple(scope), lt))
-
-        return CSP(domains, constraints)
+        return csp_from_json(self.graphJSON)
 
     def py_code(self):
         """Converts the CSP represented by this builder into Python code."""
-        csp = self.csp()
 
-        constStrList = []
-        for constraint in csp.constraints:
-            constStrList.append(f"Constraint({constraint.scope}, {constraint.condition.__name__})")
-
-        template = """from aipython.cspProblem import CSP, Constraint
-from operator import lt
-csp = CSP($domains, [$constraints])"""
         self.send({'action': 'python-code',
-                   'code': Template(template).substitute(domains=csp.domains, constraints=', '.join(constStrList))})
+                   'code': csp_to_python_code(self.csp())})

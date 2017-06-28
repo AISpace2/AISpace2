@@ -8,9 +8,9 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from time import sleep
 import random
-import uuid
+from time import sleep
+
 
 class Displayable(object):
     max_display_level = 4
@@ -70,42 +70,5 @@ def test():
     assert dict_union({1:4, 2:5, 3:4},{5:7, 2:9}) == {1:4, 2:9, 3:4, 5:7} 
     print("Passed unit test in utilities")
 
-import json
-
-def cspToJSON(csp):
-    cspJSON = {'nodes': {}, 'edges': {}}
-
-    # Maps variables to their IDs
-    domainMap = {var: str(uuid.uuid4()) for var in csp.domains}
-
-    # Maps (variable, constraint) to their corresponding arc IDs
-    linkMap = dict()
-
-    for i, (var, value) in enumerate(csp.domains.items()):
-        cspJSON['nodes'][domainMap[var]] = {'id': domainMap[var], 'name': var, 'type': 'csp:variable', 'idx': i, 'domain': list(value)}
-
-
-    for (i, cons) in enumerate(csp.constraints):
-        consId = str(uuid.uuid4())
-        cspJSON['nodes'][consId] = {'id': consId, 'name': cons.__repr__(), 'type': 'csp:constraint', 'idx': i}
-
-        link1Id = str(uuid.uuid4())
-        link1 = {'id': link1Id, 'source': domainMap[cons.scope[0]], 'dest': consId}
-
-        cspJSON['edges'][link1Id] = link1
-        linkMap[(cons.scope[0], cons)] = link1Id
-
-        if len(cons.scope) == 2:
-            consId2 = str(uuid.uuid4())
-            link2Id = str(uuid.uuid4())
-            link2 = {'id': link2Id, 'source': domainMap[cons.scope[1]], 'dest': consId}
-
-            cspJSON['edges'][link2Id] = link2
-            linkMap[(cons.scope[1], cons)] = link2Id
-    
-    return (cspJSON, domainMap, linkMap)
-
-    
 if __name__ == "__main__":
     test()
-
