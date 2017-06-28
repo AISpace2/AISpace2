@@ -153,6 +153,12 @@ class CSPViewer(DOMWidget):
         the other arguments are whatever arguments print can take.
         """
         shouldWait = True
+
+        if args[0] == 'Performing AC with domains':
+            domains = args[1]
+            for var, domain in domains.items():
+                self._send_set_domain_action(var, domain)
+
         if args[0] == 'Domain pruned':
             variable = args[2]
             domain = args[4]
