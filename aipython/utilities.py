@@ -16,6 +16,10 @@ class Displayable(object):
     max_display_level = 4
     sleep_time = 0.2
 
+    def __init__(self, **kwargs):
+        if 'visualizer' in kwargs:
+            self.visualizer = kwargs['visualizer']
+
     def display(self,level,*args,**kwargs):
         """print the arguments if level is less than or equal to the
         current max_display_level.

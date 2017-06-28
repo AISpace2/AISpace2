@@ -58,7 +58,7 @@ class CSPViewer(DOMWidget):
             module = importlib.import_module('aipython.cspConsistency')
             Con_solver = getattr(module, 'Con_solver')
 
-        self._con_solver = Con_solver(csp, self)
+        self._con_solver = Con_solver(csp, visualizer=self)
 
         self._domains = csp.domains.copy()
         self._block_for_user_input = threading.Event()
