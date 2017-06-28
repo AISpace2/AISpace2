@@ -56,6 +56,7 @@ class CSPBuilder(DOMWidget):
             constStrList.append(f"Constraint({constraint.scope}, {constraint.condition.__name__})")
 
         template = """from aipython.cspProblem import CSP, Constraint
+from operator import lt
 csp = CSP($domains, [$constraints])"""
         self.send({'action': 'python-code',
                    'code': Template(template).substitute(domains=csp.domains, constraints=', '.join(constStrList))})

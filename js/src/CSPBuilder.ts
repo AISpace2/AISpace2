@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import * as widgets from "jupyter-js-widgets";
 import * as _ from "underscore";
 
+import * as template from "./cspbuilder.template.html";
 import CSPBuilderModel from "./CSPBuilderModel";
 import { IEvent } from "./CSPViewerEvents";
 import { Graph } from "./Graph";
@@ -35,10 +36,11 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
     }
 
     public render() {
-        this.$el.html("<div id='svg' tabindex='0'></div>");
+        this.$el.html(template);
         d3.timeout(() => {
             this.visualizer.render(this.$("#svg")[0]);
         });
+
         return this;
     }
 }
