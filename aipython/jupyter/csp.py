@@ -99,6 +99,7 @@ class Displayable(DOMWidget):
 
     def wait_for_var_selection(self, iter_var):
         self._block_for_user_input.wait()
+        self._desired_level = 4
         if self._selected_var in list(iter_var):
             return self._selected_var
         else:
@@ -174,6 +175,13 @@ class Displayable(DOMWidget):
         the other arguments are whatever arguments print can take.
         """
         shouldWait = True
+
+        if args[0] == 'Starting AC with domains':
+            domains = args[1]
+
+            for var, domain in domains.items():
+                self._send_set_domain_action(var, domain)
+        
         if args[0] == 'Domain pruned':
             variable = args[2]
             domain = args[4]
