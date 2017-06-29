@@ -4,7 +4,7 @@ import CSPGraphVisualizer from "./CSPGraphVisualizer";
 import { Graph, IGraphEdge, IGraphNode } from "./Graph";
 
 export default class GraphBuilder extends CSPGraphVisualizer {
-    private static readonly DELETE_KEY = 46;
+    private static readonly DELETE_KEYS = [8, 46];
 
     /** The element that is currently selected and subject to actions like delete. */
     private selectedElement: IGraphNode | IGraphEdge | null;
@@ -31,7 +31,7 @@ export default class GraphBuilder extends CSPGraphVisualizer {
 
     public graphEvents() {
         d3.select(this.rootEl).on("keydown", () => {
-            if (d3.event.keyCode === GraphBuilder.DELETE_KEY) {
+            if (GraphBuilder.DELETE_KEYS.includes(d3.event.keyCode)) {
                 d3.event.preventDefault();
 
                 if (this.selectedElement != null) {
