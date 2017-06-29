@@ -12,8 +12,10 @@ export default class GraphBuilder extends CSPGraphVisualizer {
     private tempEdge: d3.Selection<any, any, any, any>;
     /** True if an edge is in the process of being created. */
     private isCreatingEdge = false;
-    /** Holds the node that the mouse was last over at any given point of time. */
-    private lastNodeMousedOver: IGraphNode;
+    /** Holds the node that the mouse is over at any given point of time.
+     * null if the mouse is not over a node.
+     */
+    private nodeMousedOver: IGraphNode | null;
 
     constructor(graph: Graph) {
         super(graph);
@@ -67,16 +69,25 @@ export default class GraphBuilder extends CSPGraphVisualizer {
                 this.update();
             })
             .on("mouseover", (d: IGraphNode) => {
-                this.lastNodeMousedOver = d;
+                this.nodeMousedOver = d;
+            })
+            .on("mouseout", (d: IGraphNode) => {
+                if (this.nodeMousedOver === d) {
+                    this.nodeMousedOver = null;
+                }
             })
             .call(d3.drag<any, IGraphNode>()
                 .on("start", () => {
                     this.isCreatingEdge = d3.event.sourceEvent.shiftKey;
-                    this.tempEdge
-                        .attr("x1", d3.event.x)
-                        .attr("y1", d3.event.y)
-                        .attr("x2", d3.event.x)
-                        .attr("y2", d3.event.y);
+
+                    if (this.isCreatingEdge) {
+                        this.tempEdge
+                            .attr("x1", d3.event.x)
+                            .attr("y1", d3.event.y)
+                            .attr("x2", d3.event.x)
+                            .attr("y2", d3.event.y);
+                        this.tempEdge.attr("style", "display: block;");
+                    }
                 })
                 .on("drag", (d) => {
                     if (!this.isCreatingEdge) {
@@ -92,20 +103,20 @@ export default class GraphBuilder extends CSPGraphVisualizer {
                     }
                 })
                 .on("end", (initialNode) => {
-                    if (this.isCreatingEdge) {
+                    if (this.isCreatingEdge && this.nodeMousedOver != null) {
                         this.tempEdge
-                            .attr("x2", this.lastNodeMousedOver.x!)
-                            .attr("y2", this.lastNodeMousedOver.y!);
+                            .attr("x2", this.nodeMousedOver.x!)
+                            .attr("y2", this.nodeMousedOver.y!);
 
                         // Only add the edge if the edge doesn't already exist, and isn't an edge to itself
-                        if (initialNode.id === this.lastNodeMousedOver.id ||
-                            this.graph.edgeExistsBetween(initialNode.id, this.lastNodeMousedOver.id)) {
-                            return;
+                        if (initialNode.id !== this.nodeMousedOver.id &&
+                            !this.graph.edgeExistsBetween(initialNode.id, this.nodeMousedOver.id)) {
+                            this.graph.addEdge(initialNode.id, this.nodeMousedOver.id);
+                            this.update();
                         }
-
-                        this.graph.addEdge(initialNode.id, this.lastNodeMousedOver.id);
-                        this.update();
                     }
+
+                    this.tempEdge.attr("style", "display: none;");
                 }));
     }
 
