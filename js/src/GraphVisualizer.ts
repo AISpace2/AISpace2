@@ -105,6 +105,10 @@ export default class GraphVisualizer {
     }
 
     protected renderNodes() {
+        if (this.rootEl == null) {
+            return;
+        }
+
         const updateSelection = this.nodeContainer
             .selectAll("g")
             .data(Object.values(this.graph.nodes), (d: IGraphNode) => d.id);
@@ -137,6 +141,10 @@ export default class GraphVisualizer {
     }
 
     protected renderLinks() {
+        if (this.rootEl == null) {
+            return;
+        }
+
         const updateSelection = this.edgeContainer
             .selectAll("line")
             .data(Object.values(this.graph.edges), (d: IGraphEdge) => d.id);
