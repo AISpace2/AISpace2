@@ -1,12 +1,11 @@
-import importlib
 import threading
+from functools import partial
 from time import sleep
 
-from enum import Enum
 from ipywidgets import DOMWidget, register
 from traitlets import Dict, Float, Unicode
 
-from .cspjsonbridge import csp_to_json
+from aispace.cspjsonbridge import csp_to_json
 
 
 class ReturnableThread(threading.Thread):
@@ -15,6 +14,7 @@ class ReturnableThread(threading.Thread):
     calling var.join() will return the return value.
     the return value can also be gotten directly via ._return, but this is not safe.
     """
+
     def __init__(self, *args, **kwargs):
         super(ReturnableThread, self).__init__(*args, **kwargs)
         self._return = None
@@ -23,14 +23,16 @@ class ReturnableThread(threading.Thread):
         if self._target is not None:
             self._return = self._target(*self._args, **self._kwargs)
 
-    def join(self):
-        super().join()
+    def join(self, timeout=None):
+        super().join(timeout)
         return self._return
 
 
 @register('aispace.CSPViewer')
-class CSPViewer(DOMWidget):
-    """A Jupyter widget to visualize and interact with a CSP."""
+class Displayable(DOMWidget):
+    max_display_level = 4
+    sleep_time = 0.2
+
     _view_name = Unicode('CSPViewer').tag(sync=True)
     _model_name = Unicode('CSPViewerModel').tag(sync=True)
     _view_module = Unicode('aispace').tag(sync=True)
@@ -41,31 +43,21 @@ class CSPViewer(DOMWidget):
     graph_json = Dict().tag(sync=True)
     line_width = Float(2.0).tag(sync=True)
 
-    def __init__(self, csp):
-        super(CSPViewer, self).__init__()
-
+    def __init__(self):
+        super().__init__()
         self.on_msg(self._handle_custom_msgs)
-        (self.graph_json, self.domainMap, self.linkMap) = csp_to_json(csp)
+        (self.graph_json, self._domain_map, self._edge_map) = csp_to_json(self.csp)
+        self.visualizer = self
         self._desired_level = 4
         self.sleep_time = 0.2
+        self._displayed_once = False
 
-        # If Con_solver is not defined at the time of creation, import the existing one
-        try:
-            module = importlib.import_module('__main__')
-            Con_solver = getattr(module, 'Con_solver')
-        except AttributeError:
-            module = importlib.import_module('aipython.cspConsistency')
-            Con_solver = getattr(module, 'Con_solver')
-
-        self._con_solver = Con_solver(csp, visualizer=self)
-
-        self._domains = csp.domains.copy()
         self._block_for_user_input = threading.Event()
-        self._thread = ReturnableThread(
-            target=self._con_solver.make_arc_consistent, args=(self._domains,))
-        self._thread.start()
+
         self._selected_arc = None
         self._user_selected_arc = False
+
+        self._selected_var = None
 
         self._initialize_controls()
 
@@ -95,6 +87,14 @@ class CSPViewer(DOMWidget):
         # User did not select. Return random arc.
         return to_do.pop()
 
+    def wait_for_var_selection(self, iter_var):
+        self._block_for_user_input.wait()
+        self._desired_level = 4
+        if self._selected_var in list(iter_var):
+            return self._selected_var
+        else:
+            self._block_for_user_input.wait()
+
     def _initialize_controls(self):
         """Sets up functions that can be used to control the visualization."""
         def advance_visualization(desired_level):
@@ -108,19 +108,7 @@ class CSPViewer(DOMWidget):
 
         advance_visualization1 = advance_visualization(1)
 
-        def auto_arc():
-            self._thread = ReturnableThread(
-                target=self._con_solver.make_arc_consistent, args=(self._domains,))
-            self._thread.start()
-            advance_visualization1()
-
-        def auto_solve():
-            self._thread = ReturnableThread(
-                target=self._con_solver.solve_one, args=(self._domains,))
-            self._thread.start()
-            advance_visualization1()
-
-        def backtrack():
+        def auto_step():
             advance_visualization1()
 
             if not self._thread.is_alive():
@@ -134,9 +122,7 @@ class CSPViewer(DOMWidget):
         self._controls = {
             'fine-step': advance_visualization(4),
             'step': advance_visualization(2),
-            'auto-ac': auto_arc,
-            'auto-solve': auto_solve,
-            'backtrack': backtrack
+            'auto-step': auto_step
         }
 
     def _handle_custom_msgs(self, _, content, buffers=None):
@@ -144,23 +130,35 @@ class CSPViewer(DOMWidget):
 
         if event == 'arc:click':
             var_name = content.get('varId')
-            const = self._con_solver.csp.constraints[content.get('constId')]
+            const = self.csp.constraints[content.get('constId')]
             self._desired_level = 2
 
             self._selected_arc = (var_name, const)
             self._user_selected_arc = True
             self._block_for_user_input.set()
             self._block_for_user_input.clear()
+        elif event == 'var:click':
+            var_name = content.get('varId')
+            self._selected_var = var_name
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
         elif event == 'fine-step:click':
             self._controls['fine-step']()
         elif event == 'step:click':
             self._controls['step']()
-        elif event == 'auto-ac:click':
-            self._controls['auto-ac']()
-        elif event == 'auto-solve:click':
-            self._controls['auto-solve']()
-        elif event == 'backtrack:click':
-            self._controls['backtrack']()
+        elif event == 'auto-step:click':
+            self._controls['auto-step']()
+        elif event == 'initial_render':
+            queued_func = getattr(self, '_queued_func', None)
+            if queued_func:
+                func = queued_func['func']
+                args = queued_func['args']
+                kwargs = queued_func['kwargs']
+                self._displayed_once = True
+                self.send({'action': 'begin_func'})
+                self._thread = ReturnableThread(
+                    target=func, args=args, kwargs=kwargs)
+                self._thread.start()
 
     def display(self, level, *args, **kwargs):
         """Informs the widget about a new state to update the visualization in response to.
@@ -175,6 +173,7 @@ class CSPViewer(DOMWidget):
         should_wait = True
 
         if args[0] == 'Performing AC with domains':
+            should_wait = False
             domains = args[1]
             for var, domain in domains.items():
                 self._send_set_domain_action(var, domain)
@@ -239,7 +238,7 @@ class CSPViewer(DOMWidget):
                 Passing in None will keep the existing colour of the arc.
         """
 
-        self.send({'action': 'highlightArc', 'arcId': self.linkMap[(var, const)],
+        self.send({'action': 'highlightArc', 'arcId': self._edge_map[(var, const)],
                    'style': style, 'colour': colour})
 
     def _send_set_domain_action(self, var, domain):
@@ -250,4 +249,29 @@ class CSPViewer(DOMWidget):
             domain (List[int|string]): The updated domain of the variable.
         """
         self.send({'action': 'setDomain',
-                   'nodeId': self.domainMap[var], 'domain': list(domain)})
+                   'nodeId': self._domain_map[var], 'domain': list(domain)})
+
+
+def visualize(func_to_delay):
+    """Enqueues a function that does not run until the Jupyter widget has rendered.
+
+    Once the Jupyter widget has rendered once, further invocation of the wrapped function
+    behave as if unwrapped.
+
+    Args:
+        func_to_delay (function): The function to delay.
+
+    Returns: 
+        The original function, wrapped such that it will automatically run
+        when the Jupyter widget is rendered.
+    """
+    def wrapper(self, *args, **vargs):
+        if self._displayed_once is False:
+            self._queued_func = {
+                'func': partial(func_to_delay, self),
+                'args': args, 'kwargs': vargs
+            }
+        else:
+            return func_to_delay(self, *args, **vargs)
+
+    return wrapper

@@ -9,6 +9,8 @@ import {
 export default class CSPGraphInteractor extends CSPGraphVisualizer {
     /** Callback whenever an arc is clicked. */
     public onArcClicked?: (varId: string, constId: string) => void;
+    /** Callback whenever a variable node is clicked. */
+    public onVarClicked?: (varId: string) => void;
 
     public nodeEvents() {
         super.nodeEvents();
@@ -26,6 +28,14 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
             groupSelection.select("ellipse").attr("fill", "white");
             groupSelection.selectAll("text").attr("fill", "black");
         });
+
+        this.nodeContainer.selectAll("g")
+            .filter((d: ICSPGraphNode) => d.type === "csp:variable")
+            .on("click", (d: ICSPGraphNode) => {
+                if (this.onVarClicked != null) {
+                    this.onVarClicked(d.name);
+                }
+            });
     }
 
     public edgeEvents() {
@@ -76,8 +86,7 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
      * @param domain The new domain of the variable node.
      */
     public setDomain(nodeId: string, domain: string[]) {
-        const sel = d3.select(`[id='${nodeId}']`);
-        (sel.data()[0] as ICSPGraphNode).domain = domain;
+        this.graph.nodes[nodeId].domain = domain;
         this.update();
     }
 }

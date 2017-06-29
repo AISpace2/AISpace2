@@ -8,30 +8,12 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-import random
 from time import sleep
+import random
+import uuid
 
-
-class Displayable(object):
-    max_display_level = 4
-    sleep_time = 0.2
-
-    def __init__(self, **kwargs):
-        if 'visualizer' in kwargs:
-            self.visualizer = kwargs['visualizer']
-
-    def display(self,level,*args,**kwargs):
-        """print the arguments if level is less than or equal to the
-        current max_display_level.
-        level is an integer.
-        the other arguments are whatever arguments print can take.
-        """
-
-        if getattr(self, 'visualizer', None) is not None:
-            self.visualizer.display(level, *args, **kwargs)
-        else:
-            if level <= self.max_display_level:
-                print(*args)
+class Displayable():
+    pass
 
 def argmax(gen):
     """gen is a generator of (element,value) pairs, where value is a real.

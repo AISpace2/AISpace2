@@ -24,6 +24,10 @@ export interface IRerenderEvent extends IEvent {
     action: "rerender";
 }
 
+export interface IBeginFuncEvent extends IEvent {
+    action: "begin_func";
+}
+
 export function isHighlightArcEvent(event: IEvent): event is ICSPHighlightArcEvent {
     return event.action === "highlightArc";
 }
@@ -38,4 +42,8 @@ export function isOutputEvent(event: IEvent): event is IOutputEvent {
 
 export function isRerenderEvent(event: IEvent): event is IRerenderEvent {
     return event.action === "rerender";
+}
+
+export function isBeginFuncEvent(event: IEvent): event is IBeginFuncEvent {
+    return event.action === "begin_func";
 }
