@@ -225,6 +225,12 @@ const d3ForceLayoutEngine: IGraphLayoutEngine = {
         // Run simulation synchronously the default number of times (300)
         for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
             forceSimulation.tick();
+
+            // Bound nodes to SVG
+            nodes.forEach((node) => {
+                node.x = Math.max(30, Math.min(visualizer.width - 30, node.x!));
+                node.y = Math.max(30, Math.min(visualizer.height - 30, node.y!));
+            });
         }
 
         // Copy over x and y positions onto original graph once simulation is finished
