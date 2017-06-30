@@ -52,6 +52,7 @@ class Displayable(DOMWidget):
         self.sleep_time = 0.2
         self._displayed_once = False
 
+        # You MUST wait() on this event only on a background thread!
         self._block_for_user_input = threading.Event()
 
         self._selected_arc = None
