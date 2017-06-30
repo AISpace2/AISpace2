@@ -104,25 +104,20 @@ class Displayable(DOMWidget):
                 self._block_for_user_input.set()
                 self._block_for_user_input.clear()
 
+                if not self._thread.is_alive():
+                    return_value = self._thread.join()
+                    if not isinstance(return_value, list):
+                        return_value = [return_value]
+
+                    self.send({'action': 'output',
+                            'result': f'''Algorithm execution finished. Returned:
+                            {', '.join(str(x) for x in return_value)}'''})
             return advance
-
-        advance_visualization1 = advance_visualization(1)
-
-        def auto_step():
-            advance_visualization1()
-
-            if not self._thread.is_alive():
-                return_value = self._thread.join()
-                if not isinstance(return_value, list):
-                    return_value = [return_value]
-                self.send({'action': 'output',
-                           'result': f'''There are no more solutions. Solution(s) found:
-                           {', '.join(str(x) for x in return_value)}'''})
 
         self._controls = {
             'fine-step': advance_visualization(4),
             'step': advance_visualization(2),
-            'auto-step': auto_step
+            'auto-step': advance_visualization(1)
         }
 
     def _handle_custom_msgs(self, _, content, buffers=None):
