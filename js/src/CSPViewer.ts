@@ -53,7 +53,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
             } else if (isSetDomainEvent(event)) {
                 this.visualization.setDomain(event.nodeId, event.domain);
             } else if (isOutputEvent(event)) {
-                this.$("#output").text(event.result);
+                this.$("#output").text(event.text);
             } else if (isRerenderEvent(event)) {
                 this.draw();
                 this.model.trigger("msg:custom",

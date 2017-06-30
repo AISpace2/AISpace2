@@ -17,7 +17,7 @@ export interface ICSPSetDomainEvent extends IEvent {
 
 export interface IOutputEvent extends IEvent {
     action: "output";
-    result: string;
+    text: string;
 }
 
 export interface IRerenderEvent extends IEvent {
