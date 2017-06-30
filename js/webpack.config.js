@@ -8,7 +8,7 @@ rules = [{
     loader: 'tslint-loader'
 }, {
     test: /\.ts?$/,
-    loader: "ts-loader",
+    loader: "babel-loader!ts-loader",
     exclude: path.resolve(__dirname, "node_modules")
 }, {
     test: /\.html$/,
@@ -44,7 +44,7 @@ module.exports = [{ // Notebook extension
         // custom widget.
         // It must be an amd module
         //
-        entry: './src/index.ts',
+        entry: ['babel-polyfill', './src/index.ts'],
         output: {
             filename: 'index.js',
             path: path.resolve(__dirname, '..', 'aispace', 'static'),

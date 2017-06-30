@@ -23,6 +23,9 @@
   "devDependencies": {
     "@types/d3": "^4.9.0",
     "@types/node": "^8.0.6",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.5.2",
     "css-loader": "^0.28.4",
     "html-loader": "^0.4.5",
     "json-loader": "^0.5.4",
@@ -36,6 +39,7 @@
     "webpack": "^3.0.0"
   },
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "d3": "^4.9.1",
     "jquery": "^3.2.1",
     "jupyter-js-widgets": "^2.1.4",
