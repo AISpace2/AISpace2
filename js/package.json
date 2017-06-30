@@ -22,18 +22,18 @@
   },
   "devDependencies": {
     "@types/d3": "^4.9.0",
-    "@types/node": "^7.0.32",
+    "@types/node": "^8.0.6",
     "css-loader": "^0.28.4",
     "html-loader": "^0.4.5",
     "json-loader": "^0.5.4",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
-    "ts-loader": "^2.1.0",
+    "ts-loader": "^2.2.1",
     "tslint": "^5.4.3",
     "tslint-loader": "^3.5.3",
-    "typescript": "^2.3.4",
+    "typescript": "^2.4.1",
     "typescript-formatter": "^5.2.0",
-    "webpack": "^2.0.0"
+    "webpack": "^3.0.0"
   },
   "dependencies": {
     "d3": "^4.9.1",

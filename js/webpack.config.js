@@ -1,3 +1,4 @@
+var webpack = require('webpack');
 var version = require('./package.json').version;
 const path = require('path');
 
@@ -56,7 +57,8 @@ module.exports = [{ // Notebook extension
         resolve: {
             extensions: [".tsx", ".ts", ".js"]
         },
-        externals: ['jupyter-js-widgets']
+        externals: ['jupyter-js-widgets'],
+        plugins: [new webpack.optimize.ModuleConcatenationPlugin()]
     },
     { // Embeddable aispace bundle
         //
