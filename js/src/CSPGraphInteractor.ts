@@ -36,6 +36,9 @@ export default class CSPGraphInteractor extends CSPGraphVisualizer {
                     this.onVarClicked(d.name);
                 }
             });
+
+        this.nodeContainer.selectAll("g")
+            .on("click", () => d3.event.preventDefault());
     }
 
     public edgeEvents() {
