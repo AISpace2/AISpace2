@@ -47,7 +47,7 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
             .attr("stroke", "black");
 
         variableSelection.append("text")
-            .text((d) => d.name)
+            .attr("class", "name")
             .attr("text-anchor", "middle")
             .attr("alignment-baseline", "middle")
             .attr("y", -10);
@@ -66,6 +66,7 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
 
         const mergedSelection = updateSelection.merge(enterSelection);
         mergedSelection.attr("transform", (d) => `translate(${d.x!}, ${d.y!})`);
+        mergedSelection.selectAll(".name").text((d) => d.name);
         mergedSelection.selectAll(".domain").text((d: ICSPGraphNode) => `{${d.domain.join()}}`);
 
         updateSelection.exit().remove();

@@ -17,13 +17,36 @@ export default class GraphBuilder extends CSPGraphVisualizer {
      */
     private nodeMousedOver: IGraphNode | null;
 
+    private controlEl: HTMLElement;
+
     constructor(graph: Graph) {
         super(graph);
         this.lineWidth = 5;
     }
 
     public render(targetEl: HTMLElement) {
-        super.render(targetEl);
+        const div1 = document.createElement("div");
+        div1.setAttribute("tabindex", "0");
+        targetEl.appendChild(div1);
+
+        const div2 = document.createElement("div");
+        div2.setAttribute("id", "graph-builder-controls");
+        div2.innerHTML = "Name: <input type='text' id='input-name' /> Value: <input type='text' id='input-value' />";
+        targetEl.appendChild(div2);
+        document.getElementById("input-name").onchange = (e) => {
+            if (this.selectedElement) {
+                this.selectedElement.name = e.target.value;
+                this.update();
+            }
+        };
+        document.getElementById("input-value").onchange = (e) => {
+            if (this.selectedElement && this.selectedElement.type === "csp:variable") {
+                this.selectedElement.domain = e.target.value.split(",").map((a) => parseInt(a, 10));
+                this.update();
+            }
+        };
+        this.controlEl = div2;
+        super.render(div1);
 
         this.tempEdge = this.svg.append("line")
             .attr("stroke", "black")
@@ -67,6 +90,14 @@ export default class GraphBuilder extends CSPGraphVisualizer {
 
                 this.selectedElement = d !== this.selectedElement ? d : null;
                 this.update();
+
+                if (this.selectedElement && this.selectedElement.type === "csp:variable") {
+                    document.getElementById("input-name")!.value = this.selectedElement.name;
+                    document.getElementById("input-value")!.value = this.selectedElement.domain;
+                } else {
+                    document.getElementById("input-name")!.value = "";
+                    document.getElementById("input-value")!.value = "";
+                }
             })
             .on("mouseover", (d: IGraphNode) => {
                 this.nodeMousedOver = d;
@@ -127,6 +158,8 @@ export default class GraphBuilder extends CSPGraphVisualizer {
             .on("click", (d: IGraphEdge) => {
                 d3.event.stopPropagation();
                 this.selectedElement = d !== this.selectedElement ? d : null;
+                document.getElementById("input-name")!.value = "";
+                document.getElementById("input-value")!.value = "";
                 this.update();
             });
     }
