@@ -14,7 +14,7 @@ Note that if you have both `pip` and `pip3` installed, you should use `pip3` ins
 
 For a development installation (requires npm),
 
-    $ git clone https://github.com/aispace/aispace2.git
+    $ git clone https://github.com/aispace2/aispace2.git
     $ cd aispace2
     $ pip install -e . --user
     $ jupyter nbextension install --py --user
