@@ -1,16 +1,16 @@
-aispace2
-===============================
+# AISpace2
 
-blah
+## About
+This is a Jupyter extension that aims to replace the existing AISpace Java applets. We want users to be able to interact and play with algorithms, not only visually as with the existing applets, but also by modifying the algorithms' code directly and seeing the results.
 
-Installation
-------------
+## User Installation
 
-To install use pip:
+    $ pip install aispace --user
+    $ jupyter nbextension enable --py --user aispace
 
-    $ pip install aispace
-    $ jupyter nbextension enable --py --sys-prefix aispace
+Note that if you have both `pip` and `pip3` installed, you should use `pip3` instead.
 
+## Development Installation
 
 For a development installation (requires npm),
 
@@ -19,3 +19,6 @@ For a development installation (requires npm),
     $ pip install -e . --user
     $ jupyter nbextension install --py --user
     $ jupyter nbextension enable --py --user
+
+
+Note that if you have both `pip` and `pip3` installed, you should use `pip3` instead.
