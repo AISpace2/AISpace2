@@ -109,8 +109,9 @@ class Displayable(DOMWidget):
                         return_value = [return_value]
 
                     self.send({'action': 'output',
-                            'text': f'''Algorithm execution finished. Returned:
-                            {', '.join(str(x) for x in return_value)}'''})
+                            'text': 'Algorithm execution finished. Returned: {}'.format(
+                                ', '.join(str(x) for x in return_value)
+                            )})
             return advance
 
         self._controls = {

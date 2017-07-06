@@ -144,7 +144,7 @@ def csp_to_python_code(csp):
     for constraint in csp.constraints:
         scope = constraint.scope
         name = constraint.condition.__name__
-        constraint_strings.append(f"Constraint({scope}, {name})")
+        constraint_strings.append("Constraint({}, {})".format(scope, name))
 
     template = """from aipython.cspProblem import CSP, Constraint
 from operator import lt
