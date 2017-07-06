@@ -2,7 +2,7 @@
 
 First make sure you have `~/.pypirc` setup, with the following contents:
 
-```
+```yaml
 [distutils]
 index-servers =
   pypi
