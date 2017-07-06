@@ -18,7 +18,6 @@ For a development installation (requires npm),
     $ cd aispace2
     $ ./server.sh
 
+Note that `./server.sh` uses `pip3`. You may need to change it to use `pip` if that is not available.
 
-Note that if you have both `pip` and `pip3` installed, you should use `pip3` instead.
-
-You will generally not need to restart the kernel if you modify the Python code, because of how the `-e` option for `pip` works. However, if you modify the JavaScript code, you definitely will. We provide a handy script in this directory, `./client.sh`, which launches a watcher that recompiles all your front-end code whenever it detects a change.
+You will generally not need to restart the kernel if you modify the Python code, because of how the `-e` option for `pip` works. However, if you modify the JavaScript code, you will need to recompile the code and refresh the page. We provide a handy script in this directory, `./client.sh`, which launches a watcher that recompiles all your front-end code whenever it detects a change. You only need to provide the refresh for the changes to take place.
