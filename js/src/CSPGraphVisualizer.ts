@@ -66,7 +66,7 @@ export default class CSPGraphVisualizer extends GraphVisualizer {
 
         const mergedSelection = updateSelection.merge(enterSelection);
         mergedSelection.attr("transform", (d) => `translate(${d.x!}, ${d.y!})`);
-        mergedSelection.selectAll(".name").text((d) => d.name);
+        mergedSelection.selectAll(".name").text((d: ICSPGraphNode) => d.name);
         mergedSelection.selectAll(".domain").text((d: ICSPGraphNode) => `{${d.domain.join()}}`);
 
         updateSelection.exit().remove();

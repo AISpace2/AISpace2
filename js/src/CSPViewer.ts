@@ -26,10 +26,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     private static readonly STEP_CLICK = "step:click";
     private static readonly AUTO_STEP_CLICK = "auto-step:click";
     private static readonly BACKTRACK_CLICK = "backtrack:click";
-    private app: Vue;
-    private g: object;
 
     public model: CSPViewerModel;
+
+    private app: any;
+    private g: {nodes: any[], links: any[]};
+
     // protected visualization: CSPGraphInteractor;
 
     public initialize(opts: any) {
@@ -117,7 +119,6 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
         const App = Vue.extend({
             components: { CSPGraphInteractor },
-            template: '<div id="app"><CSPGraphInteractor :graph="graph" @click:auto-step="autostep" @click:step="step" @fine-step="finestep" @click:link="link" :output="output"></CSPGraphInteractor></div>',
             data() {
                 return {
                     graph: newGraph,
@@ -128,17 +129,27 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                 autostep() {
                     that.send({ event: CSPViewer.AUTO_STEP_CLICK });
                 },
-                step() {
-                    that.send({ event: CSPViewer.STEP_CLICK });
-                },
                 finestep() {
                     that.send({ event: CSPViewer.FINE_STEP_CLICK});
                 },
                 link(l: any) {
-                    console.log(l.source.name, l.target.idx);
                     that.send({ event: CSPViewer.ARC_CLICK, varId: l.source.name, constId: l.target.idx });
                 },
+                step() {
+                    that.send({ event: CSPViewer.STEP_CLICK });
+                },
             },
+            template: `
+                <div id="app">
+                    <CSPGraphInteractor
+                        :graph="graph"
+                        @click:auto-step="autostep"
+                        @click:step="step"
+                        @fine-step="finestep"
+                        @click:link="link"
+                        :output="output">
+                    </CSPGraphInteractor>
+                </div>`,
         });
 
         this.app = new App().$mount();
