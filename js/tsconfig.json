@@ -4,6 +4,7 @@
     "strict": true,
     "module": "amd",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "target": "es2017",
     "lib": ["es2017", "dom"],
     "allowJs": true,

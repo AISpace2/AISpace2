@@ -197,7 +197,7 @@ interface IGraphLayoutEngine {
 /**
  * Layouts a graph using the results of D3's force layout.
  */
-const d3ForceLayoutEngine: IGraphLayoutEngine = {
+export const d3ForceLayoutEngine: IGraphLayoutEngine = {
     relayout: (g: Graph, visualizer: GraphVisualizer) => { return; },
     setup: (graph: Graph, visualizer: GraphVisualizer) => {
         /**

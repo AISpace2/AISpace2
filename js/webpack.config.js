@@ -11,6 +11,11 @@ rules = [{
     loader: "babel-loader!ts-loader",
     exclude: path.resolve(__dirname, "node_modules")
 }, {
+    test: /\.vue$/,
+    use: [{
+        loader: 'vue-loader'
+    }],
+}, {
     test: /\.html$/,
     use: [{
         loader: 'html-loader'
@@ -55,7 +60,10 @@ module.exports = [{ // Notebook extension
             rules: rules
         },
         resolve: {
-            extensions: [".tsx", ".ts", ".js"]
+            extensions: [".vue", ".ts", ".js"],
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js',
+            }
         },
         externals: ['jupyter-js-widgets'],
         plugins: [new webpack.optimize.ModuleConcatenationPlugin()]

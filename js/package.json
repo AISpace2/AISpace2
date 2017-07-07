@@ -36,6 +36,8 @@
     "tslint-loader": "^3.5.3",
     "typescript": "^2.4.1",
     "typescript-formatter": "^5.2.0",
+    "vue-loader": "^13.0.0",
+    "vue-template-compiler": "^2.3.4",
     "webpack": "^3.0.0"
   },
   "dependencies": {
@@ -45,6 +47,7 @@
     "jupyter-js-widgets": "^2.1.4",
     "picomodal": "^3.0.0",
     "shortid": "^2.2.8",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "vue": "^2.3.4"
   }
 }
