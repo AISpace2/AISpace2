@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <input type="radio" id="zero" value="select" v-model="picked">
-    <label for="zero">Select</label>
-    <input type="radio" id="one" value="variable" v-model="picked">
-    <label for="one">Variable</label>
-    <input type="radio" id="two" value="constraint" v-model="picked">
-    <label for="two">Constraint</label>
-    <input type="radio" id="three" value="edge" v-model="picked">
-    <label for="three">Edge</label>
-  </div>
+    <div>
+        <input type="radio" id="zero" value="select" v-model="picked">
+        <label for="zero">Select</label>
+        <input type="radio" id="one" value="variable" v-model="picked">
+        <label for="one">Variable</label>
+        <input type="radio" id="two" value="constraint" v-model="picked">
+        <label for="two">Constraint</label>
+        <input type="radio" id="three" value="edge" v-model="picked">
+        <label for="three">Edge</label>
+    </div>
 </template>
 
 <script>
@@ -21,7 +21,7 @@
       }
     },
     watch: {
-      'picked': function() {
+      'picked': function () {
         this.$emit('modechanged', this.picked);
       }
     }
