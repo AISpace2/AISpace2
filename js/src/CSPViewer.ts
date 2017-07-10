@@ -113,16 +113,16 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
         if (event.arcId == null) {
             for (const edge of this.graph.edges) {
-                const stroke = event.colour ? event.colour : edge.style.stroke;
-                Vue.set(edge.style, "stroke", stroke);
-                Vue.set(edge.style, "strokeWidth", strokeWidth);
+                const stroke = event.colour ? event.colour : edge.styles.stroke;
+                Vue.set(edge.styles, "stroke", stroke);
+                Vue.set(edge.styles, "strokeWidth", strokeWidth);
             }
         } else {
             const i = this.graph.edges.map((a) => a.id).findIndex((a) => a === event.arcId);
             if (i !== -1) {
-                const stroke = event.colour ? event.colour : this.graph.edges[i].style.stroke;
-                Vue.set(this.graph.edges[i].style, "stroke", stroke);
-                Vue.set(this.graph.edges[i].style, "strokeWidth", strokeWidth);
+                const stroke = event.colour ? event.colour : this.graph.edges[i].styles.stroke;
+                Vue.set(this.graph.edges[i].styles, "stroke", stroke);
+                Vue.set(this.graph.edges[i].styles, "strokeWidth", strokeWidth);
             }
         }
     }

@@ -1,8 +1,8 @@
 from ipywidgets import DOMWidget, register
-from traitlets import Dict, Unicode
+from traitlets import Dict, Unicode, observe
 
 from .cspjsonbridge import csp_from_json, csp_to_json, csp_to_python_code
-
+import json
 
 @register('aispace.CSPBuilder')
 class CSPBuilder(DOMWidget):

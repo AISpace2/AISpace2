@@ -17,7 +17,7 @@ export interface ICSPGraphNode extends IGraphNode {
 
 export interface IGraphEdgeJSON {
     source: string;
-    dest: string;
+    target: string;
     id: string;
     name?: string;
     [key: string]: any;
@@ -36,12 +36,17 @@ export interface IGraph<TNode extends IGraphNode = IGraphNode, TEdge extends IGr
     edges: TEdge[];
 }
 
+export interface IGraphJSON<TNode extends IGraphNode = IGraphNode, TEdge extends IGraphEdgeJSON = IGraphEdgeJSON> {
+    nodes: TNode[];
+    edges: TEdge[];
+}
+
 export class Graph<TNode extends IGraphNode = IGraphNode, TEdge extends IGraphEdge = IGraphEdge>
     implements IGraph<TNode, TEdge> {
 
-    public static fromJSON(json: any): Graph {
+    public static fromJSON(json: IGraphJSON): Graph {
         const newGraph = {
-            edges: [] as any[],
+            edges: [] as IGraphEdge[],
             nodes: [] as IGraphNode[],
         };
 
@@ -57,9 +62,9 @@ export class Graph<TNode extends IGraphNode = IGraphNode, TEdge extends IGraphEd
             // Find source
             newGraph.edges.push({
                 id: edge.id,
-                source: json.nodes[edge.source],
-                style: {},
-                target: json.nodes[edge.dest],
+                source: newGraph.nodes.find((n) => n.id === edge.source)!,
+                styles: {},
+                target: newGraph.nodes.find((n) => n.id === edge.target)!,
             });
         }
 
@@ -75,10 +80,35 @@ export class Graph<TNode extends IGraphNode = IGraphNode, TEdge extends IGraphEd
         this.edges = edges;
     }
 
-    public toJSON(): IGraph {
+    public toJSON(): IGraphJSON {
+        const nodes: TNode[] = [];
+        const edges: IGraphEdgeJSON[] = [];
+
+        for (const node of this.nodes) {
+            // Remove x and y properties
+            const newNode = Object.assign({}, node);
+            delete newNode.x;
+            delete newNode.y;
+
+            nodes.push(newNode);
+        }
+
+        for (const edge of this.edges) {
+            // Re-map each edges pointer to a node to the node's id
+            // Note that the edge changes from a IGraphEdge to a IGraphEdgeJSON
+            const newEdge = Object.assign({}, edge) as any;
+            newEdge.source = newEdge.source.id;
+            newEdge.target = newEdge.target.id;
+
+            // Also delete the style property
+            delete edge.style;
+
+            edges.push(newEdge);
+        }
+
         return {
-            edges: this.edges,
-            nodes: this.nodes,
+            edges,
+            nodes,
         };
     }
 

@@ -11,8 +11,8 @@
             </template>
             <template slot="edge" scope="props">
                 <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
-                                :stroke="props.link.style.stroke"
-                                :stroke-width="edgeStrokeWidth(props.link, props.hover)"></UndirectedEdge>
+                                :stroke="stroke(props.link)"
+                                :stroke-width="strokeWidth(props.link, props.hover)"></UndirectedEdge>
             </template>
         </GraphVisualizerBase>
         <div id="footer">
@@ -37,13 +37,20 @@
       linkClicked: function (link) {
         this.$emit('click:link', link);
       },
-      edgeStrokeWidth: function (link, isHovering) {
+      stroke: function(link) {
+        if (link.styles != null) {
+            return link.styles.stroke;
+        }
+
+        return null;
+      },
+      strokeWidth: function (link, isHovering) {
         if (isHovering) {
           return 7;
         }
 
-        if (link.style && link.style.strokeWidth) {
-          return link.style.strokeWidth;
+        if (link.styles && link.styles.strokeWidth) {
+          return link.styles.strokeWidth;
         }
 
         return 4;

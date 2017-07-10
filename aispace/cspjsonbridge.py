@@ -5,9 +5,9 @@ and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 
 import uuid
 from operator import lt
+from string import Template
 
 from aipython.cspProblem import CSP, Constraint
-from string import Template
 
 
 def csp_to_json(csp):
@@ -26,6 +26,7 @@ def csp_to_json(csp):
             The first dictionary returned represents the CSP that is representable in JSON.
             This means the dictionary has no references to object instances.
             This JSON should be immediately usable in creating a new CSP Graph in JavaScript.
+            See the TypeScript definition of IGraphJSON for details of its shape.
 
             The second dictionary is a domain map, where the keys are node names (strings),
             and values are the IDs (also strings) of the nodes in the resulting JSON.
@@ -38,49 +39,49 @@ def csp_to_json(csp):
             For example, `edge_map[('A', A_lt_B_constraint)] -> 'wer3jbvcs2'`.
             You can ignore this dictionary - it is provided for convenience.
     """
-    csp_json = {'nodes': {}, 'edges': {}}
+    csp_json = {'nodes': [], 'edges': []}
 
     # Maps variables to their IDs
     domain_map = {var: str(uuid.uuid4()) for var in csp.domains}
 
     # Maps (variable, constraint) to their corresponding arc IDs
-    edge_map = dict()
+    edge_map = {}
 
     for i, (var, value) in enumerate(csp.domains.items()):
-        csp_json['nodes'][domain_map[var]] = {
+        csp_json['nodes'].append({
             'id': domain_map[var],
             'name': var,
             'type':
             'csp:variable',
             'idx': i,
             'domain': list(value)
-        }
+        })
 
     for (i, constraint) in enumerate(csp.constraints):
         constraint_id = str(uuid.uuid4())
-        csp_json['nodes'][constraint_id] = {
+        csp_json['nodes'].append({
             'id': constraint_id,
             'name': constraint.__repr__(),
             'type': 'csp:constraint',
             'idx': i
-        }
+        })
 
         link1_id = str(uuid.uuid4())
         link1 = {
             'id': link1_id,
             'source': domain_map[constraint.scope[0]],
-            'dest': constraint_id
+            'target': constraint_id
         }
 
-        csp_json['edges'][link1_id] = link1
+        csp_json['edges'].append(link1)
         edge_map[(constraint.scope[0], constraint)] = link1_id
 
         if len(constraint.scope) == 2:
             link2_id = str(uuid.uuid4())
             link2 = {'id': link2_id,
-                     'source': domain_map[constraint.scope[1]], 'dest': constraint_id}
+                     'source': domain_map[constraint.scope[1]], 'target': constraint_id}
 
-            csp_json['edges'][link2_id] = link2
+            csp_json['edges'].append(link2)
             edge_map[(constraint.scope[1], constraint)] = link2_id
 
     return (csp_json, domain_map, edge_map)
@@ -101,21 +102,21 @@ def csp_from_json(graph_json):
     """
     domains = {
         node['name']: set(node['domain'])
-        for node in graph_json['nodes'].values() if node['type'] == 'csp:variable'
+        for node in graph_json['nodes'] if node['type'] == 'csp:variable'
     }
 
     constraints = []
 
-    for node in graph_json['nodes'].values():
+    for node in graph_json['nodes']:
         scope = []
         if node['type'] == 'csp:constraint':
             # Find the links with the target as this constraint
-            for link in graph_json['edges'].values():
-                if link['dest'] == node['id']:
-                    source_node = graph_json['nodes'][link['source']]
+            for link in graph_json['edges']:
+                if link['target'] == node['id']:
+                    source_node = next(n for n in graph_json['nodes'] if n['id'] == link['source'])
                     scope.append(source_node['name'])
                 elif link['source'] == node['id']:
-                    source_node = graph_json['nodes'][link['dest']]
+                    source_node = next(n for n in graph_json['nodes'] if n['id'] == link['target'])
                     scope.append(source_node['name'])
 
             if scope:

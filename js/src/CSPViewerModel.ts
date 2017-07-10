@@ -3,7 +3,7 @@ import * as widgets from "jupyter-js-widgets";
 import * as _ from "underscore";
 
 import { IEvent } from "./CSPViewerEvents";
-import { IGraph } from "./Graph";
+import { IGraphJSON } from "./Graph";
 
 export default class CSPViewerModel extends widgets.DOMWidgetModel {
     public defaults() {
@@ -52,7 +52,7 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     }
 
     /** The JSON representing the CSP graph. */
-    get graphJSON(): IGraph {
+    get graphJSON(): IGraphJSON {
         return this.get("graph_json");
     }
 }
