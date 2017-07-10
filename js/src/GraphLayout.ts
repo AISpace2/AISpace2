@@ -1,8 +1,13 @@
 import * as d3 from "d3-force";
 import { IGraph, IGraphEdge } from "./Graph";
 
-export interface ILayoutParams {
+/**
+ * Layout parameters used for laying out the graph.
+ */
+export interface IGraphLayoutParams {
+    /** The available width for the graph. */
     width: number;
+    /** The available height for the graph. */
     height: number;
 }
 
@@ -18,7 +23,7 @@ export interface IGraphLayoutEngine {
      * perhaps because nodes will be created at mouse position, you may assign
      * x and y positions as properties to each node datum right here.
      */
-    setup(graph: IGraph, layoutParams: ILayoutParams): void;
+    setup(graph: IGraph, layoutParams: IGraphLayoutParams): void;
 
     /**
      * Re-layouts the graph as a result of graph changes.
@@ -28,27 +33,21 @@ export interface IGraphLayoutEngine {
      *
      * You should update the x and y properties of each node datum.
      */
-    relayout(graph: IGraph, layoutParams: ILayoutParams): void;
+    relayout(graph: IGraph, layoutParams: IGraphLayoutParams): void;
 }
 
 /**
- * Layouts a graph using the results of D3's force layout.
+ * Lays out a graph using D3's force layout simulation.
  */
 export const d3ForceLayoutEngine: IGraphLayoutEngine = {
-    relayout: (graph: IGraph, layoutParams: ILayoutParams) => { return; },
-    setup: (graph: IGraph, layoutParams: ILayoutParams) => {
+    relayout: (graph: IGraph, layoutParams: IGraphLayoutParams) => { return; },
+    setup: (graph: IGraph, layoutParams: IGraphLayoutParams) => {
         /**
          * We will work with a copy of the graph to prevent D3 from adding
          * various additional properties, such as `vx` and `fy`, to our nodes.
          * Later, we'll copy over only the final x and y properties that we're interested in.
          */
         const graphCopy: IGraph = JSON.parse(JSON.stringify(graph));
-        const nodes = Object.values(graphCopy.nodes);
-        const links = [];
-        for (const edge of Object.values(graphCopy.edges)) {
-            links.push({ source: edge.source, target: edge.dest });
-        }
-
         const forceSimulation = d3.forceSimulation(graphCopy.nodes)
             .force("link", d3.forceLink()
                 .id((node: IGraphEdge) => node.id)
@@ -65,7 +64,7 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
             forceSimulation.tick();
 
             // Bound nodes to SVG
-            nodes.forEach((node) => {
+            graphCopy.nodes.forEach((node) => {
                 node.x = Math.max(30, Math.min(layoutParams.width - 30, node.x!));
                 node.y = Math.max(30, Math.min(layoutParams.height - 30, node.y!));
             });
