@@ -19,6 +19,10 @@ class CSPBuilder(DOMWidget):
         super().__init__()
         (self.graph_json, _, _) = csp_to_json(csp)
 
+    @observe('graph_json')
+    def _observe_graph_json(self, _):
+        self.send({'action': 'python-code', 'code': json.dumps(self.graph_json)})
+
     def csp(self):
         """Converts the CSP represented by this builder into a Python CSP object."""
         return csp_from_json(self.graph_json)
@@ -26,5 +30,4 @@ class CSPBuilder(DOMWidget):
     def py_code(self):
         """Converts the CSP represented by this builder into Python code."""
 
-        self.send({'action': 'python-code',
-                   'code': csp_to_python_code(self.csp())})
+        self.send({'action': 'request-python-code'})
