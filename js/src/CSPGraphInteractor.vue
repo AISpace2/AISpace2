@@ -37,7 +37,6 @@
       linkClicked: function (link) {
         this.$emit('click:link', link);
       },
-
       edgeStrokeWidth: function (link, isHovering) {
         if (isHovering) {
           return 7;

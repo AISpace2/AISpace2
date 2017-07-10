@@ -11,7 +11,7 @@
 
 <script>
   export default {
-    props: ['text', 'x', 'y', 'fill', 'type', 'textColor'],
+    props: ['x', 'y'],
     computed: {
       transform: function () {
         return `translate(${this.x}, ${this.y})`;

@@ -4,8 +4,8 @@ import * as widgets from "jupyter-js-widgets";
 import * as _ from "underscore";
 import Vue from "vue";
 import CSPGraphInteractor from "./CSPGraphInteractor.vue";
-import { Graph, IGraphNode } from "./Graph";
-import GraphVisualizer, {d3ForceLayoutEngine} from "./GraphVisualizer";
+import { Graph, ICSPGraphNode } from "./Graph";
+import { d3ForceLayoutEngine } from "./GraphLayout";
 
 import * as template from "./cspviewer.template.html";
 import {
@@ -30,44 +30,37 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     public model: CSPViewerModel;
 
     private app: any;
-    private g: {nodes: any[], links: any[]};
+    private graph: Graph<ICSPGraphNode>;
 
     // protected visualization: CSPGraphInteractor;
 
     public initialize(opts: any) {
         super.initialize(opts);
 
+        this.graph = Graph.fromJSON(this.model.graphJSON) as Graph<ICSPGraphNode>;
+
+        // Functions called on the Python backend are queued until first render
         if (this.model.initial_render) {
             this.send({ event: "initial_render" });
         }
-
-        // this.visualization = new CSPGraphInteractor(Graph.fromJSON(this.model.graphJSON));
-        // this.visualization.onArcClicked = (varId, constId) => {
-        //     this.send({ event: CSPViewer.ARC_CLICK, constId, varId });
-        // };
-        // this.visualization.onVarClicked = (varId) => {
-        //     this.send({ event: CSPViewer.VAR_CLICK, varId });
-        // };
 
         this.listenTo(this.model, "view:msg", (event: IEvent) => {
             // tslint:disable-next-line:no-console
             console.log(event);
 
             if (isHighlightArcEvent(event)) {
-                // this.visualization.highlightArc(event.arcId, event.style, event.colour);
-                const i = this.g.links.map((a) => a.id).findIndex((a) => a === event.arcId);
+                const i = this.graph.edges.map((a) => a.id).findIndex((a) => a === event.arcId);
                 if (i !== -1) {
-                    const stroke = event.colour ? event.colour : this.g.links[i].style.stroke;
+                    const stroke = event.colour ? event.colour : this.graph.edges[i].style.stroke;
                     const strokeWidth = event.style === "bold" ? 7 : 2;
-                    Vue.set(this.g.links[i].style, "stroke", stroke);
-                    Vue.set(this.g.links[i].style, "strokeWidth", strokeWidth);
+                    Vue.set(this.graph.edges[i].style, "stroke", stroke);
+                    Vue.set(this.graph.edges[i].style, "strokeWidth", strokeWidth);
                 }
             } else if (isSetDomainEvent(event)) {
-                // this.visualization.setDomain(event.nodeId, event.domain);
-                const i = this.g.nodes.map((a) => a.id).findIndex((a) => a === event.nodeId);
+                const i = this.graph.nodes.map((a) => a.id).findIndex((a) => a === event.nodeId);
 
                 if (i !== -1) {
-                    this.g.nodes[i].domain = event.domain;
+                    this.graph.nodes[i].domain = event.domain;
                 }
             } else if (isOutputEvent(event)) {
                 this.app.output = event.text;
@@ -91,29 +84,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     }
 
     public render() {
-        const newGraph = {
-            links: [] as any[],
-            nodes: [] as IGraphNode[],
-        };
-
-        const g = Graph.fromJSON(this.model.graphJSON);
-
-        d3ForceLayoutEngine.setup(g, { width: 800, height: 600 } as GraphVisualizer);
-
-        for (const node of Object.values(g.nodes)) {
-            newGraph.nodes.push(node);
-
-            if (node.type === "csp:constraint") {
-                node.constraint = "lt";
-            }
-        }
-
-        for (const edge of Object.values(g.edges)) {
-            // Find source
-            newGraph.links.push({ id: edge.id, source: g.nodes[edge.source], target: g.nodes[edge.dest], style: {} });
-        }
-
-        this.g = newGraph;
+        d3ForceLayoutEngine.setup(this.graph, { width: 800, height: 600 });
 
         const that = this;
 
@@ -121,7 +92,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
             components: { CSPGraphInteractor },
             data() {
                 return {
-                    graph: newGraph,
+                    graph: that.graph,
                     output: "",
                 };
             },

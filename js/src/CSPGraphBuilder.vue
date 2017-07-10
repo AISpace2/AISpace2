@@ -126,7 +126,7 @@
             return;
           }
 
-          this.graph.links.push({
+          this.graph.edges.push({
             source: this.first,
             target: this.selection,
             name: "edge1",

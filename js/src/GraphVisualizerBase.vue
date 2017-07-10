@@ -4,7 +4,7 @@
              @mousemove="dragSVG"
              @keydown.delete="$emit('delete')"
              @dblclick="onDblClick">
-            <EdgeContainer v-for="link in graph.links" :key="link.id"
+            <EdgeContainer v-for="link in graph.edges" :key="link.id"
                            @mouseover="linkMouseOver(link)"
                            @mouseout="linkMouseOut(link)"
                            @click="$emit('click:edge', link)">
@@ -14,10 +14,10 @@
                       :hover="link === linkHover"></slot>
             </EdgeContainer>
             <GraphNode v-for="node in graph.nodes" :key="node.id"
-                       :transform="`translate(${node.x}, ${node.y})`"
                        @click="$emit('click:node', node)"
                        @dragstart="dragstart(node, $event)" @dragend="dragend(node)"
-                       @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)">
+                       @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
+                       :x="node.x" :y="node.y">
                 <slot name="node" :node="node" :hover="node === nodeHover"></slot>
             </GraphNode>
         </svg>
