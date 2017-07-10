@@ -8,14 +8,7 @@ import { Graph, ICSPGraphNode } from "./Graph";
 import { d3ForceLayoutEngine } from "./GraphLayout";
 
 import * as template from "./cspviewer.template.html";
-import {
-    IEvent,
-    isBeginFuncEvent,
-    isHighlightArcEvent,
-    isOutputEvent,
-    isRerenderEvent,
-    isSetDomainEvent,
-} from "./CSPViewerEvents";
+import * as Events from "./CSPViewerEvents";
 import CSPViewerModel from "./CSPViewerModel";
 
 export default class CSPViewer extends widgets.DOMWidgetView {
@@ -29,10 +22,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
     public model: CSPViewerModel;
 
-    private app: any;
+    private vue: any;
     private graph: Graph<ICSPGraphNode>;
-
-    // protected visualization: CSPGraphInteractor;
 
     public initialize(opts: any) {
         super.initialize(opts);
@@ -42,34 +33,19 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         // Functions called on the Python backend are queued until first render
         if (this.model.initial_render) {
             this.send({ event: "initial_render" });
+            this.highlightArc({ action: "highlightArc", arcId: null, style: "normal", colour: "blue" });
         }
 
-        this.listenTo(this.model, "view:msg", (event: IEvent) => {
+        this.listenTo(this.model, "view:msg", (event: Events.IEvent) => {
             // tslint:disable-next-line:no-console
             console.log(event);
 
-            if (isHighlightArcEvent(event)) {
-                const i = this.graph.edges.map((a) => a.id).findIndex((a) => a === event.arcId);
-                if (i !== -1) {
-                    const stroke = event.colour ? event.colour : this.graph.edges[i].style.stroke;
-                    const strokeWidth = event.style === "bold" ? 7 : 2;
-                    Vue.set(this.graph.edges[i].style, "stroke", stroke);
-                    Vue.set(this.graph.edges[i].style, "strokeWidth", strokeWidth);
-                }
-            } else if (isSetDomainEvent(event)) {
-                const i = this.graph.nodes.map((a) => a.id).findIndex((a) => a === event.nodeId);
-
-                if (i !== -1) {
-                    this.graph.nodes[i].domain = event.domain;
-                }
-            } else if (isOutputEvent(event)) {
-                this.app.output = event.text;
-            } else if (isRerenderEvent(event)) {
-                this.draw();
-                this.model.trigger("msg:custom",
-                    { action: "highlightArc", arcId: null, style: "normal", colour: "blue" });
-            } else if (isBeginFuncEvent(event)) {
-                this.$("#controls").show();
+            if (Events.isHighlightArcEvent(event)) {
+                this.highlightArc(event);
+            } else if (Events.isSetDomainEvent(event)) {
+                this.setDomain(event);
+            } else if (Events.isOutputEvent(event)) {
+                this.vue.output = event.text;
             }
         });
     }
@@ -101,7 +77,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                     that.send({ event: CSPViewer.AUTO_STEP_CLICK });
                 },
                 finestep() {
-                    that.send({ event: CSPViewer.FINE_STEP_CLICK});
+                    that.send({ event: CSPViewer.FINE_STEP_CLICK });
                 },
                 link(l: any) {
                     that.send({ event: CSPViewer.ARC_CLICK, varId: l.source.name, constId: l.target.idx });
@@ -123,14 +99,42 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                 </div>`,
         });
 
-        this.app = new App().$mount();
-        this.el.appendChild(this.app.$el);
+        this.vue = new App().$mount();
+        this.el.appendChild(this.vue.$el);
 
         return this;
     }
 
-    private draw() {
-        // this.visualization.lineWidth = this.model.lineWidth;
-        // this.visualization.render(this.$("#svg")[0]);
+    /**
+     * Highlights an arc (or all arcs), as described by the event object.
+     */
+    private highlightArc(event: Events.ICSPHighlightArcEvent) {
+        const strokeWidth = event.style === "bold" ? 7 : 2;
+
+        if (event.arcId == null) {
+            for (const edge of this.graph.edges) {
+                const stroke = event.colour ? event.colour : edge.style.stroke;
+                Vue.set(edge.style, "stroke", stroke);
+                Vue.set(edge.style, "strokeWidth", strokeWidth);
+            }
+        } else {
+            const i = this.graph.edges.map((a) => a.id).findIndex((a) => a === event.arcId);
+            if (i !== -1) {
+                const stroke = event.colour ? event.colour : this.graph.edges[i].style.stroke;
+                Vue.set(this.graph.edges[i].style, "stroke", stroke);
+                Vue.set(this.graph.edges[i].style, "strokeWidth", strokeWidth);
+            }
+        }
+    }
+
+    /**
+     * Sets the domain of a variable node, as described by the event object.
+     */
+    private setDomain(event: Events.ICSPSetDomainEvent) {
+        const i = this.graph.nodes.map((a) => a.id).findIndex((a) => a === event.nodeId);
+
+        if (i !== -1) {
+            this.graph.nodes[i].domain = event.domain;
+        }
     }
 }

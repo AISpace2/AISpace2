@@ -150,7 +150,6 @@ class Displayable(DOMWidget):
                 args = queued_func['args']
                 kwargs = queued_func['kwargs']
                 self._displayed_once = True
-                self.send({'action': 'begin_func'})
                 self._thread = ReturnableThread(
                     target=func, args=args, kwargs=kwargs)
                 self._thread.start()
