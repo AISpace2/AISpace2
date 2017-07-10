@@ -1,12 +1,11 @@
 <template>
-  <line :class="{hover: hover}"
-  :x1="x1" :y1="y1" :x2="x2" :y2="y2" :stroke="stroke != null ? stroke : 'black'" :stroke-width="strokeWidth != null ? strokeWidth : 4" @mouseover="$emit('mouseover', $event)" @mouseout="$emit('mouseout', $event)" @click="$emit('click', $event)">
+  <line
+  :x1="x1" :y1="y1" :x2="x2" :y2="y2" :stroke="stroke != null ? stroke : 'black'" :stroke-width="strokeWidth != null ? strokeWidth : 4">
   </line>
 </template>
-
+    
 <script>
 export default {
-  name: 'node-link',
   props: {
     x1: {
       type: Number,

@@ -1,21 +1,23 @@
 <template>
   <div>
-    <graph-builder :graph="graph" @updateNodeSelection="val => selectedNode = val" @dblclick="createNode">
-      <template slot="node" scope="node">
-        <g v-if="node.type === 'csp:variable'">
-          <ellipse rx="40" ry="30" cx="0" cy="0" :fill="node.selected ? 'pink' : 'white'" stroke="black"></ellipse>
-          <text x="0" y="-8" text-anchor="middle" alignment-baseline="middle" fill="black">{{node.name}}</text>
-          <text class="domain" x="0" y="7" text-anchor="middle" alignment-baseline="middle" fill="black">
-            {{node.domain}}
-          </text>
-  
-        </g>
-        <g v-if="node.type === 'csp:constraint'">
-          <rect width="70" height="50" stroke="black" :fill="node.selected ? 'pink' : 'white'" x="-35" y="-25"></rect>
-          <text x="0" y="0" text-anchor="middle" alignment-baseline="middle" fill="black">A {{node.constraint}} 0</text>
-        </g>
+    <GraphVisualizerBase :graph="graph" @updateSelection="val => selection = val" @dblclick="createNode" :selection="selection"
+      @click:edge="updateSelection"
+      @click:node="updateSelection"
+      @delete="deleteSelection"
+      >
+      <template slot="node" scope="props">
+        <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name" :domain="props.node.domain"
+        :focus="props.node === selection"
+        >
+        </CSPVariableNode>
+        <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name" :constraint="props.node.constraint"
+        :focus="props.node === selection">
+        </CSPConstraintNode>
       </template>
-    </graph-builder>
+      <template slot="edge" scope="props">
+        <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="strokeColour(props.link)"></UndirectedEdge>
+      </template>
+    </GraphVisualizerBase>
   
     <div>
       <toolbar :mode="mode" @modechanged="updateMode"></toolbar>
@@ -29,15 +31,15 @@
     </div>
   
     <div>
-      <div v-if="selectedNode && selectedNode.type === 'csp:variable'">
+      <div v-if="selection && selection.type === 'csp:variable'">
         <label>Name</label>
-        <input type="text" :value="selectedNode ? selectedNode.name : null" @input="selectedNode ? selectedNode.name = $event.target.value : null"></input>
+        <input type="text" :value="selection ? selection.name : null" @input="selection ? selection.name = $event.target.value : null"></input>
         <label>Domain</label>
-        <input type="text" :value="selectedNode ? selectedNode.domain : null" @change="selectedNode ? selectedNode.domain = $event.target.value.split(',').map(a => +a) : null"></input>
+        <input type="text" :value="selection ? selection.domain : null" @change="selection ? selection.domain = $event.target.value.split(',').map(a => +a) : null"></input>
       </div>
-      <div v-else-if="selectedNode && selectedNode.type === 'csp:constraint'">
+      <div v-else-if="selection && selection.type === 'csp:constraint'">
         <label>Constraint Type</label>
-        <select v-model="selectedNode.constraint">
+        <select v-model="selection.constraint">
           <option value="lt">Less than (&#60;)</option>
           <option value="gt">Greater than (&#62;)</option>
           <option value="eq">Equal to (=)</option>
@@ -51,30 +53,41 @@
 
 
 <script>
-import GraphBuilder from './GraphBuilder.vue'
+import GraphVisualizerBase from './GraphVisualizerBase.vue'
+import CSPConstraintNode from './CSPConstraintNode';
+import CSPVariableNode from './CSPVariableNode';
+import UndirectedEdge from './UndirectedEdge';
+import { removeNode, removeEdge } from './GraphUtils';
+
 import Toolbar from './Toolbar.vue'
+import * as shortid from "shortid";
 
 export default {
   components: {
-    GraphBuilder,
-    Toolbar
+    GraphVisualizerBase,
+    Toolbar,
+    CSPConstraintNode,
+    CSPVariableNode,
+    UndirectedEdge
   },
   data() {
     return {
-      mode: 'variable',
-      selectedNode: null,
+      mode: 'select',
+      selection: null,
       first: null
     }
   },
   props: ['graph'],
   watch: {
-    'selectedNode': function () {
+    'selection': function () {
       if (this.mode === 'edge') {
         if (this.first == null) {
-          this.first = this.selectedNode;
+          this.first = this.selection;
         } else {
           this.createEdge();
         }
+      } else if (this.mode !== 'select') {
+        this.selection = null;
       }
     }
   },
@@ -88,20 +101,22 @@ export default {
           name: 'asdf',
           x, y,
           type: 'csp:variable',
-          domain: []
+          domain: [],
+          id: shortid.generate()
         })
       } else if (this.mode === 'constraint') {
         this.graph.nodes.push({
           name: 'asdf',
           x, y,
           type: 'csp:constraint',
-          constraint: 'gt'
+          constraint: 'gt',
+          id: shortid.generate()
         })
       }
     },
     createEdge: function () {
-      if (this.mode === 'edge' && this.selectedNode != null && this.first != null) {
-        if (this.first.type === 'csp:variable' && this.selectedNode.type === 'csp:variable') {
+      if (this.mode === 'edge' && this.selection != null && this.first != null) {
+        if (this.first.type === 'csp:variable' && this.selection.type === 'csp:variable') {
           console.log('Can\'t create an edge between two variables');
           this.first = null;
           return;
@@ -109,13 +124,41 @@ export default {
 
         this.graph.links.push({
           source: this.first,
-          target: this.selectedNode,
-          name: "edge1"
+          target: this.selection,
+          name: "edge1",
+          id: shortid.generate()
         });
 
         this.first = null;
       }
-    }
+    },
+
+    strokeColour: function(link) {
+      if (link === this.selection) {
+        return "pink";
+      }
+
+      return "black";
+    },
+
+    updateSelection: function(selection) {
+      if (this.selection === selection) {
+        this.selection = null;
+      } else {
+        this.selection = selection;
+      }
+    },
+
+    deleteSelection: function () {
+      if (this.selection) {
+        if (this.selection.source && this.selection.target) {
+          removeEdge(this.graph, this.selection);
+        } else {
+          removeNode(this.graph, this.selection);
+        }
+        this.selection = null;
+      }
+    },
   }
 }
 </script>

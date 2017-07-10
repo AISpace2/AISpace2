@@ -1,21 +1,16 @@
 <template>
   <div>
-    <GraphInteractor :graph="graph" @click:link="linkClicked">
-      <template slot="node" scope="node">
-        <g v-if="node.type === 'csp:variable'">
-          <ellipse rx="40" ry="30" cx="0" cy="0" :fill="node.hovered ? 'pink' : 'white'" stroke="black"></ellipse>
-          <text x="0" y="-8" text-anchor="middle" alignment-baseline="middle" fill="black">{{node.name}}</text>
-          <text class="domain" x="0" y="7" text-anchor="middle" alignment-baseline="middle" fill="black">
-            {{domainText(node)}}
-          </text>
-  
-        </g>
-        <g v-if="node.type === 'csp:constraint'">
-          <rect width="70" height="50" stroke="black" :fill="node.hovered ? 'azure' : 'white'" x="-35" y="-25"></rect>
-          <text x="0" y="0" text-anchor="middle" alignment-baseline="middle" fill="black">A {{node.constraint}} 0</text>
-        </g>
+    <GraphVisualizerBase :graph="graph" @click:edge="linkClicked">
+      <template slot="node" scope="props">
+        <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name" :domain="props.node.domain" :hover="props.hover">
+        </CSPVariableNode>
+        <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name" :constraint="props.node.constraint" :hover="props.hover">
+        </CSPConstraintNode>
       </template>
-    </GraphInteractor>
+      <template slot="edge" scope="props">
+        <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="props.link.style.stroke" :stroke-width="edgeStrokeWidth(props.link, props.hover)"></UndirectedEdge>
+      </template>
+    </GraphVisualizerBase>
     <div id="footer">
       <div id="controls" class="btn-group">
         <button id="fine-step" class="btn btn-default" @click="$emit('click:fine-step')">Fine Step</button>
@@ -28,15 +23,27 @@
 </template>
 
 <script>
-import GraphInteractor from './GraphInteractor.vue';
+import GraphVisualizerBase from './GraphVisualizerBase';
+import CSPConstraintNode from './CSPConstraintNode';
+import CSPVariableNode from './CSPVariableNode';
+import UndirectedEdge from './UndirectedEdge';
 export default {
-  components: { GraphInteractor },
+  components: { GraphVisualizerBase, CSPConstraintNode, CSPVariableNode, UndirectedEdge },
   methods: {
-    domainText: function(variableNode) {
-      return `{${variableNode.domain.join(',')}}`
-    },
-    linkClicked: function(link) {
+    linkClicked: function (link) {
       this.$emit('click:link', link);
+    },
+
+    edgeStrokeWidth: function (link, isHovering) {
+      if (isHovering) {
+        return 7;
+      }
+
+      if (link.style && link.style.strokeWidth) {
+        return link.style.strokeWidth;
+      }
+
+      return 4;
     }
   },
   props: ['graph', 'output']

@@ -1,5 +1,7 @@
 <template>
   <div>
+    <input type="radio" id="zero" value="select" v-model="picked">
+    <label for="zero">Select</label>
     <input type="radio" id="one" value="variable" v-model="picked">
     <label for="one">Variable</label>
     <input type="radio" id="two" value="constraint" v-model="picked">
@@ -15,7 +17,7 @@
     props: ['mode'],
     data() {
       return {
-        picked: 'variable'
+        picked: 'select'
       }
     },
     watch: {
