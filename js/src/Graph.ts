@@ -58,7 +58,7 @@ export class Graph<TNode extends IGraphNode = IGraphNode, TEdge extends IGraphEd
             newGraph.edges.push({
                 id: edge.id,
                 source: json.nodes[edge.source],
-                style: {} ,
+                style: {},
                 target: json.nodes[edge.dest],
             });
         }
@@ -80,5 +80,37 @@ export class Graph<TNode extends IGraphNode = IGraphNode, TEdge extends IGraphEd
             edges: this.edges,
             nodes: this.nodes,
         };
+    }
+
+    /**
+     * Removes a node from the graph, along with any edges attached to it.
+     *
+     * If the node is not found in the graph, this function does nothing.
+     * @param node The instance of the node to remove.
+     */
+    public removeNode(node: TNode) {
+        const nodeIndex = this.nodes.findIndex((n) => n === node);
+        if (nodeIndex === -1) { return; }
+        this.nodes.splice(nodeIndex, 1);
+
+        // Remove all edges attached to this node
+        for (let i = this.edges.length - 1; i >= 0; i--) {
+            const edge = this.edges[i];
+            if (edge.source === node || edge.target === node) {
+                this.edges.splice(i, 1);
+            }
+        }
+    }
+
+    /**
+     * Removes an edge from the graph.
+     *
+     * If the edge is not found in the graph, this function does nothing.
+     * @param edge The instance of the edge to remove.
+     */
+    public removeEdge(edge: TEdge) {
+        const edgeIndex = this.edges.findIndex((e) => e === edge);
+        if (edgeIndex === -1) { return; }
+        this.edges.splice(edgeIndex, 1);
     }
 }

@@ -61,7 +61,6 @@
   import CSPConstraintNode from './CSPConstraintNode';
   import CSPVariableNode from './CSPVariableNode';
   import UndirectedEdge from './UndirectedEdge';
-  import {removeNode, removeEdge} from './GraphUtils';
 
   import Toolbar from './Toolbar.vue'
   import * as shortid from "shortid";
@@ -156,9 +155,9 @@
       deleteSelection: function () {
         if (this.selection) {
           if (this.selection.source && this.selection.target) {
-            removeEdge(this.graph, this.selection);
+            this.graph.removeEdge(this.selection);
           } else {
-            removeNode(this.graph, this.selection);
+            this.graph.removeNode(this.selection);
           }
           this.selection = null;
         }
