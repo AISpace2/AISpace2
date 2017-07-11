@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var version = require('./package.json').version;
 const path = require('path');
 
-rules = [{
+const rules = [{
     test: /\.ts$/,
     enforce: 'pre',
     loader: 'tslint-loader'
