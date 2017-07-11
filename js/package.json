@@ -3,6 +3,7 @@
   "version": "0.1.2",
   "description": "blah",
   "author": "dom",
+  "license": "GPL-3.0",
   "main": "src/index.js",
   "repository": {
     "type": "git",
