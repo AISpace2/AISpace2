@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "prepare": "webpack",
-    "develop": "webpack --watch",
+    "dev": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "tsfmt -r"
   },

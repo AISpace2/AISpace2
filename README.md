@@ -20,4 +20,6 @@ For a development installation (requires npm),
 
 Note that `./server.sh` uses `pip3`. You may need to change it to use `pip` if that is not available.
 
-You will generally not need to restart the kernel if you modify the Python code, because of how the `-e` option for `pip` works. However, if you modify the JavaScript code, you will need to recompile the code and refresh the page. We provide a handy script in this directory, `./client.sh`, which launches a watcher that recompiles all your front-end code whenever it detects a change. You only need to provide the refresh for the changes to take place.
+This will install the extension locally and link it to Jupyter.
+
+During develop, you do not need to refresh the page or restart the kernel as a result of Python changes. For front-end changes to take effect, however, you will need to run Webpack and refresh the page. You may run `npm run dev` while inside the `js/` folder to start a watcher that automatically recompiles your changes. You still need to provide the refresh, however.
