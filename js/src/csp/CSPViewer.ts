@@ -1,13 +1,9 @@
 import * as Backbone from "backbone";
-import * as d3 from "d3";
 import * as widgets from "jupyter-js-widgets";
-import * as _ from "underscore";
 import Vue from "vue";
-import CSPGraphInteractor from "./CSPGraphInteractor.vue";
-import { Graph, ICSPGraphNode } from "./Graph";
-import { d3ForceLayoutEngine } from "./GraphLayout";
-
-import * as template from "./cspviewer.template.html";
+import {Graph, ICSPGraphNode} from "../Graph";
+import {d3ForceLayoutEngine} from "../GraphLayout";
+import CSPGraphInteractor from "./components/CSPGraphInteractor.vue";
 import * as Events from "./CSPViewerEvents";
 import CSPViewerModel from "./CSPViewerModel";
 
@@ -32,8 +28,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
         // Functions called on the Python backend are queued until first render
         if (this.model.initial_render) {
-            this.send({ event: "initial_render" });
-            this.highlightArc({ action: "highlightArc", arcId: null, style: "normal", colour: "blue" });
+            this.send({event: "initial_render"});
+            this.highlightArc({action: "highlightArc", arcId: null, style: "normal", colour: "blue"});
         }
 
         this.listenTo(this.model, "view:msg", (event: Events.IEvent) => {
@@ -52,20 +48,20 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
     public events(): Backbone.EventsHash {
         return {
-            "click #auto-step": (e) => this.send({ event: CSPViewer.AUTO_STEP_CLICK }),
-            "click #fine-step": (e) => this.send({ event: CSPViewer.FINE_STEP_CLICK }),
-            "click #step": (e) => this.send({ event: CSPViewer.STEP_CLICK }),
+            "click #auto-step": (e) => this.send({event: CSPViewer.AUTO_STEP_CLICK}),
+            "click #fine-step": (e) => this.send({event: CSPViewer.FINE_STEP_CLICK}),
+            "click #step": (e) => this.send({event: CSPViewer.STEP_CLICK}),
 
         };
     }
 
     public render() {
-        d3ForceLayoutEngine.setup(this.graph, { width: 800, height: 600 });
+        d3ForceLayoutEngine.setup(this.graph, {width: 800, height: 600});
 
         const that = this;
 
         const App = Vue.extend({
-            components: { CSPGraphInteractor },
+            components: {CSPGraphInteractor},
             data() {
                 return {
                     graph: that.graph,
@@ -74,16 +70,16 @@ export default class CSPViewer extends widgets.DOMWidgetView {
             },
             methods: {
                 autostep() {
-                    that.send({ event: CSPViewer.AUTO_STEP_CLICK });
+                    that.send({event: CSPViewer.AUTO_STEP_CLICK});
                 },
                 finestep() {
-                    that.send({ event: CSPViewer.FINE_STEP_CLICK });
+                    that.send({event: CSPViewer.FINE_STEP_CLICK});
                 },
                 link(l: any) {
-                    that.send({ event: CSPViewer.ARC_CLICK, varId: l.source.name, constId: l.target.idx });
+                    that.send({event: CSPViewer.ARC_CLICK, varId: l.source.name, constId: l.target.idx});
                 },
                 step() {
-                    that.send({ event: CSPViewer.STEP_CLICK });
+                    that.send({event: CSPViewer.STEP_CLICK});
                 },
             },
             template: `

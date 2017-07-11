@@ -23,7 +23,7 @@
 
         <div>
             <span><b>Mode: </b></span>
-            <toolbar :mode="mode" @modechanged="updateMode"></toolbar>
+            <CSPToolbar :mode="mode" @modechanged="updateMode"></CSPToolbar>
             <div v-if="mode == 'variable' || mode == 'constraint' ">
                 <span>Double click on the graph to create a new {{mode}}.</span>
             </div>
@@ -37,10 +37,10 @@
             <div v-if="selection && selection.type === 'csp:variable'">
                 <label>Name</label>
                 <input type="text" :value="selection ? selection.name : null"
-                       @input="selection ? selection.name = $event.target.value : null" />
+                       @input="selection ? selection.name = $event.target.value : null"/>
                 <label>Domain</label>
                 <input type="text" :value="selection ? selection.domain : null"
-                       @change="selection ? selection.domain = $event.target.value.split(',').map(a => +a) : null" />
+                       @change="selection ? selection.domain = $event.target.value.split(',').map(a => +a) : null"/>
             </div>
             <div v-else-if="selection && selection.type === 'csp:constraint'">
                 <label>Constraint Type</label>
@@ -57,18 +57,18 @@
 
 
 <script>
-  import GraphVisualizerBase from './GraphVisualizerBase.vue'
+  import GraphVisualizerBase from '../../components/GraphVisualizerBase.vue'
   import CSPConstraintNode from './CSPConstraintNode';
   import CSPVariableNode from './CSPVariableNode';
-  import UndirectedEdge from './UndirectedEdge';
+  import UndirectedEdge from '../../components/UndirectedEdge';
 
-  import Toolbar from './Toolbar.vue'
+  import CSPToolbar from './CSPToolbar.vue'
   import * as shortid from "shortid";
 
   export default {
     components: {
       GraphVisualizerBase,
-      Toolbar,
+      CSPToolbar,
       CSPConstraintNode,
       CSPVariableNode,
       UndirectedEdge

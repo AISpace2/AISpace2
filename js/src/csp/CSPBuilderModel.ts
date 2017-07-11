@@ -1,8 +1,6 @@
-import * as Backbone from "backbone";
 import * as widgets from "jupyter-js-widgets";
-import * as _ from "underscore";
-import { IEvent } from "./CSPViewerEvents";
-import { IGraphJSON } from "./Graph";
+import {IGraphJSON} from "../Graph";
+import {IEvent} from "./CSPViewerEvents";
 
 export default class CSPBuilderModel extends widgets.DOMWidgetModel {
     public defaults() {

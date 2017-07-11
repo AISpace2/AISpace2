@@ -26,13 +26,11 @@
 
 <script>
   import GraphNode from './GraphNode';
-  import NodeLink from './NodeLink';
   import EdgeContainer from './EdgeContainer';
 
   export default {
     components: {
       GraphNode,
-      NodeLink,
       EdgeContainer
     },
     props: ['graph', 'selection'],

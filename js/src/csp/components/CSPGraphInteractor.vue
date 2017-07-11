@@ -27,19 +27,19 @@
 </template>
 
 <script>
-  import GraphVisualizerBase from './GraphVisualizerBase';
+  import GraphVisualizerBase from '../../components/GraphVisualizerBase';
   import CSPConstraintNode from './CSPConstraintNode';
   import CSPVariableNode from './CSPVariableNode';
-  import UndirectedEdge from './UndirectedEdge';
+  import UndirectedEdge from '../../components/UndirectedEdge';
   export default {
     components: {GraphVisualizerBase, CSPConstraintNode, CSPVariableNode, UndirectedEdge},
     methods: {
       linkClicked: function (link) {
         this.$emit('click:link', link);
       },
-      stroke: function(link) {
+      stroke: function (link) {
         if (link.styles != null) {
-            return link.styles.stroke;
+          return link.styles.stroke;
         }
 
         return null;
