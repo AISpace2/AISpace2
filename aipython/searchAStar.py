@@ -9,7 +9,7 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 import heapq        # part of the Python standard library
-from searchProblem import Path
+from .searchProblem import Path
 
 class Frontier(object):
     """A frontier consists of a priority queue (heap), frontierpq, of
@@ -50,7 +50,7 @@ class Frontier(object):
         """string representation of the frontier"""
         return str([(n,c,str(p)) for (n,c,p) in self.frontierpq])
 
-from utilities import Displayable
+from .utilities import Displayable
 
 class Searcher(Displayable):
     """returns a searcher for a problem.
@@ -99,7 +99,7 @@ class Searcher(Displayable):
         self.display(1,"No (more) solutions. Total of",
                      self.frontier.frontier_index,"paths expanded.")
 
-import searchProblem 
+from .searchProblem import problem1
 def test(SearchClass):
     print("Testing problem 1:")
     schr1 = SearchClass(searchProblem.problem1)

@@ -15,6 +15,8 @@ import CSPBuilder from "./csp/CSPBuilder";
 import CSPBuilderModel from "./csp/CSPBuilderModel";
 import CSPViewer from "./csp/CSPViewer";
 import CSPViewerModel from "./csp/CSPViewerModel";
+import SearchViewer from "./search/SearchViewer";
+import SearchViewerModel from "./search/SearchViewerModel";
 
 // Export widget models and views, and the npm package version number.
 module.exports = {
@@ -22,5 +24,7 @@ module.exports = {
     CSPBuilderModel,
     CSPViewer,
     CSPViewerModel,
+    SearchViewer,
+    SearchViewerModel,
     version: (packageJSON as any).version,
 };
