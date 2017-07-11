@@ -1,7 +1,7 @@
 import * as Backbone from "backbone";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
-import {IEvent} from "../Events";
+import {IEvent, isOutputEvent} from "../Events";
 import {Graph, ICSPGraphNode} from "../Graph";
 import {d3ForceLayoutEngine} from "../GraphLayout";
 import CSPGraphInteractor from "./components/CSPGraphInteractor.vue";
@@ -41,7 +41,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                 this.highlightArc(event);
             } else if (Events.isSetDomainEvent(event)) {
                 this.setDomain(event);
-            } else if (Events.isOutputEvent(event)) {
+            } else if (isOutputEvent(event)) {
                 this.vue.output = event.text;
             }
         });

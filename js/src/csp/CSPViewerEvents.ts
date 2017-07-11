@@ -18,19 +18,10 @@ export interface ICSPSetDomainEvent extends IEvent {
     domain: string[];
 }
 
-export interface IOutputEvent extends IEvent {
-    action: "output";
-    text: string;
-}
-
 export function isHighlightArcEvent(event: IEvent): event is ICSPHighlightArcEvent {
     return event.action === "highlightArc";
 }
 
 export function isSetDomainEvent(event: IEvent): event is ICSPSetDomainEvent {
     return event.action === "setDomain";
-}
-
-export function isOutputEvent(event: IEvent): event is IOutputEvent {
-    return event.action === "output";
 }

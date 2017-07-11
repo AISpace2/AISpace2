@@ -20,9 +20,12 @@ class Displayable(DOMWidget):
     def __init__(self):
         super().__init__()
         self.graph_json = search_problem_to_json(self.problem)
+        self._block_for_user_input = threading.Event()
 
     def display(self, level, *args, **kwargs):
-        print(*args)
+        text = ' '.join(map(str, args))
+        self.send({'action': 'output', 'text': text})
+        sleep(0.1)
 
 def visualize(func_to_delay):
     """Enqueues a function that does not run until the Jupyter widget has rendered.
