@@ -22,6 +22,7 @@
         </GraphVisualizerBase>
 
         <div>
+            <span><b>Mode: </b></span>
             <toolbar :mode="mode" @modechanged="updateMode"></toolbar>
             <div v-if="mode == 'variable' || mode == 'constraint' ">
                 <span>Double click on the graph to create a new {{mode}}.</span>
@@ -51,7 +52,6 @@
                 </select>
             </div>
         </div>
-        <pre>{{$data}}</pre>
     </div>
 </template>
 

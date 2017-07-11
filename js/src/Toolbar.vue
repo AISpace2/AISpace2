@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <span>
         <input type="radio" id="zero" value="select" v-model="picked">
         <label for="zero">Select</label>
         <input type="radio" id="one" value="variable" v-model="picked">
@@ -8,7 +8,7 @@
         <label for="two">Constraint</label>
         <input type="radio" id="three" value="edge" v-model="picked">
         <label for="three">Edge</label>
-    </div>
+    </span>
 </template>
 
 <script>
