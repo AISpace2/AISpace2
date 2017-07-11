@@ -97,6 +97,8 @@
     methods: {
       updateMode: function (mode) {
         this.mode = mode;
+        this.selection = null;
+        this.first = null;
       },
       createNode: function (x, y) {
         if (this.mode === 'variable') {
@@ -122,6 +124,7 @@
           if (this.first.type === 'csp:variable' && this.selection.type === 'csp:variable') {
             console.log('Can\'t create an edge between two variables');
             this.first = null;
+            this.selection = null;
             return;
           }
 
@@ -133,6 +136,7 @@
           });
 
           this.first = null;
+          this.selection = null;
         }
       },
 
