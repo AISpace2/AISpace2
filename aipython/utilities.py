@@ -13,7 +13,11 @@ import random
 import uuid
 
 class Displayable():
-    pass
+    max_display_level = 4
+
+    def display(self, level, *args, **kwargs):
+        if level <= self.max_display_level:
+            print(*args)
 
 def argmax(gen):
     """gen is a generator of (element,value) pairs, where value is a real.
