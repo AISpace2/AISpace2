@@ -5,6 +5,8 @@ from time import sleep
 from ipywidgets import DOMWidget, register
 from traitlets import Dict, Float, Unicode
 
+from aispace.searchjsonbridge import search_problem_to_json
+
 @register('aispace.SearchViewer')
 class Displayable(DOMWidget):
     _view_name = Unicode('SearchViewer').tag(sync=True)
@@ -13,9 +15,11 @@ class Displayable(DOMWidget):
     _model_module = Unicode('aispace').tag(sync=True)
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
+    graph_json = Dict().tag(sync=True)
 
     def __init__(self):
         super().__init__()
+        self.graph_json = search_problem_to_json(self.problem)
 
     def display(self, level, *args, **kwargs):
         print(*args)
