@@ -14,11 +14,23 @@ svg text {
     font-family: var(--font-face);
 }
 
-#cspviewer > #footer {
+#cspviewer>#footer {
     margin: 10px;
 }
 
 #cspviewer #output {
     margin-top: 5px;
     font-size: 14px;
+}
+
+#app {
+    padding: 5px;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+}
+
+#app svg {
+    border: 1px solid lavenderblush;
 }

@@ -1,8 +1,6 @@
-import * as Backbone from "backbone";
 import * as widgets from "jupyter-js-widgets";
-import * as _ from "underscore";
-import { IEvent } from "./CSPViewerEvents";
-import { IGraph } from "./Graph";
+import {IGraphJSON} from "../Graph";
+import {IEvent} from "./CSPViewerEvents";
 
 export default class CSPBuilderModel extends widgets.DOMWidgetModel {
     public defaults() {
@@ -14,7 +12,7 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
             _view_module: "aispace",
             _view_module_version: "0.1.0",
             _view_name: "CSPBuilder",
-            graph_json: ({} as IGraph),
+            graph_json: ({} as IGraphJSON),
         };
     }
 
@@ -26,7 +24,7 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
         });
     }
 
-    get graphJSON(): IGraph {
+    get graphJSON(): IGraphJSON {
         return this.get("graph_json");
     }
 
