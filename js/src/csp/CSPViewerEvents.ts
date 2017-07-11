@@ -1,6 +1,4 @@
-export interface IEvent {
-    action: string;
-}
+import {IEvent} from "../Events";
 
 export interface ICSPHighlightArcEvent extends IEvent {
     action: "highlightArc";

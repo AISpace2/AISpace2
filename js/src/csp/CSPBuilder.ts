@@ -1,10 +1,10 @@
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
+import {IEvent} from "../Events";
 import {Graph, ICSPGraphNode} from "../Graph";
 import {d3ForceLayoutEngine} from "../GraphLayout";
 import CSPGraphBuilder from "./components/CSPGraphBuilder.vue";
 import CSPBuilderModel from "./CSPBuilderModel";
-import {IEvent} from "./CSPViewerEvents";
 declare let Jupyter: any;
 export default class CSPBuilder extends widgets.DOMWidgetView {
     private static readonly SHOW_PYTHON_CODE = "python-code";

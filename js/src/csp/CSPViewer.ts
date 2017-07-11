@@ -1,6 +1,7 @@
 import * as Backbone from "backbone";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
+import {IEvent} from "../Events";
 import {Graph, ICSPGraphNode} from "../Graph";
 import {d3ForceLayoutEngine} from "../GraphLayout";
 import CSPGraphInteractor from "./components/CSPGraphInteractor.vue";
@@ -32,7 +33,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
             this.highlightArc({action: "highlightArc", arcId: null, style: "normal", colour: "blue"});
         }
 
-        this.listenTo(this.model, "view:msg", (event: Events.IEvent) => {
+        this.listenTo(this.model, "view:msg", (event: IEvent) => {
             // tslint:disable-next-line:no-console
             console.log(event);
 

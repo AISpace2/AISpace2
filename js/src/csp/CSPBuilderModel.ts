@@ -1,6 +1,6 @@
 import * as widgets from "jupyter-js-widgets";
+import {IEvent} from "../Events";
 import {IGraphJSON} from "../Graph";
-import {IEvent} from "./CSPViewerEvents";
 
 export default class CSPBuilderModel extends widgets.DOMWidgetModel {
     public defaults() {
