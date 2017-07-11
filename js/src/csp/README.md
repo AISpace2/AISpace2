@@ -5,4 +5,4 @@ This directory contains the front-end components relating to Constraint Satisfac
 
 `CSPBuilder` provides a graphical interface to construct CSPs that you can later solve visually with `CSPViewer`.
 
-Check out [`csp.ipynb`](csp.ipynb) for a demo.
+Check out [`csp.ipynb`](../../../notebooks/csp/csp.ipynb) for a demo.
