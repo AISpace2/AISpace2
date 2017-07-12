@@ -40,6 +40,8 @@
         dragTarget: null,
         linkHover: null,
         nodeHover: null,
+        prevPageX: 0,
+        prevPageY: 0
       };
     },
     methods: {
@@ -50,13 +52,23 @@
       dragSVG: function (e) {
         if (this.dragTarget) {
           var svgBounds = this.$refs.mySVG.getBoundingClientRect();
-          this.dragTarget.x = e.pageX - svgBounds.left;
-          this.dragTarget.y = e.pageY - svgBounds.top;
+
+          // Everything below can be replaced with:
+          // this.dragTarget.x += e.movementX;
+          // this.dragTarget.y += e.movementY;
+          // if we don't want to support IE11.
+          this.dragTarget.x += (this.prevPageX ? e.pageX - this.prevPageX : 0);
+          this.dragTarget.y += (this.prevPageY ? e.pageY - this.prevPageY : 0);
+
+          this.prevPageX = e.pageX;
+          this.prevPageY = e.pageY;
         }
       },
 
       dragEnd: function () {
         this.dragTarget = null;
+        this.prevPageX = 0;
+        this.prevPageY = 0;
       },
 
       linkMouseOver: function (link) {
