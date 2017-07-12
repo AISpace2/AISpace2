@@ -30,18 +30,26 @@
         this.moved = false;
       },
       mousemove: function (e) {
-        if (this.startDrag) {
-          this.$emit("dragstart", e);
+        if (this.startDrag && !this.moved) {
           this.moved = true;
+          this.$emit('dragstart')
         }
       },
       mouseup: function (e) {
-        this.startDrag = false;
-        if (!this.moved) {
-          this.$emit("click", e);
-        } else {
-          this.$emit("dragend");
+        // Warning: this method is not guaranteed to be called!
+        // For example, if you click on a node, then tab out, mouseup is not called here.
+        // For the parent component, you should use the mouseleave DOM event to determine this case,
+        // and call the same thing as when you receive the dragend event.
+        if (this.startDrag) {
+          if (!this.moved) {
+            this.$emit("click", e);
+          } else {
+            this.$emit("dragend");
+          }
         }
+
+        this.startDrag = false;
+        this.moved = false;
       }
     }
   }

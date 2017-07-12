@@ -2,6 +2,7 @@
     <div>
         <svg tabindex="0" ref="mySVG" width="800" height="500"
              @mousemove="dragSVG"
+             @mouseleave="dragEnd"
              @keydown.delete="$emit('delete')"
              @dblclick="onDblClick">
             <EdgeContainer v-for="link in graph.edges" :key="link.id"
@@ -15,7 +16,7 @@
             </EdgeContainer>
             <GraphNode v-for="node in graph.nodes" :key="node.id"
                        @click="$emit('click:node', node)"
-                       @dragstart="dragstart(node, $event)" @dragend="dragend(node)"
+                       @dragstart="dragStart(node, $event)" @dragend="dragEnd"
                        @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
                        :x="node.x" :y="node.y">
                 <slot name="node" :node="node" :hover="node === nodeHover"></slot>
@@ -38,11 +39,11 @@
       return {
         dragTarget: null,
         linkHover: null,
-        nodeHover: null
+        nodeHover: null,
       };
     },
     methods: {
-      dragstart: function (node, e) {
+      dragStart: function (node, e) {
         this.dragTarget = node;
       },
 
@@ -54,7 +55,7 @@
         }
       },
 
-      dragend: function () {
+      dragEnd: function () {
         this.dragTarget = null;
       },
 
