@@ -19,13 +19,24 @@ class Displayable(DOMWidget):
 
     def __init__(self):
         super().__init__()
-        self.graph_json = search_problem_to_json(self.problem)
+        (self.graph_json, _, self.edge_map) = search_problem_to_json(self.problem)
         self._block_for_user_input = threading.Event()
 
     def display(self, level, *args, **kwargs):
+        if args[0] == 'Expanding:':
+            path = args[1]
+            if path.arc:
+                path_edges = []
+                current = path
+                while current.arc is not None:
+                    edge_id = self.edge_map[(current.arc.from_node, current.arc.to_node)]
+                    path_edges.append(edge_id)
+                    current = current.initial
+                self.send({'action': 'highlightPath', 'path': path_edges})
+
         text = ' '.join(map(str, args))
         self.send({'action': 'output', 'text': text})
-        sleep(0.1)
+        sleep(1)
 
 def visualize(func_to_delay):
     """Enqueues a function that does not run until the Jupyter widget has rendered.

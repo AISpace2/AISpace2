@@ -21,6 +21,7 @@ def search_problem_to_json(problem):
     nodes = []
     edges = []
     node_map = {n: str(uuid.uuid4()) for n in problem.nodes}
+    edge_map = {}
 
     for n in problem.nodes:
         h = 0
@@ -39,7 +40,9 @@ def search_problem_to_json(problem):
         nodes.append(node_to_add)
 
     for arc in problem.arcs:
-        new_edge = {'id': str(uuid.uuid4()), 'source': node_map[arc.from_node], 'target': node_map[arc.to_node]}
+        edge_id = str(uuid.uuid4())
+        new_edge = {'id': edge_id, 'source': node_map[arc.from_node], 'target': node_map[arc.to_node]}
+        edge_map[(arc.from_node, arc.to_node)] = edge_id
         edges.append(new_edge)
 
-    return {'nodes': nodes, 'edges': edges}
+    return ({'nodes': nodes, 'edges': edges}, node_map, edge_map)

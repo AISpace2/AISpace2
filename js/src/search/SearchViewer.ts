@@ -4,6 +4,7 @@ import { IEvent, isOutputEvent } from "../Events";
 import { Graph } from "../Graph";
 import { d3ForceLayoutEngine } from "../GraphLayout";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
+import { isHighlightPathEvent } from "./SearchViewerEvents";
 import SearchViewerModel from "./SearchViewerModel";
 
 export default class SearchViewer extends widgets.DOMWidgetView {
@@ -14,10 +15,17 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     public initialize(opts: any) {
         super.initialize(opts);
         this.graph = Graph.fromJSON(this.model.graphJSON);
-
         this.listenTo(this.model, "view:msg", (event: IEvent) => {
             if (isOutputEvent(event)) {
                 this.vue.output = event.text;
+            } else if (isHighlightPathEvent(event)) {
+                for (const edge of this.graph.edges) {
+                    if (event.path.includes(edge.id)) {
+                        Vue.set(edge.styles, "stroke", "pink");
+                    } else {
+                        Vue.set(edge.styles, "stroke", "black");
+                    }
+                }
             }
         });
     }
