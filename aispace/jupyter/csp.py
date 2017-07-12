@@ -4,7 +4,7 @@ from time import sleep
 
 from ipywidgets import DOMWidget, register
 from traitlets import Dict, Float, Unicode
-
+from .stepdomwidget import StepDOMWidget
 from aispace.cspjsonbridge import csp_to_json
 
 
@@ -29,7 +29,7 @@ class ReturnableThread(threading.Thread):
 
 
 @register('aispace.CSPViewer')
-class Displayable(DOMWidget):
+class Displayable(StepDOMWidget):
     _view_name = Unicode('CSPViewer').tag(sync=True)
     _model_name = Unicode('CSPViewerModel').tag(sync=True)
     _view_module = Unicode('aispace').tag(sync=True)
@@ -43,14 +43,10 @@ class Displayable(DOMWidget):
 
     def __init__(self):
         super().__init__()
-        self.on_msg(self._handle_custom_msgs)
         self.visualizer = self
 
         self._desired_level = 4
         self._displayed_once = False
-
-        # You MUST wait() on this event only on a background thread!
-        self._block_for_user_input = threading.Event()
 
         self._selected_arc = None
         self._has_user_selected_arc = False
@@ -94,33 +90,8 @@ class Displayable(DOMWidget):
         else:
             self._block_for_user_input.wait()
 
-    def _initialize_controls(self):
-        """Sets up functions that can be used to control the visualization."""
-        def advance_visualization(desired_level):
-            def advance():
-                self._has_user_selected_arc = False
-                self._desired_level = desired_level
-                self._block_for_user_input.set()
-                self._block_for_user_input.clear()
-
-                if not self._thread.is_alive():
-                    return_value = self._thread.join()
-                    if not isinstance(return_value, list):
-                        return_value = [return_value]
-
-                    self.send({'action': 'output',
-                            'text': 'Algorithm execution finished. Returned: {}'.format(
-                                ', '.join(str(x) for x in return_value)
-                            )})
-            return advance
-
-        self._controls = {
-            'fine-step': advance_visualization(4),
-            'step': advance_visualization(2),
-            'auto-step': advance_visualization(1)
-        }
-
     def _handle_custom_msgs(self, _, content, buffers=None):
+        super()._handle_custom_msgs(None, content, buffers)
         event = content.get('event', '')
 
         if event == 'arc:click':
@@ -137,12 +108,6 @@ class Displayable(DOMWidget):
             self._selected_var = var_name
             self._block_for_user_input.set()
             self._block_for_user_input.clear()
-        elif event == 'fine-step:click':
-            self._controls['fine-step']()
-        elif event == 'step:click':
-            self._controls['step']()
-        elif event == 'auto-step:click':
-            self._controls['auto-step']()
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
             if queued_func:
@@ -210,16 +175,7 @@ class Displayable(DOMWidget):
                     self._send_highlight_action(
                         arc[0], arc[1], style='normal', colour='blue')
 
-        text = ' '.join(map(str, args))
-        self.send({'action': 'output', 'text': text})
-
-        if level <= self._desired_level:
-            if should_wait:
-                self._block_for_user_input.wait()
-        elif args[0] == "solution:":
-            self._block_for_user_input.wait()
-        else:
-            sleep(self.sleep_time)
+        super().display(level, *args, **dict(kwargs, should_wait=should_wait))
 
     def _send_highlight_action(self, var, const, style='normal', colour=None):
         """Sends a message to the front-end visualization to highlight an arc.

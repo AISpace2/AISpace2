@@ -4,6 +4,7 @@ import Vue from "vue";
 import {IEvent, isOutputEvent} from "../Events";
 import {Graph, ICSPGraphNode} from "../Graph";
 import {d3ForceLayoutEngine} from "../GraphLayout";
+import * as StepEvents from "../StepEvents";
 import CSPGraphInteractor from "./components/CSPGraphInteractor.vue";
 import * as Events from "./CSPViewerEvents";
 import CSPViewerModel from "./CSPViewerModel";
@@ -11,11 +12,6 @@ import CSPViewerModel from "./CSPViewerModel";
 export default class CSPViewer extends widgets.DOMWidgetView {
     private static readonly ARC_CLICK = "arc:click";
     private static readonly VAR_CLICK = "var:click";
-
-    private static readonly FINE_STEP_CLICK = "fine-step:click";
-    private static readonly STEP_CLICK = "step:click";
-    private static readonly AUTO_STEP_CLICK = "auto-step:click";
-    private static readonly BACKTRACK_CLICK = "backtrack:click";
 
     public model: CSPViewerModel;
 
@@ -47,15 +43,6 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         });
     }
 
-    public events(): Backbone.EventsHash {
-        return {
-            "click #auto-step": (e) => this.send({event: CSPViewer.AUTO_STEP_CLICK}),
-            "click #fine-step": (e) => this.send({event: CSPViewer.FINE_STEP_CLICK}),
-            "click #step": (e) => this.send({event: CSPViewer.STEP_CLICK}),
-
-        };
-    }
-
     public render() {
         d3ForceLayoutEngine.setup(this.graph, {width: 800, height: 600});
 
@@ -71,16 +58,16 @@ export default class CSPViewer extends widgets.DOMWidgetView {
             },
             methods: {
                 autostep() {
-                    that.send({event: CSPViewer.AUTO_STEP_CLICK});
+                    that.send({event: StepEvents.AUTO_STEP_CLICK});
                 },
                 finestep() {
-                    that.send({event: CSPViewer.FINE_STEP_CLICK});
+                    that.send({event: StepEvents.FINE_STEP_CLICK});
                 },
                 link(l: any) {
                     that.send({event: CSPViewer.ARC_CLICK, varId: l.source.name, constId: l.target.idx});
                 },
                 step() {
-                    that.send({event: CSPViewer.STEP_CLICK});
+                    that.send({event: StepEvents.STEP_CLICK});
                 },
             },
             template: `
@@ -89,7 +76,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                         :graph="graph"
                         @click:auto-step="autostep"
                         @click:step="step"
-                        @fine-step="finestep"
+                        @click:fine-step="finestep"
                         @click:link="link"
                         :output="output">
                     </CSPGraphInteractor>

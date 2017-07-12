@@ -1,14 +1,15 @@
-import threading
 from functools import partial
 from time import sleep
-
-from ipywidgets import DOMWidget, register
-from traitlets import Dict, Float, Unicode
+from threading import Thread
+from ipywidgets import register
+from traitlets import Dict, Unicode
 
 from aispace.searchjsonbridge import search_problem_to_json
+from .stepdomwidget import StepDOMWidget
+
 
 @register('aispace.SearchViewer')
-class Displayable(DOMWidget):
+class Displayable(StepDOMWidget):
     _view_name = Unicode('SearchViewer').tag(sync=True)
     _model_name = Unicode('SearchViewerModel').tag(sync=True)
     _view_module = Unicode('aispace').tag(sync=True)
@@ -20,7 +21,8 @@ class Displayable(DOMWidget):
     def __init__(self):
         super().__init__()
         (self.graph_json, _, self.edge_map) = search_problem_to_json(self.problem)
-        self._block_for_user_input = threading.Event()
+        self._thread = Thread(target=self.search)
+        self._thread.start()
 
     def display(self, level, *args, **kwargs):
         if args[0] == 'Expanding:':
@@ -33,11 +35,8 @@ class Displayable(DOMWidget):
                     path_edges.append(edge_id)
                     current = current.initial
                 self.send({'action': 'highlightPath', 'path': path_edges})
-
-        text = ' '.join(map(str, args))
-        self.send({'action': 'output', 'text': text})
-        sleep(1)
-
+        
+        super().display(level, *args, **kwargs)
 def visualize(func_to_delay):
     """Enqueues a function that does not run until the Jupyter widget has rendered.
 
