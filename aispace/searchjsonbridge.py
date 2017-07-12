@@ -11,12 +11,18 @@ def search_problem_to_json(problem):
     synchronize the string with a traitlet, then convert it to JSON on the client.
 
     Args:
-        csp (aipython.searchProblem.Search_problem): 
+        problem (aipython.searchProblem.Search_problem):
             The search problem instance to convert to a dictionary.
 
     Returns:
-        (dict):
-            A dictionary representing the search graph that can be easily converted into JSON.
+        (dict, dict, dict):
+            The first dictionary represents the search graph that can be easily converted into JSON.
+
+            The second dictionary represents the node map. This is a mapping from a node to
+            the corresponding ID of the node.
+
+            The third dictionary is an edge map. The keys are tuple of (from_node, to_node),
+            and the values are the ID of th edge that connects those two nodes.
     """
     nodes = []
     edges = []
