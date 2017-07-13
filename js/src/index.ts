@@ -17,6 +17,8 @@ import CSPBuilder from "./csp/CSPBuilder";
 import CSPBuilderModel from "./csp/CSPBuilderModel";
 import CSPViewer from "./csp/CSPViewer";
 import CSPViewerModel from "./csp/CSPViewerModel";
+import SearchBuilder from './search/SearchBuilder';
+import SearchBuilderModel from './search/SearchBuilderModel';
 import SearchViewer from "./search/SearchViewer";
 import SearchViewerModel from "./search/SearchViewerModel";
 
@@ -26,6 +28,8 @@ module.exports = {
   CSPBuilderModel,
   CSPViewer,
   CSPViewerModel,
+  SearchBuilder,
+  SearchBuilderModel,
   SearchViewer,
   SearchViewerModel,
   version: (packageJSON as any).version

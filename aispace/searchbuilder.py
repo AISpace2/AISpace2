@@ -1,0 +1,20 @@
+from ipywidgets import DOMWidget, register
+from traitlets import Dict, Unicode
+
+from .searchjsonbridge import search_problem_to_json
+
+
+@register('aispace.SearchBuilder')
+class SearchBuilder(DOMWidget):
+    """A Jupyter widget that allows for visual creation of a CSP."""
+    _view_name = Unicode('SearchBuilder').tag(sync=True)
+    _model_name = Unicode('SearchBuilderModel').tag(sync=True)
+    _view_module = Unicode('aispace').tag(sync=True)
+    _model_module = Unicode('aispace').tag(sync=True)
+    _view_module_version = Unicode('^0.1.0').tag(sync=True)
+    _model_module_version = Unicode('^0.1.0').tag(sync=True)
+    graph_json = Dict().tag(sync=True)
+
+    def __init__(self, csp=None):
+        super().__init__()
+        (self.graph_json, _, _) = search_problem_to_json(csp)
