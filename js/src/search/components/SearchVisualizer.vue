@@ -12,9 +12,9 @@
                 </SearchGoalNode>
             </template>
             <template slot="edge" scope="props">
-                <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
+                <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
                                 :stroke="props.link.styles.stroke">
-                </UndirectedEdge>
+                </DirectedEdge>
             </template>
         </GraphVisualizerBase>
         <div class="footer">
@@ -30,7 +30,7 @@
 
 <script>
   import GraphVisualizerBase from '../../components/GraphVisualizerBase';
-  import UndirectedEdge from '../../components/UndirectedEdge';
+  import DirectedEdge from '../../components/DirectedEdge';
   import SearchRegularNode from './SearchRegularNode';
   import SearchStartNode from './SearchStartNode';
   import SearchGoalNode from './SearchGoalNode';
