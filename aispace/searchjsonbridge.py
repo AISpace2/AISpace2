@@ -1,4 +1,5 @@
 import uuid
+from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
 
 def search_problem_to_json(problem):
     """Converts a Search_problem into a JSON representation.
@@ -52,3 +53,25 @@ def search_problem_to_json(problem):
         edges.append(new_edge)
 
     return ({'nodes': nodes, 'edges': edges}, node_map, edge_map)
+
+def json_to_search_problem(json):
+    nodes = set()
+    node_map = {}
+    starts = []
+    goals = set()
+
+    for node in json['nodes']:
+        nodes.add(node['name'])
+        node_map[node['id']] = node
+
+        if node['type'] == 'search:start':
+            starts.append(node['name'])
+        elif node['type'] == 'search:goal':
+            goals.add(node['name'])
+
+    arcs = []
+    for edge in json['edges']:
+        arc = Arc(node_map[edge['source']]['name'], node_map[edge['target']]['name'])
+        arcs.append(arc)
+
+    return Search_problem_from_explicit_graph(nodes, arcs, starts, goals)

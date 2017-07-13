@@ -17,8 +17,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
     super.initialize(opts);
 
     this.graph = Graph.fromJSON(this.model.graphJSON) as Graph;
-    this.listenTo(this.model, "view:msg", (event: IEvent) => {
-    });
+    this.listenTo(this.model, "view:msg", (event: IEvent) => {});
   }
 
   public render() {
@@ -33,6 +32,16 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
         return {
           graph: that.graph
         };
+      },
+      watch: {
+        graph: {
+          handler(val, oldVal) {
+            const searchProblemCopy = JSON.parse(JSON.stringify(that.graph));
+            that.model.graphJSON = searchProblemCopy;
+            that.touch();
+          },
+          deep: true
+        }
       }
     });
 

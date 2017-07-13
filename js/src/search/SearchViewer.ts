@@ -27,7 +27,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
             Vue.set(edge.styles, "strokeWidth", "6");
           } else {
             Vue.set(edge.styles, "stroke", "black");
-            Vue.set(edge.styles, "strokeWidth", "4");            
+            Vue.set(edge.styles, "strokeWidth", "4");
           }
         }
       }

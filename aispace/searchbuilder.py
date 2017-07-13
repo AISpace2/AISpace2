@@ -1,7 +1,7 @@
 from ipywidgets import DOMWidget, register
 from traitlets import Dict, Unicode
 
-from .searchjsonbridge import search_problem_to_json
+from .searchjsonbridge import json_to_search_problem, search_problem_to_json
 
 
 @register('aispace.SearchBuilder')
@@ -18,3 +18,6 @@ class SearchBuilder(DOMWidget):
     def __init__(self, csp=None):
         super().__init__()
         (self.graph_json, _, _) = search_problem_to_json(csp)
+
+    def search_problem(self):
+        return json_to_search_problem(self.graph_json)
