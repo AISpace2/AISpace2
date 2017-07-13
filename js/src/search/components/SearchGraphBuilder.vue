@@ -17,7 +17,7 @@
             </template>
         </GraphVisualizerBase>
         <div>
-            <div v-if="selection">
+            <div v-if="selection && selection.type !== 'edge'">
                 <label for="node-type">Type</label>
                 <select id="node-type" v-model="selection.type">
                     <option value="search:start">Start</option>

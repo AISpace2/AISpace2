@@ -28,6 +28,7 @@ export interface IGraphEdge {
   target: IGraphNode;
   id: string;
   name?: string;
+  type: "edge";
   [key: string]: any;
 }
 
@@ -71,7 +72,8 @@ export class Graph<
         id: edge.id,
         source: newGraph.nodes.find(n => n.id === edge.source)!,
         styles: {},
-        target: newGraph.nodes.find(n => n.id === edge.target)!
+        target: newGraph.nodes.find(n => n.id === edge.target)!,
+        type: "edge"
       });
     }
 

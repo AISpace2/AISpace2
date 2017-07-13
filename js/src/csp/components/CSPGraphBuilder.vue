@@ -157,7 +157,7 @@
 
       deleteSelection: function () {
         if (this.selection) {
-          if (this.selection.source && this.selection.target) {
+          if (this.selection.type === "edge") {
             this.graph.removeEdge(this.selection);
           } else {
             this.graph.removeNode(this.selection);
