@@ -25,6 +25,10 @@
                     <option value="search:goal">Goal</option>
                 </select>
             </div>
+            <div v-if="selection && selection.type === 'edge'">
+                <label for="edge-cost">Edge Cost</label>
+                <input type="number" v-model.number="selection.cost">
+            </div>
         </div>
     </div>
 </template>

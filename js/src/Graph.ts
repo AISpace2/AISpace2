@@ -69,6 +69,7 @@ export class Graph<
     for (const edge of Object.values(json.edges)) {
       // Find source
       newGraph.edges.push({
+        ...edge,
         id: edge.id,
         source: newGraph.nodes.find(n => n.id === edge.source)!,
         styles: {},

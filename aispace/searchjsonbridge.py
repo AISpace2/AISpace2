@@ -48,7 +48,7 @@ def search_problem_to_json(problem):
 
     for arc in problem.arcs:
         edge_id = str(uuid.uuid4())
-        new_edge = {'id': edge_id, 'source': node_map[arc.from_node], 'target': node_map[arc.to_node]}
+        new_edge = {'id': edge_id, 'source': node_map[arc.from_node], 'target': node_map[arc.to_node], 'cost': arc.cost}
         edge_map[(arc.from_node, arc.to_node)] = edge_id
         edges.append(new_edge)
 
@@ -71,7 +71,10 @@ def json_to_search_problem(json):
 
     arcs = []
     for edge in json['edges']:
-        arc = Arc(node_map[edge['source']]['name'], node_map[edge['target']]['name'])
+        cost = 0
+        if 'cost' in edge:
+            cost = edge['cost']
+        arc = Arc(node_map[edge['source']]['name'], node_map[edge['target']]['name'], cost)
         arcs.append(arc)
 
     return Search_problem_from_explicit_graph(nodes, arcs, starts, goals)
