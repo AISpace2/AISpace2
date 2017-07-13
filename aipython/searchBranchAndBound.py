@@ -9,9 +9,10 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 from searchProblem import Path
+from searchAStar import Searcher
 from utilities import Displayable
 
-class DF_branch_and_bound(Displayable):
+class DF_branch_and_bound(Searcher):
     """returns a branch and bound searcher for a problem.    
     An optimal path with cost less than bound can be found by calling search()
     """
@@ -20,27 +21,27 @@ class DF_branch_and_bound(Displayable):
         bound gives the initial bound. By default this is infinite - meaning there
         is no initial pruning due to depth bound
         """
-        self.problem = problem
+        super().__init__(problem)
         self.best_path = None
         self.bound = bound
 
     def search(self):
         """returns an optimal solution to a problem with cost less than bound.
         returns None if there is no solution with cost less than bound."""
-        self.number_expanded=0
-        frontier = [Path(node) for node in reversed(self.problem.start_nodes())]
-        while frontier:
-            path = frontier.pop()
+        self.frontier = [Path(node) for node in reversed(self.problem.start_nodes())]
+        self.num_expanded = 0
+        while self.frontier:
+            path = self.frontier.pop()
             if path.cost+self.problem.heuristic(path.end()) < self.bound:
                 self.display(3,"Expanding:",path,"cost:",path.cost)
-                self.number_expanded += 1
+                self.num_expanded += 1
                 if self.problem.is_goal(path.end()):
                     self.best_path = path
                     self.bound = path.cost
                     self.display(2,"New best path:",path," cost:",path.cost)
-                frontier += reversed([Path(path, arc)
-                                      for arc in self.problem.neighbors(path.end())])
-        self.display(1,"Number of nodes expanded:",self.number_expanded)
+                for arc in reversed(self.problem.neighbors(path.end())):
+                    self.add_to_frontier(Path(path, arc))
+        self.display(1,"Number of paths expanded:",self.num_expanded)
         self.solution = self.best_path
         return self.best_path
         

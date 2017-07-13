@@ -135,7 +135,7 @@ class Path(object):
         """enumerates the nodes for the path before the end node.
         This starts at the end and enumerates nodes in the path backwards."""
         if self.arc is not None:
-            yield from self.initial.nodes()
+            for nd in self.initial.nodes(): yield nd     # could be "yield from"
         
     def __repr__(self):
         """returns a string representation of a path"""

@@ -15,7 +15,7 @@ import math
 class DT_learner(Learner):
     def __init__(self,
                  dataset,
-                 to_optimize="sum_squares",
+                 to_optimize="sum-of-squares",
                  leaf_selection="mean",   # what to use for point prediction at leaves
                  train=None,              # used for cross validation
                  min_number_examples=10):
@@ -110,7 +110,7 @@ def training_error(dataset, data_subset, to_optimize):
     This assumes that we choose the best value for the optimization
     criteria for dataset according to point_prediction
     """
-    select_dict = {"sum_squares":"mean", "sum_absolute":"median",
+    select_dict = {"sum-of-squares":"mean", "sum_absolute":"median",
                        "logloss":"Laplace"}  # arbitrary mapping. Perhaps wrong.
     selection = select_dict[to_optimize]
     predictor = point_prediction(dataset.target, data_subset, selection=selection)

@@ -8,37 +8,21 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from .searchProblem import Path, Search_problem_from_explicit_graph
-from .utilities import Displayable
-from ipywidgets import DOMWidget, register
-from traitlets import Unicode, observe, Instance
+from searchProblem import Path
+from utilities import Displayable
 
-def datetime_to_json(a, b):
-    print(a)
-
-def datetime_from_json(a, b):
-    print(a, b)
-@register('aispace.Depth_first_search')
-class Depth_first_search(DOMWidget):
-    _view_name = Unicode('DFSView').tag(sync=True)
-    _model_name = Unicode('DFSModel').tag(sync=True)
-    _view_module = Unicode('aispace').tag(sync=True)
-    _model_module = Unicode('aispace').tag(sync=True)
-    _view_module_version = Unicode('^0.1.0').tag(sync=True)
-    _model_module_version = Unicode('^0.1.0').tag(sync=True)
-    problem = Instance(Search_problem_from_explicit_graph, allow_none=True).tag(sync=True, to_json=datetime_to_json, from_json=datetime_from_json)
+class Depth_first_search(Displayable):
     """returns a depth-first searcher for a problem.
    
     This uses a list of iterators of nodes. "top" is the top-level iterator.
     The frontier contains iterators that may be needed to solve the problem.
     """
     def __init__(self, problem, bound=100000):
-        super(Depth_first_search, self).__init__()
         self.problem = problem
         self.bound = bound  # default bound unless overridden in search
         self.top = iter(self.problem.start_nodes()) 
         self.frontier = []    # list of iterators that generare all unexplored paths
-        self.number_expanded = 0 # number of nodes expanded
+        self.num_expanded = 0 # number of paths expanded
         self.hit_depth_bound = False # true when some paths hit the depth-bound
 
     def search(self, bound = None):
@@ -48,10 +32,10 @@ class Depth_first_search(DOMWidget):
         while True:
             try:
                 node = next(self.top)   #current path
-                self.number_expanded += 1
+                self.num_expanded += 1
                 if self.problem.is_goal(node):
                     self.display(1,"DFS found goal",node,"There were",
-                               self.number_expanded,"nodes expanded")
+                               self.num_expanded,"paths expanded")
                     return node
                 elif len(self.frontier) < bound:
                     self.frontier.append(self.top)
@@ -66,11 +50,8 @@ class Depth_first_search(DOMWidget):
                     self.top = self.frontier.pop()
                 else:
                     self.display(1,"No path found. There were",
-                              self.number_expanded,"nodes expanded")
+                              self.num_expanded,"paths expanded")
                     return None
-
-    def display(self, *args, **kwargs):
-        pass
 
 # example queries:
 # from searchDepthFirst import Depth_first_search

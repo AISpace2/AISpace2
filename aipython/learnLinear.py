@@ -90,7 +90,7 @@ def test(**args):
 
 def plot_steps(learner=None,
                data = None,
-               criterion="sum_squares",
+               criterion="sum-of-squares",
                step=1,
                num_steps=1000,
                log_scale=True,
@@ -173,7 +173,7 @@ def plot_prediction(learner=None,
     learner.learning_rate=0.00001
     learner.learn(10000)
     learner.display(1,"function learned is", learner.predictor_string(),
-              "error=",data.evaluate_dataset(data.train, learner.predictor, "sum_squares"))
+              "error=",data.evaluate_dataset(data.train, learner.predictor, "sum-of-squares"))
     plt.plot([e[0] for e in data.train],[e[-1] for e in data.train],"bo",label="data")
     plt.plot(list(arange(minx,maxx,step_size)),[learner.predictor([x])
                                           for x in arange(minx,maxx,step_size)],
@@ -209,7 +209,7 @@ def plot_polynomials(data=None,
         learner.learn(num_iter)
         learner.display(1,"For degree",degree,
                      "function learned is", learner.predictor_string(),
-                     "error=",data.evaluate_dataset(data.train, learner.predictor, "sum_squares"))
+                     "error=",data.evaluate_dataset(data.train, learner.predictor, "sum-of-squares"))
         ls = line_styles[degree % len(line_styles)]
         col = colors[degree % len(colors)]
         plt.plot(x_values,[learner.predictor([x]) for x in x_values], linestyle=ls, color=col,

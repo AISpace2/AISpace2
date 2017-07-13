@@ -36,7 +36,7 @@ class Boosting_learner(Learner):
         self.predictor = lambda e:mean     # function that returns mean for each example
         self.predictor.__doc__ = "lambda e:"+str(mean)
         self.offsets = [self.predictor]
-        self.errors = [data.evaluate_dataset(data.test, self.predictor, "sum_squares")]
+        self.errors = [data.evaluate_dataset(data.test, self.predictor, "sum-of-squares")]
         self.display(1,"Predict mean test set error=", self.errors[0] )
 
 
@@ -52,7 +52,7 @@ class Boosting_learner(Learner):
             def new_pred(e, old_pred=self.predictor, off=new_offset):
                 return old_pred(e)+off(e)
             self.predictor = new_pred
-            self.errors.append(data.evaluate_dataset(data.test, self.predictor,"sum_squares"))
+            self.errors.append(data.evaluate_dataset(data.test, self.predictor,"sum-of-squares"))
             self.display(1,"After Iteration",len(self.offsets)-1,"test set error=", self.errors[-1])
         return self.predictor
 

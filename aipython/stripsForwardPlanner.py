@@ -73,8 +73,7 @@ class Forward_STRIPS(Search_problem):
 
     def effect(self,act,state_asst):
         """returns the state that is the effect of doing act given state_asst"""
-        new_state_asst = dict(self.prob_domain.strips_map[act].effects)
-        print("NEW DICT")
+        new_state_asst = self.prob_domain.strips_map[act].effects.copy()
         for prop in state_asst:
             if prop not in new_state_asst:
                 new_state_asst[prop]=state_asst[prop]

@@ -1,4 +1,4 @@
-# relnCollFilt.py - Latent Feature-based Collaborative Filtering
+# relnCollFilt.py - Latent Property-based Collaborative Filtering
 # AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
 
 # Artificial Intelligence: Foundations of Computational Agents
@@ -21,9 +21,9 @@ class CF_learner(Learner):
                  test_subset = None,   # subset of ratings to be used as test ratings
                  step_size = 0.01,     # gradient descent step size
                  reglz = 1.0,          # the weight for the regularization terms
-                 num_features = 10,    # number of hidden features
-                 feature_range = 0.02  # features are initialized to be between
-                                       # -feature_range and feature_range
+                 num_properties = 10,    # number of hidden properties
+                 property_range = 0.02  # properties are initialized to be between
+                                       # -property_range and property_range
                  ):
         self.rating_set = rating_set
         self.ratings = rating_subset or rating_set.training_ratings # whichever is not empty
@@ -33,7 +33,7 @@ class CF_learner(Learner):
             self.test_ratings = test_subset
         self.step_size = step_size
         self.reglz = reglz
-        self.num_features = num_features
+        self.num_properties = num_properties
         self.num_ratings = len(self.ratings)
         self.ave_rating = (sum(r for (u,i,r,t) in self.ratings)
                            /self.num_ratings)
@@ -41,13 +41,13 @@ class CF_learner(Learner):
         self.items = {i for (u,i,r,t) in self.ratings}
         self.user_bias = {u:0 for u in self.users}
         self.item_bias = {i:0 for i in self.items}
-        self.user_feat = {u:[random.uniform(-feature_range,feature_range)
-                              for f in range(num_features)]
+        self.user_prop = {u:[random.uniform(-property_range,property_range)
+                              for p in range(num_properties)]
                              for u in self.users}
-        self.item_feat = {i:[random.uniform(-feature_range,feature_range)
-                              for f in range(num_features)]
+        self.item_prop = {i:[random.uniform(-property_range,property_range)
+                              for p in range(num_properties)]
                              for i in self.items}
-        self.zeros = [0 for f in range(num_features)]
+        self.zeros = [0 for p in range(num_properties)]
         self.iter=0
 
     def stats(self):
@@ -69,8 +69,8 @@ class CF_learner(Learner):
         return (self.ave_rating
                 +  self.user_bias.get(user,0)  #self.user_bias[user]
                 + self.item_bias.get(item,0)  #self.item_bias[item]
-                + sum([self.user_feat.get(user,self.zeros)[f]*self.item_feat.get(item,self.zeros)[f]
-                        for f in range(self.num_features)]))
+                + sum([self.user_prop.get(user,self.zeros)[p]*self.item_prop.get(item,self.zeros)[p]
+                        for p in range(self.num_properties)]))
       
     def learn(self, num_iter = 50):    
         """ do num_iter iterations of gradient descent."""
@@ -84,17 +84,17 @@ class CF_learner(Learner):
                 sumsq_error += error * error
                 self.user_bias[user] -= self.step_size*error
                 self.item_bias[item] -= self.step_size*error
-                for f in range(self.num_features):
-                    self.user_feat[user][f] -= self.step_size*error*self.item_feat[item][f]
-                    self.item_feat[item][f] -= self.step_size*error*self.user_feat[user][f]
+                for p in range(self.num_properties):
+                    self.user_prop[user][p] -= self.step_size*error*self.item_prop[item][p]
+                    self.item_prop[item][p] -= self.step_size*error*self.user_prop[user][p]
             for user in self.users:
                  self.user_bias[user] -= self.step_size*self.reglz* self.user_bias[user]
-                 for f in range(self.num_features):
-                     self.user_feat[user][f] -= self.step_size*self.reglz*self.user_feat[user][f]
+                 for p in range(self.num_properties):
+                     self.user_prop[user][p] -= self.step_size*self.reglz*self.user_prop[user][p]
             for item in self.items:
                 self.item_bias[item] -= self.step_size*self.reglz*self.item_bias[item]
-                for f in range(self.num_features):
-                    self.item_feat[item][f] -= self.step_size*self.reglz*self.item_feat[item][f]
+                for p in range(self.num_properties):
+                    self.item_prop[item][p] -= self.step_size*self.reglz*self.item_prop[item][p]
             self.display(1,"Iteration",self.iter,
                   "(Ave Abs,AveSumSq) training =",self.evaluate(self.ratings),
                   "test =",self.evaluate(self.test_ratings))
@@ -133,8 +133,8 @@ class CF_learner(Learner):
         plt.legend()
         plt.draw()
         
-    def plot_feature(self,
-                     f,               # feature
+    def plot_property(self,
+                     p,               # property
                      plot_all=False,  # true if all points should be plotted
                      num_points=200   # number of random points plotted if not all
                      ):
@@ -142,16 +142,16 @@ class CF_learner(Learner):
         if plot_all is true
         num_points is the number of points selected at random plotted.
 
-        the plot has the users on the x-axis sorted by their value on feature f and
-        with the items on the y-axis sorted by their value on feature f and 
+        the plot has the users on the x-axis sorted by their value on property p and
+        with the items on the y-axis sorted by their value on property p and 
         the ratings plotted at the corresponding x-y position.
         """
         plt.ion()
         plt.xlabel("users")
         plt.ylabel("items")
-        user_vals = [self.user_feat[u][f]
+        user_vals = [self.user_prop[u][p]
                      for u in self.users]
-        item_vals = [self.item_feat[i][f]
+        item_vals = [self.item_prop[i][p]
                      for i in self.items]
         plt.axis([min(user_vals)-0.02,
                   max(user_vals)+0.05,
@@ -159,14 +159,14 @@ class CF_learner(Learner):
                   max(item_vals)+0.05])
         if plot_all:
             for (u,i,r,t) in self.ratings:
-                plt.text(self.user_feat[u][f],
-                         self.item_feat[i][f],
+                plt.text(self.user_prop[u][p],
+                         self.item_prop[i][p],
                          str(r))
         else:
             for i in range(num_points):
                 (u,i,r,t) = random.choice(self.ratings)
-                plt.text(self.user_feat[u][f],
-                         self.item_feat[i][f],
+                plt.text(self.user_prop[u][p],
+                         self.item_prop[i][p],
                          str(r))
         plt.show()
 
@@ -198,7 +198,6 @@ class Rating_set(Displayable):
                 len(self.test_ratings),"test ratings")
         tr_users = {user for (user,item,rating,timestamp) in self.training_ratings}
         test_users = {user for (user,item,rating,timestamp) in self.test_ratings}
-        print(type(tr_users))
         self.display(1,"users:",len(tr_users),"training,",len(test_users),"test,",
                      len(tr_users & test_users),"in common")
         tr_items = {item for (user,item,rating,timestamp) in self.training_ratings}
@@ -239,12 +238,12 @@ class Rating_set(Displayable):
         return used_ratings
 
 movielens = Rating_set()
-learner0 = CF_learner(movielens, num_features = 1)
+learner0 = CF_learner(movielens, num_properties = 1)
 #learner0.learn(50)
 # learner0.plot_predictions(examples = "training")
 # learner0.plot_predictions(examples = "test")
-#learner0.plot_feature(0)
+#learner0.plot_property(0)
 #movielens_subset = movielens.create_top_subset(num_items = 20, num_users = 20)
-#learner1 = CF_learner(movielens, rating_subset=movielens_subset, test_subset=[], num_features=1)
+#learner1 = CF_learner(movielens, rating_subset=movielens_subset, test_subset=[], num_properties=1)
 #learner1.learn(1000)
-#learner1.plot_feature(0,plot_all=True)
+#learner1.plot_property(0,plot_all=True)

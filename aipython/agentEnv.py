@@ -36,7 +36,7 @@ class Rob_body(Environment):
         self.whisker_angle = 30   # angle of whisker relative to robot
         self.crashed = False
         # The following control how it is plotted
-        self.plotting = False      # whether the trace is being plotted
+        self.plotting = True      # whether the trace is being plotted
         self.sleep_time = 0.05     # time between actions (for real-time plotting)
         # The following are data structures maintained:
         self.history = [(self.rob_x, self.rob_y)] # history of (x,y) positions
@@ -62,7 +62,7 @@ class Rob_body(Environment):
         if any(line_segments_intersect(path,wall) for wall in self.env.walls):
             self.crashed = True
             if self.plotting:
-                plt.plot([self.rob_x],[self.rob_y],"bh",markersize=20.0)
+                plt.plot([self.rob_x],[self.rob_y],"r*",markersize=20.0)
                 plt.draw()
         self.rob_x, self.rob_y = rob_x_new, rob_y_new 
         self.history.append((self.rob_x, self.rob_y))

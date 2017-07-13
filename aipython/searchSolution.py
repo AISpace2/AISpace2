@@ -13,11 +13,13 @@ from searchProblem import Path
 
 class Searcher_prunes(Searcher):
     def __init__(self,problem,pruning=None,method='astar',max_expanded=10000):
-        """max_expanded is a bound on the number of nodes expanded (to prevent infinite computation)"""
+        """max_expanded is a bound on the number of paths expanded (to prevent infinite computation)"""
         self.method = method
         self.max_expanded = max_expanded
         self.pruning = pruning
         Searcher.__init__(self,problem,method)
+        if self.pruning == 'mpp':
+            self.explored = set()
 
     def add_to_frontier(self,path):
         """add path to the frontier with the appropriate cost"""
@@ -38,28 +40,28 @@ class Searcher_prunes(Searcher):
         if self.pruning == 'mpp':
             while not self.frontier.empty():
                 path = self.frontier.pop()
-                if path.end() not in self.expanded:
+                if path.end() not in self.explored:
                     self.display(2, "Expanding: ",path,"(cost:",path.cost,")")
-                    self.expanded.add(path.end())
+                    self.explored.add(path.end())
                     self.num_expanded += 1
                     if self.problem.is_goal(path.end()):
-                        self.display(1, self.num_expanded, "nodes have been expanded and",
-                            len(self.frontier.frontierpq), "nodes remain in the frontier")
+                        self.display(1, self.num_expanded, "paths have been expanded and",
+                            len(self.frontier.frontierpq), "paths remain in the frontier")
                         return path
                     else:
                         neighs = self.problem.neighbors(path.end())
                         for arc in neighs:
                             self.add_to_frontier(Path(path,arc))
                         self.display(3,"Frontier:",self.frontier)
-        elif self.pruning == 'loop':
+        elif self.pruning == 'cycle':
             while not self.frontier.empty():
                 path = self.frontier.pop()
-                if path.end() not in path.initial_nodes():  # new part for loop detection
+                if path.end() not in path.initial_nodes():  # new part for cycle pruning
                     self.display(2, "Expanding: ",path,"(cost:",path.cost,")")
                     self.num_expanded += 1
                     if self.problem.is_goal(path.end()):
-                        self.display(1, self.num_expanded, "nodes have been expanded and",
-                            len(self.frontier.frontierpq), "nodes remain in the frontier")
+                        self.display(1, self.num_expanded, "paths have been expanded and",
+                            len(self.frontier.frontierpq), "paths remain in the frontier")
                         return path
                     else:
                         neighs = self.problem.neighbors(path.end())
@@ -73,8 +75,8 @@ class Searcher_prunes(Searcher):
                 self.display(2, "Expanding: ",path,"(cost:",path.cost,")")
                 self.num_expanded += 1
                 if self.problem.is_goal(path.end()):
-                    self.display(1, self.num_expanded, "nodes have been expanded and",
-                            len(self.frontier.frontierpq), "nodes remain in the frontier")
+                    self.display(1, self.num_expanded, "paths have been expanded and",
+                            len(self.frontier.frontierpq), "paths remain in the frontier")
                     return path
                 else:
                     neighs = self.problem.neighbors(path.end())
@@ -82,22 +84,22 @@ class Searcher_prunes(Searcher):
                         self.add_to_frontier(Path(path,arc))
                     self.display(3,"Frontier:",self.frontier)
             
-        self.display(1,"Total of", self.frontier.frontier_index,"nodes expanded.")
+        self.display(1,"Total of", self.frontier.frontier_index,"paths expanded.")
 
 import searchProblem
 
 def show_combinations(problem,name):
     print('\n******',name)
-    for pruning in [None,'loop','mpp']:
+    for pruning in [None,'cycle','mpp']:
         for method in ['astar','best','least-cost']:
             s = Searcher_prunes(problem, pruning=pruning,method=method)
             s.max_display_level=0
             path = s.search()
             if path:
-                print(method,"with",pruning,"expanded",s.num_expanded,"nodes")
+                print(method,"with",pruning,"expanded",s.num_expanded,"paths")
             else:
-                print(method,"with",pruning,"did not find a solution with",s.num_expanded,"nodes expanded")
+                print(method,"with",pruning,"did not find a solution with",s.num_expanded,"paths expanded")
 
 if __name__ == "__main__":
-    show_combinations(searchProblem.cyclic_delivery_problem,"Updated Cyclic Delivery")
+    show_combinations(searchProblem.cyclic_delivery_problem,"Cyclic Delivery Problem")
 
