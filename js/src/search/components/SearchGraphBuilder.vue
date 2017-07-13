@@ -12,7 +12,7 @@
                 </SearchGoalNode>
             </template>
             <template slot="edge" scope="props">
-                <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="strokeColour(props.edge)"                        :strokeWidth="props.edge.styles.strokeWidth">
+                <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="strokeColour(props.edge)"                        :strokeWidth="props.edge.styles.strokeWidth" :text="props.edge.cost">
                 </DirectedEdge>
             </template>
         </GraphVisualizerBase>

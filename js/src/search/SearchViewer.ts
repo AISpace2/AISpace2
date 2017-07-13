@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import CSPViewer from "../csp/CSPViewer";
@@ -67,7 +68,9 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       </div>`
     });
 
-    this.vue = new App().$mount();
-    this.el.appendChild(this.vue.$el);
+    d3.timeout(() => {
+      this.vue = new App().$mount();
+      this.el.appendChild(this.vue.$el);
+    });
   }
 }

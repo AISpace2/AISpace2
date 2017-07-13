@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import { IEvent } from "../Events";
@@ -45,8 +46,10 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
       }
     });
 
-    const app = new App().$mount();
-    this.el.appendChild(app.$el);
+    d3.timeout(() => {
+      const app = new App().$mount();
+      this.el.appendChild(app.$el);
+    });
 
     return this;
   }
