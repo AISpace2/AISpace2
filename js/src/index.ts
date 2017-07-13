@@ -6,7 +6,9 @@
 // url for the notebook is not known at build time and is therefore computed
 // dynamically.
 declare let __webpack_public_path__: any;
-__webpack_public_path__ = document.querySelector("body")!.getAttribute("data-base-url") + "nbextensions/aispace/";
+__webpack_public_path__ =
+  document.querySelector("body")!.getAttribute("data-base-url") +
+  "nbextensions/aispace/";
 
 import "./style.css";
 
@@ -20,11 +22,11 @@ import SearchViewerModel from "./search/SearchViewerModel";
 
 // Export widget models and views, and the npm package version number.
 module.exports = {
-    CSPBuilder,
-    CSPBuilderModel,
-    CSPViewer,
-    CSPViewerModel,
-    SearchViewer,
-    SearchViewerModel,
-    version: (packageJSON as any).version,
+  CSPBuilder,
+  CSPBuilderModel,
+  CSPViewer,
+  CSPViewerModel,
+  SearchViewer,
+  SearchViewerModel,
+  version: (packageJSON as any).version
 };

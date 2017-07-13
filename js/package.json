@@ -9,17 +9,12 @@
     "type": "git",
     "url": "https://github.com/aispace/aispace2.git"
   },
-  "keywords": [
-    "jupyter",
-    "widgets",
-    "ipython",
-    "ipywidgets"
-  ],
+  "keywords": ["jupyter", "widgets", "ipython", "ipywidgets"],
   "scripts": {
     "prepare": "webpack",
     "dev": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "tsfmt -r"
+    "format": "prettier \"src/**/*.{ts,js,json,css}\" --write"
   },
   "devDependencies": {
     "@types/d3": "^4.9.0",
@@ -30,13 +25,14 @@
     "css-loader": "^0.28.4",
     "html-loader": "^0.4.5",
     "json-loader": "^0.5.4",
+    "prettier": "^1.5.2",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
     "ts-loader": "^2.2.2",
     "tslint": "^5.5.0",
+    "tslint-config-prettier": "^1.1.0",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.4.1",
-    "typescript-formatter": "^5.2.0",
     "vue-loader": "^13.0.2",
     "vue-template-compiler": "^2.4.1",
     "webpack": "^3.2.0"
