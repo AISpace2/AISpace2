@@ -1,5 +1,8 @@
 <template>
-    <path :d="path" stroke="black" stroke-width="5" marker-end="url(#marker-end)"></path>
+    <path :d="path" stroke="black" stroke-width="5" marker-end="url(#marker-end)"
+          :stroke="stroke != null ? stroke : 'black'"
+          :stroke-width="strokeWidth != null ? strokeWidth : 4">
+    </path>
 </template>
 
 <script>

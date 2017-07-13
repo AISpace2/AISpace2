@@ -24,8 +24,10 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         for (const edge of this.graph.edges) {
           if (event.path.includes(edge.id)) {
             Vue.set(edge.styles, "stroke", "pink");
+            Vue.set(edge.styles, "strokeWidth", "6");
           } else {
             Vue.set(edge.styles, "stroke", "black");
+            Vue.set(edge.styles, "strokeWidth", "4");            
           }
         }
       }
