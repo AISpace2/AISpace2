@@ -7,9 +7,14 @@
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aispace/aispace2.git"
+    "url": "https://github.com/aispace2/aispace2.git"
   },
-  "keywords": ["jupyter", "widgets", "ipython", "ipywidgets"],
+  "keywords": [
+    "jupyter",
+    "widgets",
+    "ipython",
+    "ipywidgets"
+  ],
   "scripts": {
     "prepare": "webpack",
     "dev": "webpack --watch",
@@ -35,17 +40,16 @@
     "typescript": "^2.4.1",
     "vue-loader": "^13.0.2",
     "vue-template-compiler": "^2.4.1",
-    "webpack": "^3.2.0"
+    "webpack": "^3.2.0",
+    "webpack-sources": "^1.0.1"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "d3": "^4.9.1",
     "jquery": "^3.2.1",
     "jupyter-js-widgets": "^2.1.4",
-    "picomodal": "^3.0.0",
     "shortid": "^2.2.8",
     "underscore": "^1.8.3",
-    "vue": "^2.4.1",
-    "webpack-sources": "^1.0.1"
+    "vue": "^2.4.1"
   }
 }
