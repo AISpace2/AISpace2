@@ -1,7 +1,6 @@
 <template>
     <div>
-        <GraphVisualizerBase :graph="graph" @updateSelection="val => selection = val" @dblclick="createNode"
-                             :selection="selection"
+        <GraphVisualizerBase :graph="graph" @dblclick="createNode"
                              @click:edge="updateSelection"
                              @click:node="updateSelection"
                              @delete="deleteSelection">
@@ -17,7 +16,7 @@
             </template>
             <template slot="edge" scope="props">
                 <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
-                                :stroke="strokeColour(props.link)"></UndirectedEdge>
+                                :stroke="strokeColour(props.edge)"></UndirectedEdge>
             </template>
         </GraphVisualizerBase>
 
@@ -140,8 +139,8 @@
         }
       },
 
-      strokeColour: function (link) {
-        if (link === this.selection) {
+      strokeColour: function (edge) {
+        if (edge === this.selection) {
           return "pink";
         }
 

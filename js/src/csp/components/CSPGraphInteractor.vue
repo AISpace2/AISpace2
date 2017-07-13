@@ -1,6 +1,6 @@
 <template>
     <div>
-        <GraphVisualizerBase :graph="graph" @click:edge="linkClicked">
+        <GraphVisualizerBase :graph="graph" @click:edge="edgeClicked">
             <template slot="node" scope="props">
                 <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name"
                                  :domain="props.node.domain" :hover="props.hover">
@@ -11,8 +11,8 @@
             </template>
             <template slot="edge" scope="props">
                 <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
-                                :stroke="stroke(props.link)"
-                                :stroke-width="strokeWidth(props.link, props.hover)"></UndirectedEdge>
+                                :stroke="stroke(props.edge)"
+                                :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
             </template>
         </GraphVisualizerBase>
         <div id="footer">
@@ -34,23 +34,23 @@
   export default {
     components: {GraphVisualizerBase, CSPConstraintNode, CSPVariableNode, UndirectedEdge},
     methods: {
-      linkClicked: function (link) {
-        this.$emit('click:link', link);
+      edgeClicked: function (edge) {
+        this.$emit('click:edge', edge);
       },
-      stroke: function (link) {
-        if (link.styles != null) {
-          return link.styles.stroke;
+      stroke: function (edge) {
+        if (edge.styles != null) {
+          return edge.styles.stroke;
         }
 
         return null;
       },
-      strokeWidth: function (link, isHovering) {
+      strokeWidth: function (edge, isHovering) {
         if (isHovering) {
           return 7;
         }
 
-        if (link.styles && link.styles.strokeWidth) {
-          return link.styles.strokeWidth;
+        if (edge.styles && edge.styles.strokeWidth) {
+          return edge.styles.strokeWidth;
         }
 
         return 4;

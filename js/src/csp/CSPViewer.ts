@@ -68,7 +68,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         finestep() {
           that.send({ event: StepEvents.FINE_STEP_CLICK });
         },
-        link(l: any) {
+        edge(l: any) {
           that.send({
             constId: l.target.idx,
             event: CSPViewer.ARC_CLICK,
@@ -86,7 +86,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                         @click:auto-step="autostep"
                         @click:step="step"
                         @click:fine-step="finestep"
-                        @click:link="link"
+                        @click:edge="edge"
                         :output="output">
                     </CSPGraphInteractor>
                 </div>`
