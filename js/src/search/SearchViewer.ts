@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
-import CSPViewer from "../csp/CSPViewer";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import { d3ForceLayoutEngine } from "../GraphLayout";

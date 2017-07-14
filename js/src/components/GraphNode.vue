@@ -1,12 +1,12 @@
 <template>
-    <g :transform="transform"
-       @mousedown="mousedown($event)"
-       @mousemove="mousemove($event)"
-       @mouseup="mouseup($event)"
-       @mouseover="$emit('mouseover', $event)"
-       @mouseout="$emit('mouseout', $event)">
-        <slot></slot>
-    </g>
+  <g :transform="transform"
+     @mousedown="mousedown($event)"
+     @mousemove="mousemove($event)"
+     @mouseup="mouseup($event)"
+     @mouseover="$emit('mouseover', $event)"
+     @mouseout="$emit('mouseout', $event)">
+    <slot></slot>
+  </g>
 </template>
 
 <script>
@@ -56,11 +56,11 @@
 </script>
 
 <style scoped>
-    text {
-        cursor: default;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
+  text {
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 </style>

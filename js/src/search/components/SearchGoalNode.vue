@@ -1,8 +1,8 @@
 <template>
-    <g>
-        <ellipse rx="40" ry="30" cx="0" cy="0" fill="gold" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
-        <text x="0" y="0" text-anchor="middle" alignment-baseline="middle">{{name}}</text>
-    </g>
+  <g>
+    <ellipse rx="40" ry="30" cx="0" cy="0" fill="gold" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
+    <text x="0" y="0" text-anchor="middle" alignment-baseline="middle">{{name}}</text>
+  </g>
 </template>
 
 <script>

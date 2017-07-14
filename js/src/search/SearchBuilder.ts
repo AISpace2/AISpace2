@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import { IEvent } from "../Events";
-import { Graph, ICSPGraphNode } from "../Graph";
+import { Graph } from "../Graph";
 import { d3ForceLayoutEngine } from "../GraphLayout";
 import SearchGraphBuilder from "./components/SearchGraphBuilder.vue";
 import SearchBuilderModel from "./SearchBuilderModel";

@@ -1,4 +1,3 @@
-import * as Backbone from "backbone";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";

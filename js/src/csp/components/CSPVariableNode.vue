@@ -1,11 +1,11 @@
 <template>
-    <g>
-        <ellipse rx="40" ry="30" cx="0" cy="0" :fill="ellipseFill" stroke="black"></ellipse>
-        <text x="0" y="-8" text-anchor="middle" alignment-baseline="middle" :fill="textFill">{{name}}</text>
-        <text class="domain" x="0" y="7" text-anchor="middle" alignment-baseline="middle" :fill="textFill">
-            {{domainText}}
-        </text>
-    </g>
+  <g>
+    <ellipse rx="40" ry="30" cx="0" cy="0" :fill="ellipseFill" stroke="black"></ellipse>
+    <text x="0" y="-8" text-anchor="middle" alignment-baseline="middle" :fill="textFill">{{name}}</text>
+    <text class="domain" x="0" y="7" text-anchor="middle" alignment-baseline="middle" :fill="textFill">
+      {{domainText}}
+    </text>
+  </g>
 </template>
 
 <script>

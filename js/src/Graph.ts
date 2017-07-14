@@ -1,5 +1,3 @@
-import * as shortid from "shortid";
-
 export interface IGraphNode {
   id: string;
   name: string;

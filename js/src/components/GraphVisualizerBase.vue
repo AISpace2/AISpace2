@@ -1,31 +1,32 @@
 <template>
-    <div>
-        <svg tabindex="0" ref="mySVG" width="800" height="500"
-             @mousemove="dragSVG"
-             @mouseleave="dragEnd"
-             @keydown.delete="$emit('delete')"
-             @dblclick="onDblClick">
-            <marker id="marker-end" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3" markerHeight="3" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z"></path>
-            </marker>
-            <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
-                           @mouseover="edgeMouseOver(edge)"
-                           @mouseout="edgeMouseOut(edge)"
-                           @click="$emit('click:edge', edge)">
-                <slot name="edge" :edge="edge"
-                      :x1="edge.source.x" :y1="edge.source.y"
-                      :x2="edge.target.x" :y2="edge.target.y"
-                      :hover="edge === edgeHover"></slot>
-            </EdgeContainer>
-            <GraphNode v-for="node in graph.nodes" :key="node.id"
-                       @click="$emit('click:node', node)"
-                       @dragstart="dragStart(node, $event)" @dragend="dragEnd"
-                       @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
-                       :x="node.x" :y="node.y">
-                <slot name="node" :node="node" :hover="node === nodeHover"></slot>
-            </GraphNode>
-        </svg>
-    </div>
+  <div>
+    <svg tabindex="0" ref="mySVG" width="800" height="500"
+         @mousemove="dragSVG"
+         @mouseleave="dragEnd"
+         @keydown.delete="$emit('delete')"
+         @dblclick="onDblClick">
+      <marker id="marker-end" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3" markerHeight="3"
+              orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z"></path>
+      </marker>
+      <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
+                     @mouseover="edgeMouseOver(edge)"
+                     @mouseout="edgeMouseOut(edge)"
+                     @click="$emit('click:edge', edge)">
+        <slot name="edge" :edge="edge"
+              :x1="edge.source.x" :y1="edge.source.y"
+              :x2="edge.target.x" :y2="edge.target.y"
+              :hover="edge === edgeHover"></slot>
+      </EdgeContainer>
+      <GraphNode v-for="node in graph.nodes" :key="node.id"
+                 @click="$emit('click:node', node)"
+                 @dragstart="dragStart(node, $event)" @dragend="dragEnd"
+                 @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
+                 :x="node.x" :y="node.y">
+        <slot name="node" :node="node" :hover="node === nodeHover"></slot>
+      </GraphNode>
+    </svg>
+  </div>
 </template>
 
 <script>
@@ -102,7 +103,7 @@
 </script>
 
 <style scoped>
-    svg:focus {
-        outline: none;
-    }
+  svg:focus {
+    outline: none;
+  }
 </style>

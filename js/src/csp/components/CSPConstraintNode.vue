@@ -1,8 +1,8 @@
 <template>
-    <g>
-        <rect width="70" height="50" stroke="black" :fill="rectFill" x="-35" y="-25"></rect>
-        <text x="0" y="0" text-anchor="middle" alignment-baseline="middle" :fill="textFill">A {{constraint}} 0</text>
-    </g>
+  <g>
+    <rect width="70" height="50" stroke="black" :fill="rectFill" x="-35" y="-25"></rect>
+    <text x="0" y="0" text-anchor="middle" alignment-baseline="middle" :fill="textFill">A {{constraint}} 0</text>
+  </g>
 </template>
 
 <script>
