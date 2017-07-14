@@ -36,7 +36,7 @@ def search_problem_to_json(problem):
             h = problem.hmap[n]
         
         node_to_add = {'name': str(n), 'id': node_map[n], 'h': h}
-        if n in problem.starts:
+        if n == problem.start:
             node_to_add['type'] = 'search:start'
         elif n in problem.goals:
             node_to_add['type'] = 'search:goal'
@@ -57,7 +57,7 @@ def search_problem_to_json(problem):
 def json_to_search_problem(json):
     nodes = set()
     node_map = {}
-    starts = []
+    start = None
     goals = set()
 
     for node in json['nodes']:
@@ -65,7 +65,7 @@ def json_to_search_problem(json):
         node_map[node['id']] = node
 
         if node['type'] == 'search:start':
-            starts.append(node['name'])
+            start = node['name']
         elif node['type'] == 'search:goal':
             goals.add(node['name'])
 
@@ -77,4 +77,4 @@ def json_to_search_problem(json):
         arc = Arc(node_map[edge['source']]['name'], node_map[edge['target']]['name'], cost)
         arcs.append(arc)
 
-    return Search_problem_from_explicit_graph(nodes, arcs, starts, goals)
+    return Search_problem_from_explicit_graph(nodes, arcs, start, goals)

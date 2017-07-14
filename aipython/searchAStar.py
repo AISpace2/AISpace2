@@ -64,8 +64,7 @@ class Searcher(Displayable):
         self.problem = problem
         self.initialize_frontier()
         self.num_expanded = 0
-        for node in problem.start_nodes():
-            self.add_to_frontier(Path(node))
+        self.add_to_frontier(Path(problem.start_node()))
         self.display(3,"Frontier:",self.frontier)
 
     def initialize_frontier(self):
@@ -77,7 +76,7 @@ class Searcher(Displayable):
         self.frontier.append(path)
         
     def search(self):
-        """returns (next) path from an element of problem's start nodes
+        """returns (next) path from the problem's start node
         to a goal node. 
         Returns None if no path exists.
         """

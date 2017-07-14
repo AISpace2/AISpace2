@@ -28,7 +28,7 @@ class DF_branch_and_bound(Searcher):
     def search(self):
         """returns an optimal solution to a problem with cost less than bound.
         returns None if there is no solution with cost less than bound."""
-        self.frontier = [Path(node) for node in reversed(self.problem.start_nodes())]
+        self.frontier = [Path(self.problem.start_node())]
         self.num_expanded = 0
         while self.frontier:
             path = self.frontier.pop()
