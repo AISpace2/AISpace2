@@ -8,8 +8,8 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from searchAStar import AStarSearcher
-from searchProblem import Path
+from aipython.searchAStar import AStarSearcher
+from aipython.searchProblem import Path
 
 class SearcherMPP(AStarSearcher):
     """returns a searcher for a problem.
@@ -43,11 +43,11 @@ class SearcherMPP(AStarSearcher):
         self.display(1,"No (more) solutions. Total of",
                      self.num_expanded,"paths expanded.")
 
-from searchAStar import test
+from aipython.searchAStar import test
 if __name__ == "__main__":
     test(SearcherMPP)
 
-import searchProblem 
+# import searchProblem 
 # searcherMPPcdp = SearcherMPP(searchProblem.cyclic_delivery_problem)
 # print(searcherMPPcdp.search())  # find first path
 

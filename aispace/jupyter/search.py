@@ -1,8 +1,11 @@
+from functools import partial
 from threading import Thread
+
 from ipywidgets import register
 from traitlets import Dict, Unicode
-from functools import partial
+
 from aispace.searchjsonbridge import search_problem_to_json
+
 from .stepdomwidget import StepDOMWidget
 
 
@@ -25,7 +28,7 @@ class Displayable(StepDOMWidget):
          self.edge_map) = search_problem_to_json(self.problem)
 
     def display(self, level, *args, **kwargs):
-        if args[0] == 'Expanding:':
+        if args[0] == 'Expanding: ':
             self._send_clear_action()
             path = args[1]
 

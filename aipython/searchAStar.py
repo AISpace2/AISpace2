@@ -9,7 +9,7 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 import heapq        # part of the Python standard library
-from .searchProblem import Path
+from aipython.searchProblem import Path
 
 class Frontier(object):
     """A frontier consists of a priority queue (heap), frontierpq, of
@@ -52,7 +52,7 @@ class Frontier(object):
     def __len__(self):
         return len(self.frontierpq)
     
-from .utilities import Displayable
+from aipython.utilities import Displayable
 
 class Searcher(Displayable):
     """returns a searcher for a problem.
@@ -82,7 +82,7 @@ class Searcher(Displayable):
         """
         while not self.empty_frontier():
             path = self.frontier.pop()
-            self.display(2, "Expanding:",path,"(cost:",path.cost,")")
+            self.display(2, "Expanding: ",path,"(cost:",path.cost,")")
             self.num_expanded += 1
             if self.problem.is_goal(path.end()):    # solution found
                 self.display(1, self.num_expanded, "paths have been expanded and",
@@ -118,7 +118,7 @@ class AStarSearcher(Searcher):
         self.frontier.add(path, value)
 
 
-from .searchProblem import problem1
+from aipython.searchProblem import problem1
 def test(SearchClass):
     print("Testing problem 1:")
     schr1 = SearchClass(problem1)

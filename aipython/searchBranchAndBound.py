@@ -8,9 +8,9 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from searchProblem import Path
-from searchAStar import Searcher
-from utilities import Displayable
+from aipython.searchProblem import Path
+from aipython.searchAStar import Searcher
+from aipython.utilities import Displayable
 
 class DF_branch_and_bound(Searcher):
     """returns a branch and bound searcher for a problem.    
@@ -33,7 +33,7 @@ class DF_branch_and_bound(Searcher):
         while self.frontier:
             path = self.frontier.pop()
             if path.cost+self.problem.heuristic(path.end()) < self.bound:
-                self.display(3,"Expanding:",path,"cost:",path.cost)
+                self.display(3,"Expanding: ",path,"cost:",path.cost)
                 self.num_expanded += 1
                 if self.problem.is_goal(path.end()):
                     self.best_path = path
@@ -45,7 +45,7 @@ class DF_branch_and_bound(Searcher):
         self.solution = self.best_path
         return self.best_path
         
-from searchAStar import test
+from aipython.searchAStar import test
 if __name__ == "__main__":
     test(DF_branch_and_bound)
 
