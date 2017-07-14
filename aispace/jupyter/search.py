@@ -1,7 +1,7 @@
 from threading import Thread
 from ipywidgets import register
 from traitlets import Dict, Unicode
-
+from functools import partial
 from aispace.searchjsonbridge import search_problem_to_json
 from .stepdomwidget import StepDOMWidget
 
@@ -23,8 +23,6 @@ class Displayable(StepDOMWidget):
 
         (self.graph_json, self.node_map,
          self.edge_map) = search_problem_to_json(self.problem)
-        self._thread = Thread(target=self.search)
-        self._thread.start()
 
     def display(self, level, *args, **kwargs):
         if args[0] == 'Expanding:':
@@ -104,12 +102,7 @@ def visualize(func_to_delay):
     """
 
     def wrapper(self, *args, **kwargs):
-        if self._displayed_once is False:
-            self._queued_func = {
-                'func': partial(func_to_delay, self),
-                'args': args, 'kwargs': kwargs
-            }
-        else:
-            return func_to_delay(self, *args, **kwargs)
-
+        self._thread = Thread(
+                    target=partial(func_to_delay, self), args=args, kwargs=kwargs)
+        self._thread.start()
     return wrapper
