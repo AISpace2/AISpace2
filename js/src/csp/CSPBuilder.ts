@@ -20,7 +20,7 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
     this.listenTo(this.model, "view:msg", (event: IEvent) => {
       if (event.action === CSPBuilder.SHOW_PYTHON_CODE) {
         // Replace cell contents with the code
-        Jupyter.notebook.get_selected_cell().set_text((event as any).code);
+        Jupyter.notebook.insert_cell_below().set_text((event as any).code);
       }
     });
   }
