@@ -90,14 +90,11 @@ class Displayable(StepDOMWidget):
                    'path': path_edge_ids, 'colour': colour})
 
 
-def visualize(func_to_delay):
-    """Enqueues a function that does not run until the Jupyter widget has rendered.
-
-    Once the Jupyter widget has rendered once, further invocation of the wrapped function
-    behave as if unwrapped.
+def visualize(func_bg):
+    """Runs a function in a background thread.
 
     Args:
-        func_to_delay (function): The function to delay.
+        func_bg (function): The function to run in the background.
 
     Returns: 
         The original function, wrapped such that it will automatically run
@@ -108,6 +105,6 @@ def visualize(func_to_delay):
         # We need to reset display_level so it doesn't carry over to next call
         self._desired_level = 4
         self._thread = Thread(
-                    target=partial(func_to_delay, self), args=args, kwargs=kwargs)
+                    target=partial(func_bg, self), args=args, kwargs=kwargs)
         self._thread.start()
     return wrapper
