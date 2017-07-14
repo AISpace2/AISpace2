@@ -102,6 +102,8 @@ def visualize(func_to_delay):
     """
 
     def wrapper(self, *args, **kwargs):
+        # We need to reset display_level so it doesn't carry over to next call
+        self._desired_level = 4
         self._thread = Thread(
                     target=partial(func_to_delay, self), args=args, kwargs=kwargs)
         self._thread.start()
