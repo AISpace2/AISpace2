@@ -3,7 +3,7 @@ import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import CSPViewer from "../csp/CSPViewer";
 import { IEvent, isOutputEvent } from "../Events";
-import { Graph } from "../Graph";
+import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import { d3ForceLayoutEngine } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
@@ -12,12 +12,15 @@ import SearchViewerModel from "./SearchViewerModel";
 
 export default class SearchViewer extends widgets.DOMWidgetView {
   public model: SearchViewerModel;
-  private graph: Graph;
+  private graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
   private vue: any;
 
   public initialize(opts: any) {
     super.initialize(opts);
-    this.graph = Graph.fromJSON(this.model.graphJSON);
+    this.graph = Graph.fromJSON(this.model.graphJSON) as Graph<
+      ISearchGraphNode,
+      ISearchGraphEdge
+    >;
     this.listenTo(this.model, "view:msg", (event: IEvent) => {
       console.log(event);
 

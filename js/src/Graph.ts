@@ -6,20 +6,8 @@ export interface IGraphNode {
   type: string;
   x?: number;
   y?: number;
-  [key: string]: any;
-}
-
-export type CSPNodeTypes = "csp:variable" | "csp:constraint";
-export interface ICSPGraphNode extends IGraphNode {
-  type: CSPNodeTypes;
-  domain: number[] | string[];
-}
-
-export interface IGraphEdgeJSON {
-  source: string;
-  target: string;
-  id: string;
-  name?: string;
+  /** An object that can contain arbitrary properties to influence it's rendering. */
+  styles: { [key: string]: any };
   [key: string]: any;
 }
 
@@ -29,6 +17,35 @@ export interface IGraphEdge {
   id: string;
   name?: string;
   type: "edge";
+  /** An object that can contain arbitrary properties to influence it's rendering. */
+
+  styles: { [key: string]: any };
+  [key: string]: any;
+}
+
+export type CSPNodeTypes = "csp:variable" | "csp:constraint";
+export interface ICSPGraphNode extends IGraphNode {
+  type: CSPNodeTypes;
+  domain: number[] | string[];
+}
+
+export type SearchNodeTypes = "search:start" | "search:goal" | "search:normal";
+export interface ISearchGraphNode extends IGraphNode {
+  type: SearchNodeTypes;
+  /** The node's heuristic value. Should be non-negative. */
+  h?: number;
+}
+
+export interface ISearchGraphEdge extends IGraphEdge {
+  /** The cost associated with taking the edge. */
+  cost?: number;
+}
+
+export interface IGraphEdgeJSON {
+  source: string;
+  target: string;
+  id: string;
+  name?: string;
   [key: string]: any;
 }
 
@@ -110,7 +127,7 @@ export class Graph<
       newEdge.target = newEdge.target.id;
 
       // Also delete the style property
-      delete edge.style;
+      delete newEdge.styles;
 
       edges.push(newEdge);
     }
