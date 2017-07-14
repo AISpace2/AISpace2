@@ -9,9 +9,19 @@ const rules = [
     loader: "tslint-loader"
   },
   {
-    test: /\.ts?$/,
-    loader: "babel-loader!ts-loader",
-    exclude: path.resolve(__dirname, "node_modules")
+    test: /\.ts$/,
+    exclude: /node_modules/,
+    use: [
+      {
+        loader: 'babel-loader',
+      },
+      {
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/]
+        }
+      }
+    ]
   },
   {
     test: /\.vue$/,
