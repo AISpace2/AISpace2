@@ -9,8 +9,8 @@ declare module "*.html" {
 }
 
 declare module "*.vue" {
-  const value: any;
-  export default value;
+  import Vue from "vue";
+  export default Vue;
 }
 
 declare module "shortid" {
