@@ -4,7 +4,7 @@ from functools import partial
 from ipywidgets import register
 from traitlets import Dict, Float, Unicode
 
-from aispace.cspjsonbridge import csp_to_json
+from aispace2.cspjsonbridge import csp_to_json
 
 from .stepdomwidget import StepDOMWidget
 
@@ -29,12 +29,12 @@ class ReturnableThread(threading.Thread):
         return self._return
 
 
-@register('aispace.CSPViewer')
+@register('aispace2.CSPViewer')
 class Displayable(StepDOMWidget):
     _view_name = Unicode('CSPViewer').tag(sync=True)
     _model_name = Unicode('CSPViewerModel').tag(sync=True)
-    _view_module = Unicode('aispace').tag(sync=True)
-    _model_module = Unicode('aispace').tag(sync=True)
+    _view_module = Unicode('aispace2').tag(sync=True)
+    _model_module = Unicode('aispace2').tag(sync=True)
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
 

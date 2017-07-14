@@ -7,7 +7,7 @@ if (window.require) {
   window.require.config({
     map: {
       "*": {
-        aispace: "nbextensions/aispace/index",
+        aispace2: "nbextensions/aispace2/index",
         "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension"
       }
     }

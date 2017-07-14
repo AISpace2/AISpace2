@@ -62,7 +62,7 @@ module.exports = [
     entry: "./src/extension.js",
     output: {
       filename: "extension.js",
-      path: path.resolve(__dirname, "..", "aispace", "static"),
+      path: path.resolve(__dirname, "..", "aispace2", "static"),
       libraryTarget: "amd"
     }
   },
@@ -76,7 +76,7 @@ module.exports = [
     entry: ["babel-polyfill", "./src/index.ts"],
     output: {
       filename: "index.js",
-      path: path.resolve(__dirname, "..", "aispace", "static"),
+      path: path.resolve(__dirname, "..", "aispace2", "static"),
       libraryTarget: "amd"
     },
     devtool: "source-map",
@@ -93,7 +93,7 @@ module.exports = [
     plugins: [new webpack.optimize.ModuleConcatenationPlugin()]
   },
   {
-    // Embeddable aispace bundle
+    // Embeddable aispace2 bundle
     //
     // This bundle is generally almost identical to the notebook bundle
     // containing the custom widget views and models.
@@ -112,7 +112,7 @@ module.exports = [
       filename: "index.js",
       path: path.resolve(__dirname, "dist"),
       libraryTarget: "amd",
-      publicPath: "https://unpkg.com/aispace@" + version + "/dist/"
+      publicPath: "https://unpkg.com/aispace2@" + version + "/dist/"
     },
     devtool: "source-map",
     module: {

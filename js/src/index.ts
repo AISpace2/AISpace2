@@ -8,7 +8,7 @@
 declare let __webpack_public_path__: any;
 __webpack_public_path__ =
   document.querySelector("body")!.getAttribute("data-base-url") +
-  "nbextensions/aispace/";
+  "nbextensions/aispace2/";
 
 import "./style.css";
 

@@ -6,7 +6,7 @@ build/
 node_modules/
 
 # Compiled javascript
-aispace/static/
+aispace2/static/
 
 # OS X
 .DS_Store

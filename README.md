@@ -5,8 +5,8 @@ This is a Jupyter extension that aims to replace the existing AISpace Java apple
 
 ## User Installation
 
-    $ pip install aispace --user
-    $ jupyter nbextension enable --py --user aispace
+    $ pip install aispace2 --user
+    $ jupyter nbextension enable --py --user aispace2
 
 Note that if you have both `pip` and `pip3` installed, you should use `pip3` instead.
 

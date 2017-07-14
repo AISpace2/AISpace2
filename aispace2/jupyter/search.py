@@ -4,17 +4,17 @@ from threading import Thread
 from ipywidgets import register
 from traitlets import Dict, Unicode
 
-from aispace.searchjsonbridge import search_problem_to_json
+from aispace2.searchjsonbridge import search_problem_to_json
 
 from .stepdomwidget import StepDOMWidget
 
 
-@register('aispace.SearchViewer')
+@register('aispace2.SearchViewer')
 class Displayable(StepDOMWidget):
     _view_name = Unicode('SearchViewer').tag(sync=True)
     _model_name = Unicode('SearchViewerModel').tag(sync=True)
-    _view_module = Unicode('aispace').tag(sync=True)
-    _model_module = Unicode('aispace').tag(sync=True)
+    _view_module = Unicode('aispace2').tag(sync=True)
+    _model_module = Unicode('aispace2').tag(sync=True)
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
     graph_json = Dict().tag(sync=True)
