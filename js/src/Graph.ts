@@ -59,7 +59,7 @@ export class Graph<
     };
 
     for (const node of Object.values(json.nodes)) {
-      newGraph.nodes.push(node);
+      newGraph.nodes.push({ ...node, styles: {} });
 
       if (node.type === "csp:constraint") {
         node.constraint = "lt";

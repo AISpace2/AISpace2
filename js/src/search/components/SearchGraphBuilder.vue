@@ -2,17 +2,23 @@
     <div>
         <GraphVisualizerBase :graph="graph" @click:node="updateSelection" @click:edge="updateSelection">
             <template slot="node" scope="props">
-                <SearchRegularNode v-if="props.node.type === 'search:regular'" :name="props.node.name" :focus="props.node === selection">
+                <SearchRegularNode v-if="props.node.type === 'search:regular'" 
+                                   :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined">
                 </SearchRegularNode>
     
-                <SearchStartNode v-if="props.node.type === 'search:start'" :name="props.node.name" :focus="props.node === selection">
+                <SearchStartNode v-if="props.node.type === 'search:start'" 
+                                 :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined">
                 </SearchStartNode>
     
-                <SearchGoalNode v-if="props.node.type === 'search:goal'" :name="props.node.name" :focus="props.node === selection">
+                <SearchGoalNode v-if="props.node.type === 'search:goal'" 
+                                :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined">
                 </SearchGoalNode>
             </template>
             <template slot="edge" scope="props">
-                <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="strokeColour(props.edge)"                        :strokeWidth="props.edge.styles.strokeWidth" :text="props.edge.cost">
+                <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" 
+                              :stroke="strokeColour(props.edge)" 
+                              :strokeWidth="props.edge.styles.strokeWidth" 
+                              :text="props.edge.cost">
                 </DirectedEdge>
             </template>
         </GraphVisualizerBase>

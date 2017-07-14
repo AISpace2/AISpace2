@@ -2,20 +2,17 @@
     <div>
         <GraphVisualizerBase :graph="graph">
             <template slot="node" scope="props">
-                <SearchRegularNode v-if="props.node.type === 'search:regular'" :name="props.node.name">
+                <SearchRegularNode v-if="props.node.type === 'search:regular'" :name="props.node.name" :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)">
                 </SearchRegularNode>
-
-                <SearchStartNode v-if="props.node.type === 'search:start'" :name="props.node.name">
+    
+                <SearchStartNode v-if="props.node.type === 'search:start'" :name="props.node.name" :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)">
                 </SearchStartNode>
-
-                <SearchGoalNode v-if="props.node.type === 'search:goal'" :name="props.node.name">
+    
+                <SearchGoalNode v-if="props.node.type === 'search:goal'" :name="props.node.name" :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)">
                 </SearchGoalNode>
             </template>
             <template slot="edge" scope="props">
-                <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
-                              :stroke="props.edge.styles.stroke"
-                              :strokeWidth="props.edge.styles.strokeWidth"
-                              :text="props.edge.cost">
+                <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="props.edge.styles.stroke" :strokeWidth="props.edge.styles.strokeWidth" :text="props.edge.cost">
                 </DirectedEdge>
             </template>
         </GraphVisualizerBase>
@@ -31,24 +28,40 @@
 </template>
 
 <script>
-  import GraphVisualizerBase from '../../components/GraphVisualizerBase';
-  import DirectedEdge from '../../components/DirectedEdge';
-  import SearchRegularNode from './SearchRegularNode';
-  import SearchStartNode from './SearchStartNode';
-  import SearchGoalNode from './SearchGoalNode';
+import GraphVisualizerBase from '../../components/GraphVisualizerBase';
+import DirectedEdge from '../../components/DirectedEdge';
+import SearchRegularNode from './SearchRegularNode';
+import SearchStartNode from './SearchStartNode';
+import SearchGoalNode from './SearchGoalNode';
 
-  export default {
-    components: {GraphVisualizerBase, SearchRegularNode, DirectedEdge, SearchGoalNode, SearchStartNode},
+export default {
+    components: { GraphVisualizerBase, SearchRegularNode, DirectedEdge, SearchGoalNode, SearchStartNode },
     props: {
-      graph: {
-        type: Object,
-        required: true
-      },
-      output: {
-        type: String,
-        required: false,
-        default: ''
-      }
+        graph: {
+            type: Object,
+            required: true
+        },
+        output: {
+            type: String,
+            required: false,
+            default: ''
+        }
+    },
+    methods: {
+        nodeStroke(node) {
+            if (node.styles && node.styles.stroke) {
+                return node.styles.stroke;
+            }
+
+            return 'black';
+        },
+        nodeStrokeWidth(node) {
+            if (node.styles && node.styles.strokeWidth) {
+                return node.styles.strokeWidth;
+            }
+
+            return 1;
+        }
     }
-  }
+}
 </script>

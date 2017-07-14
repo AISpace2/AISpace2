@@ -7,7 +7,7 @@ import { Graph } from "../Graph";
 import { d3ForceLayoutEngine } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
-import { isHighlightPathEvent } from "./SearchViewerEvents";
+import * as SearchViewerEvents from "./SearchViewerEvents";
 import SearchViewerModel from "./SearchViewerModel";
 
 export default class SearchViewer extends widgets.DOMWidgetView {
@@ -19,18 +19,16 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     super.initialize(opts);
     this.graph = Graph.fromJSON(this.model.graphJSON);
     this.listenTo(this.model, "view:msg", (event: IEvent) => {
+      console.log(event);
+
       if (isOutputEvent(event)) {
         this.vue.output = event.text;
-      } else if (isHighlightPathEvent(event)) {
-        for (const edge of this.graph.edges) {
-          if (event.path.includes(edge.id)) {
-            Vue.set(edge.styles, "stroke", "pink");
-            Vue.set(edge.styles, "strokeWidth", 6);
-          } else {
-            Vue.set(edge.styles, "stroke", "black");
-            Vue.set(edge.styles, "strokeWidth", 4);
-          }
-        }
+      } else if (SearchViewerEvents.isClearEvent(event)) {
+        this.clearStyling();
+      } else if (SearchViewerEvents.isHighlightNodeEvent(event)) {
+        this.highlightNode(event);
+      } else if (SearchViewerEvents.isHighlightPathEvent(event)) {
+        this.highlightPath(event);
       }
     });
   }
@@ -72,5 +70,46 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.vue = new App().$mount();
       this.el.appendChild(this.vue.$el);
     });
+  }
+
+  /**
+   * Resets all the styles in the graph (stroke colours and stroke width) back to default.
+   */
+  private clearStyling() {
+    for (const node of this.graph.nodes) {
+      Vue.set(node.styles, "stroke", "black");
+      Vue.set(node.styles, "strokeWidth", 1);
+    }
+
+    for (const edge of this.graph.edges) {
+      Vue.set(edge.styles, "stroke", "black");
+      Vue.set(edge.styles, "strokeWidth", 4);
+    }
+  }
+
+  /**
+   * Highlights a node in the visualization, as described by the event object.
+   */
+  private highlightNode(event: SearchViewerEvents.IHighlightNodeEvent) {
+    const i = this.graph.nodes
+      .map(a => a.id)
+      .findIndex(a => a === event.nodeId);
+
+    if (i !== -1) {
+      Vue.set(this.graph.nodes[i].styles, "stroke", event.colour);
+      Vue.set(this.graph.nodes[i].styles, "strokeWidth", 3);
+    }
+  }
+
+  /**
+   * Highlights a path in the visualization, as described by the event object.
+   */
+  private highlightPath(event: SearchViewerEvents.IHighlightPathEvent) {
+    for (const edge of this.graph.edges) {
+      if (event.path.includes(edge.id)) {
+        Vue.set(edge.styles, "stroke", event.colour);
+        Vue.set(edge.styles, "strokeWidth", 8);
+      }
+    }
   }
 }

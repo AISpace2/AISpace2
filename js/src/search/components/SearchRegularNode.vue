@@ -1,6 +1,6 @@
 <template>
     <g>
-        <ellipse rx="40" ry="30" cx="0" cy="0" fill="white" :stroke="focus ? 'deeppink' : 'black'"></ellipse>
+        <ellipse rx="40" ry="30" cx="0" cy="0" fill="white" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
         <text x="0" y="0" text-anchor="middle" alignment-baseline="middle">{{name}}</text>
     </g>
 </template>
@@ -12,11 +12,14 @@
         type: String,
         required: true
       },
-      focus: {
-        type: Boolean,
-        required: false,
-        default: false
+      stroke: {
+        type: String,
+        default: "black"
+      },
+      strokeWidth: {
+        type: Number,
+        default: 1
       }
-    }
+    },
   }
 </script>
