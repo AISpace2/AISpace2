@@ -74,11 +74,13 @@ export class Graph<
     };
 
     for (const node of Object.values(json.nodes)) {
-      newGraph.nodes.push({ ...node, styles: {} });
+      const newNode = { ...node, styles: {} };
 
       if (node.type === "csp:constraint") {
-        node.constraint = "lt";
+        newNode.constraint = "lt";
       }
+
+      newGraph.nodes.push(newNode);
     }
 
     for (const edge of Object.values(json.edges)) {
