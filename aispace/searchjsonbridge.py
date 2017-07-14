@@ -1,5 +1,7 @@
 import uuid
-from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
+
+from aipython.searchProblem import Arc, Search_problem_from_explicit_graph
+
 
 def search_problem_to_json(problem):
     """Converts a Search_problem into a JSON representation.
@@ -34,7 +36,7 @@ def search_problem_to_json(problem):
         h = 0
         if n in problem.hmap:
             h = problem.hmap[n]
-        
+
         node_to_add = {'name': str(n), 'id': node_map[n], 'h': h}
         if n == problem.start:
             node_to_add['type'] = 'search:start'
@@ -48,11 +50,13 @@ def search_problem_to_json(problem):
 
     for arc in problem.arcs:
         edge_id = str(uuid.uuid4())
-        new_edge = {'id': edge_id, 'source': node_map[arc.from_node], 'target': node_map[arc.to_node], 'cost': arc.cost}
+        new_edge = {'id': edge_id, 'source': node_map[arc.from_node],
+                    'target': node_map[arc.to_node], 'cost': arc.cost}
         edge_map[(arc.from_node, arc.to_node)] = edge_id
         edges.append(new_edge)
 
     return ({'nodes': nodes, 'edges': edges}, node_map, edge_map)
+
 
 def json_to_search_problem(json):
     nodes = set()
@@ -74,7 +78,8 @@ def json_to_search_problem(json):
         cost = 0
         if 'cost' in edge:
             cost = edge['cost']
-        arc = Arc(node_map[edge['source']]['name'], node_map[edge['target']]['name'], cost)
+        arc = Arc(node_map[edge['source']]['name'],
+                  node_map[edge['target']]['name'], cost)
         arcs.append(arc)
 
     return Search_problem_from_explicit_graph(nodes, arcs, start, goals)

@@ -113,10 +113,12 @@ def csp_from_json(graph_json):
             # Find the links with the target as this constraint
             for link in graph_json['edges']:
                 if link['target'] == node['id']:
-                    source_node = next(n for n in graph_json['nodes'] if n['id'] == link['source'])
+                    source_node = next(
+                        n for n in graph_json['nodes'] if n['id'] == link['source'])
                     scope.append(source_node['name'])
                 elif link['source'] == node['id']:
-                    source_node = next(n for n in graph_json['nodes'] if n['id'] == link['target'])
+                    source_node = next(
+                        n for n in graph_json['nodes'] if n['id'] == link['target'])
                     scope.append(source_node['name'])
 
             if scope:

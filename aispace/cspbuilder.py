@@ -25,4 +25,5 @@ class CSPBuilder(DOMWidget):
 
     def py_code(self):
         """Converts the CSP represented by this builder into Python code."""
-        self.send({'action': 'python-code', 'code': csp_to_python_code(self.csp())})
+        self.send({'action': 'python-code',
+                   'code': csp_to_python_code(self.csp())})

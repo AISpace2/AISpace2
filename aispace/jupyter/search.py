@@ -105,6 +105,6 @@ def visualize(func_bg):
         # We need to reset display_level so it doesn't carry over to next call
         self._desired_level = 4
         self._thread = Thread(
-                    target=partial(func_bg, self), args=args, kwargs=kwargs)
+            target=partial(func_bg, self), args=args, kwargs=kwargs)
         self._thread.start()
     return wrapper

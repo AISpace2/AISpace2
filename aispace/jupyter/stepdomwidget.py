@@ -1,10 +1,12 @@
 import threading
 from time import sleep
+
 from ipywidgets import DOMWidget
 
 
 class StepDOMWidget(DOMWidget):
     """Base class for visualizations that you can step through."""
+
     def __init__(self):
         super().__init__()
         self.on_msg(self._handle_custom_msgs)
@@ -27,10 +29,10 @@ class StepDOMWidget(DOMWidget):
                 #     if not isinstance(return_value, list):
                 #         return_value = [return_value]
 
-                    # self.send({'action': 'output',
-                    #         'text': 'Algorithm execution finished. Returned: {}'.format(
-                    #             ', '.join(str(x) for x in return_value)
-                    #         )})
+                # self.send({'action': 'output',
+                #         'text': 'Algorithm execution finished. Returned: {}'.format(
+                #             ', '.join(str(x) for x in return_value)
+                #         )})
             return advance
 
         self._controls = {

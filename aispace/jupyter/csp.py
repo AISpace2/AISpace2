@@ -1,11 +1,12 @@
 import threading
 from functools import partial
-from time import sleep
 
-from ipywidgets import DOMWidget, register
+from ipywidgets import register
 from traitlets import Dict, Float, Unicode
-from .stepdomwidget import StepDOMWidget
+
 from aispace.cspjsonbridge import csp_to_json
+
+from .stepdomwidget import StepDOMWidget
 
 
 class ReturnableThread(threading.Thread):
@@ -215,6 +216,7 @@ def visualize(func_to_delay):
         The original function, wrapped such that it will automatically run
         when the Jupyter widget is rendered.
     """
+
     def wrapper(self, *args, **kwargs):
         if self._displayed_once is False:
             self._queued_func = {
