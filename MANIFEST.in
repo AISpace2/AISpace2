@@ -1,1 +1,1 @@
-recursive-include aispace/static *.*
+recursive-include aispace2/static *.*

@@ -1,4 +1,4 @@
-## To release a new version of aispace on PyPI:
+## To release a new version of aispace2 on PyPI:
 
 First make sure you have `~/.pypirc` setup, with the following contents:
 
@@ -28,7 +28,7 @@ password=pypi password
 - `git push`
 - `git push --tags`
 
-## To release a new version of aispace on NPM:
+## To release a new version of aispace2 on NPM:
 
 - `git clean -fdx # nuke the  `dist` and `node_modules``
 - `npm install`

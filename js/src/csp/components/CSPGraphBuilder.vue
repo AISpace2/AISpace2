@@ -1,58 +1,57 @@
 <template>
+  <div>
+    <GraphVisualizerBase :graph="graph" @dblclick="createNode"
+                         @click:edge="updateSelection"
+                         @click:node="updateSelection"
+                         @delete="deleteSelection">
+      <template slot="node" scope="props">
+        <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name"
+                         :domain="props.node.domain"
+                         :focus="props.node === selection">
+        </CSPVariableNode>
+        <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name"
+                           :constraint="props.node.constraint"
+                           :focus="props.node === selection">
+        </CSPConstraintNode>
+      </template>
+      <template slot="edge" scope="props">
+        <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
+                        :stroke="strokeColour(props.edge)"></UndirectedEdge>
+      </template>
+    </GraphVisualizerBase>
+
     <div>
-        <GraphVisualizerBase :graph="graph" @updateSelection="val => selection = val" @dblclick="createNode"
-                             :selection="selection"
-                             @click:edge="updateSelection"
-                             @click:node="updateSelection"
-                             @delete="deleteSelection">
-            <template slot="node" scope="props">
-                <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name"
-                                 :domain="props.node.domain"
-                                 :focus="props.node === selection">
-                </CSPVariableNode>
-                <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name"
-                                   :constraint="props.node.constraint"
-                                   :focus="props.node === selection">
-                </CSPConstraintNode>
-            </template>
-            <template slot="edge" scope="props">
-                <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
-                                :stroke="strokeColour(props.link)"></UndirectedEdge>
-            </template>
-        </GraphVisualizerBase>
-
-        <div>
-            <span><b>Mode: </b></span>
-            <CSPToolbar :mode="mode" @modechanged="updateMode"></CSPToolbar>
-            <div v-if="mode == 'variable' || mode == 'constraint' ">
-                <span>Double click on the graph to create a new {{mode}}.</span>
-            </div>
-            <div v-else-if="mode == 'edge'">
-                <span v-if="first == null">Select the first node to begin.</span>
-                <span v-else>Source node: {{first.name}}. Select an end node to create an edge.</span>
-            </div>
-        </div>
-
-        <div>
-            <div v-if="selection && selection.type === 'csp:variable'">
-                <label>Name</label>
-                <input type="text" :value="selection ? selection.name : null"
-                       @input="selection ? selection.name = $event.target.value : null"/>
-                <label>Domain</label>
-                <input type="text" :value="selection ? selection.domain : null"
-                       @change="selection ? selection.domain = $event.target.value.split(',').map(a => +a) : null"/>
-            </div>
-            <div v-else-if="selection && selection.type === 'csp:constraint'">
-                <label>Constraint Type</label>
-                <select v-model="selection.constraint">
-                    <option value="lt">Less than (&#60;)</option>
-                    <option value="gt">Greater than (&#62;)</option>
-                    <option value="eq">Equal to (=)</option>
-                    <option value="custom">Custom</option>
-                </select>
-            </div>
-        </div>
+      <span><b>Mode: </b></span>
+      <CSPToolbar :mode="mode" @modechanged="updateMode"></CSPToolbar>
+      <div v-if="mode == 'variable' || mode == 'constraint' ">
+        <span>Double click on the graph to create a new {{mode}}.</span>
+      </div>
+      <div v-else-if="mode == 'edge'">
+        <span v-if="first == null">Select the first node to begin.</span>
+        <span v-else>Source node: {{first.name}}. Select an end node to create an edge.</span>
+      </div>
     </div>
+
+    <div>
+      <div v-if="selection && selection.type === 'csp:variable'">
+        <label>Name</label>
+        <input type="text" :value="selection ? selection.name : null"
+               @input="selection ? selection.name = $event.target.value : null"/>
+        <label>Domain</label>
+        <input type="text" :value="selection ? selection.domain : null"
+               @change="selection ? selection.domain = $event.target.value.split(',').map(a => +a) : null"/>
+      </div>
+      <div v-else-if="selection && selection.type === 'csp:constraint'">
+        <label>Constraint Type</label>
+        <select v-model="selection.constraint">
+          <option value="lt">Less than (&#60;)</option>
+          <option value="gt">Greater than (&#62;)</option>
+          <option value="eq">Equal to (=)</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+    </div>
+  </div>
 </template>
 
 
@@ -140,8 +139,8 @@
         }
       },
 
-      strokeColour: function (link) {
-        if (link === this.selection) {
+      strokeColour: function (edge) {
+        if (edge === this.selection) {
           return "pink";
         }
 
@@ -158,7 +157,7 @@
 
       deleteSelection: function () {
         if (this.selection) {
-          if (this.selection.source && this.selection.target) {
+          if (this.selection.type === "edge") {
             this.graph.removeEdge(this.selection);
           } else {
             this.graph.removeNode(this.selection);
@@ -171,7 +170,7 @@
 </script>
 
 <style scoped>
-    text.domain {
-        font-size: 12px;
-    }
+  text.domain {
+    font-size: 12px;
+  }
 </style>

@@ -11,7 +11,5 @@
     "skipLibCheck": true,
     "newLine": "LF"
   },
-  "include": [
-    "src/*"
-  ]
+  "include": ["src/*"]
 }

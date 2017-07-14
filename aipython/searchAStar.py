@@ -9,7 +9,7 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 import heapq        # part of the Python standard library
-from searchProblem import Path
+from aipython.searchProblem import Path
 
 class Frontier(object):
     """A frontier consists of a priority queue (heap), frontierpq, of
@@ -49,68 +49,88 @@ class Frontier(object):
     def __repr__(self):
         """string representation of the frontier"""
         return str([(n,c,str(p)) for (n,c,p) in self.frontierpq])
-
-from utilities import Displayable
+    def __len__(self):
+        return len(self.frontierpq)
+    
+from aipython.utilities import Displayable
 
 class Searcher(Displayable):
     """returns a searcher for a problem.
     Paths can be found by repeatedly calling search().
     """
-
-    def __init__(self, problem, method='astar'):
+    def __init__(self, problem):
         """creates a searcher from a problem
-        method is 'astar' or 'best-first' or 'lowest-cost-first'
         """
         self.problem = problem
-        self.method = method  # not used
-        self.frontier = Frontier()
+        self.initialize_frontier()
         self.num_expanded = 0
-        for node in problem.start_nodes():
-            self.add_to_frontier(Path(node))
+        self.add_to_frontier(Path(problem.start_node()))
         self.display(3,"Frontier:",self.frontier)
-    
-    def add_to_frontier(self,path):
-        """add path to the frontier with the appropriate cost"""
-        if self.method=='astar':
-            value = path.cost+self.problem.heuristic(path.end())
-        else:
-            assert False, "unknown method "+str(self.method)
-        self.frontier.add(path, value)
 
+    def initialize_frontier(self):
+        self.frontier = []
+    def empty_frontier(self):
+        return self.frontier == []
+        
+    def add_to_frontier(self,path):
+        self.frontier.append(path)
+        
     def search(self):
-        """returns (next) path from an element of problem's start nodes
+        """returns (next) path from the problem's start node
         to a goal node. 
         Returns None if no path exists.
         """
-        while not self.frontier.empty():
+        while not self.empty_frontier():
             path = self.frontier.pop()
-            self.display(2, "Expanding:",path,"(cost:",path.cost,")")
+            self.display(2, "Expanding: ",path,"(cost:",path.cost,")")
             self.num_expanded += 1
             if self.problem.is_goal(path.end()):    # solution found
                 self.display(1, self.num_expanded, "paths have been expanded and",
-                            len(self.frontier.frontierpq), "nodes remain in the frontier")
+                            len(self.frontier), "paths remain in the frontier")
                 self.solution = path   # store the solution found
                 return path
             else:
                 neighs = self.problem.neighbors(path.end())
+                self.display(3,"Neighbors are", neighs)
                 for arc in neighs:
                     self.add_to_frontier(Path(path,arc))
                 self.display(3,"Frontier:",self.frontier)
         self.display(1,"No (more) solutions. Total of",
-                     self.frontier.frontier_index,"paths expanded.")
+                     self.num_expanded,"paths expanded.")
 
-import searchProblem 
+    
+class AStarSearcher(Searcher):
+    """returns a searcher for a problem.
+    Paths can be found by repeatedly calling search().
+    """
+
+    def __init__(self, problem):
+        super().__init__(problem)
+
+    def initialize_frontier(self):
+        self.frontier = Frontier()
+    def empty_frontier(self):
+        return self.frontier.empty()
+
+    def add_to_frontier(self,path):
+        """add path to the frontier with the appropriate cost"""
+        value = path.cost+self.problem.heuristic(path.end())
+        self.frontier.add(path, value)
+
+
+from aipython.searchProblem import problem1
 def test(SearchClass):
     print("Testing problem 1:")
-    schr1 = SearchClass(searchProblem.problem1)
+    schr1 = SearchClass(problem1)
     path1 = schr1.search()
     print("Path found: ",path1)
     assert list(path1.nodes()) == ['g','d','c','b','a'], "Shortest path not found in problem1"
     print("Passed unit test")
 
 if __name__ == "__main__":
-    test(Searcher)
-
+    #test(Searcher)
+    test(AStarSearcher)
+    
 # example queries:
 # searcher1 = Searcher(searchProblem.acyclic_delivery_problem)
 # searcher1.search()  # find first path

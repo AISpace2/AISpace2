@@ -8,9 +8,9 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from .cspProblem import CSP, Constraint
-from .searchProblem import Arc, Search_problem
-from .utilities import dict_union
+from cspProblem import CSP, Constraint
+from searchProblem import Arc, Search_problem
+from utilities import dict_union
 
 class Search_from_CSP(Search_problem):
     """A search problem directly from the CSP.
@@ -20,6 +20,7 @@ class Search_from_CSP(Search_problem):
         self.csp=csp
         if variable_order:
             assert set(variable_order) == set(csp.variables)
+            assert len(variable_order) == len(csp.variables)
             self.variables = variable_order
         else:
             self.variables = list(csp.variables)
@@ -38,8 +39,8 @@ class Search_from_CSP(Search_problem):
             if self.csp.consistent(new_env):
                 yield new_env
 
-from .cspExamples import csp1,csp2,test
-from .searchDepthFirst import Depth_first_search
+from cspExamples import csp1,csp2,test
+from searchDepthFirst import Depth_first_search
 
 def dfs_solver(csp):
     """depth-first search"""

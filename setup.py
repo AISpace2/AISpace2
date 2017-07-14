@@ -66,8 +66,8 @@ class NPM(Command):
     node_modules = os.path.join(node_root, 'node_modules')
 
     targets = [
-        os.path.join(here, 'aispace', 'static', 'extension.js'),
-        os.path.join(here, 'aispace', 'static', 'index.js')
+        os.path.join(here, 'aispace2', 'static', 'extension.js'),
+        os.path.join(here, 'aispace2', 'static', 'index.js')
     ]
 
     def initialize_options(self):
@@ -112,20 +112,20 @@ class NPM(Command):
         update_package_data(self.distribution)
 
 version_ns = {}
-with open(os.path.join(here, 'aispace', '_version.py')) as f:
+with open(os.path.join(here, 'aispace2', '_version.py')) as f:
     exec(f.read(), {}, version_ns)
 
 setup_args = {
-    'name': 'aispace',
+    'name': 'aispace2',
     'version': version_ns['__version__'],
     'description': 'blah',
     'long_description': LONG_DESCRIPTION,
     'include_package_data': True,
     'data_files': [
-        ('share/jupyter/nbextensions/aispace', [
-            'aispace/static/extension.js',
-            'aispace/static/index.js',
-            'aispace/static/index.js.map',
+        ('share/jupyter/nbextensions/aispace2', [
+            'aispace2/static/extension.js',
+            'aispace2/static/index.js',
+            'aispace2/static/index.js.map',
         ]),
     ],
     'install_requires': [

@@ -48,15 +48,15 @@ class K_fold_dataset(object):
             return float("inf")  #infinity
         return error/len(self.data)
 
-def plot_error(data,criterion="sum_squares", num_folds=5,  xscale='log'):
+def plot_error(data,criterion="sum-of-squares", num_folds=5,  xscale='log'):
     """Plots the error on the validation set and the test set 
     with respect to settings of the minimum number of examples.
     xscale should be 'log' or 'linear'
     """
     plt.ion()
     plt.xscale('linear')  # change between log and linear scale
-    plt.xlabel("min_number_examples")
-    plt.ylabel(criterion+" error")
+    plt.xlabel("minimum number of examples")
+    plt.ylabel("average "+criterion+" error")
     folded_data = K_fold_dataset(data, num_folds)
     verrors = []   # validation errors
     terrors = []   # test set errors

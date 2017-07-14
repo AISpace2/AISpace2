@@ -11,7 +11,6 @@
 import math, random
 import csv
 from utilities import Displayable
-import ipdb
 
 boolean = [False, True]
 
@@ -46,9 +45,7 @@ class Data_set(Displayable):
             target_index = self.num_properties + target_index
         self.target_index = target_index
         self.header = header
-        ipdb.set_trace()
         self.create_features()
-        print("OK")
         self.display(1,"There are",len(self.input_features),"features")
 
     def create_features(self):
@@ -56,7 +53,6 @@ class Data_set(Displayable):
         This assumes that the features all have domain {0,1}.
         This should be overridden if the features have a different domain.
         """
-        print("?????????")
         self.input_features = []
         for i in range(self.num_properties):
             def feat(e,index=i):
@@ -70,9 +66,8 @@ class Data_set(Displayable):
                 self.target = feat
             else:
                 self.input_features.append(feat)
-        print("FEATURES")
-        print(self.input_features)
-    evaluation_criteria = ["sum_squares","sum_absolute","logloss"]
+
+    evaluation_criteria = ["sum-of-squares","sum_absolute","logloss"]
         
     def evaluate_dataset(self, data, predictor, evaluation_criterion):
         """Evaluates predictor on data according to the evaluation_criterion.
@@ -95,7 +90,7 @@ def error_example(predicted, actual, evaluation_criterion):
     according to evaluation_criterion.
     Throws ValueError if the error is infinite (log(0))
     """
-    if evaluation_criterion=="sum_squares":
+    if evaluation_criterion=="sum-of-squares":
         return (predicted-actual)**2
     elif evaluation_criterion=="sum_absolute":
         return abs(predicted-actual)
@@ -247,7 +242,6 @@ class Data_from_file(Data_set):
                     self.target = feat
                 else:
                     self.input_features.append(feat)
-        print(self.input_features)
 def make_num(str_list):
     """make the elements of string list str_list numerical if possible.
     Otherwise remove initial and trailing spaces.

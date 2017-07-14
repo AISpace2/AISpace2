@@ -118,7 +118,9 @@ class K_means_learner(Learner):
         plt.legend()
         plt.draw()
 
+%data = Data_from_file('data/emdata1.csv', num_train=10, target_index=2000) % trivial example
 data = Data_from_file('data/emdata2.csv', num_train=10, target_index=2000)
+%data = Data_from_file('data/emdata0.csv', num_train=14, target_index=2000) % example from textbook
 kml = K_means_learner(data,2)
 num_iter=4
 print("Class assignment after",num_iter,"iterations:")

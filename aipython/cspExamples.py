@@ -8,12 +8,13 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from .cspProblem import CSP, Constraint        
+from aipython.cspProblem import CSP, Constraint        
 from operator import lt,ne,eq,gt
 
 def ne_(val):
     """not equal value"""
-    # return lambda x: x != val       # alternative definition
+    # nev = lambda x: x != val   # alternative definition
+    # nev = partial(neq,val)     # another alternative definition
     def nev(x):
         return val != x
     nev.__name__ = str(val)+"!="      # name of the function 
@@ -21,7 +22,7 @@ def ne_(val):
 
 def is_(val):
     """is a value"""
-    #return lambda x: x == val   # alternative definition
+    # isv = lambda x: x == val   # alternative definition
     # isv = partial(eq,val)      # another alternative definition
     def isv(x):
         return val == x
@@ -34,7 +35,7 @@ csp0 = CSP({'A':{1,2,3},'B':{1,2,3}, 'C':{1,2,3}},
 
 csp1 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}},
            [ Constraint(('A','B'),lt),
-             #Constraint(('B',),ne_(2)),      # alternatively: lambda b: b!=2
+             Constraint(('B',),ne_(2)),
              Constraint(('B','C'),lt)])
 
 csp2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}, 
@@ -52,7 +53,10 @@ csp2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4},
             Constraint(('B','D'),ne)])
 
 def meet_at(p1,p2):
-    def meets(w1,w2): return w1[p1]==w2[p2]
+    """returns a function that is true when the words meet at the postions p1, p2
+    """
+    def meets(w1,w2):
+        return w1[p1] == w2[p2]
     meets.__name__ = "meet_at("+str(p1)+','+str(p2)+')'
     return meets
 
@@ -67,11 +71,15 @@ crossword1 = CSP({'one_across':{'ant', 'big', 'bus', 'car', 'has'},
                    Constraint(('three_across','one_down'),meet_at(0,2)),
                    Constraint(('four_across','two_down'),meet_at(0,4))])
 
-words1 = {"add", "ado", "age", "ago", "aid", "ail", "aim", "air",
+words1 = {"add", "age", "aid", "aim", "air", "are", "arm", "art",
+    "bad", "bat", "bee", "boa", "dim", "ear", "eel", "eft", "lee", "oaf"}
+    
+words2 = {"add", "ado", "age", "ago", "aid", "ail", "aim", "air",
     "and", "any", "ape", "apt", "arc", "are", "ark", "arm", "art", "ash",
     "ask", "auk", "awe", "awl", "aye", "bad", "bag", "ban", "bat", "bee",
     "boa", "dim", "ear", "eel", "eft", "far", "fat", "fit", "lee", "oaf",
     "rat", "tar", "tie"}
+    
 crossword2 = CSP({'1_down':words1, '2_down':words1, '3_down':words1,
                   '1_across':words1, '4_across':words1, '5_across':words1},
                   [Constraint(('1_down','1_across'),meet_at(0,0)), # 1_down[0]=1_across[0]
@@ -85,9 +93,9 @@ crossword2 = CSP({'1_down':words1, '2_down':words1, '3_down':words1,
                    Constraint(('3_down','5_across'),meet_at(2,2))
                    ])
 
-def is_word(*letters):
-    """is true if the letters concatenated forms a word in words1"""
-    return "".join(letters) in words1
+def is_word(*letters, words=words1):
+    """is true if the letters concatenated form a word in words"""
+    return "".join(letters) in words
 
 letters = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
   "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y",
@@ -102,15 +110,16 @@ crossword2d = CSP({"p00":letters, "p01":letters, "p02":letters,
                    Constraint(("p01","p11","p21"), is_word),
                    Constraint(("p02","p12","p22"), is_word)])
                    
-def test(CSP_solver, csp=csp0, solutions=[{'A': 1, 'B': 2, 'C': 3}]):
+def test(CSP_solver, csp=csp1,
+             solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
     """CSP_solver is a solver that finds a solution to a CSP.
     CSP_solver takes a csp and returns a solution. 
     csp has to be a CSP, where solutions is the list of all solutions.
-    This tests whether the first solution is a solution.
+    This tests whether the solution returned by CSP_solver is a solution.
     """
-    print("Testing csp0 with",CSP_solver.__doc__)
+    print("Testing csp with",CSP_solver.__doc__)
     sol0 = CSP_solver(csp)
     print("Solution found:",sol0)
-    assert sol0 in solutions, "Solution not found for csp0"
+    assert sol0 in solutions, "Solution not found for "+str(csp)
     print("Passed unit test")
 

@@ -1,36 +1,37 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400);
+
 :root {
-    --font-face: 'Roboto', sans-serif;
+  --font-face: 'Roboto', sans-serif;
 }
 
 svg text {
-    cursor: default;
-    user-select: none;
+  cursor: default;
+  user-select: none;
 }
 
 .output-container {
-    border: 1px solid silver;
-    border-radius: 2px;
-    font-family: var(--font-face);
+  border: 1px solid silver;
+  border-radius: 2px;
+  font-family: var(--font-face);
 }
 
-#cspviewer>#footer {
-    margin: 10px;
+#cspviewer > #footer {
+  margin: 10px;
 }
 
 #cspviewer #output {
-    margin-top: 5px;
-    font-size: 14px;
+  margin-top: 5px;
+  font-size: 14px;
 }
 
 #app {
-    padding: 5px;
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+  padding: 5px;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
 }
 
 #app svg {
-    border: 1px solid lavenderblush;
+  border: 1px solid lavenderblush;
 }

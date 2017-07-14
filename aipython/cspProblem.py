@@ -12,8 +12,8 @@ from .utilities import Displayable, dict_union
 
 class Constraint(object):
     """A Constraint consists of
-    * scope, a tuple of variables
-    * a condition, a function that can applied to a tuple of values
+    * scope: a tuple of variables
+    * condition: a function that can applied to a tuple of values
     for the variables
     """
     def __init__(self, scope, condition):
@@ -34,8 +34,13 @@ class CSP(Displayable):
     """A CSP consists of
     * domains, a dictionary that maps each variable to its domain
     * constraints, a list of constraints
+    * variables, a set of variables
+    * var_to_const, a variable to set of constraints dictionary
     """
     def __init__(self,domains,constraints):
+        """domains is a variable:domain dictionary
+        constraints is a list of constriants
+        """
         self.variables = set(domains)
         self.domains = domains
         self.constraints = constraints
@@ -53,15 +58,11 @@ class CSP(Displayable):
         return "CSP("+str(self.domains)+", "+str([str(c) for c in self.constraints])+")"
 
     def consistent(self,assignment):
-        """returns True if all of the constraints that can be evaluated
-        evaluate to True given the assignment.
-        assignment is a variable:value dictionary
+        """assignment is a variable:value dictionary
+        returns True if all of the constraints that can be evaluated
+                        evaluate to True given assignment.
         """
         return all(con.holds(assignment)
                     for con in self.constraints
                     if all(v in  assignment  for v in con.scope))
-    
-    #If the CSP has a coordinate system attached, this will return True                
-    def hasCoordinates(self):
-        return False
 

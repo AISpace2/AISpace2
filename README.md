@@ -5,8 +5,8 @@ This is a Jupyter extension that aims to replace the existing AISpace Java apple
 
 ## User Installation
 
-    $ pip install aispace --user
-    $ jupyter nbextension enable --py --user aispace
+    $ pip install aispace2 --user
+    $ jupyter nbextension enable --py --user aispace2
 
 Note that if you have both `pip` and `pip3` installed, you should use `pip3` instead.
 
@@ -22,4 +22,4 @@ Note that `./server.sh` uses `pip3`. You may need to change it to use `pip` if t
 
 This will install the extension locally and link it to Jupyter.
 
-During develop, you do not need to refresh the page or restart the kernel as a result of Python changes. For front-end changes to take effect, however, you will need to run Webpack and refresh the page. You may run `npm run dev` while inside the `js/` folder to start a watcher that automatically recompiles your changes. You still need to provide the refresh, however.
+During development, you do not need to refresh the page or reinstall the Jupyter extension as a result of Python changes, but you will need to restart the kernel. For front-end changes to take effect, you will need to run Webpack and refresh the page. You may run `npm run dev` while inside the `js/` folder to start a watcher that automatically recompiles your changes. You still need to provide the refresh, however.

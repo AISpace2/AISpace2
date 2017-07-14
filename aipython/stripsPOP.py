@@ -124,18 +124,18 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
         for each action in actions
         """
         if actions:
-            a=actions[0]
+            a = actions[0]
             rem_actions = actions[1:]
             a0, subgoal, a1 = clink
             if a != a0 and a != a1 and self.deletes(a,subgoal):
                 if self.possible((a,a0),constrs):
                     new_const = self.add_constraint((a,a0),constrs)
-                    yield from self.protect_cl_for_actions(rem_actions,new_const,clink)
+                    for e in self.protect_cl_for_actions(rem_actions,new_const,clink): yield e  # could be "yield from"
                 if self.possible((a1,a),constrs):
                     new_const = self.add_constraint((a1,a),constrs)
-                    yield from self.protect_cl_for_actions(rem_actions,new_const,clink)
+                    for e in self.protect_cl_for_actions(rem_actions,new_const,clink): yield e
             else:
-                yield from self.protect_cl_for_actions(rem_actions,constrs,clink)
+                for e in self.protect_cl_for_actions(rem_actions,constrs,clink): yield e
         else:
             yield constrs
                
@@ -147,12 +147,12 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
             if act != a0 and act != a1 and self.deletes(act,cond):
                 if self.possible((act,a0),constrs):
                     new_const = self.add_constraint((act,a0),constrs)
-                    yield from self.protect_all_cls(rem_clinks,act,new_const)
+                    for e in self.protect_all_cls(rem_clinks,act,new_const): yield e
                 if self.possible((a1,act),constrs):
                     new_const = self.add_constraint((a1,act),constrs)
-                    yield from self.protect_all_cls(rem_clinks,act,new_const)
+                    for e in self.protect_all_cls(rem_clinks,act,new_const): yield e
             else:
-                yield from self.protect_all_cls(rem_clinks,act,constrs)
+                for e in self.protect_all_cls(rem_clinks,act,constrs): yield e
         else:
             yield constrs
 

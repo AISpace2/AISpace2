@@ -4,17 +4,17 @@
 
 // Configure requirejs
 if (window.require) {
-    window.require.config({
-        map: {
-            "*": {
-                "aispace": "nbextensions/aispace/index",
-                "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension"
-            }
-        }
-    });
+  window.require.config({
+    map: {
+      "*": {
+        aispace2: "nbextensions/aispace2/index",
+        "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension"
+      }
+    }
+  });
 }
 
 // Export the required load_ipython_extention
 module.exports = {
-    load_ipython_extension: function() { }
+  load_ipython_extension: function() {}
 };
