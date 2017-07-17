@@ -46,16 +46,20 @@ class Displayable(StepDOMWidget):
         super().__init__()
         self.visualizer = self
 
-        self._desired_level = 4
+        # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
         self._displayed_once = False
 
+        # A reference to the arc the user has selected. A tuple of (variable name, Constraint instance).
         self._selected_arc = None
+        # True if the user has selected an arc to perform arc-consistency on. Otherwise, an arc is automatically chosen.
         self._has_user_selected_arc = False
 
+        # A reference to the variable the user has selected.
         self._selected_var = None
 
-        self._initialize_controls()
         (self.graph_json, self._domain_map, self._edge_map) = csp_to_json(self.csp)
+
+        self._initialize_controls()
 
     def before_step(self):
         self._has_user_selected_arc = False
@@ -74,7 +78,7 @@ class Displayable(StepDOMWidget):
                 A tuple (var_name, constraint) that represents an arc from `to_do`.
         """
         # Running in Auto mode. Don't block!
-        if self._desired_level == 1:
+        if self._display_block_level == 1:
             return to_do.pop()
 
         self._block_for_user_input.wait()
@@ -88,7 +92,7 @@ class Displayable(StepDOMWidget):
 
     def wait_for_var_selection(self, iter_var):
         self._block_for_user_input.wait()
-        self._desired_level = 4
+        self._display_block_level = 4
         if self._selected_var in list(iter_var):
             return self._selected_var
         else:
@@ -101,7 +105,7 @@ class Displayable(StepDOMWidget):
         if event == 'arc:click':
             var_name = content.get('varId')
             const = self.csp.constraints[content.get('constId')]
-            self._desired_level = 2
+            self._display_block_level = 2
 
             self._selected_arc = (var_name, const)
             self._has_user_selected_arc = True
@@ -124,15 +128,6 @@ class Displayable(StepDOMWidget):
                 self._thread.start()
 
     def display(self, level, *args, **kwargs):
-        """Informs the widget about a new state to update the visualization in response to.
-
-        Args:
-            level (int): An integer in [1, 4] that specifies how "important" the message is.
-                It may also be interpreted as a level of "specificity".
-                1 means very general, such as the algorithm has finished.
-                4 means very specific, such as some very minor algorithmic detail.
-            *args: Any extra data to help the visualization update.
-        """
         should_wait = True
 
         if args[0] == 'Performing AC with domains':
