@@ -20,7 +20,7 @@ class Depth_first_search(Displayable):
     def __init__(self, problem, bound=100000):
         self.problem = problem
         self.bound = bound  # default bound unless overridden in search
-        self.top = iter(self.problem.start_nodes()) 
+        self.top = iter([self.problem.start_node()])
         self.frontier = []    # list of iterators that generare all unexplored paths
         self.num_expanded = 0 # number of paths expanded
         self.hit_depth_bound = False # true when some paths hit the depth-bound
