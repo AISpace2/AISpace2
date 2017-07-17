@@ -2,9 +2,11 @@
   <g>
     <path :d="path" stroke="black" stroke-width="5" :stroke="stroke" :stroke-width="strokeWidth">
     </path>
-    <!-- (4, 4) is the center of the arrow -->
-    <polygon points="0 0 8 4 0 8" 
-             :transform="`translate(${adjustedX2 - 4},${adjustedY2 - 4}) rotate(${angle}, 4, 4)`"
+    <polygon :points="`0 0 ${arrowHalfSize * 2} ${arrowHalfSize} 0 ${arrowHalfSize * 2}`"
+             :transform="`
+              translate(${adjustedX2 - arrowHalfSize},${adjustedY2 - arrowHalfSize}) 
+              rotate(${angle}, ${arrowHalfSize}, ${arrowHalfSize}) 
+              translate(${-arrowHalfSize - 2}, 0)`"
              :stroke="stroke" :fill="stroke" :stroke-width="strokeWidth">
     </polygon>
     <rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect>
@@ -64,6 +66,8 @@
     rectHeight: number;
 
     /// Data
+    /** Half the size of the arrow, such that (arrowHalfSize, arrowHalfSize) is the center of the arrow. */
+    arrowHalfSize: number;
     /** The padding along the x-axis to add to the rectangle that acts as the background of the displayed text. */
     rectHorizontalPadding: number;
     /** The padding along the y-axis to add to the rectangle that acts as the background of the displayed text. */
@@ -81,19 +85,19 @@
   export default {
     computed: {
       adjustedX1() {
-        let offsetXSource = this.deltaX * 40 / this.pathLength;
-        return this.x1 + offsetXSource;
+        let offsetX = this.deltaX * 40 / this.pathLength;
+        return this.x1 + offsetX;
       },
       adjustedY1() {
-        let offsetYSource = this.deltaY * 30 / this.pathLength;
-        return this.y1 + offsetYSource;
+        let offsetY = this.deltaY * 30 / this.pathLength;
+        return this.y1 + offsetY;
       },
       adjustedX2() {
-        let offsetX = this.deltaX * 50 / this.pathLength;
+        let offsetX = this.deltaX * 40 / this.pathLength;
         return this.x2 - offsetX;
       },
       adjustedY2() {
-        let offsetY = this.deltaY * 40 / this.pathLength;
+        let offsetY = this.deltaY * 30 / this.pathLength;
         return this.y2 - offsetY;
       },
       angle() {
@@ -155,7 +159,8 @@
       return {
         isMounted: false,
         rectHorizontalPadding: 8,
-        rectVerticalPadding: 2
+        rectVerticalPadding: 2,
+        arrowHalfSize: 4
       };
     },
     mounted() {
