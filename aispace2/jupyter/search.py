@@ -2,7 +2,7 @@ from functools import partial
 from threading import Thread
 
 from ipywidgets import register
-from traitlets import Dict, Unicode
+from traitlets import Dict, Unicode, Bool
 
 from aispace2.searchjsonbridge import search_problem_to_json
 
@@ -20,6 +20,9 @@ class Displayable(StepDOMWidget):
     graph_json = Dict().tag(sync=True)
     problem = None
     search = None
+
+    # True if the visualization should show edge costs.
+    show_edge_costs = Bool(True).tag(sync=True)
 
     def __init__(self):
         super().__init__()

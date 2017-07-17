@@ -44,7 +44,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       data() {
         return {
           graph: that.graph,
-          output: null
+          output: null,
+          showEdgeCosts: that.model.showEdgeCosts
         };
       },
       methods: {
@@ -60,7 +61,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       },
       template: `
       <div id="app">
-          <SearchVisualizer :graph="graph" :output="output"
+          <SearchVisualizer 
+              :graph="graph" :output="output" :showEdgeCosts="showEdgeCosts"
               @click:auto-step="autostep"
               @click:step="step"
               @click:fine-step="finestep">

@@ -16,7 +16,7 @@
       </template>
       <template slot="edge" scope="props">
         <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="props.edge.styles.stroke"
-                      :strokeWidth="props.edge.styles.strokeWidth" :text="props.edge.cost">
+                      :strokeWidth="props.edge.styles.strokeWidth" :text="showEdgeCosts ? props.edge.cost : undefined">
         </DirectedEdge>
       </template>
     </GraphVisualizerBase>
@@ -55,6 +55,11 @@
         type: String,
         required: false,
         default: ""
+      },
+      showEdgeCosts: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     methods: {
