@@ -42,7 +42,7 @@
           return edge.styles.stroke;
         }
 
-        return null;
+        return undefined;
       },
       strokeWidth: function (edge, isHovering) {
         if (isHovering) {

@@ -1,8 +1,12 @@
 <template>
   <g>
-    <path :d="path" stroke="black" stroke-width="5" marker-end="url(#marker-end)"
-          :stroke="stroke != null ? stroke : 'black'" :stroke-width="strokeWidth != null ? strokeWidth : 4">
+    <path :d="path" stroke="black" stroke-width="5" :stroke="stroke" :stroke-width="strokeWidth">
     </path>
+    <!-- (4, 4) is the center of the arrow -->
+    <polygon points="0 0 8 4 0 8" 
+             :transform="`translate(${adjustedX2 - 4},${adjustedY2 - 4}) rotate(${angle}, 4, 4)`"
+             :stroke="stroke" :fill="stroke" :stroke-width="strokeWidth">
+    </polygon>
     <rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect>
     <text v-if="text" ref="text" :x="centerX" :y="centerY" text-anchor="middle" dominant-baseline="central">{{text}}
     </text>
@@ -10,7 +14,7 @@
 </template>
 
 <script lang="ts">
-  import Vue, {ComponentOptions} from "vue";
+  import Vue, { ComponentOptions } from "vue";
 
   interface DirectedEdge extends Vue {
     /// Props
@@ -30,22 +34,34 @@
     text?: string | number;
 
     /// Computed Properties
+    /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
+    adjustedX1: number;
+    /** The y-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
+    adjustedY1: number;
+    /** The x-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
+    adjustedX2: number;
+    /** The y-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
+    adjustedY2: number;
     /** The x-coordinate that is the midpoint between the source and target. */
     centerX: number;
     /** The y-coordinate that is the midpoint between the source and target. */
-
     centerY: number;
+    /** The difference between the source and target on the x-axis. */
+    deltaX: number;
+    /** The difference between the soruce and target on the y-axis. */
+    deltaY: number;
+    /** The computed path of the line between the source and target. */
+    path: string;
+    /** The length of the path. This is computed using the original x and y coordinates, not the adjusted ones. */
+    pathLength: number;
     /** The x-coordinate to draw the rectangle that acts as the background of the displayed text, if any. */
     rectX: number;
     /** The y-coordinate to draw the rectangle that acts as the background of the displayed text, if any. */
-
     rectY: number;
     /** The width to draw the rectangle that acts as the background of the displayed text, if any. */
     rectWidth: number;
     /** The height to draw the rectangle that acts as the background of the displayed text, if any. */
     rectHeight: number;
-    /** The computed path of the line between the source and target. */
-    path: string;
 
     /// Data
     /** The padding along the x-axis to add to the rectangle that acts as the background of the displayed text. */
@@ -64,11 +80,40 @@
 
   export default {
     computed: {
+      adjustedX1() {
+        let offsetXSource = this.deltaX * 40 / this.pathLength;
+        return this.x1 + offsetXSource;
+      },
+      adjustedY1() {
+        let offsetYSource = this.deltaY * 30 / this.pathLength;
+        return this.y1 + offsetYSource;
+      },
+      adjustedX2() {
+        let offsetX = this.deltaX * 50 / this.pathLength;
+        return this.x2 - offsetX;
+      },
+      adjustedY2() {
+        let offsetY = this.deltaY * 40 / this.pathLength;
+        return this.y2 - offsetY;
+      },
+      angle() {
+        var dx = this.x2 - this.x1;
+        var dy = this.y2 - this.y1;
+        var rad = Math.atan2(dy, dx);
+        var deg = rad * 180 / Math.PI;
+        return deg;
+      },
       centerX() {
         return this.x1 + (this.x2 - this.x1) / 2;
       },
       centerY() {
         return this.y1 + (this.y2 - this.y1) / 2;
+      },
+      deltaX() {
+        return this.x2 - this.x1;
+      },
+      deltaY() {
+        return this.y2 - this.y1;
       },
       rectX() {
         return this.centerX - this.rectWidth / 2;
@@ -91,28 +136,20 @@
         return 0;
       },
       path() {
-        let diffX = this.x2 - this.x1;
-        let diffY = this.y2 - this.y1;
-
-        let pathLength = Math.sqrt(diffX * diffX + diffY * diffY);
-
-        let offsetX = diffX * 50 / pathLength;
-        let offsetY = diffY * 40 / pathLength;
-
-        let offsetXSource = diffX * 40 / pathLength;
-        let offsetYSource = diffY * 30 / pathLength;
-
         return (
           "M" +
-          (this.x1 + offsetXSource) +
+          this.adjustedX1 +
           "," +
-          (this.y1 + offsetYSource) +
+          this.adjustedY1 +
           "L" +
-          (this.x2 - offsetX) +
+          this.adjustedX2 +
           "," +
-          (this.y2 - offsetY)
+          this.adjustedY2
         );
-      }
+      },
+      pathLength() {
+        return Math.sqrt(this.deltaX * this.deltaX + this.deltaY * this.deltaY);
+      },
     },
     data() {
       return {

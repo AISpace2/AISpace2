@@ -5,10 +5,6 @@
          @mouseleave="dragEnd"
          @keydown.delete="$emit('delete')"
          @dblclick="onDblClick">
-      <marker id="marker-end" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3" markerHeight="3"
-              orient="auto">
-        <path d="M 0 0 L 10 5 L 0 10 z"></path>
-      </marker>
       <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
                      @mouseover="edgeMouseOver(edge)"
                      @mouseout="edgeMouseOut(edge)"
