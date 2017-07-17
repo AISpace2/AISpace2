@@ -9,7 +9,7 @@ class StepDOMWidget(DOMWidget):
 
     def __init__(self):
         super().__init__()
-        self.on_msg(self._handle_custom_msgs)
+        self.on_msg(self.handle_custom_msgs)
         self._block_for_user_input = threading.Event()
         self._desired_level = 4
         self._controls = {}
@@ -20,6 +20,7 @@ class StepDOMWidget(DOMWidget):
         """Sets up functions that can be used to control the visualization."""
         def advance_visualization(desired_level):
             def advance():
+                self.before_step()
                 self._desired_level = desired_level
                 self._block_for_user_input.set()
                 self._block_for_user_input.clear()
@@ -41,7 +42,13 @@ class StepDOMWidget(DOMWidget):
             'auto-step': advance_visualization(1)
         }
 
-    def _handle_custom_msgs(self, _, content, buffers=None):
+    def before_step(self):
+        """Override this to provide custom logic before every (fine/auto) step.
+        
+        For example, you may reset state variables."""
+        pass
+
+    def handle_custom_msgs(self, _, content, buffers=None):
         event = content.get('event', '')
 
         if event == 'fine-step:click':

@@ -57,6 +57,9 @@ class Displayable(StepDOMWidget):
         self._initialize_controls()
         (self.graph_json, self._domain_map, self._edge_map) = csp_to_json(self.csp)
 
+    def before_step(self):
+        self._has_user_selected_arc = False
+
     def wait_for_arc_selection(self, to_do):
         """Pauses execution until an arc has been selected and returned.
 
@@ -91,8 +94,8 @@ class Displayable(StepDOMWidget):
         else:
             self._block_for_user_input.wait()
 
-    def _handle_custom_msgs(self, _, content, buffers=None):
-        super()._handle_custom_msgs(None, content, buffers)
+    def handle_custom_msgs(self, _, content, buffers=None):
+        super().handle_custom_msgs(None, content, buffers)
         event = content.get('event', '')
 
         if event == 'arc:click':
