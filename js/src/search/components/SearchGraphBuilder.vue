@@ -3,19 +3,24 @@
     <GraphVisualizerBase :graph="graph" @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
         <SearchRegularNode v-if="props.node.type === 'search:regular'"
-                           :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined">
+                           :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined"
+                            @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchRegularNode>
 
         <SearchStartNode v-if="props.node.type === 'search:start'"
-                         :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined">
+                         :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined"
+                          @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchStartNode>
 
         <SearchGoalNode v-if="props.node.type === 'search:goal'"
-                        :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined">
+                        :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined"
+                        @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchGoalNode>
       </template>
       <template slot="edge" scope="props">
         <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
+                      :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
+                      :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
                       :stroke="strokeColour(props.edge)"
                       :strokeWidth="props.edge.styles.strokeWidth"
                       :text="props.edge.cost">
@@ -24,6 +29,8 @@
     </GraphVisualizerBase>
     <div>
       <div v-if="selection && selection.type !== 'edge'">
+        <label for="node-name">Name</label>
+        <input type="text" v-model="selection.name" />
         <label for="node-type">Type</label>
         <select id="node-type" v-model="selection.type">
           <option value="search:start">Start</option>
@@ -68,6 +75,10 @@
           this.selection = selection;
         }
       },
+      updateNodeBounds: function(node, bounds) {
+        node.styles.rx = bounds.rx;
+        node.styles.ry = bounds.ry;
+      }
     },
     props: {
       graph: {

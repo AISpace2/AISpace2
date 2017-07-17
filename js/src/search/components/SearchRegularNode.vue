@@ -1,25 +1,11 @@
 <template>
   <g>
-    <ellipse rx="40" ry="30" cx="0" cy="0" fill="white" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
+    <ellipse :rx="size.rx" :ry="size.ry" cx="0" cy="0" fill="white" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
     <text x="0" y="0" text-anchor="middle" alignment-baseline="middle">{{name}}</text>
   </g>
 </template>
 
 <script>
-  export default {
-    props: {
-      name: {
-        type: String,
-        required: true
-      },
-      stroke: {
-        type: String,
-        default: "black"
-      },
-      strokeWidth: {
-        type: Number,
-        default: 1
-      }
-    },
-  }
+  import SearchNode from './SearchNode';
+  export default new SearchNode();
 </script>

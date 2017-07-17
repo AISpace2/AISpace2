@@ -28,6 +28,14 @@
     x2: number;
     /** The y-coordinate of the center of the target node of the edge. */
     y2: number;
+    /** The radius along the x-axis of the source node. Defaults to 0 (i.e. drawn edge at origin of node). */
+    sourceRx: number;
+    /** The radius along the y-axis of the source node. Defaults to 0 (i.e. drawn edge at origin of node). */    
+    sourceRy: number;
+    /** The radius along the x-axis of the target node. Defaults to 0 (i.e. drawn edge at origin of node). */  
+    targetRx: number;
+    /** The radius along the y-axis of the target node. Defaults to 0 (i.e. drawn edge at origin of node). */    
+    targetRy: number;
     /** A HTML colour string representing the colour of the line. */
     stroke: string;
     /** The width, in pixels, of the line. */
@@ -85,19 +93,19 @@
   export default {
     computed: {
       adjustedX1() {
-        let offsetX = this.deltaX * 40 / this.pathLength;
+        let offsetX = this.deltaX * this.sourceRx / this.pathLength;
         return this.x1 + offsetX;
       },
       adjustedY1() {
-        let offsetY = this.deltaY * 30 / this.pathLength;
+        let offsetY = this.deltaY * this.sourceRy / this.pathLength;
         return this.y1 + offsetY;
       },
       adjustedX2() {
-        let offsetX = this.deltaX * 40 / this.pathLength;
+        let offsetX = this.deltaX * this.targetRx / this.pathLength;
         return this.x2 - offsetX;
       },
       adjustedY2() {
-        let offsetY = this.deltaY * 30 / this.pathLength;
+        let offsetY = this.deltaY * this.targetRy / this.pathLength;
         return this.y2 - offsetY;
       },
       angle() {
@@ -196,7 +204,27 @@
       text: {
         type: [String, Number],
         required: false
-      }
+      },
+      sourceRx: {
+        type: Number,
+        required: false,
+        default: 0
+      },
+      targetRx: {
+        type: Number,
+        required: false,
+        default: 0
+      },
+      sourceRy: {
+        type: Number,
+        required: false,
+        default: 0
+      },
+      targetRy: {
+        type: Number,
+        required: false,
+        default: 0
+      },
     }
   } as ComponentOptions<DirectedEdge>;
 </script>

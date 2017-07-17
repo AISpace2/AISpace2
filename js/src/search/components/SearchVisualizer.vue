@@ -3,20 +3,25 @@
     <GraphVisualizerBase :graph="graph">
       <template slot="node" scope="props">
         <SearchRegularNode v-if="props.node.type === 'search:regular'" :name="props.node.name"
-                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)">
+                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
+                           @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchRegularNode>
 
         <SearchStartNode v-if="props.node.type === 'search:start'" :name="props.node.name"
-                         :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)">
+                         :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
+                         @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchStartNode>
 
         <SearchGoalNode v-if="props.node.type === 'search:goal'" :name="props.node.name"
-                        :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)">
+                        :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
+                        @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchGoalNode>
       </template>
       <template slot="edge" scope="props">
         <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="props.edge.styles.stroke"
-                      :strokeWidth="props.edge.styles.strokeWidth" :text="showEdgeCosts ? props.edge.cost : undefined">
+                      :strokeWidth="props.edge.styles.strokeWidth" :text="showEdgeCosts ? props.edge.cost : undefined"
+                      :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
+                      :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry">
         </DirectedEdge>
       </template>
     </GraphVisualizerBase>
@@ -76,6 +81,10 @@
         }
 
         return 1;
+      },
+      updateNodeBounds: function(node, bounds) {
+        node.styles.rx = bounds.rx;
+        node.styles.ry = bounds.ry;
       }
     }
   };
