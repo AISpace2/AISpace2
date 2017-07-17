@@ -14,7 +14,7 @@
               :x2="edge.target.x" :y2="edge.target.y"
               :hover="edge === edgeHover"></slot>
       </EdgeContainer>
-      <GraphNode v-for="node in graph.nodes" :key="node.id"
+      <GraphNode v-for="node in nodes" :key="node.id"
                  @click="$emit('click:node', node)"
                  @dragstart="dragStart(node, $event)" @dragend="dragEnd"
                  @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
@@ -33,6 +33,17 @@
     components: {
       GraphNode,
       EdgeContainer
+    },
+    computed: {
+      nodes() {
+        let i = this.graph.nodes.indexOf(this.dragTarget);
+        if (i !== -1) {
+          // Move element at index i to the back of the array
+          this.graph.nodes.push(this.graph.nodes.splice(i, 1)[0]);
+        }
+
+        return this.graph.nodes;
+      }
     },
     props: ['graph'],
     data() {
