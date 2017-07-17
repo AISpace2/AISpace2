@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" @click:edge="edgeClicked">
+    <GraphVisualizerBase :graph="graph" @click:edge="edgeClicked" :width="width" :height="height">
       <template slot="node" scope="props">
         <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name"
                          :domain="props.node.domain" :hover="props.hover">
@@ -56,7 +56,7 @@
         return 4;
       }
     },
-    props: ['graph', 'output']
+    props: ['graph', 'output', 'width', 'height']
   }
 </script>
 

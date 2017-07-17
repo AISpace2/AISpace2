@@ -93,18 +93,22 @@
   export default {
     computed: {
       adjustedX1() {
+        if (this.pathLength === 0) return 0;
         let offsetX = this.deltaX * this.sourceRx / this.pathLength;
         return this.x1 + offsetX;
       },
       adjustedY1() {
+        if (this.pathLength === 0) return 0;        
         let offsetY = this.deltaY * this.sourceRy / this.pathLength;
         return this.y1 + offsetY;
       },
       adjustedX2() {
+        if (this.pathLength === 0) return 0;        
         let offsetX = this.deltaX * this.targetRx / this.pathLength;
         return this.x2 - offsetX;
       },
       adjustedY2() {
+        if (this.pathLength === 0) return 0;        
         let offsetY = this.deltaY * this.targetRy / this.pathLength;
         return this.y2 - offsetY;
       },

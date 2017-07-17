@@ -36,6 +36,7 @@ export interface IGraphLayoutEngine {
   relayout(graph: IGraph, layoutParams: IGraphLayoutParams): void;
 }
 
+const edgePadding = 50;
 /**
  * Lays out a graph using D3's force layout simulation.
  */
@@ -75,8 +76,14 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
 
       // Bound nodes to SVG
       graphCopy.nodes.forEach(node => {
-        node.x = Math.max(30, Math.min(layoutParams.width - 30, node.x!));
-        node.y = Math.max(30, Math.min(layoutParams.height - 30, node.y!));
+        node.x = Math.max(
+          edgePadding,
+          Math.min(layoutParams.width - edgePadding, node.x!)
+        );
+        node.y = Math.max(
+          edgePadding,
+          Math.min(layoutParams.height - edgePadding, node.y!)
+        );
       });
     }
 

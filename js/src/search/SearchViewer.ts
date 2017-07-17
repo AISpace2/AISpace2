@@ -1,5 +1,6 @@
-import * as d3 from "d3";
+import { timeout } from "d3";
 import * as widgets from "jupyter-js-widgets";
+import { debounce } from "underscore";
 import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
@@ -33,19 +34,23 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         this.highlightPath(event);
       }
     });
+
+    $(window).resize(() => {
+      this.handleResize();
+    });
   }
 
   public render() {
-    d3ForceLayoutEngine.setup(this.graph, { width: 800, height: 500 });
-
     const that = this;
     const App = Vue.extend({
       components: { SearchVisualizer },
       data() {
         return {
           graph: that.graph,
+          height: 0,
           output: null,
-          showEdgeCosts: that.model.showEdgeCosts
+          showEdgeCosts: that.model.showEdgeCosts,
+          width: 0
         };
       },
       methods: {
@@ -63,6 +68,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       <div id="app">
           <SearchVisualizer 
               :graph="graph" :output="output" :showEdgeCosts="showEdgeCosts"
+              :width="width" :height="height"
               @click:auto-step="autostep"
               @click:step="step"
               @click:fine-step="finestep">
@@ -70,8 +76,20 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       </div>`
     });
 
-    d3.timeout(() => {
+    timeout(() => {
+      // Workaround: Since nodes need some position before rendering, assign 0
+      this.graph.nodes.forEach(node => {
+        node.x = 0;
+        node.y = 0;
+      });
+
       this.vue = new App().$mount();
+
+      // We debounce after our intial resize, since the first "resize" is when the cell is first executed
+      // We don't want to delay for no reason in that case
+      this.handleResize();
+      this.handleResize = debounce(this.handleResize, 300);
+
       this.el.appendChild(this.vue.$el);
     });
   }
@@ -114,6 +132,18 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         Vue.set(edge.styles, "stroke", event.colour);
         Vue.set(edge.styles, "strokeWidth", 8);
       }
+    }
+  }
+
+  /** Resize the width and height of the graph. */
+  private handleResize() {
+    const width = this.$el.width();
+    const height = width / 1.6;
+
+    if (this.vue != null) {
+      d3ForceLayoutEngine.setup(this.graph, { width, height });
+      this.vue.$data.width = width;
+      this.vue.$data.height = height;
     }
   }
 }

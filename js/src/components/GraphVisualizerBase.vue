@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg tabindex="0" ref="mySVG" width="800" height="500"
+    <svg tabindex="0" ref="mySVG" :width="width" :height="height"
          @mousemove="dragSVG"
          @mouseleave="dragEnd"
          @keydown.delete="$emit('delete')"
@@ -45,7 +45,20 @@
         return this.graph.nodes;
       }
     },
-    props: ['graph'],
+    props: {
+      graph: {
+        type: Object,
+        required: true,
+      },
+      width: {
+        type: Number,
+        default: 600,
+      },
+      height: {
+        type: Number,
+        default: 480
+      }
+    },
     data() {
       return {
         dragTarget: null,

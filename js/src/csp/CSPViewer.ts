@@ -1,4 +1,6 @@
+import { timeout } from "d3";
 import * as widgets from "jupyter-js-widgets";
+import { debounce } from "underscore";
 import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
@@ -45,11 +47,13 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.vue.output = event.text;
       }
     });
+
+    $(window).resize(() => {
+      this.handleResize();
+    });
   }
 
   public render() {
-    d3ForceLayoutEngine.setup(this.graph, { width: 800, height: 600 });
-
     const that = this;
 
     const App = Vue.extend({
@@ -57,7 +61,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       data() {
         return {
           graph: that.graph,
-          output: ""
+          height: 0,
+          output: "",
+          width: 0
         };
       },
       methods: {
@@ -82,6 +88,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                 <div id="app">
                     <CSPGraphInteractor
                         :graph="graph"
+                        :width="width"
+                        :height="height"
                         @click:auto-step="autostep"
                         @click:step="step"
                         @click:fine-step="finestep"
@@ -91,8 +99,21 @@ export default class CSPViewer extends widgets.DOMWidgetView {
                 </div>`
     });
 
-    this.vue = new App().$mount();
-    this.el.appendChild(this.vue.$el);
+    timeout(() => {
+      // Workaround: Since nodes need some position before rendering, assign 0
+      this.graph.nodes.forEach(node => {
+        node.x = 0;
+        node.y = 0;
+      });
+
+      this.vue = new App().$mount();
+
+      // We debounce after our intial resize, since the first "resize" is when the cell is first executed
+      // We don't want to delay for no reason in that case
+      this.handleResize();
+      this.handleResize = debounce(this.handleResize, 300);
+      this.el.appendChild(this.vue.$el);
+    });
 
     return this;
   }
@@ -133,6 +154,18 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
     if (i !== -1) {
       this.graph.nodes[i].domain = event.domain;
+    }
+  }
+
+  /** Resize the width and height of the graph. */
+  private handleResize() {
+    const width = this.$el.width();
+    const height = width / 1.6;
+
+    if (this.vue != null) {
+      d3ForceLayoutEngine.setup(this.graph, { width, height });
+      this.vue.$data.width = width;
+      this.vue.$data.height = height;
     }
   }
 }

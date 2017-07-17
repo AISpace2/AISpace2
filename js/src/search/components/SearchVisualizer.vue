@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph">
+    <GraphVisualizerBase :graph="graph" :width="width" :height="height">
       <template slot="node" scope="props">
         <SearchRegularNode v-if="props.node.type === 'search:regular'" :name="props.node.name"
                            :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
@@ -65,6 +65,14 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      width: {
+        type: Number,
+        default: undefined,
+      },
+      height: {
+        type: Number,
+        default: undefined
       }
     },
     methods: {
