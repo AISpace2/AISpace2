@@ -3,17 +3,20 @@
     <GraphVisualizerBase :graph="graph" @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
         <SearchRegularNode v-if="props.node.type === 'search:regular'"
-                           :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined"
-                            @updateBounds="updateNodeBounds(props.node, $event)">
+                           :name="props.node.name"
+                           :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
+                           @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchRegularNode>
 
         <SearchStartNode v-if="props.node.type === 'search:start'"
-                         :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined"
-                          @updateBounds="updateNodeBounds(props.node, $event)">
+                         :name="props.node.name"
+                         :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
+                         @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchStartNode>
 
         <SearchGoalNode v-if="props.node.type === 'search:goal'"
-                        :name="props.node.name" :stroke="props.node === selection ? 'pink' : undefined"
+                        :name="props.node.name"
+                        :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                         @updateBounds="updateNodeBounds(props.node, $event)">
         </SearchGoalNode>
       </template>
@@ -61,12 +64,19 @@
       };
     },
     methods: {
-      strokeColour: function (edge) {
-        if (this.selection === edge) {
-          return 'pink';
+      strokeColour: function (selection) {
+        if (this.selection === selection) {
+          return 'blue';
         }
 
         return 'black';
+      },
+      nodeStrokeWidth: function(node) {
+        if (this.selection === node) {
+          return 3;
+        }
+
+        return 1;
       },
       updateSelection: function (selection) {
         if (this.selection === selection) {
