@@ -14,24 +14,24 @@
               :x2="edge.target.x" :y2="edge.target.y"
               :hover="edge === edgeHover"></slot>
       </EdgeContainer>
-      <GraphNode v-for="node in nodes" :key="node.id"
+      <GraphNodeContainer v-for="node in nodes" :key="node.id"
                  @click="$emit('click:node', node)"
                  @dragstart="dragStart(node, $event)" @dragend="dragEnd"
                  @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
                  :x="node.x" :y="node.y">
         <slot name="node" :node="node" :hover="node === nodeHover"></slot>
-      </GraphNode>
+      </GraphNodeContainer>
     </svg>
   </div>
 </template>
 
 <script>
-  import GraphNode from './GraphNode';
+  import GraphNodeContainer from './GraphNodeContainer';
   import EdgeContainer from './EdgeContainer';
 
   export default {
     components: {
-      GraphNode,
+      GraphNodeContainer,
       EdgeContainer
     },
     computed: {

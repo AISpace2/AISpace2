@@ -2,23 +2,11 @@
   <div>
     <GraphVisualizerBase :graph="graph" @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
-        <SearchRegularNode v-if="props.node.type === 'search:regular'"
-                           :name="props.node.name"
-                           :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
-                           @updateBounds="updateNodeBounds(props.node, $event)">
-        </SearchRegularNode>
-
-        <SearchStartNode v-if="props.node.type === 'search:start'"
-                         :name="props.node.name"
-                         :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
-                         @updateBounds="updateNodeBounds(props.node, $event)">
-        </SearchStartNode>
-
-        <SearchGoalNode v-if="props.node.type === 'search:goal'"
-                        :name="props.node.name"
-                        :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
-                        @updateBounds="updateNodeBounds(props.node, $event)">
-        </SearchGoalNode>
+        <EllipseGraphNode :text="props.node.name"
+                          :fill="nodeFillColour(props.node)"
+                          :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
+                          @updateBounds="updateNodeBounds(props.node, $event)">
+        </EllipseGraphNode>
       </template>
       <template slot="edge" scope="props">
         <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
@@ -52,12 +40,10 @@
 <script>
   import GraphVisualizerBase from '../../components/GraphVisualizerBase';
   import DirectedEdge from '../../components/DirectedEdge';
-  import SearchRegularNode from './SearchRegularNode';
-  import SearchStartNode from './SearchStartNode';
-  import SearchGoalNode from './SearchGoalNode';
+  import EllipseGraphNode from '../../components/EllipseGraphNode';
 
   export default {
-    components: {GraphVisualizerBase, SearchRegularNode, DirectedEdge, SearchGoalNode, SearchStartNode},
+    components: {GraphVisualizerBase, DirectedEdge, EllipseGraphNode},
     data() {
       return {
         selection: null
@@ -77,6 +63,16 @@
         }
 
         return 1;
+      },
+      nodeFillColour: function(node) {
+        switch (node.type) {
+          case "search:start":
+          return "orchid";
+          case "search:goal":
+          return "gold";
+          default:
+          return "white";
+        }
       },
       updateSelection: function (selection) {
         if (this.selection === selection) {
