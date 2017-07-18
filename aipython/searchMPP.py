@@ -1,5 +1,5 @@
 # searchMPP.py - Searcher with multiple-path pruning
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -8,8 +8,9 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from aipython.searchAStar import AStarSearcher
+from aipython.searchGeneric import AStarSearcher
 from aipython.searchProblem import Path
+from aispace2.jupyter.search import visualize
 
 class SearcherMPP(AStarSearcher):
     """returns a searcher for a problem.
@@ -19,6 +20,7 @@ class SearcherMPP(AStarSearcher):
         super().__init__(problem)
         self.explored = set()
 
+    @visualize
     def search(self):
         """returns next path from an element of problem's start nodes
         to a goal node. 
@@ -43,11 +45,11 @@ class SearcherMPP(AStarSearcher):
         self.display(1,"No (more) solutions. Total of",
                      self.num_expanded,"paths expanded.")
 
-from aipython.searchAStar import test
+from searchGeneric import test
 if __name__ == "__main__":
     test(SearcherMPP)
 
-# import searchProblem 
+import searchProblem 
 # searcherMPPcdp = SearcherMPP(searchProblem.cyclic_delivery_problem)
 # print(searcherMPPcdp.search())  # find first path
 

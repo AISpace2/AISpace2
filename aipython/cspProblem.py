@@ -1,5 +1,5 @@
 # cspProblem.py - Representations of a Constraint Satisfaction Problem
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -8,7 +8,7 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from .utilities import Displayable, dict_union
+from aipython.utilities import Displayable, dict_union
 
 class Constraint(object):
     """A Constraint consists of

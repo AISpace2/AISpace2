@@ -1,5 +1,5 @@
-# searchAStar.py - A* and related searchers
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# searchGeneric.py - Generic Searcher, including depth-first and A*
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -7,6 +7,55 @@
 # This work is licensed under a Creative Commons
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
+
+from aispace2.jupyter.search import Displayable, visualize
+
+class Searcher(Displayable):
+    """returns a searcher for a problem.
+    Paths can be found by repeatedly calling search().
+    This does depth-first search unless overridden
+    """
+    def __init__(self, problem):
+        """creates a searcher from a problem
+        """
+        self.problem = problem
+        self.initialize_frontier()
+        self.num_expanded = 0
+        self.add_to_frontier(Path(problem.start_node()))
+        # self.display(3,"Frontier:",self.frontier)
+        super().__init__()
+
+    def initialize_frontier(self):
+        self.frontier = []
+    def empty_frontier(self):
+        return self.frontier == []
+        
+    def add_to_frontier(self,path):
+        self.frontier.append(path)
+        
+    @visualize
+    def search(self):
+        """returns (next) path from the problem's start node
+        to a goal node. 
+        Returns None if no path exists.
+        """
+        while not self.empty_frontier():
+            path = self.frontier.pop()
+            self.display(2, "Expanding:",path,"(cost:",path.cost,")")
+            self.num_expanded += 1
+            if self.problem.is_goal(path.end()):    # solution found
+                self.display(1, self.num_expanded, "paths have been expanded and",
+                            len(self.frontier), "paths remain in the frontier")
+                self.solution = path   # store the solution found
+                return path
+            else:
+                neighs = self.problem.neighbors(path.end())
+                self.display(3,"Neighbors are", neighs)
+                for arc in neighs:
+                    self.add_to_frontier(Path(path,arc))
+                self.display(3,"Frontier:",self.frontier)
+        self.display(1,"No (more) solutions. Total of",
+                     self.num_expanded,"paths expanded.")
 
 import heapq        # part of the Python standard library
 from aipython.searchProblem import Path
@@ -52,53 +101,6 @@ class Frontier(object):
     def __len__(self):
         return len(self.frontierpq)
     
-from aipython.utilities import Displayable
-
-class Searcher(Displayable):
-    """returns a searcher for a problem.
-    Paths can be found by repeatedly calling search().
-    """
-    def __init__(self, problem):
-        """creates a searcher from a problem
-        """
-        self.problem = problem
-        self.initialize_frontier()
-        self.num_expanded = 0
-        self.add_to_frontier(Path(problem.start_node()))
-        self.display(3,"Frontier:",self.frontier)
-
-    def initialize_frontier(self):
-        self.frontier = []
-    def empty_frontier(self):
-        return self.frontier == []
-        
-    def add_to_frontier(self,path):
-        self.frontier.append(path)
-        
-    def search(self):
-        """returns (next) path from the problem's start node
-        to a goal node. 
-        Returns None if no path exists.
-        """
-        while not self.empty_frontier():
-            path = self.frontier.pop()
-            self.display(2, "Expanding: ",path,"(cost:",path.cost,")")
-            self.num_expanded += 1
-            if self.problem.is_goal(path.end()):    # solution found
-                self.display(1, self.num_expanded, "paths have been expanded and",
-                            len(self.frontier), "paths remain in the frontier")
-                self.solution = path   # store the solution found
-                return path
-            else:
-                neighs = self.problem.neighbors(path.end())
-                self.display(3,"Neighbors are", neighs)
-                for arc in neighs:
-                    self.add_to_frontier(Path(path,arc))
-                self.display(3,"Frontier:",self.frontier)
-        self.display(1,"No (more) solutions. Total of",
-                     self.num_expanded,"paths expanded.")
-
-    
 class AStarSearcher(Searcher):
     """returns a searcher for a problem.
     Paths can be found by repeatedly calling search().
@@ -117,11 +119,10 @@ class AStarSearcher(Searcher):
         value = path.cost+self.problem.heuristic(path.end())
         self.frontier.add(path, value)
 
-
-from aipython.searchProblem import problem1
+from aipython import searchProblem
 def test(SearchClass):
     print("Testing problem 1:")
-    schr1 = SearchClass(problem1)
+    schr1 = SearchClass(searchProblem.problem1)
     path1 = schr1.search()
     print("Path found: ",path1)
     assert list(path1.nodes()) == ['g','d','c','b','a'], "Shortest path not found in problem1"
@@ -135,7 +136,12 @@ if __name__ == "__main__":
 # searcher1 = Searcher(searchProblem.acyclic_delivery_problem)
 # searcher1.search()  # find first path
 # searcher1.search()  # find next path
-# searcher2 = Searcher(searchProblem.cyclic_delivery_problem)
+# searcher2 = AStarSearcher(searchProblem.acyclic_delivery_problem)
 # searcher2.search()  # find first path
 # searcher2.search()  # find next path
+# searcher3 = Searcher(searchProblem.cyclic_delivery_problem)
+# searcher3.search()  # find first path.  What do you expect to happen?
+# searcher4 = AStarSearcher(searchProblem.cyclic_delivery_problem)
+# searcher4 = AStarSearcher(searchProblem.cyclic_delivery_problem)
+# searcher4.search()  # find first path
 

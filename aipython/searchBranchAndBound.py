@@ -1,5 +1,5 @@
 # searchBranchAndBound.py - Branch and Bound Search
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -9,8 +9,9 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 from aipython.searchProblem import Path
-from aipython.searchAStar import Searcher
+from aipython.searchGeneric import Searcher
 from aipython.utilities import Displayable
+from aispace2.jupyter.search import visualize
 
 class DF_branch_and_bound(Searcher):
     """returns a branch and bound searcher for a problem.    
@@ -25,6 +26,7 @@ class DF_branch_and_bound(Searcher):
         self.best_path = None
         self.bound = bound
 
+    @visualize
     def search(self):
         """returns an optimal solution to a problem with cost less than bound.
         returns None if there is no solution with cost less than bound."""
@@ -33,19 +35,19 @@ class DF_branch_and_bound(Searcher):
         while self.frontier:
             path = self.frontier.pop()
             if path.cost+self.problem.heuristic(path.end()) < self.bound:
-                self.display(3,"Expanding: ",path,"cost:",path.cost)
+                self.display(3,"Expanding:",path,"cost:",path.cost)
                 self.num_expanded += 1
                 if self.problem.is_goal(path.end()):
                     self.best_path = path
                     self.bound = path.cost
                     self.display(2,"New best path:",path," cost:",path.cost)
-                for arc in reversed(self.problem.neighbors(path.end())):
+                for arc in reversed(list(self.problem.neighbors(path.end()))):
                     self.add_to_frontier(Path(path, arc))
         self.display(1,"Number of paths expanded:",self.num_expanded)
         self.solution = self.best_path
         return self.best_path
         
-from aipython.searchAStar import test
+from searchGeneric import test
 if __name__ == "__main__":
     test(DF_branch_and_bound)
 

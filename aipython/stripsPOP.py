@@ -1,5 +1,5 @@
 # stripsPOP.py - Partial-order Planner using STRIPS representation
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -77,10 +77,10 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
     def is_goal(self, node):
         return node.agenda == []
     
-    def start_nodes(self):
+    def start_node(self):
         constraints = {(self.start, self.finish)}
         agenda = [(g, self.finish) for g in self.planning_problem.goal.items()]
-        return [POP_node([self.start,self.finish], constraints, agenda, [] )]
+        return POP_node([self.start,self.finish], constraints, agenda, [] )
 
     def neighbors(self, node):
         """enumerates the neighbors of node"""
@@ -196,7 +196,7 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
         return (y,x) not in constraint
 
 from searchBranchAndBound import DF_branch_and_bound
-from searchAStar import Searcher
+from searchGeneric import AStarSearcher
 from searchMPP import SearcherMPP 
 from stripsProblem import problem0, problem1, problem2 
 
@@ -204,17 +204,17 @@ rplanning0 = POP_search_from_STRIPS(problem0)
 rplanning1 = POP_search_from_STRIPS(problem1)
 rplanning2 = POP_search_from_STRIPS(problem2)
 searcher0 = DF_branch_and_bound(rplanning0,5)
-searcher0a = Searcher(rplanning0)
+searcher0a = AStarSearcher(rplanning0)
 searcher1 = DF_branch_and_bound(rplanning1,10)
-searcher1a = Searcher(rplanning1)
+searcher1a = AStarSearcher(rplanning1)
 searcher2 = DF_branch_and_bound(rplanning2,10)
-searcher2a = Searcher(rplanning2)
+searcher2a = AStarSearcher(rplanning2)
 # Try one of the following searchers
 # a = searcher0.search()
 # a = searcher0a.search()
 # a.end().extract_plan()  # print a plan found
 # a.end().constraints     # print the constraints
-# Searcher.max_display_level = 0  # less detailed display
+# AStarSearcher.max_display_level = 0  # less detailed display
 # DF_branch_and_bound.max_display_level = 0  # less detailed display
 # a = searcher1.search()
 # a = searcher1a.search()

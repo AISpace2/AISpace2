@@ -1,5 +1,5 @@
 # cspConsistency.py - Arc Consistency and Domain splitting for solving a CSP
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -8,7 +8,7 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from utilities import Displayable
+from aipython.utilities import Displayable
 
 class Con_solver(Displayable):
     def __init__(self, csp, **kwargs):
@@ -142,7 +142,7 @@ def ac_solver(csp):
 if __name__ == "__main__":
     test(ac_solver)
 
-from searchProblem import Search_problem
+from searchProblem import Arc, Search_problem
 
 class Search_with_AC_from_CSP(Search_problem,Displayable):
     """A search problem with arc consistency and domain splitting
@@ -156,17 +156,16 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
         """node is a goal if all domains have 1 element"""
         return all(len(node[var])==1 for var in node)
     
-    def start_nodes(self):
-        return [self.domains]
+    def start_node(self):
+        return self.domains
     
-    def neighbor_nodes(self,node):
-        """an iterator over the neighboring nodes of node.
-        This is used for depth-first search"""
+    def neighbors(self,node):
+        """returns the neighboring nodes of node.
+        """
+        neighs = []
         var = select(x for x in node if len(node[x])>1)
         if var:
-            split = len(node[var])//2
-            dom1 = set(list(node[var])[:split]) #a nonempty proper subset
-            dom2 = node[var]-dom1
+            dom1, dom2 = partition_domain(node[var])
             self.display(2,"Splitting", var, "into", dom1, "and", dom2)
             to_do = self.cons.new_to_do(var,None)
             for dom in [dom1,dom2]:
@@ -174,17 +173,20 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
                 cons_doms = self.cons.make_arc_consistent(newdoms,to_do)
                 if all(len(cons_doms[v])>0 for v in cons_doms):
                     # all domains are non-empty
-                    yield cons_doms
+                    neighs.append(Arc(node,cons_doms))
                 else:
                     self.display(2,"...",var,"in",dom,"has no solution")
+        return neighs
 
 from cspExamples import test
-from searchDepthFirst import Depth_first_search
+from searchGeneric import Searcher
 
 def ac_search_solver(csp):
     """arc consistency (search interface)"""
-    sol = Depth_first_search(Search_with_AC_from_CSP(csp)).search()
-    return {v:select(d) for (v,d) in sol.items()}
+    sol = Searcher(Search_with_AC_from_CSP(csp)).search()
+    if sol:
+        return {v:select(d) for (v,d) in sol.end().items()}
+    
 if __name__ == "__main__":
     test(ac_search_solver)
 
@@ -192,15 +194,15 @@ from cspExamples import csp1, csp2, crossword1, crossword2, crossword2d
 
 ## Test Solving CSPs with Arc consistency and domain splitting:
 #Con_solver(csp1).solve_one()
-#searcher1d = Depth_first_search(Search_with_AC_from_CSP(csp1))
+#searcher1d = Searcher(Search_with_AC_from_CSP(csp1))
 #print(searcher1d.search())
-#Depth_first_search.max_display_level = 2  # display search trace (0 turns off)
-#searcher2c = Depth_first_search(Search_with_AC_from_CSP(csp2))
+#Searcher.max_display_level = 2  # display search trace (0 turns off)
+#searcher2c = Searcher(Search_with_AC_from_CSP(csp2))
 #print(searcher2c.search())
-#searcher3c = Depth_first_search(Search_with_AC_from_CSP(crossword1))
+#searcher3c = Searcher(Search_with_AC_from_CSP(crossword1))
 #print(searcher3c.search())
-#searcher4c = Depth_first_search(Search_with_AC_from_CSP(crossword2))
+#searcher4c = Searcher(Search_with_AC_from_CSP(crossword2))
 #print(searcher4c.search())
-#searcher5c = Depth_first_search(Search_with_AC_from_CSP(crossword2d))
+#searcher5c = Searcher(Search_with_AC_from_CSP(crossword2d))
 #print(searcher5c.search())
 

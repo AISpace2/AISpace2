@@ -1,5 +1,5 @@
 # stripsForwardPlanner.py - Forward Planner with STRIPS actions
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -52,9 +52,9 @@ class Forward_STRIPS(Search_problem):
         return all(prop in state_asst and state_asst[prop]==self.goal[prop]
                    for prop in self.goal)
 
-    def start_nodes(self):
-        """returns list of start nodes"""
-        return [self.initial_state]
+    def start_node(self):
+        """returns start node"""
+        return self.initial_state
 
     def neighbors(self,state):
         """returns neighbors of state in this problem"""
@@ -87,14 +87,14 @@ class Forward_STRIPS(Search_problem):
         return self.heur(state.assignment, self.goal)
 
 from searchBranchAndBound import DF_branch_and_bound
-from searchAStar import Searcher
+from searchGeneric import AStarSearcher
 from searchMPP import SearcherMPP
 from stripsProblem import problem0, problem1, problem2, blocks1, blocks2, blocks3
 
-# Searcher(Forward_STRIPS(problem1)).search()  #A*
+# AStarSearcher(Forward_STRIPS(problem1)).search()  #A*
 # SearcherMPP(Forward_STRIPS(problem1)).search()  #A* with MPP
 # DF_branch_and_bound(Forward_STRIPS(problem1),10).search() #B&B
 # To find more than one plan:
-# s1 =Searcher(Forward_STRIPS(problem1))  #A*
+# s1 =AStarSearcher(Forward_STRIPS(problem1))  #A*
 # s1.search()  #find another plan
 

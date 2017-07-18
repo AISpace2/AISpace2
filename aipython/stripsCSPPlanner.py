@@ -1,5 +1,5 @@
 # stripsCSPPlanner.py - CSP planner where actions are represented using STRIPS
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -83,7 +83,7 @@ def con_plan(prob,horizon):
     sol = Con_solver(csp).solve_one()
     return csp.extract_plan(sol) if sol else sol
     
-from searchDepthFirst import Depth_first_search
+from searchGeneric import Searcher
 from stripsProblem import delivery_domain
 from cspConsistency import Search_with_AC_from_CSP, Con_solver
 from stripsProblem import Planning_problem, problem0, problem1, problem2 
@@ -93,14 +93,14 @@ from stripsProblem import Planning_problem, problem0, problem1, problem2
 # con_plan(problem0,2) # should it succeed?
 # con_plan(problem0,3) # should it succeed?
 # To use search to enumerate solutions
-#searcher0a = Depth_first_search(Search_with_AC_from_CSP(CSP_from_STRIPS(problem0, 1)))
+#searcher0a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(problem0, 1)))
 #print(searcher0a.search())
 
 ## Problem 1
 # con_plan(problem1,5) # should it succeed?
 # con_plan(problem1,4) # should it succeed?
 ## To use search to enumerate solutions:
-#searcher15a = Depth_first_search(Search_with_AC_from_CSP(CSP_from_STRIPS(problem1, 5)))
+#searcher15a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(problem1, 5)))
 #print(searcher15a.search())
 
 ## Problem 2

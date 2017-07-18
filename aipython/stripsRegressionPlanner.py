@@ -1,5 +1,5 @@
 # stripsRegressionPlanner.py - Regression Planner with STRIPS actions
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -46,9 +46,9 @@ class Regression_STRIPS(Search_problem):
         return all((g in self.initial_state) and (self.initial_state[g]==goal_asst[g])
                    for g in goal_asst)
 
-    def start_nodes(self):
-        """the list of start nodes consists of the top-level goal"""
-        return [self.top_goal]
+    def start_node(self):
+        """the start node is the top-level goal"""
+        return self.top_goal
 
     def neighbors(self,subgoal):
         """returns a list of the arcs for the neighbors of subgoal in this problem"""
@@ -90,11 +90,11 @@ class Regression_STRIPS(Search_problem):
         return self.heur(self.initial_state, subgoal.assignment)
 
 from searchBranchAndBound import DF_branch_and_bound
-from searchAStar import Searcher
+from searchGeneric import AStarSearcher
 from searchMPP import SearcherMPP 
 from stripsProblem import problem0, problem1, problem2 
 
-# Searcher(Regression_STRIPS(problem0)).search()  #A*
-# SearcherMPP(Regression_STRIPS(problem0)).search()   #A* with MPP
-# DF_branch_and_bound(Regression_STRIPS(problem0),10).search() #B&B
+# AStarSearcher(Regression_STRIPS(problem1)).search()  #A*
+# SearcherMPP(Regression_STRIPS(problem1)).search()   #A* with MPP
+# DF_branch_and_bound(Regression_STRIPS(problem1),10).search() #B&B
 

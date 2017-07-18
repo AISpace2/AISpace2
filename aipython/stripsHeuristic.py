@@ -1,5 +1,5 @@
 # stripsHeuristic.py - Planner with Heursitic Function
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -45,7 +45,7 @@ def dist(loc1, loc2):
         return 1
 
 #####  Forward Planner #####
-from searchAStar import Searcher
+from searchGeneric import AStarSearcher
 from searchMPP import SearcherMPP
 from stripsForwardPlanner import Forward_STRIPS
 from stripsProblem import problem0, problem1, problem2

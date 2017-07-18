@@ -1,5 +1,5 @@
 # cspSearch.py - Representations of a Search Problem from a CSP.
-# AIFCA Python3 code Version 0.7. Documentation at http://artint.info/code/python/
+# AIFCA Python3 code Version 0.7.1 Documentation at http://aipython.org
 
 # Artificial Intelligence: Foundations of Computational Agents
 # http://artint.info
@@ -28,30 +28,36 @@ class Search_from_CSP(Search_problem):
     def is_goal(self, node):
         return len(node)==len(self.csp.variables)
     
-    def start_nodes(self):
-        return [{}]
+    def start_node(self):
+        return {}
     
-    def neighbor_nodes(self, node):
+    def neighbors(self, node):
         """iterator over the neighboring nodes of node"""
         var = self.variables[len(node)] # the next variable
+        res = []
         for val in self.csp.domains[var]:
             new_env = dict_union(node,{var:val})  #dictionary union
             if self.csp.consistent(new_env):
-                yield new_env
+                res.append(Arc(node,new_env))
+        return res
 
 from cspExamples import csp1,csp2,test
-from searchDepthFirst import Depth_first_search
+from searchGeneric import Searcher
 
 def dfs_solver(csp):
-    """depth-first search"""
-    return Depth_first_search(Search_from_CSP(csp)).search()
+    """depth-first search solver"""
+    path = Searcher(Search_from_CSP(csp)).search()
+    if path is not None:
+        return path.end()
+    else:
+        return None
 
 if __name__ == "__main__":
     test(dfs_solver)
 
 ## Test Solving CSPs with Search:
-searcher1 = Depth_first_search(Search_from_CSP(csp1))
+searcher1 = Searcher(Search_from_CSP(csp1))
 #print(searcher1.search())  # get next solution
-searcher2 = Depth_first_search(Search_from_CSP(csp2))
+searcher2 = Searcher(Search_from_CSP(csp2))
 #print(searcher2.search())  # get next solution
 
