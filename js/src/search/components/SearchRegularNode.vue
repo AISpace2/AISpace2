@@ -1,7 +1,7 @@
 <template>
   <g>
     <ellipse :rx="size.rx" :ry="size.ry" cx="0" cy="0" fill="white" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
-    <text x="0" y="0" text-anchor="middle" alignment-baseline="middle">{{name}}</text>
+    <text ref="text" x="0" y="0" text-anchor="middle" alignment-baseline="middle">{{truncatedName}}</text>
   </g>
 </template>
 
