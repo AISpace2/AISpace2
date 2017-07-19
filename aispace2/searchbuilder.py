@@ -17,6 +17,8 @@ class SearchBuilder(DOMWidget):
 
     # True if the visualization should show edge costs.
     show_edge_costs = Bool(True).tag(sync=True)
+    # True if a node's heuristic value should be shown.
+    show_node_heuristics = Bool(False).tag(sync=True)
 
     def __init__(self, csp=None):
         super().__init__()

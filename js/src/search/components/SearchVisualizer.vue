@@ -3,6 +3,7 @@
     <GraphVisualizerBase :graph="graph" :width="width" :height="height">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name" :fill="nodeFillColour(props.node)"
+                          :subtext="showNodeHeuristics ? props.node.h.toFixed(1) : undefined"
                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)">
         </EllipseGraphNode>
@@ -54,6 +55,9 @@ export default class SearchVisualizer extends Vue {
   /** True if edge costs should be shown on the edges. */
   @Prop({ default: true })
   showEdgeCosts: boolean;
+  /** True if node heuristics should be shown on the nodes. */
+  @Prop({ default: true })
+  showNodeHeuristics: boolean;
   /** The width, in pixels, of the visualizer. */
   @Prop({ default: undefined })
   width: number;

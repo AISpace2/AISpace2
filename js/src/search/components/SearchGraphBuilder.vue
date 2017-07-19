@@ -4,6 +4,7 @@
                          @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name"
+                          :subtext="showNodeHeuristics ? props.node.h.toFixed(1) : undefined"
                           :fill="nodeFillColour(props.node)"
                           :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)">
@@ -62,6 +63,9 @@ export default class SearchGraphBuilder extends Vue {
   /** True if edge costs should be shown on the edges. */
   @Prop({ default: true })
   showEdgeCosts: boolean;
+  /** True if node heuristics should be shown on the nodes. */
+  @Prop({ default: true })
+  showNodeHeuristics: boolean;
   /** The width, in pixels, of the graph builder. */
   @Prop({ default: undefined })
   width: number;

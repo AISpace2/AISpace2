@@ -13,7 +13,8 @@ export default class SearchBuilderModel extends widgets.DOMWidgetModel {
       _view_module_version: "0.1.0",
       _view_name: "SearchBuilderModel",
       graph_json: {} as IGraphJSON,
-      show_edge_costs: true
+      show_edge_costs: true,
+      show_node_heuristics: false
     };
   }
 
@@ -35,5 +36,9 @@ export default class SearchBuilderModel extends widgets.DOMWidgetModel {
 
   get showEdgeCosts(): boolean {
     return this.get("show_edge_costs");
+  }
+
+  get showNodeHeuristics(): boolean {
+    return this.get("show_node_heuristics");
   }
 }

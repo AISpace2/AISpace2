@@ -29,7 +29,9 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
       components: { SearchGraphBuilder },
       template: `
         <div id="app">
-          <SearchGraphBuilder :graph="graph" :width="width" :height="height" :showEdgeCosts="showEdgeCosts">
+          <SearchGraphBuilder 
+            :graph="graph" :width="width" :height="height" 
+            :showEdgeCosts="showEdgeCosts" :showNodeHeuristics="showNodeHeuristics">
           </SearchGraphBuilder>
         </div>`,
       data() {
@@ -37,6 +39,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
           graph: that.graph,
           height: 0,
           showEdgeCosts: that.model.showEdgeCosts,
+          showNodeHeuristics: that.model.showNodeHeuristics,
           width: 0,
         };
       },
