@@ -41,6 +41,19 @@ import {Graph, IGraphNode, IGraphEdge} from '../Graph';
  * This component handles rendering nodes and edges, handling drag and hover behaviours,
  * and propogating some events up to the parent. It provides slots to customize
  * how nodes and edges are displayed.
+ * 
+ * For nodes in the slot with name "node", it passes the following down as props:
+ * {
+ *   node: IGraphNode, // The node being rendered
+ *   hover: boolean // True if the node is being hovered over
+ * }
+ * 
+ * For edges in the slot with name "edge", it passes the following down as props:
+ * {
+ *   edge: IGraphEdge, // The edge being rendered,
+ *   hover: boolean, // True if the edge is being hovered over
+ *   x1, y1, x2, y2: number // The center coordinates of the source and target of the edge
+ * }
  */
 @Component({
   components: {
