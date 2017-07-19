@@ -2,8 +2,9 @@
   <div>
     <GraphVisualizerBase :graph="graph" :width="width" :height="height">
       <template slot="node" scope="props">
-        <EllipseGraphNode :text="props.node.name" :fill="nodeFillColour(props.node)"
+        <EllipseGraphNode :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                           :subtext="showNodeHeuristics ? props.node.h.toFixed(1) : undefined"
+                          :fill="nodeFillColour(props.node, props.hover)"
                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)">
         </EllipseGraphNode>
@@ -72,7 +73,11 @@ export default class SearchVisualizer extends Vue {
     * 'click:auto-step': The "autostep" button has been clicked.
     */
 
-  nodeFillColour(node: ISearchGraphNode) {
+  nodeFillColour(node: ISearchGraphNode, hover: boolean) {
+    if (hover) {
+      return "black";
+    }
+
     switch (node.type) {
       case "search:start":
         return "orchid";
@@ -81,6 +86,14 @@ export default class SearchVisualizer extends Vue {
       default:
         return "white";
     }
+  }
+
+  nodeTextColour(node: ISearchGraphNode, hover: boolean) {
+    if (hover) {
+      return "white";
+    }
+
+    return "black";
   }
 
   nodeStroke(node: ISearchGraphNode) {

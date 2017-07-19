@@ -1,8 +1,8 @@
 <template>
   <g>
     <ellipse :rx="size.rx" :ry="size.ry" cx="0" cy="0" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
-    <text ref="text" x="0" :y="subtext != null ? -8 : 0" text-anchor="middle" alignment-baseline="middle">{{truncatedText}}</text>
-    <text v-if="subtext != null" ref="subtext" x="0" y="8" text-anchor="middle" alignment-baseline="middle">{{truncatedSubtext}}</text>
+    <text ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">{{truncatedText}}</text>
+    <text v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">{{truncatedSubtext}}</text>
   </g>
 </template>
 
@@ -29,6 +29,9 @@ export default class EllipseGraphNode extends Vue {
   /** The width of the stroke to draw around the node. */
   @Prop({ default: 1 })
   strokeWidth: number;
+  /** The colour of the (sub)text inside the node. */
+  @Prop({default: 'black'})
+  textColour: string;
 
   /** The final width, in pixels, of the text element containing the (truncated) text. */
   computedTextWidth = 0;
