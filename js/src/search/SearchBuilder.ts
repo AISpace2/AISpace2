@@ -28,7 +28,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
     const App = Vue.extend({
       components: { SearchGraphBuilder },
       template:
-        '<div id="app"><SearchGraphBuilder :graph="graph"></SearchGraphBuilder></div>',
+        `<div id="app"><SearchGraphBuilder :graph="graph"></SearchGraphBuilder></div>`,
       data() {
         return {
           graph: that.graph

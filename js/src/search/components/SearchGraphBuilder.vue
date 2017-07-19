@@ -1,6 +1,7 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" @click:node="updateSelection" @click:edge="updateSelection">
+    <GraphVisualizerBase :graph="graph" :width="width" :height="height"
+                         @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name"
                           :fill="nodeFillColour(props.node)"
@@ -37,60 +38,75 @@
   </div>
 </template>
 
-<script>
-  import GraphVisualizerBase from '../../components/GraphVisualizerBase';
-  import DirectedEdge from '../../components/DirectedEdge';
-  import EllipseGraphNode from '../../components/EllipseGraphNode';
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
-  export default {
-    components: {GraphVisualizerBase, DirectedEdge, EllipseGraphNode},
-    data() {
-      return {
-        selection: null
-      };
-    },
-    methods: {
-      strokeColour: function (selection) {
-        if (this.selection === selection) {
-          return 'blue';
-        }
+import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
+import DirectedEdge from "../../components/DirectedEdge.vue";
+import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
-        return 'black';
-      },
-      nodeStrokeWidth: function(node) {
-        if (this.selection === node) {
-          return 3;
-        }
+import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 
-        return 1;
-      },
-      nodeFillColour: function(node) {
-        switch (node.type) {
-          case "search:start":
-          return "orchid";
-          case "search:goal":
-          return "gold";
-          default:
-          return "white";
-        }
-      },
-      updateSelection: function (selection) {
-        if (this.selection === selection) {
-          this.selection = null;
-        } else {
-          this.selection = selection;
-        }
-      },
-      updateNodeBounds: function(node, bounds) {
-        node.styles.rx = bounds.rx;
-        node.styles.ry = bounds.ry;
-      }
-    },
-    props: {
-      graph: {
-        type: Object,
-        required: true
-      }
+/**
+ * Component to visually construct a search graph.
+ */
+@Component({
+  components: { GraphVisualizerBase, DirectedEdge, EllipseGraphNode }
+})
+export default class SearchGraphBuilder extends Vue {
+  /** The graph being built. */
+  @Prop({ type: Object })
+  graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
+  /** The width, in pixels, of the graph builder. */
+  @Prop({ default: undefined })
+  width: number;
+  /** The height, in pixels, of the graph builder. */
+  @Prop({ default: undefined })
+  height: number;
+
+  /** The current node or edge being selected. */
+  selection: ISearchGraphNode | ISearchGraphEdge | null = null;
+
+  strokeColour(selection: ISearchGraphNode | ISearchGraphEdge) {
+    if (this.selection === selection) {
+      return "blue";
+    }
+
+    return "black";
+  }
+
+  nodeStrokeWidth(node: ISearchGraphNode) {
+    if (this.selection === node) {
+      return 3;
+    }
+
+    return 1;
+  }
+
+  nodeFillColour(node: ISearchGraphNode) {
+    switch (node.type) {
+      case "search:start":
+        return "orchid";
+      case "search:goal":
+        return "gold";
+      default:
+        return "white";
     }
   }
+
+  updateSelection(selection: ISearchGraphNode | ISearchGraphEdge) {
+    if (this.selection === selection) {
+      this.selection = null;
+    } else {
+      this.selection = selection;
+    }
+  }
+
+  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number, ry: number }) {
+    node.styles.rx = bounds.rx;
+    node.styles.ry = bounds.ry;
+  }
+}
 </script>

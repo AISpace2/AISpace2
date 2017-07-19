@@ -9,7 +9,9 @@
     "lib": ["es2017", "dom"],
     "allowJs": true,
     "skipLibCheck": true,
-    "newLine": "LF"
+    "newLine": "LF",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
-  "include": ["src/*"]
+  "include": ["src/**/*"]
 }

@@ -8,51 +8,50 @@
   </g>
 </template>
 
-<script>
-  export default {
-    props: {
-      name: {
-        type: String,
-        required: true
-      },
-      domain: {
-        type: Array,
-        required: true
-      },
-      focus: {
-        type: Boolean,
-        default: false,
-        required: false
-      },
-      hover: {
-        type: Boolean,
-        default: false,
-        required: false,
-      }
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
-    },
-    computed: {
-      domainText: function () {
-        return `{${this.domain.join(',')}}`
-      },
-      ellipseFill: function () {
-        if (this.focus) {
-          return 'pink';
-        }
+/**
+ * A component representing a CSP variable.
+ */
+@Component
+export default class CSPVariableNode extends Vue {
+  /** The name of the variable node. */
+  @Prop() name: string;
+  /** The domain of the variable node. */
+  @Prop({ type: Array })
+  domain: number[] | string[];
+  /** True if the node is being focused (e.g. selected). */
+  @Prop({ default: false })
+  focus: boolean;
+  /** True if the node is being hovered over. */
+  @Prop({ default: false })
+  hover: boolean;
 
-        if (this.hover) {
-          return 'black';
-        }
-
-        return 'white';
-      },
-      textFill: function () {
-        if (this.hover) {
-          return 'white';
-        }
-
-        return 'black';
-      }
-    }
+  get domainText() {
+    return `{${this.domain.join(",")}}`;
   }
+
+  get ellipseFill() {
+    if (this.focus) {
+      return "pink";
+    }
+
+    if (this.hover) {
+      return "black";
+    }
+
+    return "white";
+  }
+
+  get textFill() {
+    if (this.hover) {
+      return "white";
+    }
+
+    return "black";
+  }
+}
 </script>

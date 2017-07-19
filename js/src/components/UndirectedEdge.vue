@@ -5,40 +5,32 @@
   </line>
 </template>
 
-<script>
-  export default {
-    props: {
-      x1: {
-        type: Number,
-        required: true
-      },
-      y1: {
-        type: Number,
-        required: true
-      },
-      x2: {
-        type: Number,
-        required: true
-      },
-      y2: {
-        type: Number,
-        required: true
-      },
-      stroke: {
-        type: String,
-        required: false,
-        default: "black"
-      },
-      strokeWidth: {
-        type: Number,
-        required: false,
-        default: 4
-      },
-      hover: {
-        type: Boolean,
-        required: false,
-        default: false
-      }
-    }
-  }
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+
+/**
+ * An undirected edge between two nodes.
+ */
+@Component
+export default class UndirectedEdge extends Vue {
+  /** The x-coordinate of the source point. */
+  @Prop() x1: number;
+  /** The y-coordinate of the source point. */
+  @Prop() y1: number;
+  /** The x-coordinate of the target point. */
+  @Prop() x2: number;
+  /** The y-coordinate of the target point. */
+  @Prop() y2: number;
+  /** A HTML colour string representing the colour of the edge. */
+  @Prop({ default: "black" })
+  stroke: string;
+  /** The width of the edge, in pixels. */
+  @Prop({ default: 4 })
+  strokeWidth: number;
+  /** True if the edge is being hovered over. */
+  @Prop({ default: false })
+  hover: boolean;
+}
 </script>

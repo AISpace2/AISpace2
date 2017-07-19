@@ -11,21 +11,25 @@
     </span>
 </template>
 
-<script>
-  export default {
-    name: 'toolbar',
-    props: ['mode'],
-    data() {
-      return {
-        picked: 'select'
-      }
-    },
-    watch: {
-      'picked': function () {
-        this.$emit('modechanged', this.picked);
-      }
-    }
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop, Watch } from "vue-property-decorator";
+
+type Mode = "select" | "variable" | "constraint" | "edge";
+
+/**
+ * Toolbar to switch between modes while creating a CSP.
+ */
+@Component
+export default class CSPToolbar extends Vue {
+  picked: Mode = "select";
+
+  @Watch("picked")
+  onPickedChanged() {
+    this.$emit("modechanged", this.picked);
   }
+}
 </script>
 
 <style scoped>

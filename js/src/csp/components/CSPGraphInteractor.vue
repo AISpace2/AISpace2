@@ -26,38 +26,74 @@
   </div>
 </template>
 
-<script>
-  import GraphVisualizerBase from '../../components/GraphVisualizerBase';
-  import CSPConstraintNode from './CSPConstraintNode';
-  import CSPVariableNode from './CSPVariableNode';
-  import UndirectedEdge from '../../components/UndirectedEdge';
-  export default {
-    components: {GraphVisualizerBase, CSPConstraintNode, CSPVariableNode, UndirectedEdge},
-    methods: {
-      edgeClicked: function (edge) {
-        this.$emit('click:edge', edge);
-      },
-      stroke: function (edge) {
-        if (edge.styles != null) {
-          return edge.styles.stroke;
-        }
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
-        return undefined;
-      },
-      strokeWidth: function (edge, isHovering) {
-        if (isHovering) {
-          return 7;
-        }
+import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
+import CSPConstraintNode from "./CSPConstraintNode.vue";
+import CSPVariableNode from "./CSPVariableNode.vue";
+import UndirectedEdge from "../../components/UndirectedEdge.vue";
 
-        if (edge.styles && edge.styles.strokeWidth) {
-          return edge.styles.strokeWidth;
-        }
+import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
 
-        return 4;
-      }
-    },
-    props: ['graph', 'output', 'width', 'height']
+/**
+ * Used to draw a CSP graph that can show the visualization of code.
+ */
+@Component({
+  components: {
+    GraphVisualizerBase,
+    CSPConstraintNode,
+    CSPVariableNode,
+    UndirectedEdge
   }
+})
+export default class CSPGraphInteractor extends Vue {
+  /** The graph being displayed. */
+  @Prop({ type: Object })
+  graph: Graph<ICSPGraphNode>;
+  /** Text describing what is currently happening. */
+  @Prop() output: string;
+  /** The width, in pixels, of the interactor. */
+  @Prop({ default: undefined })
+  width: number;
+  /** The height, in pixels, of the interactor. */
+  @Prop({ default: undefined })
+  height: number;
+
+  /** Events Emitted */
+  /**
+    * 'click:edge': An edge has been clicked. The first argument is the edge.
+    * 'click:fine-step': The "fine step" button has been clicked.
+    * 'click:step': The "step" button has been clicked.
+    * 'click:auto-step': The "autostep" button has been clicked.
+    */
+
+  edgeClicked(edge: IGraphEdge) {
+    this.$emit("click:edge", edge);
+  }
+
+  stroke(edge: IGraphEdge) {
+    if (edge.styles != null) {
+      return edge.styles.stroke;
+    }
+
+    return undefined;
+  }
+
+  strokeWidth(edge: IGraphEdge, isHovering: boolean) {
+    if (isHovering) {
+      return 7;
+    }
+
+    if (edge.styles && edge.styles.strokeWidth) {
+      return edge.styles.strokeWidth;
+    }
+
+    return 4;
+  }
+}
 </script>
 
 <style scoped>

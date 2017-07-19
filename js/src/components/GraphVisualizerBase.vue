@@ -25,101 +25,124 @@
   </div>
 </template>
 
-<script>
-  import GraphNodeContainer from './GraphNodeContainer';
-  import EdgeContainer from './EdgeContainer';
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
-  export default {
-    components: {
-      GraphNodeContainer,
-      EdgeContainer
-    },
-    computed: {
-      nodes() {
-        let i = this.graph.nodes.indexOf(this.dragTarget);
-        if (i !== -1) {
-          // Move element at index i to the back of the array
-          this.graph.nodes.push(this.graph.nodes.splice(i, 1)[0]);
-        }
+import GraphNodeContainer from "./GraphNodeContainer.vue";
+import EdgeContainer from "./EdgeContainer.vue";
 
-        return this.graph.nodes;
-      }
-    },
-    props: {
-      graph: {
-        type: Object,
-        required: true,
-      },
-      width: {
-        type: Number,
-        default: 600,
-      },
-      height: {
-        type: Number,
-        default: 480
-      }
-    },
-    data() {
-      return {
-        dragTarget: null,
-        edgeHover: null,
-        nodeHover: null,
-        prevPageX: 0,
-        prevPageY: 0
-      };
-    },
-    methods: {
-      dragStart: function (node, e) {
-        this.dragTarget = node;
-      },
+import {Graph, IGraphNode, IGraphEdge} from '../Graph';
 
-      dragSVG: function (e) {
-        if (this.dragTarget) {
-          var svgBounds = this.$refs.mySVG.getBoundingClientRect();
+/**
+ * Base class for all graph visualizers.
+ *
+ * This component handles rendering nodes and edges, handling drag and hover behaviours,
+ * and propogating some events up to the parent. It provides slots to customize
+ * how nodes and edges are displayed.
+ */
+@Component({
+  components: {
+    GraphNodeContainer,
+    EdgeContainer,
+  }
+})
+export default class GraphVisualizeBase extends Vue {
+  /** The graph to render. */
+  @Prop({type: Object}) graph: Graph;
+  /** The width of the graph, in pixels */
+  @Prop({default: 600}) width: number;
+  /** The height of the graph, in pixels. */
+  @Prop({default: 480}) height: number;
 
-          // Everything below can be replaced with:
-          // this.dragTarget.x += e.movementX;
-          // this.dragTarget.y += e.movementY;
-          // if we don't want to support IE11.
-          this.dragTarget.x += (this.prevPageX ? e.pageX - this.prevPageX : 0);
-          this.dragTarget.y += (this.prevPageY ? e.pageY - this.prevPageY : 0);
+  /** The node or edge currently being dragged. */
+  dragTarget: IGraphNode|IGraphEdge|null = null;
+  /** The edge being hovered over. */
+  edgeHover: IGraphEdge|null = null;
+  /** The node being hovered over. */
+  nodeHover: IGraphNode|null = null;
+  /** Tracks the pageX of the previous MouseEvent. Used to compute the delta mouse position. */
+  prevPageX = 0;
+  /** Tracks the pageY of the previous MouseEvent. Used to compute the delta mouse position. */
+  prevPageY = 0;
 
-          this.prevPageX = e.pageX;
-          this.prevPageY = e.pageY;
-        }
-      },
-
-      dragEnd: function () {
-        this.dragTarget = null;
-        this.prevPageX = 0;
-        this.prevPageY = 0;
-      },
-
-      edgeMouseOver: function (edge) {
-        this.edgeHover = edge;
-      },
-
-      edgeMouseOut: function (edge) {
-        this.edgeHover = null;
-      },
-
-      nodeMouseOver: function (edge) {
-        this.nodeHover = edge;
-      },
-
-      nodeMouseOut: function (edge) {
-        this.nodeHover = null;
-      },
-
-      onDblClick: function (e) {
-        var svgBounds = this.$refs.mySVG.getBoundingClientRect();
-        var x = e.pageX - svgBounds.left;
-        var y = e.pageY - svgBounds.top;
-        this.$emit('dblclick', x, y, e);
-      }
-    }
+  $refs: {
+    /** The SVG element that the graph is drawn in. */
+    mySVG: SVGElement;
   }
 
+  /** Emitted Events */
+  /**
+   * 'dblclick': The user has double-clicked on the graph. Arguments passed: x, y, MouseEvent
+   * 'delete': The user has pressed 'Delete' or 'Backspace' while the graph is focused.
+   * 'click:node': A node has been clicked. Passes the node as the first argument.
+   * 'click:edge': An edge has been clicked. Passes the edge as the first argument.
+   */
+
+    get nodes() {
+      let i = this.graph.nodes.indexOf(this.dragTarget as IGraphNode);
+      if (i !== -1) {
+        // Move element at index i to the back of the array
+        this.graph.nodes.push(this.graph.nodes.splice(i, 1)[0]);
+      }
+
+      return this.graph.nodes;
+    }
+
+    dragStart(node: IGraphNode) {
+      this.dragTarget = node;
+    }
+
+    dragSVG(e: MouseEvent) {
+      if (this.dragTarget) {
+        var svgBounds = this.$refs.mySVG.getBoundingClientRect();
+
+        // Everything below can be replaced with:
+        // this.dragTarget.x += e.movementX;
+        // this.dragTarget.y += e.movementY;
+        // if we don't want to support IE11.
+        this.dragTarget.x += this.prevPageX ? e.pageX - this.prevPageX : 0;
+        this.dragTarget.y += this.prevPageY ? e.pageY - this.prevPageY : 0;
+
+        this.prevPageX = e.pageX;
+        this.prevPageY = e.pageY;
+      }
+    }
+
+    dragEnd() {
+      this.dragTarget = null;
+      this.prevPageX = 0;
+      this.prevPageY = 0;
+    }
+
+    edgeMouseOver(edge: IGraphEdge) {
+      this.edgeHover = edge;
+    }
+
+    edgeMouseOut(edge: IGraphEdge) {
+      this.edgeHover = null;
+    }
+
+    nodeMouseOver(node: IGraphNode) {
+      this.nodeHover = node;
+    }
+
+    nodeMouseOut(node: IGraphNode) {
+      this.nodeHover = null;
+    }
+
+    /**
+     * Handles the user double-clicking on the graph.
+     * The x and y position within the SVG are calculated and passed to the event.
+     */
+    onDblClick(e: MouseEvent) {
+      var svgBounds = this.$refs.mySVG.getBoundingClientRect();
+      var x = e.pageX - svgBounds.left;
+      var y = e.pageY - svgBounds.top;
+      this.$emit("dblclick", x, y, e);
+    }
+  }
 </script>
 
 <style scoped>

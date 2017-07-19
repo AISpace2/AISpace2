@@ -1,28 +1,22 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" @dblclick="createNode"
-                         @click:edge="updateSelection"
-                         @click:node="updateSelection"
-                         @delete="deleteSelection">
+    <GraphVisualizerBase :graph="graph" @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
       <template slot="node" scope="props">
-        <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name"
-                         :domain="props.node.domain"
-                         :focus="props.node === selection">
+        <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name" :domain="props.node.domain" :focus="props.node === selection">
         </CSPVariableNode>
-        <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name"
-                           :constraint="props.node.constraint"
-                           :focus="props.node === selection">
+        <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name" :constraint="props.node.constraint" :focus="props.node === selection">
         </CSPConstraintNode>
       </template>
       <template slot="edge" scope="props">
-        <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
-                        :stroke="strokeColour(props.edge)"></UndirectedEdge>
+        <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="strokeColour(props.edge)"></UndirectedEdge>
       </template>
     </GraphVisualizerBase>
 
     <div>
-      <span><b>Mode: </b></span>
-      <CSPToolbar :mode="mode" @modechanged="updateMode"></CSPToolbar>
+      <span>
+        <b>Mode: </b>
+      </span>
+      <CSPToolbar @modechanged="setMode"></CSPToolbar>
       <div v-if="mode == 'variable' || mode == 'constraint' ">
         <span>Double click on the graph to create a new {{mode}}.</span>
       </div>
@@ -35,11 +29,9 @@
     <div>
       <div v-if="selection && selection.type === 'csp:variable'">
         <label>Name</label>
-        <input type="text" :value="selection ? selection.name : null"
-               @input="selection ? selection.name = $event.target.value : null"/>
+        <input type="text" :value="selection ? selection.name : null" @input="selection ? selection.name = $event.target.value : null" />
         <label>Domain</label>
-        <input type="text" :value="selection ? selection.domain : null"
-               @change="selection ? selection.domain = $event.target.value.split(',').map(a => +a) : null"/>
+        <input type="text" :value="selection ? selection.domain : null" @change="selection ? selection.domain = $event.target.value.split(',').map(a => +a) : null" />
       </div>
       <div v-else-if="selection && selection.type === 'csp:constraint'">
         <label>Constraint Type</label>
@@ -55,122 +47,144 @@
 </template>
 
 
-<script>
-  import GraphVisualizerBase from '../../components/GraphVisualizerBase.vue'
-  import CSPConstraintNode from './CSPConstraintNode';
-  import CSPVariableNode from './CSPVariableNode';
-  import UndirectedEdge from '../../components/UndirectedEdge';
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop, Watch } from "vue-property-decorator";
 
-  import CSPToolbar from './CSPToolbar.vue'
-  import * as shortid from "shortid";
+import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
+import CSPConstraintNode from "./CSPConstraintNode.vue";
+import CSPVariableNode from "./CSPVariableNode.vue";
+import UndirectedEdge from "../../components/UndirectedEdge.vue";
+import CSPToolbar from "./CSPToolbar.vue";
 
-  export default {
-    components: {
-      GraphVisualizerBase,
-      CSPToolbar,
-      CSPConstraintNode,
-      CSPVariableNode,
-      UndirectedEdge
-    },
-    data() {
-      return {
-        mode: 'select',
-        selection: null,
-        first: null
-      }
-    },
-    props: ['graph'],
-    watch: {
-      'selection': function () {
-        if (this.mode === 'edge') {
-          if (this.first == null) {
-            this.first = this.selection;
-          } else {
-            this.createEdge();
-          }
-        } else if (this.mode !== 'select') {
-          this.selection = null;
-        }
-      }
-    },
-    methods: {
-      updateMode: function (mode) {
-        this.mode = mode;
-        this.selection = null;
-        this.first = null;
-      },
-      createNode: function (x, y) {
-        if (this.mode === 'variable') {
-          this.graph.nodes.push({
-            name: 'asdf',
-            x, y,
-            type: 'csp:variable',
-            domain: [],
-            id: shortid.generate()
-          })
-        } else if (this.mode === 'constraint') {
-          this.graph.nodes.push({
-            name: 'asdf',
-            x, y,
-            type: 'csp:constraint',
-            constraint: 'gt',
-            id: shortid.generate()
-          })
-        }
-      },
-      createEdge: function () {
-        if (this.mode === 'edge' && this.selection != null && this.first != null) {
-          if (this.first.type === 'csp:variable' && this.selection.type === 'csp:variable') {
-            console.log('Can\'t create an edge between two variables');
-            this.first = null;
-            this.selection = null;
-            return;
-          }
+import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
 
-          this.graph.edges.push({
-            source: this.first,
-            target: this.selection,
-            name: "edge1",
-            id: shortid.generate()
-          });
+type Mode = "select" | "variable" | "constraint" | "edge";
 
-          this.first = null;
-          this.selection = null;
-        }
-      },
+/**
+ * Component to visually construct a CSP graph.
+ */
+@Component({
+  components: {
+    GraphVisualizerBase,
+    CSPToolbar,
+    CSPConstraintNode,
+    CSPVariableNode,
+    UndirectedEdge
+  }
+})
+export default class CSPGraphBuilder extends Vue {
+  /** The graph being built by this builder. */
+  @Prop({ type: Object })
+  graph: Graph<ICSPGraphNode>;
 
-      strokeColour: function (edge) {
-        if (edge === this.selection) {
-          return "pink";
-        }
+  /** The mode of the editor. */
+  mode: Mode = "select";
 
-        return "black";
-      },
+  /** The currently selected node or edge. Actions are preformed on the selection. */
+  selection: ICSPGraphNode | IGraphEdge | null = null;
+  /** During edge creation, tracks the source node of the edge to be formed. */
+  first: ICSPGraphNode | null = null;
 
-      updateSelection: function (selection) {
-        if (this.selection === selection) {
-          this.selection = null;
-        } else {
-          this.selection = selection;
-        }
-      },
+  /** Switches to a new mode. */
+  setMode(mode: Mode) {
+    this.mode = mode;
+    this.selection = null;
+    this.first = null;
+  }
 
-      deleteSelection: function () {
-        if (this.selection) {
-          if (this.selection.type === "edge") {
-            this.graph.removeEdge(this.selection);
-          } else {
-            this.graph.removeNode(this.selection);
-          }
-          this.selection = null;
-        }
-      },
+  /** Adds a node to the graph at position (x, y). */
+  createNode(x: number, y: number) {
+    if (this.mode === "variable") {
+      this.graph.addNode({
+        name: "asdf",
+        x,
+        y,
+        type: "csp:variable",
+        domain: []
+      });
+    } else if (this.mode === "constraint") {
+      this.graph.addNode({
+        name: "asdf",
+        x,
+        y,
+        type: "csp:constraint",
+        constraint: "gt"
+      });
     }
   }
+
+  /** Adds a new edge to the graph. */
+  createEdge() {
+    if (this.mode === "edge" && this.selection != null && this.first != null) {
+      if (
+        this.first.type === "csp:variable" &&
+        this.selection.type === "csp:variable"
+      ) {
+        console.log("Can't create an edge between two variables");
+        this.first = null;
+        this.selection = null;
+        return;
+      }
+
+      this.graph.addEdge({
+        source: this.first,
+        target: this.selection,
+        name: "edge1"
+      });
+
+      this.first = null;
+      this.selection = null;
+    }
+  }
+
+  strokeColour(edge: IGraphEdge) {
+    if (edge === this.selection) {
+      return "pink";
+    }
+
+    return "black";
+  }
+
+  /** Updates the user selection. If the selection was previously selected, unselects it. */
+  updateSelection(selection: ICSPGraphNode | IGraphEdge) {
+    if (this.selection === selection) {
+      this.selection = null;
+    } else {
+      this.selection = selection;
+    }
+  }
+
+  /** Remove the current selection from the graph. */
+  deleteSelection() {
+    if (this.selection) {
+      if (this.selection.type === "edge") {
+        this.graph.removeEdge(this.selection);
+      } else {
+        this.graph.removeNode(this.selection);
+      }
+      this.selection = null;
+    }
+  }
+
+  @Watch("selection")
+  onSelectionChanged() {
+    if (this.mode === "edge") {
+      if (this.first == null) {
+        this.first = this.selection as ICSPGraphNode;
+      } else {
+        this.createEdge();
+      }
+    } else if (this.mode !== "select") {
+      this.selection = null;
+    }
+  }
+}
 </script>
 
 <style scoped>
-  text.domain {
-    font-size: 12px;
-  }
+text.domain {
+  font-size: 12px;
+}
 </style>

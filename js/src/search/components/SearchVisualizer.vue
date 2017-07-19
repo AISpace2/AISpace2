@@ -26,70 +26,81 @@
   </div>
 </template>
 
-<script>
-  import GraphVisualizerBase from "../../components/GraphVisualizerBase";
-  import DirectedEdge from "../../components/DirectedEdge";
-  import EllipseGraphNode from '../../components/EllipseGraphNode';
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
-  export default {
-    components: {
-      GraphVisualizerBase,
-      DirectedEdge,
-      EllipseGraphNode
-    },
-    props: {
-      graph: {
-        type: Object,
-        required: true
-      },
-      output: {
-        type: String,
-        required: false,
-        default: ""
-      },
-      showEdgeCosts: {
-        type: Boolean,
-        required: false,
-        default: true
-      },
-      width: {
-        type: Number,
-        default: undefined,
-      },
-      height: {
-        type: Number,
-        default: undefined
-      }
-    },
-    methods: {
-       nodeFillColour: function(node) {
-        switch (node.type) {
-          case "search:start":
-          return "orchid";
-          case "search:goal":
-          return "gold";
-          default:
-          return "white";
-        }
-      },
-      nodeStroke(node) {
-        if (node.styles && node.styles.stroke) {
-          return node.styles.stroke;
-        }
+import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
+import DirectedEdge from "../../components/DirectedEdge.vue";
+import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
-        return "black";
-      },
-      nodeStrokeWidth(node) {
-        if (node.styles && node.styles.strokeWidth) {
-          return node.styles.strokeWidth;
-        }
+import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 
-        return 1;
-      },
-      updateNodeBounds: function(node, bounds) {
-        node.styles.rx = bounds.rx;
-        node.styles.ry = bounds.ry;
-      }
+@Component({
+  components: {
+    GraphVisualizerBase,
+    DirectedEdge,
+    EllipseGraphNode
+  }
+})
+export default class SearchVisualizer extends Vue {
+  /** The graph being visualized. */
+  @Prop({ type: Object })
+  graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
+  /** Text describing what is currently happening. */
+  @Prop({ default: "" })
+  output: string;
+  /** True if edge costs should be shown on the edges. */
+  @Prop({ default: true })
+  showEdgeCosts: boolean;
+  /** The width, in pixels, of the visualizer. */
+  @Prop({ default: undefined })
+  width: number;
+  /** The width, in pixels, of the visualizer. */
+  @Prop({ default: undefined })
+  height: number;
+
+  /** Events Emitted */
+  /**
+    * 'click:fine-step': The "fine step" button has been clicked.
+    * 'click:step': The "step" button has been clicked.
+    * 'click:auto-step': The "autostep" button has been clicked.
+    */
+
+  nodeFillColour(node: ISearchGraphNode) {
+    switch (node.type) {
+      case "search:start":
+        return "orchid";
+      case "search:goal":
+        return "gold";
+      default:
+        return "white";
     }
-  };
+  }
+
+  nodeStroke(node: ISearchGraphNode) {
+    if (node.styles && node.styles.stroke) {
+      return node.styles.stroke;
+    }
+
+    return "black";
+  }
+
+  nodeStrokeWidth(node: ISearchGraphNode) {
+    if (node.styles && node.styles.strokeWidth) {
+      return node.styles.strokeWidth;
+    }
+
+    return 1;
+  }
+
+  /**
+   * Whenever a node reports it has resized, update it's style so that it redraws.
+   */
+  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number, ry: number }) {
+    node.styles.rx = bounds.rx;
+    node.styles.ry = bounds.ry;
+  }
+}
 </script>

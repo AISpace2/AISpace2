@@ -5,48 +5,45 @@
   </g>
 </template>
 
-<script>
-  export default {
-    props: {
-      name: {
-        type: String,
-        required: true
-      },
-      constraint: {
-        type: String,
-        required: true
-      },
-      focus: {
-        type: Boolean,
-        default: false,
-        required: false
-      },
-      hover: {
-        type: Boolean,
-        default: false,
-        required: false,
-      }
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
-    },
-    computed: {
-      rectFill: function () {
-        if (this.focus) {
-          return 'pink';
-        }
+/**
+ * A component representing a CSP constraint.
+ */
+@Component
+export default class CSPConstraintNode extends Vue {
+  /** Text representing the name of the constraint. */
+  @Prop() name: string;
+  /** Text representing the constraint. */
+  @Prop() constraint: string;
+  /** True if the node is being focused (e.g. selected). */
+  @Prop({ default: false })
+  focus: boolean;
+  /** True if the node is being hovered over. */
+  @Prop({ default: false })
+  hover: boolean;
 
-        if (this.hover) {
-          return 'black';
-        }
-
-        return 'white';
-      },
-      textFill: function () {
-        if (this.hover) {
-          return 'white';
-        }
-
-        return 'black';
-      }
+  get rectFill() {
+    if (this.focus) {
+      return "pink";
     }
+
+    if (this.hover) {
+      return "black";
+    }
+
+    return "white";
   }
+
+  get textFill() {
+    if (this.hover) {
+      return "white";
+    }
+
+    return "black";
+  }
+}
 </script>

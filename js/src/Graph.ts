@@ -1,3 +1,5 @@
+import * as shortid from "shortid";
+
 export interface IGraphNode {
   id: string;
   name: string;
@@ -136,6 +138,28 @@ export class Graph<
       edges,
       nodes
     };
+  }
+
+  /** Adds a node to the graph.
+   * @param opts An object containing properties conforming to TNode. Default values are added.
+   */
+  public addNode(opts: {}) {
+    this.nodes.push({
+      id: shortid.generate(),
+      styles: {},
+      ...opts
+    } as TNode);
+  }
+
+  /** Adds an edge to the graph.
+   * @param opts An object containing properties conforming to TEdge. Default values are added.
+   */
+  public addEdge(opts: {}) {
+    this.edges.push({
+      id: shortid.generate(),
+      styles: {},
+      ...opts
+    } as TEdge);
   }
 
   /**

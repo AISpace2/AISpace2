@@ -9,50 +9,70 @@
   </g>
 </template>
 
-<script>
-  export default {
-    props: ['x', 'y'],
-    computed: {
-      transform: function () {
-        return `translate(${this.x}, ${this.y})`;
-      },
-    },
-    data () {
-      return {
-        startDrag: false,
-        startPos: [],
-        moved: false
-      }
-    },
-    methods: {
-      mousedown: function (e) {
-        this.startDrag = true;
-        this.moved = false;
-      },
-      mousemove: function (e) {
-        if (this.startDrag && !this.moved) {
-          this.moved = true;
-          this.$emit('dragstart')
-        }
-      },
-      mouseup: function (e) {
-        // Warning: this method is not guaranteed to be called!
-        // For example, if you click on a node, then tab out, mouseup is not called here.
-        // For the parent component, you should use the mouseleave DOM event to determine this case,
-        // and call the same thing as when you receive the dragend event.
-        if (this.startDrag) {
-          if (!this.moved) {
-            this.$emit("click", e);
-          } else {
-            this.$emit("dragend");
-          }
-        }
+<script lang="ts">
+import Vue, { ComponentOptions } from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
-        this.startDrag = false;
-        this.moved = false;
-      }
+/**
+ * A container for nodes with a slot where the actual node is drawn.
+ * This container places the node in the correct place and handles mouse events.
+ */
+@Component
+export default class GraphNodeContainer extends Vue {
+  /** The x-coordinate, in pixels, where the node is drawn. */
+  @Prop() x: number;
+  /** The y-coordinate, in pixels, where the node is drawn.*/
+  @Prop() y: number;
+
+  /** True if the user is holding mouse down. */
+  mouseDown = false;
+  /** True if the mouse has moved since the user has held mouse down. */
+  moved = false;
+
+  /** Events Emitted */
+  /**
+   * 'dragstart': The mouse is down over the node and has moved since.
+   * 'dragend': The mouse has been up since the drag started.
+   * 'click': The user has clicked on the node. Receives MouseEvent as the first argument.
+   * 'mouseover': The mouse is over the node. Receives MouseEvent as the first argument.
+   * 'mouseout': The mouse has left the node. Receives MouseEvent as the first argument.
+   */
+
+  /** Returns the translation to move this node to the right position. */
+  get transform() {
+    return `translate(${this.x}, ${this.y})`;
+  }
+
+  mousedown(e: MouseEvent) {
+    this.mouseDown = true;
+    this.moved = false;
+  }
+
+  mousemove(e: MouseEvent) {
+    if (this.mouseDown && !this.moved) {
+      this.moved = true;
+      this.$emit("dragstart");
     }
   }
+
+  mouseup(e: MouseEvent) {
+    // Warning: this method is not guaranteed to be called!
+    // For example, if you click on a node, then tab out, mouseup is not called here.
+    // For the parent component, you should use the mouseleave DOM event to determine this case,
+    // and call the same thing as when you receive the dragend event.
+    if (this.mouseDown) {
+      if (!this.moved) {
+        this.$emit("click", e);
+      } else {
+        this.$emit("dragend");
+      }
+    }
+
+    this.mouseDown = false;
+    this.moved = false;
+  }
+}
 </script>
 
 <style scoped>
