@@ -15,7 +15,7 @@
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
                       :stroke="strokeColour(props.edge)"
                       :strokeWidth="props.edge.styles.strokeWidth"
-                      :text="props.edge.cost">
+                      :text="showEdgeCosts ? props.edge.cost : undefined">
         </DirectedEdge>
       </template>
     </GraphVisualizerBase>
@@ -59,6 +59,9 @@ export default class SearchGraphBuilder extends Vue {
   /** The graph being built. */
   @Prop({ type: Object })
   graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
+  /** True if edge costs should be shown on the edges. */
+  @Prop({ default: true })
+  showEdgeCosts: boolean;
   /** The width, in pixels, of the graph builder. */
   @Prop({ default: undefined })
   width: number;

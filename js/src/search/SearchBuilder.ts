@@ -29,14 +29,15 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
       components: { SearchGraphBuilder },
       template: `
         <div id="app">
-          <SearchGraphBuilder :graph="graph" :width="width" :height="height">
+          <SearchGraphBuilder :graph="graph" :width="width" :height="height" :showEdgeCosts="showEdgeCosts">
           </SearchGraphBuilder>
         </div>`,
       data() {
         return {
           graph: that.graph,
           height: 0,
-          width: 0
+          showEdgeCosts: that.model.showEdgeCosts,
+          width: 0,
         };
       },
       watch: {

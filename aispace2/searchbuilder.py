@@ -1,5 +1,5 @@
 from ipywidgets import DOMWidget, register
-from traitlets import Dict, Unicode
+from traitlets import Dict, Unicode, Bool
 
 from .searchjsonbridge import json_to_search_problem, search_problem_to_json
 
@@ -14,6 +14,9 @@ class SearchBuilder(DOMWidget):
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
     graph_json = Dict().tag(sync=True)
+
+    # True if the visualization should show edge costs.
+    show_edge_costs = Bool(True).tag(sync=True)
 
     def __init__(self, csp=None):
         super().__init__()

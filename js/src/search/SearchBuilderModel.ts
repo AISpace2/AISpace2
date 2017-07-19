@@ -12,7 +12,8 @@ export default class SearchBuilderModel extends widgets.DOMWidgetModel {
       _view_module: "aispace2",
       _view_module_version: "0.1.0",
       _view_name: "SearchBuilderModel",
-      graph_json: {} as IGraphJSON
+      graph_json: {} as IGraphJSON,
+      show_edge_costs: true
     };
   }
 
@@ -30,5 +31,9 @@ export default class SearchBuilderModel extends widgets.DOMWidgetModel {
 
   set graphJSON(val) {
     this.set("graph_json", val);
+  }
+
+  get showEdgeCosts(): boolean {
+    return this.get("show_edge_costs");
   }
 }
