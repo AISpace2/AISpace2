@@ -144,22 +144,26 @@ export class Graph<
    * @param opts An object containing properties conforming to TNode. Default values are added.
    */
   public addNode(opts: {}) {
-    this.nodes.push({
-      id: shortid.generate(),
-      styles: {},
-      ...opts
-    } as TNode);
+    this.nodes.push(
+      {
+        id: shortid.generate(),
+        styles: {},
+        ...opts
+      } as TNode
+    );
   }
 
   /** Adds an edge to the graph.
    * @param opts An object containing properties conforming to TEdge. Default values are added.
    */
   public addEdge(opts: {}) {
-    this.edges.push({
-      id: shortid.generate(),
-      styles: {},
-      ...opts
-    } as TEdge);
+    this.edges.push(
+      {
+        id: shortid.generate(),
+        styles: {},
+        ...opts
+      } as TEdge
+    );
   }
 
   /**

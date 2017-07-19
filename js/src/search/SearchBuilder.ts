@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import { timeout } from "d3";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import { IEvent } from "../Events";
@@ -27,11 +27,16 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
     const that = this;
     const App = Vue.extend({
       components: { SearchGraphBuilder },
-      template:
-        `<div id="app"><SearchGraphBuilder :graph="graph"></SearchGraphBuilder></div>`,
+      template: `
+        <div id="app">
+          <SearchGraphBuilder :graph="graph" :width="width" :height="height">
+          </SearchGraphBuilder>
+        </div>`,
       data() {
         return {
-          graph: that.graph
+          graph: that.graph,
+          height: 0,
+          width: 0
         };
       },
       watch: {
@@ -46,8 +51,13 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
       }
     });
 
-    d3.timeout(() => {
+    timeout(() => {
+      const width = this.$el.width();
+      const height = width / 1.6;
+      d3ForceLayoutEngine.setup(this.graph, { width, height });
       const app = new App().$mount();
+      (app.$data as any).width = width;
+      (app.$data as any).height = height;
       this.el.appendChild(app.$el);
     });
 

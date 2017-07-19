@@ -1,6 +1,7 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
+    <GraphVisualizerBase :graph="graph" :width="width" :height="height"
+      @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
       <template slot="node" scope="props">
         <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name" :domain="props.node.domain" :focus="props.node === selection">
         </CSPVariableNode>
@@ -78,6 +79,12 @@ export default class CSPGraphBuilder extends Vue {
   /** The graph being built by this builder. */
   @Prop({ type: Object })
   graph: Graph<ICSPGraphNode>;
+  /** The width, in pixels, of the graph builder. */
+  @Prop({ default: undefined })
+  width: number;
+  /** The height, in pixels, of the graph builder. */
+  @Prop({ default: undefined })
+  height: number;
 
   /** The mode of the editor. */
   mode: Mode = "select";

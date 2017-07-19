@@ -1,3 +1,4 @@
+import { timeout } from "d3";
 import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import { IEvent } from "../Events";
@@ -31,8 +32,11 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
     const that = this;
     const App = Vue.extend({
       components: { CSPGraphBuilder },
-      template:
-        '<div id="app"><CSPGraphBuilder :graph="graph"></CSPGraphBuilder></div>',
+      template: `
+        <div id="app">
+          <CSPGraphBuilder :graph="graph" :width="width" :height="height">
+          </CSPGraphBuilder>
+        </div>`,
       watch: {
         graph: {
           handler(val, oldVal) {
@@ -45,13 +49,22 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
       },
       data() {
         return {
-          graph: that.graph
+          graph: that.graph,
+          height: 0,
+          width: 0
         };
       }
     });
 
-    const app = new App().$mount();
-    this.el.appendChild(app.$el);
+    timeout(() => {
+      const width = this.$el.width();
+      const height = width / 1.6;
+      d3ForceLayoutEngine.setup(this.graph, { width, height });
+      const app = new App().$mount();
+      (app.$data as any).width = width;
+      (app.$data as any).height = height;
+      this.el.appendChild(app.$el);
+    });
 
     return this;
   }
