@@ -1,8 +1,8 @@
 <template>
   <g>
     <ellipse :rx="size.rx" :ry="size.ry" cx="0" cy="0" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
-    <text ref="text" x="0" :y="subtext != null ? 8 : 0" text-anchor="middle" alignment-baseline="middle">{{truncatedText}}</text>
-    <text v-if="subtext" ref="subtext" x="0" y="-8" text-anchor="middle" alignment-baseline="middle">{{truncatedSubtext}}</text>
+    <text ref="text" x="0" :y="subtext != null ? -8 : 0" text-anchor="middle" alignment-baseline="middle">{{truncatedText}}</text>
+    <text v-if="subtext != null" ref="subtext" x="0" y="8" text-anchor="middle" alignment-baseline="middle">{{truncatedSubtext}}</text>
   </g>
 </template>
 
