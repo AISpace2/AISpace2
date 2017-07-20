@@ -37,10 +37,10 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
       data() {
         return {
           graph: that.graph,
-          height: 0,
           showEdgeCosts: that.model.showEdgeCosts,
           showNodeHeuristics: that.model.showNodeHeuristics,
           width: 0,
+          height: 0
         };
       },
       watch: {

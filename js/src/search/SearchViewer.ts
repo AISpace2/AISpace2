@@ -47,11 +47,11 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       data() {
         return {
           graph: that.graph,
-          height: 0,
-          output: null,
           showEdgeCosts: that.model.showEdgeCosts,
           showNodeHeuristics: that.model.showNodeHeuristics,
-          width: 0
+          output: null,
+          width: 0,
+          height: 0
         };
       },
       methods: {

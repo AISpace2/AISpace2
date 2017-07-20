@@ -50,8 +50,8 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
       data() {
         return {
           graph: that.graph,
-          height: 0,
-          width: 0
+          width: 0,
+          height: 0
         };
       }
     });

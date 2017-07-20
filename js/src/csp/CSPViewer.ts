@@ -61,17 +61,20 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       data() {
         return {
           graph: that.graph,
-          height: 0,
           output: "",
-          width: 0
+          width: 0,
+          height: 0
         };
       },
       methods: {
-        autostep() {
-          that.send({ event: StepEvents.AUTO_STEP_CLICK });
-        },
         finestep() {
           that.send({ event: StepEvents.FINE_STEP_CLICK });
+        },
+        step() {
+          that.send({ event: StepEvents.STEP_CLICK });
+        },
+        autostep() {
+          that.send({ event: StepEvents.AUTO_STEP_CLICK });
         },
         edge(l: any) {
           that.send({
@@ -79,9 +82,6 @@ export default class CSPViewer extends widgets.DOMWidgetView {
             event: CSPViewer.ARC_CLICK,
             varId: l.source.name
           });
-        },
-        step() {
-          that.send({ event: StepEvents.STEP_CLICK });
         }
       },
       template: `
