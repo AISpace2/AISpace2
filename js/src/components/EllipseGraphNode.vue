@@ -139,7 +139,7 @@ export default class EllipseGraphNode extends Vue {
 
         if (
           el === "subtext" &&
-          this.computedTextWidth === this.computedTotalWidth
+          this.computedSubtextWidth === this.computedTotalWidth
         ) {
           this.truncatedSubtext = `${this.subtext.substr(0, truncateTo)}…`;
         }
