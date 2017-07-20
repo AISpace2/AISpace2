@@ -74,6 +74,7 @@ def json_to_search_problem(json):
     node_map = {}
     start = None
     goals = set()
+    hmap = {}
 
     for node in json['nodes']:
         nodes.add(node['name'])
@@ -83,6 +84,9 @@ def json_to_search_problem(json):
             start = node['name']
         elif node['type'] == 'search:goal':
             goals.add(node['name'])
+        
+        if node['h'] != 0:
+            hmap[node['name']] = node['h']
 
     arcs = []
     for edge in json['edges']:
@@ -93,7 +97,8 @@ def json_to_search_problem(json):
                   node_map[edge['target']]['name'], cost)
         arcs.append(arc)
 
-    return Search_problem_from_explicit_graph(nodes, arcs, start, goals)
+    return Search_problem_from_explicit_graph(nodes, arcs, start, goals, hmap)
+
 
 def search_problem_to_python_code(problem):
     """Converts a JSON representation of a search problem into Python code.
@@ -115,11 +120,13 @@ def search_problem_to_python_code(problem):
     nodes = problem.nodes
     arcs = []
     for arc in problem.arcs:
-        arcs.append("Arc({}, {}, cost={})".format(arc.from_node.__repr__(), arc.to_node.__repr__(), arc.cost))
-    
+        arcs.append("Arc({}, {}, cost={})".format(
+            arc.from_node.__repr__(), arc.to_node.__repr__(), arc.cost))
+
     start = problem.start
     goals = problem.goals
-    
+    hmap = problem.hmap
+
     template = """from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
-search_problem = Search_problem_from_explicit_graph($nodes, [$arcs], $start, $goals)"""
-    return Template(template).substitute(nodes=nodes, arcs=', '.join(arcs), start=start.__repr__(), goals=goals)
+search_problem = Search_problem_from_explicit_graph($nodes, [$arcs], $start, $goals, $hmap)"""
+    return Template(template).substitute(nodes=nodes, arcs=', '.join(arcs), start=start.__repr__(), goals=goals, hmap=hmap)
