@@ -4,7 +4,7 @@
                          @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name"
-                          :subtext="showNodeHeuristics ? props.node.h.toFixed(1) : undefined"
+                          :subtext="showNodeHeuristics ? Number(props.node.h).toFixed(1) : undefined"
                           :fill="nodeFillColour(props.node)"
                           :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)">
@@ -24,6 +24,8 @@
       <div v-if="selection && selection.type !== 'edge'">
         <label for="node-name">Name</label>
         <input type="text" v-model="selection.name" />
+        <label for="node-h">Heuristic Value</label>
+        <input type="number" step="0.1" min="0" v-model="selection.h" />
         <label for="node-type">Type</label>
         <select id="node-type" v-model="selection.type">
           <option value="search:start">Start</option>
