@@ -1,4 +1,5 @@
 import uuid
+from string import Template
 
 from aipython.searchProblem import Arc, Search_problem_from_explicit_graph
 
@@ -59,6 +60,16 @@ def search_problem_to_json(problem):
 
 
 def json_to_search_problem(json):
+    """Converts a JSON representation of a search problem into an explicit graph.
+
+    Args:
+        json (dict):
+            A dictionary that conforms to the interface IGraphJSON<ISearchGraphNode, IGraphEdgeJSON>
+
+    Returns:
+        (aipython.searchProblem.Search_problem_from_explicit_graph):
+            An explicit search problem represented by the provided JSON.
+    """
     nodes = set()
     node_map = {}
     start = None
@@ -83,3 +94,32 @@ def json_to_search_problem(json):
         arcs.append(arc)
 
     return Search_problem_from_explicit_graph(nodes, arcs, start, goals)
+
+def search_problem_to_python_code(problem):
+    """Converts a JSON representation of a search problem into Python code.
+
+    Example:
+        ::
+            >>> search_problem_to_python_code(csp)
+            'from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
+            search_problem = Search_problem_from_explicit_graph({'a', 'b'}, [Arc('a', 'b', cost=5), 'a', {'b'}])'
+
+    Args:
+        problem (aipython.searchProblem.Search_problem_from_explicit_graph):
+            The search problem to convert into code.
+
+    Returns:
+        (string):
+            A string of Python code that, when executed, reconstructs the search problem given.
+    """
+    nodes = problem.nodes
+    arcs = []
+    for arc in problem.arcs:
+        arcs.append("Arc({}, {}, cost={})".format(arc.from_node.__repr__(), arc.to_node.__repr__(), arc.cost))
+    
+    start = problem.start
+    goals = problem.goals
+    
+    template = """from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
+search_problem = Search_problem_from_explicit_graph($nodes, [$arcs], $start, $goals)"""
+    return Template(template).substitute(nodes=nodes, arcs=', '.join(arcs), start=start.__repr__(), goals=goals)

@@ -18,7 +18,12 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
     super.initialize(opts);
 
     this.graph = Graph.fromJSON(this.model.graphJSON) as Graph;
-    this.listenTo(this.model, "view:msg", (event: IEvent) => {});
+    this.listenTo(this.model, "view:msg", (event: IEvent) => {
+      if (event.action === SearchBuilder.SHOW_PYTHON_CODE) {
+        // Replace cell contents with the code
+        Jupyter.notebook.insert_cell_below().set_text((event as any).code);
+      }
+    });
   }
 
   public render() {
