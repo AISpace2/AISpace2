@@ -4,7 +4,7 @@
                          @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name"
-                          :subtext="showNodeHeuristics ? Number(props.node.h).toFixed(1) : undefined"
+                          :subtext="nodeHText(props.node)"
                           :fill="nodeFillColour(props.node)"
                           :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)">
@@ -103,6 +103,15 @@ export default class SearchGraphBuilder extends Vue {
       default:
         return "white";
     }
+  }
+
+  nodeHText(node: ISearchGraphNode) {
+    if (!this.showNodeHeuristics) {
+      return undefined;
+    }
+
+    // Ensures proper rounding for e.g. 8.45 -> 8.5, which fails just using toFixed (8.4)
+    return (Math.round(10 * node.h) / 10).toFixed(1);
   }
 
   updateSelection(selection: ISearchGraphNode | ISearchGraphEdge) {
