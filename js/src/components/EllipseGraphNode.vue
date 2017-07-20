@@ -81,7 +81,7 @@ export default class EllipseGraphNode extends Vue {
   get size() {
     // Arbitrarily chosen magic constants to make things look good
     this.rx = Math.min(Math.max(this.computedTotalWidth, 25), 50);
-    this.ry = Math.min(Math.max(this.computedTotalHeight - 8, 20), 35);
+    this.ry = Math.min(Math.max(this.computedTotalHeight - 12, 20), 35);
     const bounds = { rx: this.rx, ry: this.ry };
     this.$emit("updateBounds", bounds);
     return bounds;
