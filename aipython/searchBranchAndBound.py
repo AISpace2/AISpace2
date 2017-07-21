@@ -41,7 +41,9 @@ class DF_branch_and_bound(Searcher):
                     self.best_path = path
                     self.bound = path.cost
                     self.display(2,"New best path:",path," cost:",path.cost)
-                for arc in reversed(list(self.problem.neighbors(path.end()))):
+                neighs = self.problem.neighbors(path.end())
+                self.display(3,"Neighbors are", neighs)
+                for arc in reversed(list(neighs)):
                     self.add_to_frontier(Path(path, arc))
         self.display(1,"Number of paths expanded:",self.num_expanded)
         self.solution = self.best_path

@@ -9,7 +9,7 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 class Displayable(object):
-    max_display_level = 1   # can be overridden in subclasses
+    max_display_level = 4   # can be overridden in subclasses
 
     def display(self,level,*args,**nargs):
         """print the arguments if level is less than or equal to the

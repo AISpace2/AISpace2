@@ -8,9 +8,9 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from cspProblem import CSP, Constraint
-from searchProblem import Arc, Search_problem
-from utilities import dict_union
+from aipython.cspProblem import CSP, Constraint
+from aipython.searchProblem import Arc, Search_problem
+from aipython.utilities import dict_union
 
 class Search_from_CSP(Search_problem):
     """A search problem directly from the CSP.
@@ -41,8 +41,8 @@ class Search_from_CSP(Search_problem):
                 res.append(Arc(node,new_env))
         return res
 
-from cspExamples import csp1,csp2,test
-from searchGeneric import Searcher
+from aipython.cspExamples import csp1,csp2,test
+from aipython.searchGeneric import Searcher
 
 def dfs_solver(csp):
     """depth-first search solver"""

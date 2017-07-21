@@ -22,11 +22,11 @@ class Searcher(Displayable):
         self.initialize_frontier()
         self.num_expanded = 0
         self.add_to_frontier(Path(problem.start_node()))
-        # self.display(3,"Frontier:",self.frontier)
         super().__init__()
 
     def initialize_frontier(self):
         self.frontier = []
+        
     def empty_frontier(self):
         return self.frontier == []
         
@@ -51,7 +51,7 @@ class Searcher(Displayable):
             else:
                 neighs = self.problem.neighbors(path.end())
                 self.display(3,"Neighbors are", neighs)
-                for arc in neighs:
+                for arc in reversed(neighs):
                     self.add_to_frontier(Path(path,arc))
                 self.display(3,"Frontier:",self.frontier)
         self.display(1,"No (more) solutions. Total of",
@@ -110,7 +110,7 @@ class AStarSearcher(Searcher):
         super().__init__(problem)
 
     def initialize_frontier(self):
-        self.frontier = Frontier()
+        self.frontier = FrontierPQ()
     def empty_frontier(self):
         return self.frontier.empty()
 
