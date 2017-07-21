@@ -15,9 +15,13 @@
     ```
 Depending on your setup, you may have to use `pip3` instead of `pip` to ensure you are installing the extension to Python 3 instead of Python 2.
 
-4. Choose a notebook to download from below. For a full list, see the [repository](https://github.com/AISpace2/AISpace2/tree/master/notebooks). You should download these notebooks by right-clicking a link and choosing _Save As_.
-- [Search](https://rawgit.com/AISpace2/AISpace2/master/notebooks/search/search.ipynb)
-- [Constraint Satisfaction Problem](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/csp.ipynb)
+4. Choose a notebook to download from below. For a full list, see the [repository](https://github.com/AISpace2/AISpace2/tree/master/notebooks). 
+
+- [Search: A*, Multiple Path Pruning, Branch and Bound](https://rawgit.com/AISpace2/AISpace2/master/notebooks/search/search.ipynb)
+- [Constraint Satisfcation Problems (CSPs) using Search](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/solving_csp_with_search.ipynb)
+- [Constraint Satisfaction Problems (CSPs) using Arc Consistency](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/csp.ipynb)
+
+    You should download these notebooks by right-clicking a link and choosing _Save As_.
 
 5. Open Jupyter and upload the notebook to Jupyter. In the notebook dashboard, select _Upload_ and choose the file you just downloaded.
 
