@@ -1,16 +1,20 @@
+import json
 from functools import partial
 from threading import Thread
 
+from aipython.searchProblem import (Arc, Search_problem_from_explicit_graph,
+                                    problem1)
+from aispace2.searchjsonbridge import (implicit_to_explicit_search_problem,
+                                       search_problem_to_json)
 from ipywidgets import register
-from traitlets import Dict, Unicode, Bool
-
-from aispace2.searchjsonbridge import search_problem_to_json
+from traitlets import Bool, Dict, Unicode
 
 from .stepdomwidget import StepDOMWidget
 
 
 @register('aispace2.SearchViewer')
 class Displayable(StepDOMWidget):
+    """A Jupyter widget for visualizing search problems."""
     _view_name = Unicode('SearchViewer').tag(sync=True)
     _model_name = Unicode('SearchViewerModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)
@@ -18,44 +22,97 @@ class Displayable(StepDOMWidget):
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
     graph_json = Dict().tag(sync=True)
-    problem = None
-    search = None
 
     # True if the visualization should show edge costs.
     show_edge_costs = Bool(True).tag(sync=True)
+
     # True if a node's heuristic value should be shown.
     show_node_heuristics = Bool(False).tag(sync=True)
+
+    # Controls the layout engine used. Either "force" for force layout, or "tree".
+    layout_method = Unicode('force').tag(sync=True)
 
     def __init__(self):
         super().__init__()
 
+        # The explicit representation of the problem.
+        # If the problem was already explicit, the problem itself; otherwise, it is converted.
+        self._explicit_graph_from_problem = None
+
+        # Arcs in tuple form (str(from_node), str(to_node)) that have been added to the explicit graph.
+        # Only used if the problem is implicit. Useful when search() is ran again;
+        # the explicit graph already contains neighbours that are about to be rediscovered
+        self._implicit_neighbours_added = set()
+
+        if not isinstance(self.problem, Search_problem_from_explicit_graph):
+            self._explicit_graph_from_problem = implicit_to_explicit_search_problem(
+                self.problem)
+            self._is_problem_explicit = False
+        else:
+            self._explicit_graph_from_problem = self.problem
+            self._is_problem_explicit = True
+
         (self.graph_json, self.node_map,
-         self.edge_map) = search_problem_to_json(self.problem)
+         self.edge_map) = search_problem_to_json(self._explicit_graph_from_problem)
 
     def display(self, level, *args, **kwargs):
-        if args[0] == 'Expanding: ':
-            self._send_clear_action()
+        if args[0] == 'Expanding:':
             path = args[1]
+            self._send_clear_action()
 
             # Highlight the path and end node red, and nodes along the path gray
             if path.arc:
-                path_arcs = []
+                nodes_along_path = []
+                arcs_of_path = []
                 current = path
 
                 while current.arc is not None:
-                    path_arcs.append(current.arc)
-                    self._send_highlight_node_action(
-                        current.arc.to_node, 'gray')
+                    arcs_of_path.append(current.arc)
+                    nodes_along_path.append(current.arc.to_node)
                     current = current.initial
 
-                self._send_highlight_path_action(path_arcs, 'red')
-                self._send_highlight_node_action(path.arc.to_node, 'red')
+                self._send_highlight_nodes_action(nodes_along_path, 'gray')
+                self._send_highlight_path_action(arcs_of_path, 'red')
+                self._send_highlight_nodes_action(path.arc.to_node, 'red')
 
         elif args[0] == 'Neighbors are':
             neighbours = args[1]
+            if not neighbours:
+                return
+
+            if not self._is_problem_explicit:
+                # If the problem is implicit, we may need to add newly discovered neighbours
+                has_graph_changed = False
+                for arc in neighbours:
+                    self._explicit_graph_from_problem.nodes.add(
+                        str(arc.to_node))
+
+                    if self.problem.is_goal(arc.to_node):
+                        self._explicit_graph_from_problem.goals.add(
+                            str(arc.to_node))
+
+                    if (str(arc.from_node), str(arc.to_node)) not in self._implicit_neighbours_added:
+                        # Found a new neighbour!
+                        arc = Arc(arc.from_node, arc.to_node)
+                        self._explicit_graph_from_problem.arcs.append(arc)
+                        self._implicit_neighbours_added.add(
+                            (str(arc.from_node), str(arc.to_node)))
+                        has_graph_changed = True
+
+                if has_graph_changed:
+                    # Sync updated explicit representation with the front-end
+                    (self.graph_json, self.node_map,
+                     self.edge_map) = search_problem_to_json(self._explicit_graph_from_problem)
+
+            neighbour_nodes = []
+            arcs_of_path = []
+
             for arc in neighbours:
-                self._send_highlight_path_action(arc, 'blue')
-                self._send_highlight_node_action(arc.to_node, 'blue')
+                neighbour_nodes.append(arc.to_node)
+                arcs_of_path.append(arc)
+
+            self._send_highlight_nodes_action(neighbour_nodes, 'blue')
+            self._send_highlight_path_action(arcs_of_path, 'blue')
 
         super().display(level, *args, **kwargs)
 
@@ -63,16 +120,24 @@ class Displayable(StepDOMWidget):
         """Sends a message to the front-end visualization to clear all styles applied to node/arcs."""
         self.send({'action': 'clear'})
 
-    def _send_highlight_node_action(self, node, colour='black'):
+    def _send_highlight_nodes_action(self, nodes, colour='black'):
         """Sends a message to the front-end visualization to highlight a node.
 
         Args:
-            node (Any): A node in the search problem, typically a string
+            nodes (Any|Any[]): Node(s) in the search problem.
             colour (string|None): A HTML colour string that will be the stroke of the node.
                 Defaults to 'black'/'#000000'.
         """
-        self.send({'action': 'highlightNode',
-                   'nodeId': self.node_map[node], 'colour': colour})
+        # For convenience, allow the user to pass in a single arc
+        if not isinstance(nodes, list):
+            nodes = [nodes]
+
+        nodeIds = []
+        for node in nodes:
+            nodeIds.append(self.node_map[str(node)])
+
+        self.send({'action': 'highlightNodes',
+                   'nodeIds': nodeIds, 'colour': colour})
 
     def _send_highlight_path_action(self, arcs, colour='black'):
         """Sends a message to the front-end visualization to highlight a path.
@@ -89,7 +154,8 @@ class Displayable(StepDOMWidget):
 
         path_edge_ids = []
         for arc in arcs:
-            path_edge_ids.append(self.edge_map[(arc.from_node, arc.to_node)])
+            path_edge_ids.append(
+                self.edge_map[(str(arc.from_node), str(arc.to_node))])
 
         self.send({'action': 'highlightPath',
                    'path': path_edge_ids, 'colour': colour})
@@ -97,6 +163,9 @@ class Displayable(StepDOMWidget):
 
 def visualize(func_bg):
     """Runs a function in a background thread.
+
+    This is meant to be used as a decorator and is required for all functions called directly in Jupyter.
+    Otherwise, `display()` will block the main thread.
 
     Args:
         func_bg (function): The function to run in the background.

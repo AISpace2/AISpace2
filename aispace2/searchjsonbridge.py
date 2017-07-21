@@ -7,7 +7,8 @@ from aipython.searchProblem import Arc, Search_problem_from_explicit_graph
 def search_problem_to_json(problem):
     """Converts a Search_problem into a JSON representation.
 
-    The search problem must be defined explicitly.
+    The search problem must be defined explicitly (i.e. instance of aipython.searchProblem.Search_problem_from_explicit_graph).
+    If you would like to convert an implicitly defined search problem, use `implicit_to_explicit_search_problem()`. 
 
     When using this function with a Dict traitlet for Jupyter widgets,
     this dictionary will automatically be converted into JSON for the client side.
@@ -15,35 +16,35 @@ def search_problem_to_json(problem):
     synchronize the string with a traitlet, then convert it to JSON on the client.
 
     Args:
-        problem (aipython.searchProblem.Search_problem):
+        problem (aipython.searchProblem.Search_problem_from_explicit_graph):
             The search problem instance to convert to a dictionary.
 
     Returns:
         (dict, dict, dict):
             The first dictionary represents the search graph that can be easily converted into JSON.
 
-            The second dictionary represents the node map. This is a mapping from a node to
-            the corresponding ID of the node.
+            The second dictionary represents the node map. This is a mapping from a *string* representing the node
+            to its corresponding ID. The keys are computed as `str(node)`.
 
             The third dictionary is an edge map. The keys are tuple of (from_node, to_node),
-            and the values are the ID of th edge that connects those two nodes.
+            and the values are the ID of the edge that connects those two nodes.
+            Both from_node and to_node are string representation of the nodes, e.g. str(node)
     """
     nodes = []
     edges = []
-    node_map = {n: str(uuid.uuid4()) for n in problem.nodes}
+    node_map = {str(n): str(uuid.uuid4()) for n in problem.nodes}
     edge_map = {}
 
-    for n in problem.nodes:
+    for node in problem.nodes:
         h = 0
-        if n in problem.hmap:
+        if node in problem.hmap:
             h = problem.hmap[n]
 
-        node_to_add = {'name': str(n), 'id': node_map[n], 'h': h}
-        if n == problem.start:
+        node_to_add = {'name': str(node), 'id': node_map[str(node)], 'h': h}
+        if node == problem.start:
             node_to_add['type'] = 'search:start'
-        elif n in problem.goals:
+        elif node in problem.goals:
             node_to_add['type'] = 'search:goal'
-
         else:
             node_to_add['type'] = 'search:regular'
 
@@ -51,12 +52,35 @@ def search_problem_to_json(problem):
 
     for arc in problem.arcs:
         edge_id = str(uuid.uuid4())
-        new_edge = {'id': edge_id, 'source': node_map[arc.from_node],
-                    'target': node_map[arc.to_node], 'cost': arc.cost}
-        edge_map[(arc.from_node, arc.to_node)] = edge_id
+        from_node = str(arc.from_node)
+        to_node = str(arc.to_node)
+
+        new_edge = {'id': edge_id, 'source': node_map[from_node],
+                    'target': node_map[to_node], 'cost': arc.cost}
+        edge_map[(from_node, to_node)] = edge_id
         edges.append(new_edge)
 
     return ({'nodes': nodes, 'edges': edges}, node_map, edge_map)
+
+
+def implicit_to_explicit_search_problem(implicit_problem):
+    """Converts a non-explicit search problem into an explicit one.
+
+    The intention is to take an initial implicit graph, turn it into an explicit graph,
+    then proceed (e.g. by way of listening to `implicit_problem.neighbours()`) to fill in the graph.
+
+    Arguments:
+        implicit_problem (aipython.searchProblem.searchProblem):
+            The implicitly defined search problem to convert.
+
+    Returns:
+        (aipython.searchproblem.Search_problem_from_explicit_graph):
+            The explicit search problem. This only returns an explicit graph with the start node:
+            there are no arcs nor goals. In the future, we could support "unrolling" of the implicit graph
+            in order to create a more defined explicit graph.
+    """
+    start = str(implicit_problem.start_node())
+    return Search_problem_from_explicit_graph(set((start,)), [], start)
 
 
 def json_to_search_problem(json):
@@ -84,7 +108,7 @@ def json_to_search_problem(json):
             start = node['name']
         elif node['type'] == 'search:goal':
             goals.add(node['name'])
-        
+
         if node['h'] != 0:
             hmap[node['name']] = node['h']
 

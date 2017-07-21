@@ -1,5 +1,5 @@
-import * as d3 from "d3-force";
-import { IGraph, IGraphEdge } from "./Graph";
+import * as d3 from "d3";
+import { IGraph, IGraphEdge, IGraphNode } from "./Graph";
 
 /**
  * Layout parameters used for laying out the graph.
@@ -12,7 +12,7 @@ export interface IGraphLayoutParams {
 }
 
 /**
- * Layouts a graph by giving nodes x and y properties.
+ * Lays out a graph by giving nodes x and y properties.
  */
 export interface IGraphLayoutEngine {
   /**
@@ -36,7 +36,6 @@ export interface IGraphLayoutEngine {
   relayout(graph: IGraph, layoutParams: IGraphLayoutParams): void;
 }
 
-const edgePadding = 50;
 /**
  * Lays out a graph using D3's force layout simulation.
  */
@@ -70,6 +69,8 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
       .force("collision", d3.forceCollide(75))
       .stop();
 
+    const edgePadding = 50;
+
     // Run simulation synchronously the default number of times (300)
     for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
       forceSimulation.tick();
@@ -91,6 +92,94 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
     graphCopy.nodes.forEach((node, i) => {
       graph.nodes[i].x = node.x;
       graph.nodes[i].y = node.y;
+    });
+  }
+};
+
+/**
+ * Lays out a graph using D3's tree layout. All nodes of the same depth are placed at the same level.
+ */
+export const d3TreeLayoutEngine: IGraphLayoutEngine = {
+  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams) => {
+    return;
+  },
+  setup: (graph: IGraph, layoutParams: IGraphLayoutParams) => {
+    /** Maps IDs to nodes */
+    const nodeMap: { [key: string]: IGraphNode } = {};
+    for (const node of graph.nodes) {
+      nodeMap[node.id] = node;
+    }
+
+    interface IHierarchyNode {
+      node: IGraphNode;
+      children: IHierarchyNode[];
+    }
+
+    // TODO: Remove this assumption
+    let rootNode = graph.nodes.find(n => n.name === "{}");
+    if (rootNode == null) {
+      rootNode = graph.nodes[0];
+    }
+
+    const rootData = {
+      node: rootNode,
+      children: []
+    } as IHierarchyNode;
+
+    /** Map node IDs to their data in the hierarchy. Can quickly add children to parent. */
+    const map = {
+      [rootNode.id]: rootData
+    };
+
+    for (const edge of graph.edges) {
+      if (!(edge.target.id in map)) {
+        const data = {
+          node: nodeMap[edge.target.id],
+          children: []
+        };
+
+        map[edge.target.id] = data;
+      }
+
+      // Parent not in map
+      if (!(edge.source.id in map)) {
+        const data = {
+          node: nodeMap[edge.source.id],
+          children: []
+        };
+
+        map[edge.source.id] = data;
+      }
+
+      // Add target to source's children
+      map[edge.source.id].children.push(map[edge.target.id]);
+    }
+
+    const treeLayout = d3.tree();
+    const root = d3.hierarchy(rootData);
+    treeLayout(root); // Sets x and y positions, in [0, 1] range
+
+    let maxDepth = 0;
+    root.descendants().forEach(n => {
+      if (n.depth > maxDepth) {
+        maxDepth = n.depth;
+      }
+    });
+
+    /**
+     * Tree layout has a tendency to fill the y-axis, e.g. if you have a parent and a child node,
+     * it will place the parent at the top and child at the bottom. This takes up more space then is often necessary.
+     * To make this look better, we divide the available height into `maxDepth + 1` equal sections,
+     * and place the nodes along those dividing lines. This tends to look better, while still filling
+     * the whole area when the depth is high enough.
+     */
+    const heightDivision = layoutParams.height / (maxDepth + 2);
+
+    root.each((n: d3.HierarchyPointNode<IHierarchyNode>) => {
+      n.data.node.x = n.x * layoutParams.width;
+      n.data.node.y =
+        n.y * (layoutParams.height - heightDivision - heightDivision) +
+        heightDivision;
     });
   }
 };

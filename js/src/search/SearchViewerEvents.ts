@@ -1,9 +1,9 @@
 import { IEvent } from "../Events";
 
 export interface IHighlightNodeEvent extends IEvent {
-  action: "highlightNode";
-  /** The ID of the node to highlight. */
-  nodeId: string;
+  action: "highlightNodes";
+  /** The ID of the nodes to highlight. */
+  nodeIds: string[];
   /** A HTML colour string that will be used as the stroke of the node. */
   colour: string;
 }
@@ -23,7 +23,7 @@ export interface IClearEvent extends IEvent {
 export function isHighlightNodeEvent(
   event: IEvent
 ): event is IHighlightNodeEvent {
-  return event.action === "highlightNode";
+  return event.action === "highlightNodes";
 }
 
 export function isHighlightPathEvent(

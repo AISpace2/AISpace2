@@ -4,7 +4,11 @@ import { debounce } from "underscore";
 import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
-import { d3ForceLayoutEngine } from "../GraphLayout";
+import {
+  d3ForceLayoutEngine,
+  d3TreeLayoutEngine,
+  IGraphLayoutParams
+} from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchViewerEvents from "./SearchViewerEvents";
@@ -29,10 +33,26 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       } else if (SearchViewerEvents.isClearEvent(event)) {
         this.clearStyling();
       } else if (SearchViewerEvents.isHighlightNodeEvent(event)) {
-        this.highlightNode(event);
+        this.highlightNodes(event);
       } else if (SearchViewerEvents.isHighlightPathEvent(event)) {
         this.highlightPath(event);
+      } else if (event.action === "add_neigh") {
+        this.graph.nodes.push();
       }
+    });
+
+    this.listenTo(this.model, "change:graph_json", () => {
+      this.graph = Graph.fromJSON(this.model.graphJSON) as Graph<
+        ISearchGraphNode,
+        ISearchGraphEdge
+      >;
+
+      this.layoutGraph({
+        width: this.$el.width(),
+        height: this.$el.width() / 1.6
+      });
+
+      this.vue.$data.graph = this.graph;
     });
 
     $(window).resize(() => {
@@ -112,16 +132,16 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   }
 
   /**
-   * Highlights a node in the visualization, as described by the event object.
+   * Highlights nodes in the visualization, as described by the event object.
    */
-  private highlightNode(event: SearchViewerEvents.IHighlightNodeEvent) {
-    const i = this.graph.nodes
-      .map(a => a.id)
-      .findIndex(a => a === event.nodeId);
+  private highlightNodes(event: SearchViewerEvents.IHighlightNodeEvent) {
+    for (const nodeId of event.nodeIds) {
+      const i = this.graph.nodes.map(a => a.id).findIndex(a => a === nodeId);
 
-    if (i !== -1) {
-      Vue.set(this.graph.nodes[i].styles, "stroke", event.colour);
-      Vue.set(this.graph.nodes[i].styles, "strokeWidth", 3);
+      if (i !== -1) {
+        Vue.set(this.graph.nodes[i].styles, "stroke", event.colour);
+        Vue.set(this.graph.nodes[i].styles, "strokeWidth", 3);
+      }
     }
   }
 
@@ -143,9 +163,21 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     const height = width / 1.6;
 
     if (this.vue != null) {
-      d3ForceLayoutEngine.setup(this.graph, { width, height });
+      this.layoutGraph({ width, height });
       this.vue.$data.width = width;
       this.vue.$data.height = height;
+    }
+  }
+
+  /** Layout the graph using the current layout method. */
+  private layoutGraph(layoutParams: IGraphLayoutParams) {
+    switch (this.model.layoutMethod) {
+      case "tree":
+        d3TreeLayoutEngine.setup(this.graph, layoutParams);
+        break;
+      case "force":
+      default:
+        d3ForceLayoutEngine.setup(this.graph, layoutParams);
     }
   }
 }
