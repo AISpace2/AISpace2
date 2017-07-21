@@ -38,7 +38,7 @@ def search_problem_to_json(problem):
     for node in problem.nodes:
         h = 0
         if node in problem.hmap:
-            h = problem.hmap[n]
+            h = problem.hmap[node]
 
         node_to_add = {'name': str(node), 'id': node_map[str(node)], 'h': h}
         if node == problem.start:

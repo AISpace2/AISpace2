@@ -15,7 +15,8 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
       graph_json: {} as IGraphJSON,
       show_edge_costs: true,
       show_node_heuristics: false,
-      layout_method: "force"
+      layout_method: "force",
+      _layout_root_id: null
     };
   }
 
@@ -49,5 +50,9 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
 
   get layoutMethod(): "force" | "tree" {
     return this.get("layout_method");
+  }
+
+  get layoutRootId(): string {
+    return this.get("_layout_root_id");
   }
 }

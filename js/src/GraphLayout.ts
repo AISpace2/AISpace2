@@ -23,7 +23,7 @@ export interface IGraphLayoutEngine {
    * perhaps because nodes will be created at mouse position, you may assign
    * x and y positions as properties to each node datum right here.
    */
-  setup(graph: IGraph, layoutParams: IGraphLayoutParams): void;
+  setup(graph: IGraph, layoutParams: IGraphLayoutParams, opts?: {}): void;
 
   /**
    * Re-layouts the graph as a result of graph changes.
@@ -33,17 +33,17 @@ export interface IGraphLayoutEngine {
    *
    * You should update the x and y properties of each node datum.
    */
-  relayout(graph: IGraph, layoutParams: IGraphLayoutParams): void;
+  relayout(graph: IGraph, layoutParams: IGraphLayoutParams, opts?: {}): void;
 }
 
 /**
  * Lays out a graph using D3's force layout simulation.
  */
 export const d3ForceLayoutEngine: IGraphLayoutEngine = {
-  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams) => {
+  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
     return;
   },
-  setup: (graph: IGraph, layoutParams: IGraphLayoutParams) => {
+  setup: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
     /**
      * We will work with a copy of the graph to prevent D3 from adding
      * various additional properties, such as `vx` and `fy`, to our nodes.
@@ -100,10 +100,14 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
  * Lays out a graph using D3's tree layout. All nodes of the same depth are placed at the same level.
  */
 export const d3TreeLayoutEngine: IGraphLayoutEngine = {
-  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams) => {
+  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
     return;
   },
-  setup: (graph: IGraph, layoutParams: IGraphLayoutParams) => {
+  setup: (
+    graph: IGraph,
+    layoutParams: IGraphLayoutParams,
+    opts: { root?: IGraphNode } = {}
+  ) => {
     /** Maps IDs to nodes */
     const nodeMap: { [key: string]: IGraphNode } = {};
     for (const node of graph.nodes) {
@@ -115,10 +119,9 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
       children: IHierarchyNode[];
     }
 
-    // TODO: Remove this assumption
-    let rootNode = graph.nodes.find(n => n.name === "{}");
-    if (rootNode == null) {
-      rootNode = graph.nodes[0];
+    let rootNode = graph.nodes[0];
+    if (opts.root != null) {
+      rootNode = opts.root;
     }
 
     const rootData = {

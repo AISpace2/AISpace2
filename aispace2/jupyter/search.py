@@ -32,6 +32,10 @@ class Displayable(StepDOMWidget):
     # Controls the layout engine used. Either "force" for force layout, or "tree".
     layout_method = Unicode('force').tag(sync=True)
 
+    # The ID of the node to be used as the root of the tree.
+    # Only applicable when using tree layout. Set automatically to the problem's start node.
+    _layout_root_id = Unicode('').tag(sync=True)
+
     def __init__(self):
         super().__init__()
 
@@ -52,8 +56,12 @@ class Displayable(StepDOMWidget):
             self._explicit_graph_from_problem = self.problem
             self._is_problem_explicit = True
 
-        (self.graph_json, self.node_map,
+        (graph_json, self.node_map,
          self.edge_map) = search_problem_to_json(self._explicit_graph_from_problem)
+
+        # Assumption: there is a start node
+        self._layout_root_id = self.node_map[str(self._explicit_graph_from_problem.start)]
+        self.graph_json = graph_json # Need to ensure _layout_root_id gets synced first
 
     def display(self, level, *args, **kwargs):
         if args[0] == 'Expanding:':
@@ -101,8 +109,10 @@ class Displayable(StepDOMWidget):
 
                 if has_graph_changed:
                     # Sync updated explicit representation with the front-end
-                    (self.graph_json, self.node_map,
+                    (graph_json, self.node_map,
                      self.edge_map) = search_problem_to_json(self._explicit_graph_from_problem)
+                    self._layout_root_id = self.node_map[str(self._explicit_graph_from_problem.start)]
+                    self.graph_json = graph_json # Need to ensure _layout_root_id gets synced first
 
             neighbour_nodes = []
             arcs_of_path = []

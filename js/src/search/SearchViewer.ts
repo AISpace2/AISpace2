@@ -172,9 +172,19 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   /** Layout the graph using the current layout method. */
   private layoutGraph(layoutParams: IGraphLayoutParams) {
     switch (this.model.layoutMethod) {
-      case "tree":
-        d3TreeLayoutEngine.setup(this.graph, layoutParams);
+      case "tree": {
+        const opts = { root: this.graph.nodes[0] };
+        const root = this.graph.nodes.find(
+          n => n.id === this.model.layoutRootId
+        );
+
+        if (root != null) {
+          opts.root = root;
+        }
+
+        d3TreeLayoutEngine.setup(this.graph, layoutParams, opts);
         break;
+      }
       case "force":
       default:
         d3ForceLayoutEngine.setup(this.graph, layoutParams);
