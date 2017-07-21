@@ -100,8 +100,8 @@ export default class DirectedEdge extends Vue {
 
   /** The angle of the line, in degrees, between the source and target. */
   get angle() {
-    var dx = this.x2 - this.x1;
-    var dy = this.y2 - this.y1;
+    var dx = this.adjustedX2 - this.adjustedX1;
+    var dy = this.adjustedY2 - this.adjustedY1;
     var rad = Math.atan2(dy, dx);
     var deg = rad * 180 / Math.PI;
     return deg;
