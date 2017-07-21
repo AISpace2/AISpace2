@@ -7,6 +7,7 @@
     <text v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{truncatedSubtext}}
     </text>
+    <title>{{text}}</title>
   </g>
 </template>
 
