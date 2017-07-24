@@ -46,6 +46,8 @@ Depending on your setup, you may have to use `pip3` instead of `pip` to ensure y
         </li>
         <li><a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/regression_planning.ipynb">Regression Planning</a>
         </li>
+        <li><a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/planning_as_csp.ipynb">Planning as CSPs</a>
+        </li>
     </ul>
     </details>
 
