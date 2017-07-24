@@ -33,7 +33,7 @@ Depending on your setup, you may have to use `pip3` instead of `pip` to ensure y
         <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/solving_csp_with_search.ipynb">Solving CSPs using Search</a>
         </li>
         <li>
-        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/csp.ipynb">CSPs using Arc Consistency</a>
+        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/arc_consistency.ipynb">CSPs using Arc Consistency</a>
         </li>
     </ul>
     </details>
