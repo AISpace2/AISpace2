@@ -20,7 +20,8 @@ Depending on your setup, you may have to use `pip3` instead of `pip` to ensure y
 - [Search: A*, Multiple Path Pruning, Branch and Bound](https://rawgit.com/AISpace2/AISpace2/master/notebooks/search/search.ipynb)
 - [Constraint Satisfcation Problems (CSPs) using Search](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/solving_csp_with_search.ipynb)
 - [Constraint Satisfaction Problems (CSPs) using Arc Consistency](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/csp.ipynb)
-- [Planning with Search (Forward Planning)](https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/forward_planning.ipynb)
+- [Forward Planning](https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/forward_planning.ipynb)
+- [Regression Planning](https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/regression_planning.ipynb)
 
     You should download these notebooks by right-clicking a link and choosing _Save As_.
 
