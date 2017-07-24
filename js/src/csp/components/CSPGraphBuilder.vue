@@ -36,11 +36,11 @@
       </div>
       <div v-else-if="selection && selection.type === 'csp:constraint'">
         <label>Constraint Type</label>
-        <select v-model="selection.constraint">
+        <select v-model="selection.constraint" :disabled="selection.constraint == null">
           <option value="lt">Less than (&#60;)</option>
           <option value="gt">Greater than (&#62;)</option>
           <option value="eq">Equal to (=)</option>
-          <option value="custom">Custom</option>
+          <option value="undefined" v-if="selection.constraint == null">Python Constraint</option>
         </select>
       </div>
     </div>

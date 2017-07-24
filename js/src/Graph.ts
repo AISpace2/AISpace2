@@ -77,11 +77,6 @@ export class Graph<
 
     for (const node of Object.values(json.nodes)) {
       const newNode = { ...node, styles: { rx: 40, ry: 30 } };
-
-      if (node.type === "csp:constraint") {
-        newNode.constraint = "lt";
-      }
-
       newGraph.nodes.push(newNode);
     }
 

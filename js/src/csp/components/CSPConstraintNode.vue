@@ -1,7 +1,7 @@
 <template>
   <g>
     <rect width="70" height="50" stroke="black" :fill="rectFill" x="-35" y="-25"></rect>
-    <text x="0" y="0" text-anchor="middle" alignment-baseline="middle" :fill="textFill">A {{constraint}} 0</text>
+    <text x="0" y="0" text-anchor="middle" alignment-baseline="middle" :fill="textFill">{{constraintText}}</text>
   </g>
 </template>
 
@@ -44,6 +44,18 @@ export default class CSPConstraintNode extends Vue {
     }
 
     return "black";
+  }
+
+  get constraintText() {
+    if (this.constraint != null) {
+      return `? ${this.constraint} ?`;
+    }
+
+    if (this.name != null) {
+      return this.name;
+    }
+
+    return '';
   }
 }
 </script>
