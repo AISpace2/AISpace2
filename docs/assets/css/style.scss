@@ -1,0 +1,24 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+details {
+  border-radius: 3px;
+  background: #EEE;
+  margin: 1em 0;
+}
+
+summary {
+  background: #1e6bb8;
+  color: white;
+  border-radius: 3px;
+  padding: 5px 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+details[open] summary {
+  cursor: pointer;
+  background: #159957;
+}
