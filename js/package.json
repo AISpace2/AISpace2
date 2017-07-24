@@ -22,8 +22,8 @@
     "format": "prettier \"src/**/*.{ts,js,json,css}\" --write"
   },
   "devDependencies": {
-    "@types/d3": "^4.9.0",
-    "@types/node": "^8.0.14",
+    "@types/d3": "^4.10.0",
+    "@types/node": "^8.0.16",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -31,7 +31,7 @@
     "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.4",
     "html-loader": "^0.4.5",
-    "json-loader": "^0.5.4",
+    "json-loader": "^0.5.7",
     "prettier": "^1.5.3",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
@@ -41,7 +41,7 @@
     "tslint-loader": "^3.5.3",
     "typescript": "^2.4.2",
     "vue-loader": "^13.0.2",
-    "vue-template-compiler": "^2.4.1",
+    "vue-template-compiler": "^2.4.2",
     "webpack": "^3.3.0",
     "webpack-sources": "^1.0.1"
   },
@@ -52,7 +52,7 @@
     "jupyter-js-widgets": "^2.1.4",
     "shortid": "^2.2.8",
     "underscore": "^1.8.3",
-    "vue": "^2.4.1",
+    "vue": "^2.4.2",
     "vue-class-component": "^5.0.2",
     "vue-property-decorator": "^5.1.1"
   }
