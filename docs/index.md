@@ -17,11 +17,24 @@ Depending on your setup, you may have to use `pip3` instead of `pip` to ensure y
 
 4. Choose a notebook to download from below. For a full list, see the [repository](https://github.com/AISpace2/AISpace2/tree/master/notebooks). 
 
-- [Search: A*, Multiple Path Pruning, Branch and Bound](https://rawgit.com/AISpace2/AISpace2/master/notebooks/search/search.ipynb)
-- [Constraint Satisfcation Problems (CSPs) using Search](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/solving_csp_with_search.ipynb)
-- [Constraint Satisfaction Problems (CSPs) using Arc Consistency](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/csp.ipynb)
-- [Forward Planning](https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/forward_planning.ipynb)
-- [Regression Planning](https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/regression_planning.ipynb)
+    <details>
+    <summary>Search</summary>
+    - [A*, Multiple Path Pruning, Branch and Bound](https://rawgit.com/AISpace2/AISpace2/master/notebooks/search/search.ipynb)
+    </details>
+
+    <details>
+    <summary>Constraint Satisfaction Problems (CSPs)</summary>
+
+    - [Solving CSPs using Search](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/solving_csp_with_search.ipynb)
+    - [CSPs using Arc Consistency](https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/csp.ipynb)
+    </details>
+
+    <details>
+    <summary>Planning</summary>
+
+    - [Forward Planning](https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/forward_planning.ipynb)
+    - [Regression Planning](https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/regression_planning.ipynb)
+    </details>
 
     You should download these notebooks by right-clicking a link and choosing _Save As_.
 
