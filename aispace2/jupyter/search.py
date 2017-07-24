@@ -58,6 +58,8 @@ class Displayable(StepDOMWidget):
 
         (graph_json, self.node_map,
          self.edge_map) = search_problem_to_json(self._explicit_graph_from_problem)
+        
+        self._frontier = []
 
         # Assumption: there is a start node
         self._layout_root_id = self.node_map[str(self._explicit_graph_from_problem.start)]
@@ -67,8 +69,8 @@ class Displayable(StepDOMWidget):
         if args[0] == 'Expanding:':
             path = args[1]
             self._send_clear_action()
+            self._send_highlight_frontier_action()            
 
-            # Highlight the path and end node red, and nodes along the path gray
             if path.arc:
                 nodes_along_path = []
                 arcs_of_path = []
@@ -76,12 +78,15 @@ class Displayable(StepDOMWidget):
 
                 while current.arc is not None:
                     arcs_of_path.append(current.arc)
-                    nodes_along_path.append(current.arc.to_node)
+                    nodes_along_path.append(current.arc.from_node)
                     current = current.initial
 
+                # Highlight the path and end node red, and nodes along the path gray
                 self._send_highlight_nodes_action(nodes_along_path, 'gray')
                 self._send_highlight_path_action(arcs_of_path, 'red')
                 self._send_highlight_nodes_action(path.arc.to_node, 'red')
+            else:
+                self._send_highlight_nodes_action(path, 'red')
 
         elif args[0] == 'Neighbors are':
             neighbours = args[1]
@@ -124,11 +129,29 @@ class Displayable(StepDOMWidget):
             self._send_highlight_nodes_action(neighbour_nodes, 'blue')
             self._send_highlight_path_action(arcs_of_path, 'blue')
 
+        elif args[0] == "Frontier:":
+            self._frontier = args[1]
+            self._send_clear_action()
+            self._send_highlight_frontier_action()
+
         super().display(level, *args, **kwargs)
 
     def _send_clear_action(self):
         """Sends a message to the front-end visualization to clear all styles applied to node/arcs."""
         self.send({'action': 'clear'})
+
+    def _send_highlight_frontier_action(self):
+        """Sends a message to the front-end visualization to highlight the nodes on the froniter.
+        
+        This is a convenience function that uses the value of `self._frontier` to choose nodes to highlight.
+        """
+        nodes_to_highlight = []
+
+        for path in self._frontier:
+            nodes_to_highlight.append(path.end())
+
+        self._send_clear_action()
+        self._send_highlight_nodes_action(nodes_to_highlight, 'green')
 
     def _send_highlight_nodes_action(self, nodes, colour='black'):
         """Sends a message to the front-end visualization to highlight a node.

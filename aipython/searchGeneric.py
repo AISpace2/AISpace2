@@ -100,6 +100,10 @@ class Frontier(object):
         return str([(n,c,str(p)) for (n,c,p) in self.frontierpq])
     def __len__(self):
         return len(self.frontierpq)
+
+    def __iter__(self):
+        for (_, _, p) in self.frontierpq:
+            yield p
     
 class AStarSearcher(Searcher):
     """returns a searcher for a problem.
