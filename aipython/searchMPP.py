@@ -46,11 +46,11 @@ class SearcherMPP(AStarSearcher):
         self.display(1,"No (more) solutions. Total of",
                      self.num_expanded,"paths expanded.")
 
-from searchGeneric import test
+from aipython.searchGeneric import test
 if __name__ == "__main__":
     test(SearcherMPP)
 
-import searchProblem 
+import aipython.searchProblem 
 # searcherMPPcdp = SearcherMPP(searchProblem.cyclic_delivery_problem)
 # print(searcherMPPcdp.search())  # find first path
 

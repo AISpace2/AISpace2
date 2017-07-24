@@ -8,8 +8,8 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from searchProblem import Arc, Search_problem
-from stripsProblem import Strips, STRIPS_domain
+from aipython.searchProblem import Arc, Search_problem
+from aipython.stripsProblem import Strips, STRIPS_domain
 
 class State(object):
     def __init__(self,assignment):
@@ -86,10 +86,10 @@ class Forward_STRIPS(Search_problem):
         """
         return self.heur(state.assignment, self.goal)
 
-from searchBranchAndBound import DF_branch_and_bound
-from searchGeneric import AStarSearcher
-from searchMPP import SearcherMPP
-from stripsProblem import problem0, problem1, problem2, blocks1, blocks2, blocks3
+from aipython.searchBranchAndBound import DF_branch_and_bound
+from aipython.searchGeneric import AStarSearcher
+from aipython.searchMPP import SearcherMPP
+from aipython.stripsProblem import problem0, problem1, problem2, blocks1, blocks2, blocks3
 
 # AStarSearcher(Forward_STRIPS(problem1)).search()  #A*
 # SearcherMPP(Forward_STRIPS(problem1)).search()  #A* with MPP

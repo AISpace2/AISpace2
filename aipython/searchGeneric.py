@@ -114,7 +114,7 @@ class AStarSearcher(Searcher):
         super().__init__(problem)
 
     def initialize_frontier(self):
-        self.frontier = FrontierPQ()
+        self.frontier = Frontier()
     def empty_frontier(self):
         return self.frontier.empty()
 

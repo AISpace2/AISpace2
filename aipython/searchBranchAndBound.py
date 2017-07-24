@@ -50,7 +50,7 @@ class DF_branch_and_bound(Searcher):
         self.solution = self.best_path
         return self.best_path
         
-from searchGeneric import test
+from aipython.searchGeneric import test
 if __name__ == "__main__":
     test(DF_branch_and_bound)
 
