@@ -8,7 +8,7 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from cspProblem import CSP, Constraint
+from aipython.cspProblem import CSP, Constraint
 
 class CSP_from_STRIPS(CSP):
     """A CSP where:
@@ -83,10 +83,10 @@ def con_plan(prob,horizon):
     sol = Con_solver(csp).solve_one()
     return csp.extract_plan(sol) if sol else sol
     
-from searchGeneric import Searcher
-from stripsProblem import delivery_domain
-from cspConsistency import Search_with_AC_from_CSP, Con_solver
-from stripsProblem import Planning_problem, problem0, problem1, problem2 
+from aipython.searchGeneric import Searcher
+from aipython.stripsProblem import delivery_domain
+from aipython.cspConsistency import Search_with_AC_from_CSP, Con_solver
+from aipython.stripsProblem import Planning_problem, problem0, problem1, problem2 
 
 # Problem 0
 # con_plan(problem0,1) # should it succeed?

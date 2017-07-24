@@ -135,14 +135,14 @@ def select(iterable):
     for e in iterable:
         return e  # returns first element found
 
-from cspExamples import test
+from aipython.cspExamples import test
 def ac_solver(csp):
     "arc consistency (solve_one)"
     return Con_solver(csp).solve_one()
 if __name__ == "__main__":
     test(ac_solver)
 
-from searchProblem import Arc, Search_problem
+from aipython.searchProblem import Arc, Search_problem
 
 class Search_with_AC_from_CSP(Search_problem,Displayable):
     """A search problem with arc consistency and domain splitting
@@ -178,8 +178,8 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
                     self.display(2,"...",var,"in",dom,"has no solution")
         return neighs
 
-from cspExamples import test
-from searchGeneric import Searcher
+from aipython.cspExamples import test
+from aipython.searchGeneric import Searcher
 
 def ac_search_solver(csp):
     """arc consistency (search interface)"""
@@ -190,7 +190,7 @@ def ac_search_solver(csp):
 if __name__ == "__main__":
     test(ac_search_solver)
 
-from cspExamples import csp1, csp2, crossword1, crossword2, crossword2d
+from aipython.cspExamples import csp1, csp2, crossword1, crossword2, crossword2d
 
 ## Test Solving CSPs with Arc consistency and domain splitting:
 #Con_solver(csp1).solve_one()
