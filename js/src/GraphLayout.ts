@@ -154,6 +154,13 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
         map[edge.source.id] = data;
       }
 
+      if (map[edge.target.id].children.some(c => c.node.id === edge.source.id)) {
+        // There is already an arrow the other way
+        // Note that while this prevents endless loops, the tree layout is not designed
+        // to work with general graphs, and thus the resulting layout may be very odd
+        continue;
+      }
+
       // Add target to source's children
       map[edge.source.id].children.push(map[edge.target.id]);
     }
