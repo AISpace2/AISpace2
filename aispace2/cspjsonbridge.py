@@ -66,23 +66,17 @@ def csp_to_json(csp):
             'idx': i
         })
 
-        link1_id = str(uuid.uuid4())
-        link1 = {
-            'id': link1_id,
-            'source': domain_map[constraint.scope[0]],
-            'target': constraint_id
-        }
+        # Create a link from the constraint to each variable in its scope
+        for var in constraint.scope:
+            link_id = str(uuid.uuid4())
+            link = {
+                'id': link_id,
+                'source': domain_map[var],
+                'target': constraint_id
+            }
 
-        csp_json['edges'].append(link1)
-        edge_map[(constraint.scope[0], constraint)] = link1_id
-
-        if len(constraint.scope) == 2:
-            link2_id = str(uuid.uuid4())
-            link2 = {'id': link2_id,
-                     'source': domain_map[constraint.scope[1]], 'target': constraint_id}
-
-            csp_json['edges'].append(link2)
-            edge_map[(constraint.scope[1], constraint)] = link2_id
+            csp_json['edges'].append(link)
+            edge_map[(var, constraint)] = link_id
 
     return (csp_json, domain_map, edge_map)
 
