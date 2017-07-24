@@ -80,7 +80,8 @@ def implicit_to_explicit_search_problem(implicit_problem):
             in order to create a more defined explicit graph.
     """
     start = str(implicit_problem.start_node())
-    return Search_problem_from_explicit_graph(set((start,)), [], start)
+    h = implicit_problem.heuristic(implicit_problem.start_node())
+    return Search_problem_from_explicit_graph(set((start,)), [], start, set(), { start: h })
 
 
 def json_to_search_problem(json):

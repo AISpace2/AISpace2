@@ -110,6 +110,7 @@ class Displayable(StepDOMWidget):
                         self._explicit_graph_from_problem.arcs.append(arc)
                         self._implicit_neighbours_added.add(
                             (str(arc.from_node), str(arc.to_node)))
+                        self._explicit_graph_from_problem.hmap[str(arc.to_node)] = self.problem.heuristic(arc.to_node)
                         has_graph_changed = True
 
                 if has_graph_changed:
