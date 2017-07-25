@@ -9,8 +9,8 @@
 
 3. Run the following commands to install the widget:
 
-    ```
-    pip install aispace2 --user
+    ```sh
+    pip install aispace2 --user # Add --upgrade if you've already installed it before
     jupyter nbextension enable --py aispace2 --user
     ```
 Depending on your setup, you may have to use `pip3` instead of `pip` to ensure you are installing the extension to Python 3 instead of Python 2.
