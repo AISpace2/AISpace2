@@ -135,6 +135,9 @@ class Displayable(StepDOMWidget):
             self._send_clear_action()
             self._send_highlight_frontier_action()
 
+        elif args[1] == "paths have been expanded and":
+            args += ('- Run search() again to find more solutions.', )
+
         super().display(level, *args, **kwargs)
 
     def _send_clear_action(self):
