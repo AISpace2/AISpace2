@@ -85,17 +85,23 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           that.send({ event: StepEvents.STEP_CLICK });
         }
       },
-      template: `
-      <div id="app">
-          <SearchVisualizer 
-              :graph="graph" :output="output" 
-              :showEdgeCosts="showEdgeCosts" :showNodeHeuristics="showNodeHeuristics"
-              :width="width" :height="height"
-              @click:auto-step="autostep"
-              @click:step="step"
-              @click:fine-step="finestep">
-          </SearchVisualizer>
-      </div>`
+      render(createElement: Vue.CreateElement) {
+        return createElement(SearchVisualizer, {
+          props: {
+            graph: this.graph,
+            width: this.width,
+            height: this.height,
+            showEdgeCosts: this.showEdgeCosts,
+            showNodeHeuristics: this.showNodeHeuristics,
+            output: this.output
+          },
+          on: {
+            "click:auto-step": this.autostep,
+            "click:step": this.step,
+            "click:fine-step": this.finestep
+          }
+        });
+      }
     });
 
     timeout(() => {

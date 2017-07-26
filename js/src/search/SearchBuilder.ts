@@ -32,13 +32,6 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
     const that = this;
     const App = Vue.extend({
       components: { SearchGraphBuilder },
-      template: `
-        <div id="app">
-          <SearchGraphBuilder 
-            :graph="graph" :width="width" :height="height" 
-            :showEdgeCosts="showEdgeCosts" :showNodeHeuristics="showNodeHeuristics">
-          </SearchGraphBuilder>
-        </div>`,
       data() {
         return {
           graph: that.graph,
@@ -57,6 +50,17 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
           },
           deep: true
         }
+      },
+      render(createElement: Vue.CreateElement) {
+        return createElement(SearchGraphBuilder, {
+          props: {
+            graph: this.graph,
+            width: this.width,
+            height: this.height,
+            showEdgeCosts: this.showEdgeCosts,
+            showNodeHeuristics: this.showNodeHeuristics
+          }
+        });
       }
     });
 

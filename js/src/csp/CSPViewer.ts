@@ -84,19 +84,23 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           });
         }
       },
-      template: `
-                <div id="app">
-                    <CSPGraphInteractor
-                        :graph="graph"
-                        :width="width"
-                        :height="height"
-                        @click:auto-step="autostep"
-                        @click:step="step"
-                        @click:fine-step="finestep"
-                        @click:edge="edge"
-                        :output="output">
-                    </CSPGraphInteractor>
-                </div>`
+      render(createElement: Vue.CreateElement) {
+        return createElement(CSPGraphInteractor, {
+          props: {
+            graph: this.graph,
+            width: this.width,
+            height: this.height,
+            showEdgeCosts: this.showEdgeCosts,
+            showNodeHeuristics: this.showNodeHeuristics,
+            output: this.output
+          },
+          on: {
+            "click:auto-step": this.autostep,
+            "click:step": this.step,
+            "click:fine-step": this.finestep
+          }
+        });
+      }
     });
 
     timeout(() => {

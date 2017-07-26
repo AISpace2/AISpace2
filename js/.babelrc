@@ -1,5 +1,15 @@
 {
-  "presets": ["env"],
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "uglify": true
+        },
+        "modules": false
+      }
+    ]
+  ],
   "plugins": [
     "transform-decorators-legacy",
     "transform-class-properties"

@@ -32,11 +32,13 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
     const that = this;
     const App = Vue.extend({
       components: { CSPGraphBuilder },
-      template: `
-        <div id="app">
-          <CSPGraphBuilder :graph="graph" :width="width" :height="height">
-          </CSPGraphBuilder>
-        </div>`,
+      data() {
+        return {
+          graph: that.graph,
+          width: 0,
+          height: 0
+        };
+      },
       watch: {
         graph: {
           handler(val, oldVal) {
@@ -47,12 +49,10 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
           deep: true
         }
       },
-      data() {
-        return {
-          graph: that.graph,
-          width: 0,
-          height: 0
-        };
+      render(createElement: Vue.CreateElement) {
+        return createElement(CSPGraphBuilder, {
+          props: { graph: this.graph, width: this.width, height: this.height }
+        });
       }
     });
 
