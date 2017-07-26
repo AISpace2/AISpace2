@@ -18,7 +18,7 @@ username=pypi username
 password=pypi password
 ```
 
-- Update `_version.py` if necessary, removing 'dev' if this is a production release
+- Update `_version.py`, removing 'dev'
 - `git add` and `git commit` the version changes
 - `python setup.py sdist upload`
 - `python setup.py bdist_wheel`
