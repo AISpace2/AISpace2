@@ -26,6 +26,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       ISearchGraphEdge
     >;
     this.listenTo(this.model, "view:msg", (event: IEvent) => {
+      // tslint:disable-next-line:no-console
       console.log(event);
 
       if (isOutputEvent(event)) {
