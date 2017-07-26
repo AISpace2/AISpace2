@@ -51,7 +51,7 @@ Depending on your setup, you may have to use `pip3` instead of `pip` to ensure y
     </ul>
     </details>
 
-    You should download these notebooks by right-clicking a link and choosing _Save As_.
+    You should download these notebooks by right-clicking a link and choosing _Save As_. (Some web browsers have the tendency to append a `.txt` file extension to your notebooks. If that's the case, you'll have to rename the file and remove it yourself.)
 
 5. Open Jupyter and upload the notebook to Jupyter. In the notebook dashboard, select _Upload_ and choose the file you just downloaded.
 
