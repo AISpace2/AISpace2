@@ -21,7 +21,8 @@ module.exports = merge.multiple(commonConfig, {
           warnings: false,
           drop_console: true
         },
-        comments: false
+        comments: false,
+        sourceMap: true
       }),
       new webpack.optimize.OccurrenceOrderPlugin()
     ]
