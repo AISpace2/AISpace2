@@ -22,7 +22,7 @@ log.set_verbosity(log.DEBUG)
 log.info('setup.py entered')
 log.info('$PATH=%s' % os.environ['PATH'])
 
-LONG_DESCRIPTION = 'blah'
+LONG_DESCRIPTION = 'A Jupyter extension for the next-generation of AISpace'
 
 def js_prerelease(command, strict=False):
     """decorator for building minified js/css prior to another command"""
@@ -119,7 +119,7 @@ with open(os.path.join(here, 'aispace2', '_version.py')) as f:
 setup_args = {
     'name': 'aispace2',
     'version': version_ns['__version__'],
-    'description': 'blah',
+    'description': 'A Jupyter extension for the next-generation of AISpace',
     'long_description': LONG_DESCRIPTION,
     'include_package_data': True,
     'data_files': [
