@@ -32,6 +32,7 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     });
   }
 
+  /** The JSON representation of the search graph. */
   get graphJSON(): IGraphJSON {
     return this.get("graph_json");
   }
@@ -40,18 +41,25 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     this.set("graph_json", val);
   }
 
+  /** True if the visualization should show edge costs. */
   get showEdgeCosts(): boolean {
     return this.get("show_edge_costs");
   }
 
+  /** True if a node's heuristic value should be shown. */
   get showNodeHeuristics(): boolean {
     return this.get("show_node_heuristics");
   }
 
+  /** Controls the layout engine used. Either "force" for force layout, or "tree". */
   get layoutMethod(): "force" | "tree" {
     return this.get("layout_method");
   }
 
+  /**
+   * The ID of the node to be used as the root of the tree.
+   * Only applicable when using tree layout. Set automatically to the problem's start node.
+   */
   get layoutRootId(): string {
     return this.get("_layout_root_id");
   }

@@ -21,6 +21,8 @@ class Displayable(StepDOMWidget):
     _model_module = Unicode('aispace2').tag(sync=True)
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
+
+    # The JSON representation of the search graph.
     graph_json = Dict().tag(sync=True)
 
     # True if the visualization should show edge costs.

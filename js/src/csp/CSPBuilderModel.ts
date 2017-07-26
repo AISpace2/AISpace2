@@ -24,6 +24,7 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
     });
   }
 
+  /** The JSON representing the CSP graph. */
   get graphJSON(): IGraphJSON {
     return this.get("graph_json");
   }
