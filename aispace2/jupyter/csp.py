@@ -78,7 +78,7 @@ class Displayable(StepDOMWidget):
                 A tuple (var_name, constraint) that represents an arc from `to_do`.
         """
         # Running in Auto mode. Don't block!
-        if self._display_block_level == 1:
+        if self.max_display_level == 1:
             return to_do.pop()
 
         self._block_for_user_input.wait()
@@ -92,7 +92,7 @@ class Displayable(StepDOMWidget):
 
     def wait_for_var_selection(self, iter_var):
         self._block_for_user_input.wait()
-        self._display_block_level = 4
+        self.max_display_level = 4
         if self._selected_var in list(iter_var):
             return self._selected_var
         else:
@@ -105,7 +105,7 @@ class Displayable(StepDOMWidget):
         if event == 'arc:click':
             var_name = content.get('varId')
             const = self.csp.constraints[content.get('constId')]
-            self._display_block_level = 2
+            self.max_display_level = 2
 
             self._selected_arc = (var_name, const)
             self._has_user_selected_arc = True

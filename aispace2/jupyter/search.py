@@ -214,7 +214,7 @@ def visualize(func_bg):
 
     def wrapper(self, *args, **kwargs):
         # We need to reset display_level so it doesn't carry over to next call
-        self._display_block_level = 4
+        self.max_display_level = 4
         self._thread = Thread(
             target=partial(func_bg, self), args=args, kwargs=kwargs)
         self._thread.start()

@@ -22,7 +22,7 @@ class StepDOMWidget(DOMWidget):
         self._block_for_user_input = threading.Event()
 
         # The display level to block on. The visualization will not block on displays > to this.
-        self._display_block_level = 4
+        self.max_display_level = 4
         self._initialize_controls()
 
     def _initialize_controls(self):
@@ -30,7 +30,7 @@ class StepDOMWidget(DOMWidget):
         def step_through_to_level(desired_level):
             def step():
                 self.before_step()
-                self._display_block_level = desired_level
+                self.max_display_level = desired_level
                 self._block_for_user_input.set()
                 self._block_for_user_input.clear()
 
@@ -79,7 +79,7 @@ class StepDOMWidget(DOMWidget):
         text = ' '.join(map(str, args))
         self.send({'action': 'output', 'text': text})
 
-        if level <= self._display_block_level:
+        if level <= self.max_display_level:
             if 'should_wait' in kwargs:
                 if not kwargs['should_wait']:
                     return
