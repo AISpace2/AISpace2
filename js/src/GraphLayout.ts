@@ -1,3 +1,5 @@
+// tslint:disable-next-line:no-var-requires
+const cytoscape = require("cytoscape");
 import * as d3 from "d3";
 import { IGraph, IGraphEdge, IGraphNode } from "./Graph";
 
@@ -54,19 +56,14 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
       .forceSimulation(graphCopy.nodes)
       .force(
         "link",
-        d3
-          .forceLink()
-          .id((node: IGraphEdge) => node.id)
-          .links(graphCopy.edges)
-          .distance(35)
-          .strength(0.6)
+        d3.forceLink().id((node: IGraphEdge) => node.id).links(graphCopy.edges)
       )
-      .force("charge", d3.forceManyBody().strength(-30))
+      .force("charge", d3.forceManyBody())
       .force(
         "center",
         d3.forceCenter(layoutParams.width / 2, layoutParams.height / 2)
       )
-      .force("collision", d3.forceCollide(75))
+      .force("collision", d3.forceCollide(60))
       .stop();
 
     const edgePadding = 50;
@@ -193,5 +190,62 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
         n.y * (layoutParams.height - heightDivision - heightDivision) +
         heightDivision;
     });
+  }
+};
+
+/** An experimental layout engine using Cytoscape.js
+ * 
+ * Note that this isn't ready for use. Some layouts are asynchronous, but layouts are
+ * currently synchronous only.
+ */
+export const cytoscapeLayoutEngine: IGraphLayoutEngine = {
+  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
+    return;
+  },
+  setup: (
+    graph: IGraph,
+    layoutParams: IGraphLayoutParams,
+    opts: { name?: string } = {}
+  ) => {
+    const elements = [];
+
+    for (const node of graph.nodes) {
+      elements.push({ data: { id: node.id } });
+    }
+
+    for (const edge of graph.edges) {
+      elements.push({
+        data: { id: edge.id, source: edge.source.id, target: edge.target.id }
+      });
+    }
+
+    const c = cytoscape({
+      elements
+    });
+
+    c
+      .layout({
+        name: opts.name || "cose",
+        boundingBox: {
+          x1: 0,
+          y1: 0,
+          w: layoutParams.width,
+          h: layoutParams.height
+        },
+        fit: false,
+        stop() {
+          c.nodes().forEach((node: any) => {
+            const i = graph.nodes.findIndex(n => n.id === node.id());
+            graph.nodes[i].x = node.position().x;
+            graph.nodes[i].y = node.position().y;
+          });
+        }
+      })
+      .run();
+
+    for (const node of graph.nodes) {
+      node.x = 0;
+      node.y = 0;
+    }
   }
 };

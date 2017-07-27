@@ -5,6 +5,7 @@ import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import {
+  cytoscapeLayoutEngine,
   d3ForceLayoutEngine,
   d3TreeLayoutEngine,
   IGraphLayoutParams
@@ -192,6 +193,11 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         d3TreeLayoutEngine.setup(this.graph, layoutParams, opts);
         break;
       }
+      case "cose":
+        cytoscapeLayoutEngine.setup(this.graph, layoutParams, {
+          name: this.model.layoutMethod
+        });
+        break;
       case "force":
       default:
         d3ForceLayoutEngine.setup(this.graph, layoutParams);

@@ -51,8 +51,8 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     return this.get("show_node_heuristics");
   }
 
-  /** Controls the layout engine used. Either "force" for force layout, or "tree". */
-  get layoutMethod(): "force" | "tree" {
+  /** Controls the layout engine used. */
+  get layoutMethod(): "force" | "tree" | "cose" {
     return this.get("layout_method");
   }
 
