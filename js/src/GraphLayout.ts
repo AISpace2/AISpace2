@@ -139,7 +139,7 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
         const data = {
           node: nodeMap[edge.target.id],
           children: []
-        };
+        } as IHierarchyNode;
 
         map[edge.target.id] = data;
       }
@@ -149,7 +149,7 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
         const data = {
           node: nodeMap[edge.source.id],
           children: []
-        };
+        } as IHierarchyNode;
 
         map[edge.source.id] = data;
       }
