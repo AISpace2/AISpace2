@@ -193,11 +193,6 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         d3TreeLayoutEngine.setup(this.graph, layoutParams, opts);
         break;
       }
-      case "cose":
-        cytoscapeLayoutEngine.setup(this.graph, layoutParams, {
-          name: this.model.layoutMethod
-        });
-        break;
       case "force":
       default:
         d3ForceLayoutEngine.setup(this.graph, layoutParams);

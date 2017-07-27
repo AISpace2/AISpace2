@@ -52,7 +52,7 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
   }
 
   /** Controls the layout engine used. */
-  get layoutMethod(): "force" | "tree" | "cose" {
+  get layoutMethod(): "force" | "tree" {
     return this.get("layout_method");
   }
 

@@ -1,5 +1,3 @@
-// tslint:disable-next-line:no-var-requires
-const cytoscape = require("cytoscape");
 import * as d3 from "d3";
 import { IGraph, IGraphEdge, IGraphNode } from "./Graph";
 
@@ -193,11 +191,12 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
   }
 };
 
-/** An experimental layout engine using Cytoscape.js
- * 
- * Note that this isn't ready for use. Some layouts are asynchronous, but layouts are
- * currently synchronous only.
- */
+/*
+   This is a test of using cytoscape and it's layouts.
+   You must install cytoscape and require it before trying the following.
+   Note that some of cytoscape's layouts are asynchronous, which breaks
+   the current, synchronous-only layout engine.
+
 export const cytoscapeLayoutEngine: IGraphLayoutEngine = {
   relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
     return;
@@ -248,4 +247,4 @@ export const cytoscapeLayoutEngine: IGraphLayoutEngine = {
       node.y = 0;
     }
   }
-};
+};*/

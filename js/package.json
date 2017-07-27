@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
-    "cytoscape": "^3.1.4",
     "d3": "^4.10.0",
     "jquery": "^3.2.1",
     "jupyter-js-widgets": "^2.1.4",

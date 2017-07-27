@@ -31,7 +31,7 @@ class Displayable(StepDOMWidget):
     # True if a node's heuristic value should be shown.
     show_node_heuristics = Bool(False).tag(sync=True)
 
-    # Controls the layout engine used. Either "force", "tree", or "cose".
+    # Controls the layout engine used. Either "force" for force layout, or "tree".
     layout_method = Unicode('force').tag(sync=True)
 
     # The ID of the node to be used as the root of the tree.
