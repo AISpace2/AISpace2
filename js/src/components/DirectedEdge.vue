@@ -107,14 +107,14 @@ export default class DirectedEdge extends Vue {
     return deg;
   }
 
-  /** The x-coordinate that is the midpoint between the source and target. */
+  /** The x-coordinate that is the midpoint between the source and target of the adjusted path. */
   get centerX() {
-    return this.x1 + (this.x2 - this.x1) / 2;
+    return this.adjustedX1 + (this.adjustedX2 - this.adjustedX1) / 2;
   }
 
-  /** The y-coordinate that is the midpoint between the source and target. */
+  /** The y-coordinate that is the midpoint between the source and target of the adjusted path. */
   get centerY() {
-    return this.y1 + (this.y2 - this.y1) / 2;
+    return this.adjustedY1 + (this.adjustedY2 - this.adjustedY1) / 2;
   }
 
   /** The difference between the source and target on the x-axis. */
