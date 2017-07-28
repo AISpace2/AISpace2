@@ -22,18 +22,29 @@ export interface IGraphLayoutEngine {
    * If your graph layout algorithm never requires relayout when the graph is updated,
    * perhaps because nodes will be created at mouse position, you may assign
    * x and y positions as properties to each node datum right here.
+   * 
+   * When the promise is resolved, the nodes of the graph will have assigned x, y positions.
    */
-  setup(graph: IGraph, layoutParams: IGraphLayoutParams, opts?: {}): void;
+  setup(
+    graph: IGraph,
+    layoutParams: IGraphLayoutParams,
+    opts?: {}
+  ): Promise<void>;
 
   /**
    * Re-layouts the graph as a result of graph changes.
    *
    * This function is not called initially for the first render.
    * You may call this function from the setup function if necessary.
-   *
+   * When the promise is resolved, the nodes of the graph will have assigned x, y positions.
+   * 
    * You should update the x and y properties of each node datum.
    */
-  relayout(graph: IGraph, layoutParams: IGraphLayoutParams, opts?: {}): void;
+  relayout(
+    graph: IGraph,
+    layoutParams: IGraphLayoutParams,
+    opts?: {}
+  ): Promise<void>;
 }
 
 /**
@@ -41,7 +52,7 @@ export interface IGraphLayoutEngine {
  */
 export const d3ForceLayoutEngine: IGraphLayoutEngine = {
   relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
-    return;
+    return Promise.resolve();
   },
   setup: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
     /**
@@ -56,7 +67,7 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
         "link",
         d3.forceLink().id((node: IGraphEdge) => node.id).links(graphCopy.edges)
       )
-      .force("charge", d3.forceManyBody())
+      .force("charge", d3.forceManyBody().strength(-35))
       .force(
         "center",
         d3.forceCenter(layoutParams.width / 2, layoutParams.height / 2)
@@ -66,27 +77,31 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
 
     const edgePadding = 50;
 
-    // Run simulation synchronously the default number of times (300)
-    for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
-      forceSimulation.tick();
+    return new Promise((resolve, reject) => {
+      // Run simulation synchronously the default number of times (300)
+      for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
+        forceSimulation.tick();
 
-      // Bound nodes to SVG
-      graphCopy.nodes.forEach(node => {
-        node.x = Math.max(
-          edgePadding,
-          Math.min(layoutParams.width - edgePadding, node.x!)
-        );
-        node.y = Math.max(
-          edgePadding,
-          Math.min(layoutParams.height - edgePadding, node.y!)
-        );
+        // Bound nodes to SVG
+        graphCopy.nodes.forEach(node => {
+          node.x = Math.max(
+            edgePadding,
+            Math.min(layoutParams.width - edgePadding, node.x!)
+          );
+          node.y = Math.max(
+            edgePadding,
+            Math.min(layoutParams.height - edgePadding, node.y!)
+          );
+        });
+      }
+
+      // Copy over x and y positions onto original graph once simulation is finished
+      graphCopy.nodes.forEach((node, i) => {
+        graph.nodes[i].x = node.x;
+        graph.nodes[i].y = node.y;
       });
-    }
 
-    // Copy over x and y positions onto original graph once simulation is finished
-    graphCopy.nodes.forEach((node, i) => {
-      graph.nodes[i].x = node.x;
-      graph.nodes[i].y = node.y;
+      resolve();
     });
   }
 };
@@ -96,7 +111,7 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
  */
 export const d3TreeLayoutEngine: IGraphLayoutEngine = {
   relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
-    return;
+    return Promise.resolve();
   },
   setup: (
     graph: IGraph,
@@ -162,31 +177,35 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
       map[edge.source.id].children.push(map[edge.target.id]);
     }
 
-    const treeLayout = d3.tree();
-    const root = d3.hierarchy(rootData);
-    treeLayout(root); // Sets x and y positions, in [0, 1] range
+    return new Promise((resolve, reject) => {
+      const treeLayout = d3.tree();
+      const root = d3.hierarchy(rootData);
+      treeLayout(root); // Sets x and y positions, in [0, 1] range
 
-    let maxDepth = 0;
-    root.descendants().forEach(n => {
-      if (n.depth > maxDepth) {
-        maxDepth = n.depth;
-      }
-    });
+      let maxDepth = 0;
+      root.descendants().forEach(n => {
+        if (n.depth > maxDepth) {
+          maxDepth = n.depth;
+        }
+      });
 
-    /**
-     * Tree layout has a tendency to fill the y-axis, e.g. if you have a parent and a child node,
-     * it will place the parent at the top and child at the bottom. This takes up more space then is often necessary.
-     * To make this look better, we divide the available height into `maxDepth + 1` equal sections,
-     * and place the nodes along those dividing lines. This tends to look better, while still filling
-     * the whole area when the depth is high enough.
-     */
-    const heightDivision = layoutParams.height / (maxDepth + 2);
+      /**
+       * Tree layout has a tendency to fill the y-axis, e.g. if you have a parent and a child node,
+       * it will place the parent at the top and child at the bottom. This takes up more space then is often necessary.
+       * To make this look better, we divide the available height into `maxDepth + 1` equal sections,
+       * and place the nodes along those dividing lines. This tends to look better, while still filling
+       * the whole area when the depth is high enough.
+       */
+      const heightDivision = layoutParams.height / (maxDepth + 2);
 
-    root.each((n: d3.HierarchyPointNode<IHierarchyNode>) => {
-      n.data.node.x = n.x * layoutParams.width;
-      n.data.node.y =
-        n.y * (layoutParams.height - heightDivision - heightDivision) +
-        heightDivision;
+      root.each((n: d3.HierarchyPointNode<IHierarchyNode>) => {
+        n.data.node.x = n.x * layoutParams.width;
+        n.data.node.y =
+          n.y * (layoutParams.height - heightDivision - heightDivision) +
+          heightDivision;
+      });
+
+      resolve();
     });
   }
 };
@@ -222,29 +241,28 @@ export const cytoscapeLayoutEngine: IGraphLayoutEngine = {
       elements
     });
 
+    return new Promise((resolve, reject) => {
     c
       .layout({
-        name: opts.name || "cose",
+        name: "dagre",
         boundingBox: {
-          x1: 0,
-          y1: 0,
-          w: layoutParams.width,
-          h: layoutParams.height
+          x1: 60,
+          y1: 60,
+          w: layoutParams.width - 120,
+          h: layoutParams.height - 120
         },
-        fit: false,
+        fit: true,
         stop() {
           c.nodes().forEach((node: any) => {
             const i = graph.nodes.findIndex(n => n.id === node.id());
             graph.nodes[i].x = node.position().x;
             graph.nodes[i].y = node.position().y;
           });
+
+          resolve();
         }
       })
       .run();
-
-    for (const node of graph.nodes) {
-      node.x = 0;
-      node.y = 0;
-    }
+    });
   }
 };*/

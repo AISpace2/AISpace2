@@ -51,9 +51,9 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.layoutGraph({
         width: this.$el.width(),
         height: this.$el.width() / 1.6
+      }).then(() => {
+        this.vue.$data.graph = this.graph;
       });
-
-      this.vue.$data.graph = this.graph;
     });
 
     $(window).resize(() => {
@@ -189,12 +189,11 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           opts.root = root;
         }
 
-        d3TreeLayoutEngine.setup(this.graph, layoutParams, opts);
-        break;
+        return d3TreeLayoutEngine.setup(this.graph, layoutParams, opts);
       }
       case "force":
       default:
-        d3ForceLayoutEngine.setup(this.graph, layoutParams);
+        return d3ForceLayoutEngine.setup(this.graph, layoutParams);
     }
   }
 }
