@@ -11,7 +11,7 @@
       </template>
       <template slot="edge" scope="props">
         <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="props.edge.styles.stroke"
-                      :strokeWidth="props.edge.styles.strokeWidth" :text="showEdgeCosts ? props.edge.cost : undefined"
+                      :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)"
                       :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry">
         </DirectedEdge>
@@ -110,6 +110,20 @@ export default class SearchVisualizer extends Vue {
     }
 
     return 1;
+  }
+
+  edgeText(edge: ISearchGraphEdge) {
+    let text = '';
+
+    if (edge.name != null) {
+      text = edge.name;
+    }
+
+    if (this.showEdgeCosts) {
+      text += ` (${edge.cost})`;
+    }
+
+    return text;
   }
 
   /**

@@ -55,7 +55,7 @@ def search_problem_to_json(problem):
         from_node = str(arc.from_node)
         to_node = str(arc.to_node)
 
-        new_edge = {'id': edge_id, 'source': node_map[from_node],
+        new_edge = {'id': edge_id, 'name': arc.action, 'source': node_map[from_node],
                     'target': node_map[to_node], 'cost': arc.cost}
         edge_map[(from_node, to_node)] = edge_id
         edges.append(new_edge)

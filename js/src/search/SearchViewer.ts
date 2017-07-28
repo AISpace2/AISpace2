@@ -5,7 +5,6 @@ import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import {
-  cytoscapeLayoutEngine,
   d3ForceLayoutEngine,
   d3TreeLayoutEngine,
   IGraphLayoutParams

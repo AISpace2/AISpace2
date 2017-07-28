@@ -108,7 +108,6 @@ class Displayable(StepDOMWidget):
 
                     if (str(arc.from_node), str(arc.to_node)) not in self._implicit_neighbours_added:
                         # Found a new neighbour!
-                        arc = Arc(arc.from_node, arc.to_node)
                         self._explicit_graph_from_problem.arcs.append(arc)
                         self._implicit_neighbours_added.add(
                             (str(arc.from_node), str(arc.to_node)))
