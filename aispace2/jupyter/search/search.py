@@ -4,12 +4,12 @@ from threading import Thread
 
 from aipython.searchProblem import (Arc, Search_problem_from_explicit_graph,
                                     problem1)
-from aispace2.searchjsonbridge import (implicit_to_explicit_search_problem,
+from .searchjsonbridge import (implicit_to_explicit_search_problem,
                                        search_problem_to_json)
 from ipywidgets import register
 from traitlets import Bool, Dict, Unicode
 
-from .stepdomwidget import StepDOMWidget
+from ..stepdomwidget import StepDOMWidget
 
 
 @register('aispace2.SearchViewer')

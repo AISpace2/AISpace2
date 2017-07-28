@@ -4,9 +4,8 @@ from functools import partial
 from ipywidgets import register
 from traitlets import Dict, Float, Unicode
 
-from aispace2.cspjsonbridge import csp_to_json
-
-from .stepdomwidget import StepDOMWidget
+from ..stepdomwidget import StepDOMWidget
+from .cspjsonbridge import csp_to_json
 
 
 class ReturnableThread(threading.Thread):
