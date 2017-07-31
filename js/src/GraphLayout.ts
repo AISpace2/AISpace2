@@ -213,8 +213,6 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
 /*
    This is a test of using cytoscape and it's layouts.
    You must install cytoscape and require it before trying the following.
-   Note that some of cytoscape's layouts are asynchronous, which breaks
-   the current, synchronous-only layout engine.
 
 export const cytoscapeLayoutEngine: IGraphLayoutEngine = {
   relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
