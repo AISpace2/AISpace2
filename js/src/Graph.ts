@@ -69,14 +69,31 @@ export class Graph<
   TNode extends IGraphNode = IGraphNode,
   TEdge extends IGraphEdge = IGraphEdge
 > implements IGraph<TNode, TEdge> {
-  public static fromJSON(json: IGraphJSON): Graph {
+  /**
+   * Converts JSON into an instance of the class Graph.
+   * @param json The JSON representation of the graph to convert.
+   * @param prevGraph If provided, the styles of the previous graph are merged
+   * into the new graph. The reason why this is necessary is that styles are *not*
+   * preserved when being converted to Python (since those classes do not know about the visualization),
+   * so in order to keep them, we need to take the styles from the previous graph.
+   * In this way, applied styles can persist even after being converted to and from JSON.
+   * This is only needed when the graph is being updated with more nodes or edges after conversion.
+   */
+  public static fromJSON(json: IGraphJSON, prevGraph?: Graph): Graph {
     const newGraph = {
       edges: [] as IGraphEdge[],
       nodes: [] as IGraphNode[]
     };
 
     for (const node of Object.values(json.nodes)) {
-      const newNode = { ...node, styles: { rx: 40, ry: 30 } };
+      let newNode = { styles: { rx: 40, ry: 30 }, ...node };      
+      if (prevGraph != null) {
+        // Copy over the styles of the node in the previous graph
+        const i = prevGraph.nodes.findIndex(n => n.id === node.id);
+        if (i !== -1) {
+          newNode = {...node, styles: {...prevGraph.nodes[i].styles }};          
+        }
+      }     
       newGraph.nodes.push(newNode);
     }
 

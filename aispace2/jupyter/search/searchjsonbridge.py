@@ -32,7 +32,7 @@ def search_problem_to_json(problem):
     """
     nodes = []
     edges = []
-    node_map = {str(n): str(uuid.uuid4()) for n in problem.nodes}
+    node_map = {str(n): str(hash(n)) for n in problem.nodes}
     edge_map = {}
 
     for node in problem.nodes:
@@ -51,7 +51,7 @@ def search_problem_to_json(problem):
         nodes.append(node_to_add)
 
     for arc in problem.arcs:
-        edge_id = str(uuid.uuid4())
+        edge_id = str(hash(arc))
         from_node = str(arc.from_node)
         to_node = str(arc.to_node)
 

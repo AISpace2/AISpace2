@@ -43,7 +43,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     });
 
     this.listenTo(this.model, "change:graph_json", () => {
-      this.graph = Graph.fromJSON(this.model.graphJSON) as Graph<
+      this.graph = Graph.fromJSON(this.model.graphJSON, this.graph) as Graph<
         ISearchGraphNode,
         ISearchGraphEdge
       >;
