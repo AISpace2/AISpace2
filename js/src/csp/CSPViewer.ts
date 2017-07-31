@@ -27,9 +27,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     // Functions called on the Python backend are queued until first render
     if (this.model.initial_render) {
       this.send({ event: "initial_render" });
-      this.highlightArc({
-        action: "highlightArc",
-        arcId: null,
+      this.highlightArcs({
+        action: "highlightArcs",
+        arcIds: null,
         colour: "blue",
         style: "normal"
       });
@@ -39,10 +39,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       // tslint:disable-next-line:no-console
       console.log(event);
 
-      if (Events.isHighlightArcEvent(event)) {
-        this.highlightArc(event);
+      if (Events.isHighlightArcsEvent(event)) {
+        this.highlightArcs(event);
       } else if (Events.isSetDomainEvent(event)) {
         this.setDomain(event);
+      } else if (Events.isHighlightNodesEvent(event)) {
+        this.highlightNodes(event);
       } else if (isOutputEvent(event)) {
         this.vue.output = event.text;
       }
@@ -125,25 +127,25 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /**
    * Highlights an arc (or all arcs), as described by the event object.
    */
-  private highlightArc(event: Events.ICSPHighlightArcEvent) {
+  private highlightArcs(event: Events.ICSPHighlightArcsEvent) {
     const strokeWidth = event.style === "bold" ? 7 : 4;
 
-    if (event.arcId == null) {
+    if (event.arcIds == null) {
       for (const edge of this.graph.edges) {
         const stroke = event.colour ? event.colour : edge.styles.stroke;
         Vue.set(edge.styles, "stroke", stroke);
         Vue.set(edge.styles, "strokeWidth", strokeWidth);
       }
     } else {
-      const i = this.graph.edges
-        .map(a => a.id)
-        .findIndex(a => a === event.arcId);
-      if (i !== -1) {
-        const stroke = event.colour
-          ? event.colour
-          : this.graph.edges[i].styles.stroke;
-        Vue.set(this.graph.edges[i].styles, "stroke", stroke);
-        Vue.set(this.graph.edges[i].styles, "strokeWidth", strokeWidth);
+      for (const arcId of event.arcIds) {
+        const i = this.graph.edges.map(a => a.id).findIndex(a => a === arcId);
+        if (i !== -1) {
+          const stroke = event.colour
+            ? event.colour
+            : this.graph.edges[i].styles.stroke;
+          Vue.set(this.graph.edges[i].styles, "stroke", stroke);
+          Vue.set(this.graph.edges[i].styles, "strokeWidth", strokeWidth);
+        }
       }
     }
   }
@@ -158,6 +160,20 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
     if (i !== -1) {
       this.graph.nodes[i].domain = event.domain;
+    }
+  }
+
+  /**
+   * Highlights nodes, as described by the event object.
+   */
+  private highlightNodes(event: Events.ICSPHighlightNodesEvent) {
+    for (const nodeId of event.nodeIds) {
+      const i = this.graph.nodes.map(a => a.id).findIndex(a => a === nodeId);
+
+      if (i !== -1) {
+        Vue.set(this.graph.nodes[i].styles, "stroke", event.colour);
+        Vue.set(this.graph.nodes[i].styles, "strokeWidth", 2);
+      }
     }
   }
 

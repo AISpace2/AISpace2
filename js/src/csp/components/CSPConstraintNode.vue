@@ -1,7 +1,7 @@
 <template>
   <g>
-    <rect width="70" height="50" stroke="black" :fill="rectFill" x="-35" y="-25"></rect>
-    <text x="0" y="0" text-anchor="middle" alignment-baseline="middle" :fill="textFill">{{constraintText}}</text>
+    <rect width="70" height="50" :fill="fillColour" :stroke="stroke" :stroke-width="strokeWidth" x="-35" y="-25"></rect>
+    <text x="0" y="0" text-anchor="middle" alignment-baseline="middle" :fill="textColour">{{constraintText}}</text>
   </g>
 </template>
 
@@ -19,32 +19,14 @@ export default class CSPConstraintNode extends Vue {
   @Prop() name: string;
   /** Text representing the constraint. */
   @Prop() constraint: string;
-  /** True if the node is being focused (e.g. selected). */
-  @Prop({ default: false })
-  focus: boolean;
-  /** True if the node is being hovered over. */
-  @Prop({ default: false })
-  hover: boolean;
-
-  get rectFill() {
-    if (this.focus) {
-      return "pink";
-    }
-
-    if (this.hover) {
-      return "black";
-    }
-
-    return "white";
-  }
-
-  get textFill() {
-    if (this.hover) {
-      return "white";
-    }
-
-    return "black";
-  }
+  @Prop({ default: "black" })
+  stroke: string;
+  @Prop({ default: 1 })
+  strokeWidth: number;
+  @Prop({ default: "white" })
+  fillColour: string;
+  @Prop({default: "black" })
+  textColour: string;
 
   get constraintText() {
     if (this.constraint != null) {

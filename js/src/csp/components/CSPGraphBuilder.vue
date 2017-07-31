@@ -3,9 +3,11 @@
     <GraphVisualizerBase :graph="graph" :width="width" :height="height"
       @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
       <template slot="node" scope="props">
-        <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name" :domain="props.node.domain" :focus="props.node === selection">
+        <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name" :domain="props.node.domain"
+                         :fillColour="props.node === selection ? 'pink' : 'white'">
         </CSPVariableNode>
-        <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name" :constraint="props.node.constraint" :focus="props.node === selection">
+        <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name" :constraint="props.node.constraint"
+                           :fillColour="props.node === selection ? 'pink' : 'white'">
         </CSPConstraintNode>
       </template>
       <template slot="edge" scope="props">

@@ -56,6 +56,10 @@ class Displayable(StepDOMWidget):
         # A reference to the variable the user has selected.
         self._selected_var = None
 
+        # If this problem is an SLS, tracks if this is the first conflict reported.
+        # If so, will also compute non-conflicts to highlight green the first time around.
+        self._sls_first_conflict = True
+
         (self.graph_json, self._domain_map, self._edge_map) = csp_to_json(self.csp)
 
         self._initialize_controls()
@@ -144,49 +148,188 @@ class Displayable(StepDOMWidget):
         elif args[0] == "Processing arc (":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_action(
-                variable, constraint, style='bold', colour=None)
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='bold', colour=None)
 
         elif args[0] == 'Domain pruned':
             variable = args[2]
             constraint = args[6]
-            self._send_highlight_action(
-                variable, constraint, style='bold', colour='green')
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='bold', colour='green')
 
         elif args[0] == "Arc: (" and args[4] == ") is inconsistent":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_action(
-                variable, constraint, style='bold', colour='red')
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='bold', colour='red')
 
         elif args[0] == "Arc: (" and args[4] == ") now consistent":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_action(
-                variable, constraint, style='normal', colour='green')
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='normal', colour='green')
             should_wait = False
 
         elif args[0] == "  adding" and args[2] == "to to_do.":
             if args[1] != "nothing":
                 arcs = list(args[1])
+                arcs_to_highlight = []
+
                 for arc in arcs:
-                    self._send_highlight_action(
-                        arc[0], arc[1], style='normal', colour='blue')
+                    arcs_to_highlight.append((arc[0], arc[1]))
+
+                self._send_highlight_arcs_action(
+                    arcs_to_highlight, style='normal', colour='blue')
+
+        #############################
+        ### SLS-specific displays ###
+        #############################
+
+        elif args[0] == "Initial assignment":
+            assignment = args[1]
+            for (key, val) in assignment.items():
+                self._send_set_domain_action(key, [val])
+
+        elif args[0] == "Assigning" and args[2] == "=":
+            var = args[1]
+            domain = args[3]
+            self._send_set_domain_action(var, [domain])
+            self._send_highlight_nodes_action(var, "blue")
+
+        elif args[0] == "Checking":
+            node = args[1]
+            self._send_highlight_nodes_action(node, "blue")
+
+        elif args[0] == "Still inconsistent":
+            const = args[1]
+            nodes_to_highlight = {const}
+            arcs_to_highlight = []
+
+            for var in const.scope:
+                nodes_to_highlight.add(var)
+                arcs_to_highlight.append((var, const))
+
+            self._send_highlight_nodes_action(nodes_to_highlight, "red")
+            self._send_highlight_arcs_action(arcs_to_highlight, "bold", "red")
+
+        elif args[0] == "Still consistent":
+            const = args[1]
+            nodes_to_highlight = {const}
+            arcs_to_highlight = []
+
+            for var in const.scope:
+                nodes_to_highlight.add(var)
+                arcs_to_highlight.append((var, const))
+
+            self._send_highlight_nodes_action(nodes_to_highlight, "green")
+            self._send_highlight_arcs_action(
+                arcs_to_highlight, "bold", "green")
+
+        elif args[0] == "Became consistent":
+            const = args[1]
+            nodes_to_highlight = {const}
+            arcs_to_highlight = []
+
+            for var in const.scope:
+                nodes_to_highlight.add(var)
+                arcs_to_highlight.append((var, const))
+
+            self._send_highlight_nodes_action(nodes_to_highlight, "green")
+            self._send_highlight_arcs_action(
+                arcs_to_highlight, "bold", "green")
+
+        elif args[0] == "Became inconsistent":
+            const = args[1]
+            nodes_to_highlight = {const}
+            arcs_to_highlight = []
+
+            for var in const.scope:
+                nodes_to_highlight.add(var)
+                arcs_to_highlight.append((var, const))
+
+            self._send_highlight_nodes_action(nodes_to_highlight, "red")
+            self._send_highlight_arcs_action(arcs_to_highlight, "bold", "red")
+
+        elif args[0] == "Conflicts:":
+            conflicts = args[1]
+            conflict_nodes_to_highlight = set()
+            conflict_arcs_to_highlight = []
+            non_conflict_nodes_to_highlight = set()
+            non_conflict_arcs_to_highlight = []
+
+            if self._sls_first_conflict:
+                # Highlight all non-conflicts green
+                self._sls_first_conflict = False
+                not_conflicts = set(self.csp.constraints) - conflicts
+
+                for not_conflict in not_conflicts:
+                    non_conflict_nodes_to_highlight.add(not_conflict)
+
+                    for node in not_conflict.scope:
+                        non_conflict_nodes_to_highlight.add(node)
+                        non_conflict_arcs_to_highlight.append(
+                            (node, not_conflict))
+
+                self._send_highlight_nodes_action(
+                    non_conflict_nodes_to_highlight, "green")
+                self._send_highlight_arcs_action(
+                    non_conflict_arcs_to_highlight, "bold", "green")
+
+            # Highlight all conflicts red
+            for conflict in conflicts:
+                conflict_nodes_to_highlight.add(conflict)
+
+                for node in conflict.scope:
+                    conflict_nodes_to_highlight.add(node)
+                    conflict_arcs_to_highlight.append((node, conflict))
+
+            self._send_highlight_nodes_action(
+                conflict_nodes_to_highlight, "red")
+            self._send_highlight_arcs_action(
+                conflict_arcs_to_highlight, "bold", "red")
 
         super().display(level, *args, **dict(kwargs, should_wait=should_wait))
 
-    def _send_highlight_action(self, var, const, style='normal', colour=None):
-        """Sends a message to the front-end visualization to highlight an arc.
+    def _send_highlight_nodes_action(self, vars, colour):
+        """Sends a message to the front-end visualization to highlight nodes.
 
         Args:
-            var (string): The name of the variable that is part of the arc to highlight.
-            const (Constraint): The constraint that is affecting `var`.
-            style ('normal'|'bold'): Style of the highlight.
+            vars (string|string[]): The name(s) of the variables to highlight.
+            colour (string|None): A HTML colour string for the stroke of the node.
+                Passing in None will keep the existing stroke of the node.
+        """
+        try:
+            vars = iter(vars)
+        except:
+            vars = list(vars)
+
+        nodeIds = []
+        for var in vars:
+            nodeIds.append(self._domain_map[var])
+
+        self.send({'action': 'highlightNodes',
+                   'nodeIds': nodeIds, 'colour': colour})
+
+    def _send_highlight_arcs_action(self, arcs, style='normal', colour=None):
+        """Sends a message to the front-end visualization to highlight arcs.
+
+        Args:
+            arcs ((string, Constraint)|(string, Constraint)[]): 
+                Tuples of (variable name, Constraint instance) that form an arc. 
+                For convenience, you do not need to pass a list of tuples of you only have one to highlight.
+            style ('normal'|'bold'): Style of the highlight. Applied to every arc passed in.
             colour (string|None): A HTML colour string for the colour of the line.
-                Passing in None will keep the existing colour of the arc.
+                Passing in None will keep the existing colour of the arcs.
         """
 
-        self.send({'action': 'highlightArc', 'arcId': self._edge_map[(var, const)],
+        if not isinstance(arcs, list):
+            arcs = [arcs]
+
+        arcIds = []
+        for arc in arcs:
+            arcIds.append(self._edge_map[arc])
+
+        self.send({'action': 'highlightArcs', 'arcIds': arcIds,
                    'style': style, 'colour': colour})
 
     def _send_set_domain_action(self, var, domain):

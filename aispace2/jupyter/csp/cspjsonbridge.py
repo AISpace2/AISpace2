@@ -28,9 +28,9 @@ def csp_to_json(csp):
             This JSON should be immediately usable in creating a new CSP Graph in JavaScript.
             See the TypeScript definition of IGraphJSON for details of its shape.
 
-            The second dictionary is a domain map, where the keys are node names (strings),
+            The second dictionary is a node map, where the keys are node names (strings),
             and values are the IDs (also strings) of the nodes in the resulting JSON.
-            For example, `domain_map['A'] -> 'a6c!dv33'`.
+            For example, `node_map['A'] -> 'a6c!dv33'` and `node_map[A_lt_B_constraint] -> '205cvlkj'.
             You can ignore this dictionary - it is provided for convenience.
 
             The third dictionary is a edge map.
@@ -42,14 +42,14 @@ def csp_to_json(csp):
     csp_json = {'nodes': [], 'edges': []}
 
     # Maps variables to their IDs
-    domain_map = {var: str(uuid.uuid4()) for var in csp.domains}
+    node_map = {var: str(uuid.uuid4()) for var in csp.domains}
 
     # Maps (variable, constraint) to their corresponding arc IDs
     edge_map = {}
 
     for i, (var, value) in enumerate(csp.domains.items()):
         csp_json['nodes'].append({
-            'id': domain_map[var],
+            'id': node_map[var],
             'name': var,
             'type':
             'csp:variable',
@@ -65,20 +65,21 @@ def csp_to_json(csp):
             'type': 'csp:constraint',
             'idx': i
         })
+        node_map[constraint] = constraint_id
 
         # Create a link from the constraint to each variable in its scope
         for var in constraint.scope:
             link_id = str(uuid.uuid4())
             link = {
                 'id': link_id,
-                'source': domain_map[var],
+                'source': node_map[var],
                 'target': constraint_id
             }
 
             csp_json['edges'].append(link)
             edge_map[(var, constraint)] = link_id
 
-    return (csp_json, domain_map, edge_map)
+    return (csp_json, node_map, edge_map)
 
 
 def csp_from_json(graph_json):

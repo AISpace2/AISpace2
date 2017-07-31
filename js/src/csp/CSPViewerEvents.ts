@@ -1,9 +1,9 @@
 import { IEvent } from "../Events";
 
-export interface ICSPHighlightArcEvent extends IEvent {
-  action: "highlightArc";
-  /** The ID of the arc to highlight. If null, all arcs are highlighted. */
-  arcId: string | null;
+export interface ICSPHighlightArcsEvent extends IEvent {
+  action: "highlightArcs";
+  /** The IDs of the arc to highlight. If null, all arcs are highlighted. */
+  arcIds: string[] | null;
   /** The thickness of the highlight. */
   style: "normal" | "bold";
   /** The colour of the highlight. */
@@ -18,12 +18,26 @@ export interface ICSPSetDomainEvent extends IEvent {
   domain: string[];
 }
 
-export function isHighlightArcEvent(
+export interface ICSPHighlightNodesEvent extends IEvent {
+  action: "highlightNodes";
+  /** The IDs of the nodes to highlight. */
+  nodeIds: string[];
+  /** The colour of the highlight. */
+  colour: string;
+}
+
+export function isHighlightArcsEvent(
   event: IEvent
-): event is ICSPHighlightArcEvent {
-  return event.action === "highlightArc";
+): event is ICSPHighlightArcsEvent {
+  return event.action === "highlightArcs";
 }
 
 export function isSetDomainEvent(event: IEvent): event is ICSPSetDomainEvent {
   return event.action === "setDomain";
+}
+
+export function isHighlightNodesEvent(
+  event: IEvent
+): event is ICSPHighlightNodesEvent {
+  return event.action === "highlightNodes";
 }

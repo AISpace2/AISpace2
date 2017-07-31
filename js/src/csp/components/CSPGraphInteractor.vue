@@ -3,10 +3,14 @@
     <GraphVisualizerBase :graph="graph" @click:edge="edgeClicked" :width="width" :height="height">
       <template slot="node" scope="props">
         <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name"
-                         :domain="props.node.domain" :hover="props.hover">
+                         :domain="props.node.domain" 
+                         :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
+                         :textColour="props.hover ? 'white' : 'black'" :fillColour="props.hover ? 'black' : 'white'">
         </CSPVariableNode>
         <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name"
-                           :constraint="props.node.constraint" :hover="props.hover">
+                           :constraint="props.node.constraint" 
+                           :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
+                           :textColour="props.hover ? 'white' : 'black'" :fillColour="props.hover ? 'black' : 'white'">
         </CSPConstraintNode>
       </template>
       <template slot="edge" scope="props">
@@ -72,6 +76,22 @@ export default class CSPGraphInteractor extends Vue {
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
+  }
+
+  nodeStrokeColour(node: ICSPGraphNode, isHovering: boolean = false) {
+    if (node.styles && node.styles.stroke) {
+      return node.styles.stroke;
+    }
+
+    return undefined;
+  }
+
+  nodeStrokeWidth(node: ICSPGraphNode) {
+    if (node.styles && node.styles.strokeWidth) {
+      return node.styles.strokeWidth;
+    }
+
+    return undefined;
   }
 
   stroke(edge: IGraphEdge) {

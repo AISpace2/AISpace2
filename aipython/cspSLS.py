@@ -8,9 +8,9 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from cspProblem import CSP, Constraint
-from searchProblem import Arc, Search_problem
-from utilities import Displayable
+from aipython.cspProblem import CSP, Constraint
+from aipython.searchProblem import Arc, Search_problem
+from aipython.utilities import Displayable
 import random
 import heapq
 
@@ -259,7 +259,7 @@ class Runtime_distribution(object):
         #plt.draw()
         SLSearcher.max_display_level= temp_mdl  #restore display
 
-from cspExamples import test
+from aipython.cspExamples import test
 def sls_solver(csp,prob_best=0.7):
     """stochastic local searcher"""
     se0 = SLSearcher(csp)
@@ -273,7 +273,7 @@ if __name__ == "__main__":
     test(sls_solver) 
     test(any_conflict_solver)
     
-from cspExamples import csp1, csp2, crossword1
+from aipython.cspExamples import csp1, csp2, crossword1
 
 ## Test Solving CSPs with Search:
 #se1 = SLSearcher(csp1); print(se1.search(100))

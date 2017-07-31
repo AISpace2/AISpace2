@@ -86,14 +86,14 @@ export class Graph<
     };
 
     for (const node of Object.values(json.nodes)) {
-      let newNode = { styles: { rx: 40, ry: 30 }, ...node };      
+      let newNode = { styles: { rx: 40, ry: 30 }, ...node };
       if (prevGraph != null) {
         // Copy over the styles of the node in the previous graph
         const i = prevGraph.nodes.findIndex(n => n.id === node.id);
         if (i !== -1) {
-          newNode = {...node, styles: {...prevGraph.nodes[i].styles }};          
+          newNode = { ...node, styles: { ...prevGraph.nodes[i].styles } };
         }
-      }     
+      }
       newGraph.nodes.push(newNode);
     }
 

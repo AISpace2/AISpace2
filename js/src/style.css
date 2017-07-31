@@ -9,7 +9,7 @@ svg text {
   user-select: none;
 }
 
-.p-Widget{
+.p-Widget {
   font-family: var(--font-face);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
