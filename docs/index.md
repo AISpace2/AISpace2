@@ -35,6 +35,9 @@ Depending on your setup, you may have to use `pip3` instead of `pip` to ensure y
         <li>
         <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/arc_consistency.ipynb">CSPs using Arc Consistency</a>
         </li>
+        <li>
+        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/stochastic_local_search.ipynb">Stochastic Local Search (SLS)</a>
+        </li>
     </ul>
     </details>
 
