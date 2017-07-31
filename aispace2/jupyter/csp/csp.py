@@ -38,7 +38,7 @@ class Displayable(StepDOMWidget):
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
 
     graph_json = Dict().tag(sync=True)
-    line_width = Float(2.0).tag(sync=True)
+    line_width = Float(4.0).tag(sync=True)
     sleep_time = Float(0.2).tag(sync=True)
 
     def __init__(self):

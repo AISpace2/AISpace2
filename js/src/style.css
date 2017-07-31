@@ -9,10 +9,10 @@ svg text {
   user-select: none;
 }
 
-.output-container {
-  border: 1px solid silver;
-  border-radius: 2px;
+.p-Widget{
   font-family: var(--font-face);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #cspviewer > #footer {
@@ -22,12 +22,4 @@ svg text {
 #cspviewer #output {
   margin-top: 5px;
   font-size: 14px;
-}
-
-#app {
-  padding: 5px;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
 }
