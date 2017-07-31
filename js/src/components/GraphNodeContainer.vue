@@ -47,6 +47,7 @@ export default class GraphNodeContainer extends Vue {
   mousedown(e: MouseEvent) {
     this.mouseDown = true;
     this.moved = false;
+    e.preventDefault();
   }
 
   mousemove(e: MouseEvent) {
