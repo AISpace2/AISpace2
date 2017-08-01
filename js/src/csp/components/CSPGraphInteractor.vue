@@ -18,13 +18,13 @@
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
     </GraphVisualizerBase>
-    <div id="footer">
+    <div>
       <div id="controls" class="btn-group">
         <button id="fine-step" class="btn btn-default" @click="$emit('click:fine-step')">Fine Step</button>
         <button id="step" class="btn btn-default" @click="$emit('click:step')">Step</button>
         <button id="auto-step" class="btn btn-default" @click="$emit('click:auto-step')">Auto Step</button>
       </div>
-      <div id="output">{{output}}</div>
+      <div class="output">{{output}}</div>
     </div>
   </div>
 </template>

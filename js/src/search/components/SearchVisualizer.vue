@@ -23,7 +23,7 @@
         <button id="step" class="btn btn-default" @click="$emit('click:step')">Step</button>
         <button id="auto-step" class="btn btn-default" @click="$emit('click:auto-step')">Auto Step</button>
       </div>
-      <div>{{output}}</div>
+      <div class="output">{{output}}</div>
     </div>
   </div>
 </template>
