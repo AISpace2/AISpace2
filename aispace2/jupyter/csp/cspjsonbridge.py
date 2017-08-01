@@ -3,7 +3,6 @@ Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP)
 and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 """
 
-import uuid
 from operator import lt
 from string import Template
 
@@ -42,7 +41,7 @@ def csp_to_json(csp):
     csp_json = {'nodes': [], 'edges': []}
 
     # Maps variables to their IDs
-    node_map = {var: str(uuid.uuid4()) for var in csp.domains}
+    node_map = {var: str(hash(var)) for var in csp.domains}
 
     # Maps (variable, constraint) to their corresponding arc IDs
     edge_map = {}
@@ -58,7 +57,7 @@ def csp_to_json(csp):
         })
 
     for (i, constraint) in enumerate(csp.constraints):
-        constraint_id = str(uuid.uuid4())
+        constraint_id = str(hash(constraint))
         csp_json['nodes'].append({
             'id': constraint_id,
             'name': constraint.__repr__(),
@@ -69,7 +68,7 @@ def csp_to_json(csp):
 
         # Create a link from the constraint to each variable in its scope
         for var in constraint.scope:
-            link_id = str(uuid.uuid4())
+            link_id = str(hash((var, constraint)))
             link = {
                 'id': link_id,
                 'source': node_map[var],
