@@ -5,7 +5,7 @@
      @mouseup="mouseup($event)"
      @mouseover="$emit('mouseover', $event)"
      @mouseout="$emit('mouseout', $event)"
-     :class="{transition: transition && !cancelTransitions}">
+     :class="{transitions}">
     <slot></slot>
   </g>
 </template>
@@ -26,15 +26,13 @@ export default class GraphNodeContainer extends Vue {
   /** The y-coordinate, in pixels, where the node is drawn.*/
   @Prop() y: number;
   /** If true, animates positional changes and other properties of this node. */
-  @Prop({default: true})
-  transition: boolean;
+  @Prop({default: false})
+  transitions: boolean;
 
   /** True if the user is holding mouse down. */
   mouseDown = false;
   /** True if the mouse has moved since the user has held mouse down. */
   moved = false;
-  /** If true, cancels transitions regardless of the transition prop. Used when dragging the node. */
-  cancelTransitions = false;
 
   /** Events Emitted */
   /**
@@ -43,6 +41,10 @@ export default class GraphNodeContainer extends Vue {
    * 'click': The user has clicked on the node. Receives MouseEvent as the first argument.
    * 'mouseover': The mouse is over the node. Receives MouseEvent as the first argument.
    * 'mouseout': The mouse has left the node. Receives MouseEvent as the first argument.
+   * 'canTransition': Notifies its parent if it wants transitions enabled.
+   *                  Receives a boolean as the first argument.
+   *                  If false, requests its parent disables transitions on itself and edges (e.g. for dragging);
+   *                  If true, allows the parent to set its transition prop to whatever it wants.
    */
 
   /** Returns the translation to move this node to the right position. */
@@ -60,7 +62,7 @@ export default class GraphNodeContainer extends Vue {
     if (this.mouseDown && !this.moved) {
       this.moved = true;
       this.$emit("dragstart");
-      this.cancelTransitions = false;
+      this.$emit("canTransition", false);
     }
   }
 
@@ -79,7 +81,7 @@ export default class GraphNodeContainer extends Vue {
 
     this.mouseDown = false;
     this.moved = false;
-    this.cancelTransitions = true;
+    this.$emit("canTransition", true);
   }
 }
 </script>

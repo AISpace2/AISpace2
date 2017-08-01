@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" :width="width" :height="height">
+    <GraphVisualizerBase :graph="graph" :width="width" :height="height" :transitions="true">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                           :subtext="showNodeHeuristics ? props.node.h.toFixed(1) : undefined"

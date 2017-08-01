@@ -6,6 +6,7 @@
          @keydown.delete="$emit('delete')"
          @dblclick="onDblClick">
       <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
+                     :transitions="transitions && transitionsAllowed"
                      @mouseover="edgeMouseOver(edge)"
                      @mouseout="edgeMouseOut(edge)"
                      @click="$emit('click:edge', edge)">
@@ -15,10 +16,12 @@
               :hover="edge === edgeHover"></slot>
       </EdgeContainer>
       <GraphNodeContainer v-for="node in nodes" :key="node.id"
+                 :transitions="transitions && transitionsAllowed"
+                 :x="node.x" :y="node.y"      
                  @click="$emit('click:node', node)"
                  @dragstart="dragStart(node, $event)" @dragend="dragEnd"
                  @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
-                 :x="node.x" :y="node.y">
+                 @canTransition="toggleTransition">
         <slot name="node" :node="node" :hover="node === nodeHover"></slot>
       </GraphNodeContainer>
     </svg>
@@ -68,6 +71,9 @@ export default class GraphVisualizeBase extends Vue {
   @Prop({default: 600}) width: number;
   /** The height of the graph, in pixels. */
   @Prop({default: 480}) height: number;
+  /** If true, animates positional changes and other properties of the nodes/edges in this graph. */
+  @Prop({default: false})
+  transitions: boolean;
 
   /** The node or edge currently being dragged. */
   dragTarget: IGraphNode|IGraphEdge|null = null;
@@ -79,6 +85,8 @@ export default class GraphVisualizeBase extends Vue {
   prevPageX = 0;
   /** Tracks the pageY of the previous MouseEvent. Used to compute the delta mouse position. */
   prevPageY = 0;
+  /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
+  transitionsAllowed = true;
 
   $refs: {
     /** The SVG element that the graph is drawn in. */
@@ -125,6 +133,7 @@ export default class GraphVisualizeBase extends Vue {
 
     dragEnd() {
       this.dragTarget = null;
+      this.transitionsAllowed = true;
       this.prevPageX = 0;
       this.prevPageY = 0;
     }
@@ -154,6 +163,16 @@ export default class GraphVisualizeBase extends Vue {
       var x = e.pageX - svgBounds.left;
       var y = e.pageY - svgBounds.top;
       this.$emit("dblclick", x, y, e);
+    }
+
+    /**
+     * Toggles transitions on and off.
+     * 
+     * For example, when nodes are being dragged,
+     * we want to disable transitions on nodes and edges so their positions don't lag the mouse.
+     */
+    toggleTransition(allowed: boolean) {
+      this.transitionsAllowed = allowed;
     }
   }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <g @mouseover="$emit('mouseover', $event)" @mouseout="$emit('mouseout', $event)" @click="$emit('click', $event)"
-     :class="{transition}">
+     :class="{transitions}">
     <slot></slot>
   </g>
 </template>
@@ -20,7 +20,7 @@ import { Prop } from "vue-property-decorator";
 @Component
 export default class EdgeContainer extends Vue {
   /** If true, animates positional changes and other properties of the edge. */
-  @Prop({default: true})
-  transition: boolean;
+  @Prop({default: false})
+  transitions: boolean;
 }
 </script>
