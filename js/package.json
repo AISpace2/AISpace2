@@ -9,14 +9,9 @@
     "type": "git",
     "url": "https://github.com/aispace2/aispace2.git"
   },
-  "keywords": [
-    "jupyter",
-    "widgets",
-    "ipython",
-    "ipywidgets"
-  ],
+  "keywords": ["jupyter", "widgets", "ipython", "ipywidgets"],
   "scripts": {
-    "dev": "webpack --env=dev --watch",
+    "dev": "webpack-dashboard -m -- webpack --env=dev --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier \"src/**/*.{ts,js,json,css}\" --write",
     "build:dev": "webpack --env=dev --progress",
@@ -44,6 +39,7 @@
     "vue-loader": "^13.0.2",
     "vue-template-compiler": "^2.4.2",
     "webpack": "^3.2.0",
+    "webpack-dashboard": "^0.4.0",
     "webpack-merge": "^4.1.0",
     "webpack-sources": "^1.0.1"
   },

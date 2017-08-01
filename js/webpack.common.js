@@ -102,7 +102,7 @@ module.exports = {
         vue$: "vue/dist/vue.esm.js"
       }
     },
-    externals: ["jupyter-js-widgets"],
+    externals: ["jupyter-js-widgets", "underscore"],
     plugins: [new webpack.optimize.ModuleConcatenationPlugin()]
   },
   embeddable: {
