@@ -37,8 +37,6 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         this.highlightNodes(event);
       } else if (SearchViewerEvents.isHighlightPathEvent(event)) {
         this.highlightPath(event);
-      } else if (event.action === "add_neigh") {
-        this.graph.nodes.push();
       }
     });
 
