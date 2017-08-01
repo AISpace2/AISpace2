@@ -50,7 +50,8 @@ export default class DirectedEdge extends Vue {
   @Prop({ default: 4 })
   strokeWidth: number;
   /** The text displayed on the middle of the line. */
-  @Prop({type: [String, Number], required: false}) text?: string | number;
+  @Prop({type: [String, Number], required: false}) 
+  text?: string | number;
 
   /** Half the size of the arrow, such that (arrowHalfSize, arrowHalfSize) is the center of the arrow. */
   arrowHalfSize = 4;

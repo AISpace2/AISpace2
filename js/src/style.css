@@ -23,3 +23,8 @@ svg text {
   margin-top: 5px;
   font-size: 14px;
 }
+
+.transition,
+.transition * {
+  transition: all 0.5s ease-in-out, stroke 0s, fill 0s, stroke-width 0.2s;
+}
