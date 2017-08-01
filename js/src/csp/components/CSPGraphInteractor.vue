@@ -2,16 +2,15 @@
   <div>
     <GraphVisualizerBase :graph="graph" @click:edge="edgeClicked" :width="width" :height="height">
       <template slot="node" scope="props">
-        <CSPVariableNode v-if="props.node.type === 'csp:variable'" :name="props.node.name"
-                         :domain="props.node.domain" 
+        <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
+                         :subtext="domainText(props.node)" 
                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
-                         :textColour="props.hover ? 'white' : 'black'" :fillColour="props.hover ? 'black' : 'white'">
-        </CSPVariableNode>
-        <CSPConstraintNode v-if="props.node.type === 'csp:constraint'" :name="props.node.name"
-                           :constraint="props.node.constraint" 
+                         :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'">
+        </EllipseGraphNode>
+        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)"
                            :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
-                           :textColour="props.hover ? 'white' : 'black'" :fillColour="props.hover ? 'black' : 'white'">
-        </CSPConstraintNode>
+                           :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'">
+        </RectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
         <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
@@ -35,21 +34,22 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
+import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
-import CSPConstraintNode from "./CSPConstraintNode.vue";
-import CSPVariableNode from "./CSPVariableNode.vue";
+import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
 
 import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
+import * as CSPGraphUtils from "../CSPGraphUtils";
 
 /**
  * Used to draw a CSP graph that can show the visualization of code.
  */
 @Component({
   components: {
+    EllipseGraphNode,
     GraphVisualizerBase,
-    CSPConstraintNode,
-    CSPVariableNode,
+    RectangleGraphNode,
     UndirectedEdge
   }
 })
@@ -112,6 +112,14 @@ export default class CSPGraphInteractor extends Vue {
     }
 
     return 4;
+  }
+
+  domainText(node: ICSPGraphNode) {
+    return CSPGraphUtils.domainText(node);
+  }
+
+  constraintText(node: ICSPGraphNode) {
+    return CSPGraphUtils.constraintText(node);
   }
 }
 </script>
