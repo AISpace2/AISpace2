@@ -138,14 +138,11 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       }
     } else {
       for (const arcId of event.arcIds) {
-        const i = this.graph.edges.map(a => a.id).findIndex(a => a === arcId);
-        if (i !== -1) {
-          const stroke = event.colour
-            ? event.colour
-            : this.graph.edges[i].styles.stroke;
-          Vue.set(this.graph.edges[i].styles, "stroke", stroke);
-          Vue.set(this.graph.edges[i].styles, "strokeWidth", strokeWidth);
-        }
+        const stroke = event.colour
+          ? event.colour
+          : this.graph.idMap[arcId].styles.stroke;
+        Vue.set(this.graph.idMap[arcId].styles, "stroke", stroke);
+        Vue.set(this.graph.idMap[arcId].styles, "strokeWidth", strokeWidth);
       }
     }
   }
@@ -154,13 +151,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Sets the domain of a variable node, as described by the event object.
    */
   private setDomain(event: Events.ICSPSetDomainEvent) {
-    const i = this.graph.nodes
-      .map(a => a.id)
-      .findIndex(a => a === event.nodeId);
-
-    if (i !== -1) {
-      this.graph.nodes[i].domain = event.domain;
-    }
+    const variableNode = this.graph.idMap[event.nodeId] as ICSPGraphNode;
+    variableNode.domain = event.domain;
   }
 
   /**
@@ -168,12 +160,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private highlightNodes(event: Events.ICSPHighlightNodesEvent) {
     for (const nodeId of event.nodeIds) {
-      const i = this.graph.nodes.map(a => a.id).findIndex(a => a === nodeId);
-
-      if (i !== -1) {
-        Vue.set(this.graph.nodes[i].styles, "stroke", event.colour);
-        Vue.set(this.graph.nodes[i].styles, "strokeWidth", 2);
-      }
+      Vue.set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
+      Vue.set(this.graph.idMap[nodeId].styles, "strokeWidth", 2);
     }
   }
 

@@ -143,12 +143,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
    */
   private highlightNodes(event: SearchViewerEvents.IHighlightNodeEvent) {
     for (const nodeId of event.nodeIds) {
-      const i = this.graph.nodes.map(a => a.id).findIndex(a => a === nodeId);
-
-      if (i !== -1) {
-        Vue.set(this.graph.nodes[i].styles, "stroke", event.colour);
-        Vue.set(this.graph.nodes[i].styles, "strokeWidth", 3);
-      }
+      Vue.set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
+      Vue.set(this.graph.idMap[nodeId].styles, "strokeWidth", 3);
     }
   }
 
@@ -156,11 +152,9 @@ export default class SearchViewer extends widgets.DOMWidgetView {
    * Highlights a path in the visualization, as described by the event object.
    */
   private highlightPath(event: SearchViewerEvents.IHighlightPathEvent) {
-    for (const edge of this.graph.edges) {
-      if (event.path.includes(edge.id)) {
-        Vue.set(edge.styles, "stroke", event.colour);
-        Vue.set(edge.styles, "strokeWidth", 8);
-      }
+    for (const edgeId of event.path) {
+      Vue.set(this.graph.idMap[edgeId].styles, "stroke", event.colour);
+      Vue.set(this.graph.idMap[edgeId].styles, "strokeWidth", 8);
     }
   }
 

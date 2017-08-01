@@ -115,9 +115,17 @@ export class Graph<
   public nodes: TNode[];
   public edges: TEdge[];
 
+  /** A mapping from IDs in the graph to nodes or edges.
+   * 
+   * This is useful for quick lookups when you have the ID.
+   * Assumption: All IDs are unique.
+   */
+  public idMap: { [id: string]: TNode | TEdge };
+
   constructor(nodes: TNode[] = [], edges: TEdge[] = []) {
     this.nodes = nodes;
     this.edges = edges;
+    this.idMap = this.generateIdMap();
   }
 
   public toJSON(): IGraphJSON {
@@ -212,5 +220,23 @@ export class Graph<
       return;
     }
     this.edges.splice(edgeIndex, 1);
+  }
+
+  /**
+   * Generates an ID map based off of the current graph.
+   * @returns An ID map, where the keys are IDs and values are either nodes or edges.
+   */
+  private generateIdMap() {
+    const idMap: { [id: string]: TNode | TEdge } = Object.create(null);
+
+    for (const node of this.nodes) {
+      idMap[node.id] = node;
+    }
+
+    for (const edge of this.edges) {
+      idMap[edge.id] = edge;
+    }
+
+    return idMap;
   }
 }
