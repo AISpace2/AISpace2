@@ -298,10 +298,10 @@ class Displayable(StepDOMWidget):
             colour (string|None): A HTML colour string for the stroke of the node.
                 Passing in None will keep the existing stroke of the node.
         """
-        try:
-            vars = iter(vars)
-        except:
-            vars = list(vars)
+
+        # We don't want to check if it is iterable because a string is iterable
+        if not isinstance(vars, list) and not isinstance(vars, set):
+            vars = [vars]
 
         nodeIds = []
         for var in vars:
