@@ -34,15 +34,11 @@ class StepDOMWidget(DOMWidget):
                 self._block_for_user_input.set()
                 self._block_for_user_input.clear()
 
-                # if not self._thread.is_alive():
-                #     return_value = self._thread.join()
-                #     if not isinstance(return_value, list):
-                #         return_value = [return_value]
+                if not self._thread.is_alive():
+                    return_value = self._thread.join()
 
-                # self.send({'action': 'output',
-                #         'text': 'Algorithm execution finished. Returned: {}'.format(
-                #             ', '.join(str(x) for x in return_value)
-                #         )})
+                    self.send({'action': 'output',
+                            'text': 'Execution completed. Returned: {}'.format(str(return_value))})
             return step
 
         self._fine_step = step_through_to_level(4)
