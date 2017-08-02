@@ -2,64 +2,22 @@ const webpack = require("webpack");
 const version = require("./package.json").version;
 const path = require("path");
 
-const rules = [
+const babelLoader = {
+  loader: "babel-loader",
+  options: {
+    cacheDirectory: true
+  }
+};
+
+const tsLoader = [
+  babelLoader,
   {
-    test: /\.ts$/,
-    enforce: "pre",
-    loader: "tslint-loader"
-  },
-  {
-    test: /\.ts$/,
-    exclude: /node_modules/,
-    use: [
-      {
-        loader: "babel-loader"
-      },
-      {
-        loader: "ts-loader",
-        options: {
-          appendTsSuffixTo: [/\.vue$/]
-        }
-      }
-    ]
-  },
-  {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    use: [
-      {
-        loader: "babel-loader"
-      }
-    ]
-  },
-  {
-    test: /\.vue$/,
-    use: [
-      {
-        loader: "vue-loader",
-        options: {
-          loaders: {
-            ts: "babel-loader!ts-loader"
-          }
-        }
-      }
-    ]
-  },
-  {
-    test: /\.html$/,
-    use: [
-      {
-        loader: "html-loader"
-      }
-    ]
-  },
-  {
-    test: /\.css$/,
-    loader: "style-loader!css-loader"
-  },
-  {
-    test: /\.json$/,
-    loader: "json-loader"
+    loader: "ts-loader",
+    options: {
+      appendTsSuffixTo: [/\.vue$/],
+      silent: true,
+      transpileOnly: process.env.NODE_ENV !== "production"
+    }
   }
 ];
 
@@ -94,7 +52,51 @@ module.exports = {
       libraryTarget: "amd"
     },
     module: {
-      rules: rules
+      rules: [
+        {
+          test: /\.ts$/,
+          include: [path.join(__dirname, "./src")],
+          use: tsLoader
+        },
+        {
+          test: /\.js$/,
+          include: [path.join(__dirname, "./src")],
+          use: [babelLoader]
+        },
+        {
+          test: /\.vue$/,
+          include: [path.join(__dirname, "./src")],
+          use: [
+            {
+              loader: "vue-loader",
+              options: {
+                loaders: {
+                  ts: tsLoader
+                }
+              }
+            }
+          ]
+        },
+        {
+          test: /\.html$/,
+          include: [path.join(__dirname, "./src")],
+          use: [
+            {
+              loader: "html-loader"
+            }
+          ]
+        },
+        {
+          test: /\.css$/,
+          include: [path.join(__dirname, "./src")],
+          loader: "style-loader!css-loader"
+        },
+        {
+          test: /\.json$/,
+          include: [path.join(__dirname, "./src")],
+          loader: "json-loader"
+        }
+      ]
     },
     resolve: {
       extensions: [".vue", ".ts", ".js"],
@@ -102,8 +104,7 @@ module.exports = {
         vue$: "vue/dist/vue.esm.js"
       }
     },
-    externals: ["jupyter-js-widgets", "underscore"],
-    plugins: [new webpack.optimize.ModuleConcatenationPlugin()]
+    externals: ["jupyter-js-widgets", "underscore"]
   },
   embeddable: {
     // Embeddable aispace2 bundle
@@ -126,10 +127,6 @@ module.exports = {
       path: path.resolve(__dirname, "dist"),
       libraryTarget: "amd",
       publicPath: "https://unpkg.com/aispace2@" + version + "/dist/"
-    },
-    devtool: "source-map",
-    module: {
-      rules: rules
     },
     externals: ["jupyter-js-widgets"]
   }

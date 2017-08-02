@@ -1,10 +1,16 @@
+/**
+ * Webpack configuration for production.
+ * 
+ * Optimizes and minifies bundle.
+ */
+
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 const commonConfig = require("./webpack.common.js");
 
 module.exports = merge.multiple(commonConfig, {
   main: {
-    devtool: "hidden-source-map",
+    devtool: "source-map",
     plugins: [
       new webpack.LoaderOptionsPlugin({
         minimize: true,
@@ -24,7 +30,8 @@ module.exports = merge.multiple(commonConfig, {
         comments: false,
         sourceMap: true
       }),
-      new webpack.optimize.OccurrenceOrderPlugin()
+      new webpack.optimize.OccurrenceOrderPlugin(),
+      new webpack.optimize.ModuleConcatenationPlugin()
     ]
   }
 });

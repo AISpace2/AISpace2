@@ -7,6 +7,8 @@ node_modules/
 
 # Compiled javascript
 aispace2/static/
+js/vendor/*
+!js/vendor/vendor.js
 
 # OS X
 .DS_Store

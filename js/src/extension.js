@@ -8,7 +8,8 @@ if (window.require) {
     map: {
       "*": {
         aispace2: "nbextensions/aispace2/index",
-        "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension"
+        "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension",
+        vendor_lib: "nbextensions/aispace2/vendor_lib" // Only applicable for development
       }
     }
   });
@@ -16,5 +17,6 @@ if (window.require) {
 
 // Export the required load_ipython_extention
 module.exports = {
+  // tslint:disable-next-line:no-empty
   load_ipython_extension: function() {}
 };
