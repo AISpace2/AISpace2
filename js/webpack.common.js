@@ -1,3 +1,6 @@
+/**
+ * Base, shared webpack configuration used by development and production configurations.
+ */
 const webpack = require("webpack");
 const version = require("./package.json").version;
 const path = require("path");
