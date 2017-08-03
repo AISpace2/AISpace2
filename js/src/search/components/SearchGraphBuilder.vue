@@ -60,19 +60,14 @@ import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 })
 export default class SearchGraphBuilder extends Vue {
   /** The graph being built. */
-  @Prop({ type: Object })
   graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
   /** True if edge costs should be shown on the edges. */
-  @Prop({ default: true })
   showEdgeCosts: boolean;
   /** True if node heuristics should be shown on the nodes. */
-  @Prop({ default: true })
   showNodeHeuristics: boolean;
   /** The width, in pixels, of the graph builder. */
-  @Prop({ default: undefined })
   width: number;
   /** The height, in pixels, of the graph builder. */
-  @Prop({ default: undefined })
   height: number;
 
   /** The current node or edge being selected. */

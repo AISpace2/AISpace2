@@ -60,49 +60,6 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   }
 
   public render() {
-    const that = this;
-    const App = Vue.extend({
-      components: { SearchVisualizer },
-      data() {
-        return {
-          graph: that.graph,
-          showEdgeCosts: that.model.showEdgeCosts,
-          showNodeHeuristics: that.model.showNodeHeuristics,
-          output: null,
-          width: 0,
-          height: 0
-        };
-      },
-      methods: {
-        autostep() {
-          that.send({ event: StepEvents.AUTO_STEP_CLICK });
-        },
-        finestep() {
-          that.send({ event: StepEvents.FINE_STEP_CLICK });
-        },
-        step() {
-          that.send({ event: StepEvents.STEP_CLICK });
-        }
-      },
-      render(createElement: Vue.CreateElement) {
-        return createElement(SearchVisualizer, {
-          props: {
-            graph: this.graph,
-            width: this.width,
-            height: this.height,
-            showEdgeCosts: this.showEdgeCosts,
-            showNodeHeuristics: this.showNodeHeuristics,
-            output: this.output
-          },
-          on: {
-            "click:auto-step": this.autostep,
-            "click:step": this.step,
-            "click:fine-step": this.finestep
-          }
-        });
-      }
-    });
-
     timeout(() => {
       // Workaround: Since nodes need some position before rendering, assign 0
       this.graph.nodes.forEach(node => {
@@ -110,7 +67,26 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         node.y = 0;
       });
 
-      this.vue = new App().$mount();
+      this.vue = new SearchVisualizer({
+        data: {
+          graph: this.graph,
+          width: 0,
+          height: 0,
+          showEdgeCosts: this.model.showEdgeCosts,
+          showNodeHeuristics: this.model.showNodeHeuristics,
+          output: null
+        }
+      }).$mount();
+
+      this.vue.$on("click:fine-step", () =>
+        this.send({ event: StepEvents.FINE_STEP_CLICK })
+      );
+      this.vue.$on("click:step", () =>
+        this.send({ event: StepEvents.STEP_CLICK })
+      );
+      this.vue.$on("click:auto-step", () =>
+        this.send({ event: StepEvents.AUTO_STEP_CLICK })
+      );
 
       // We debounce after our intial resize, since the first "resize" is when the cell is first executed
       // We don't want to delay for no reason in that case

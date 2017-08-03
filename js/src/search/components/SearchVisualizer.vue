@@ -48,22 +48,16 @@ import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 })
 export default class SearchVisualizer extends Vue {
   /** The graph being visualized. */
-  @Prop({ type: Object })
   graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
   /** Text describing what is currently happening. */
-  @Prop({ default: "" })
   output: string;
   /** True if edge costs should be shown on the edges. */
-  @Prop({ default: true })
   showEdgeCosts: boolean;
   /** True if node heuristics should be shown on the nodes. */
-  @Prop({ default: true })
   showNodeHeuristics: boolean;
   /** The width, in pixels, of the visualizer. */
-  @Prop({ default: undefined })
   width: number;
   /** The width, in pixels, of the visualizer. */
-  @Prop({ default: undefined })
   height: number;
 
   /** Events Emitted */

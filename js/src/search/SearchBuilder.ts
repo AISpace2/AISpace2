@@ -29,49 +29,32 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
   public render() {
     d3ForceLayoutEngine.setup(this.graph, { width: 800, height: 600 });
 
-    const that = this;
-    const App = Vue.extend({
-      components: { SearchGraphBuilder },
-      data() {
-        return {
-          graph: that.graph,
-          showEdgeCosts: that.model.showEdgeCosts,
-          showNodeHeuristics: that.model.showNodeHeuristics,
-          width: 0,
-          height: 0
-        };
-      },
-      watch: {
-        graph: {
-          handler(val, oldVal) {
-            const searchProblemCopy = JSON.parse(JSON.stringify(that.graph));
-            that.model.graphJSON = searchProblemCopy;
-            that.touch();
-          },
-          deep: true
-        }
-      },
-      render(createElement: Vue.CreateElement) {
-        return createElement(SearchGraphBuilder, {
-          props: {
-            graph: this.graph,
-            width: this.width,
-            height: this.height,
-            showEdgeCosts: this.showEdgeCosts,
-            showNodeHeuristics: this.showNodeHeuristics
-          }
-        });
-      }
-    });
-
     timeout(() => {
       const width = this.$el.width();
       const height = width / 1.6;
       d3ForceLayoutEngine.setup(this.graph, { width, height });
-      const app = new App().$mount();
-      (app.$data as any).width = width;
-      (app.$data as any).height = height;
-      this.el.appendChild(app.$el);
+
+      const vue = new SearchGraphBuilder({
+        data: {
+          graph: this.graph,
+          showEdgeCosts: this.model.showEdgeCosts,
+          showNodeHeuristics: this.model.showNodeHeuristics,
+          width,
+          height
+        },
+        watch: {
+          graph: {
+            handler: (val, oldVal) => {
+              const searchProblemCopy = JSON.parse(JSON.stringify(this.graph));
+              this.model.graphJSON = searchProblemCopy;
+              this.touch();
+            },
+            deep: true
+          }
+        }
+      }).$mount();
+
+      this.el.appendChild(vue.$el);
     });
 
     return this;

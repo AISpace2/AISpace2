@@ -55,15 +55,11 @@ import * as CSPGraphUtils from "../CSPGraphUtils";
 })
 export default class CSPGraphInteractor extends Vue {
   /** The graph being displayed. */
-  @Prop({ type: Object })
   graph: Graph<ICSPGraphNode>;
   /** Text describing what is currently happening. */
-  @Prop() output: string;
   /** The width, in pixels, of the interactor. */
-  @Prop({ default: undefined })
   width: number;
   /** The height, in pixels, of the interactor. */
-  @Prop({ default: undefined })
   height: number;
 
   /** Events Emitted */

@@ -80,13 +80,10 @@ type Mode = "select" | "variable" | "constraint" | "edge";
 })
 export default class CSPGraphBuilder extends Vue {
   /** The graph being built by this builder. */
-  @Prop({ type: Object })
   graph: Graph<ICSPGraphNode>;
   /** The width, in pixels, of the graph builder. */
-  @Prop({ default: undefined })
   width: number;
   /** The height, in pixels, of the graph builder. */
-  @Prop({ default: undefined })
   height: number;
 
   /** The mode of the editor. */
