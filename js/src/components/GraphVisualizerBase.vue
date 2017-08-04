@@ -5,7 +5,7 @@
          @mouseleave="dragEnd"
          @keydown.delete="$emit('delete')"
          @dblclick="onDblClick">
-      <EdgeContainer v-for="edge in _graph.edges" :key="edge.id"
+      <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
                      :transitions="transitionsAllowed && transitions"
                      @mouseover="edgeMouseOver(edge)"
                      @mouseout="edgeMouseOut(edge)"
@@ -15,7 +15,7 @@
               :x2="edge.target.x" :y2="edge.target.y"
               :hover="edge === edgeHover"></slot>
       </EdgeContainer>
-      <GraphNodeContainer v-for="node in _graph.nodes" :key="node.id"
+      <GraphNodeContainer v-for="node in nodes" :key="node.id"
                  :x="node.x" :y="node.y"
                  :transitions="transitionsAllowed && transitions"                 
                  @click="$emit('click:node', node)"
@@ -69,10 +69,6 @@ import { GraphLayout } from '../GraphLayout';
 export default class GraphVisualizeBase extends Vue {
   /** The graph to render. */
   @Prop({type: Object}) graph: Graph;
-  /** The width of the graph, in pixels */
-  width: number = 0;
-  /** The height of the graph, in pixels. */
-  height: number = 0;
   /** If true, animates positional changes and other properties of the nodes/edges in this graph. */
   @Prop({default: false})
   transitions: boolean;
@@ -92,16 +88,10 @@ export default class GraphVisualizeBase extends Vue {
   prevPageY = 0;
   /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
   transitionsAllowed = true;
-  /** 
-   * Same as `graph`, except temporarily after nodes/edges have changed
-   * 
-   * Used to prevent graph updating immediately after nodes/edges are added;
-   * we want to layout first, then redraw. This prevents a flash where nodes
-   * initially have position (0, 0), then move to their final positions.
-   * Instead, we show the previous graph on the screen, then swap it
-   * with the updated one after layout.
-   */
-  _graph: Graph = null;
+  /** The width of the SVG. Automatically set to width of container. */
+  width = 0;
+  /** The height of the SVG. Automatically set to height of container. */  
+  height = 0;
 
   $refs: {
     /** The SVG element that the graph is drawn in. */
@@ -117,7 +107,7 @@ export default class GraphVisualizeBase extends Vue {
    */
 
   created() {
-    this._graph = this.graph;
+    this.graph = this.graph;
     this.handleResize = debounce(this.handleResize, 300);
   }
 
@@ -143,14 +133,14 @@ export default class GraphVisualizeBase extends Vue {
   get nodes() {
     if (this.dragTarget != null) {
       // Move the node being dragged to the top, so it appears over everything else
-      const i = this._graph.nodes.indexOf(this.dragTarget as IGraphNode);
+      const i = this.graph.nodes.indexOf(this.dragTarget as IGraphNode);
       if (i !== -1) {
         // Move element at index i to the back of the array
-        this._graph.nodes.push(this.graph.nodes.splice(i, 1)[0]);
+        this.graph.nodes.push(this.graph.nodes.splice(i, 1)[0]);
       }
     }
 
-    return this._graph.nodes;
+    return this.graph.nodes;
   }
 
   dragStart(node: IGraphNode) {
@@ -220,10 +210,7 @@ export default class GraphVisualizeBase extends Vue {
 
   @Watch('graph')
   onGraphChanged(newVal) {
-    // Layout new graph first, then display it. 
-    // This prevents new nodes being drawn at (0, 0) before layout is finished.
-    this.layout.relayout(this.graph, { width: this.width, height: this.height })
-      .then(() => this._graph = newVal);
+    this.layout.relayout(this.graph, { width: this.width, height: this.height });
   }
 }
 </script>
