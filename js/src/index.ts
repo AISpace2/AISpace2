@@ -15,12 +15,12 @@ import "./style.css";
 import * as packageJSON from "../package.json";
 import CSPBuilder from "./csp/CSPBuilder";
 import CSPBuilderModel from "./csp/CSPBuilderModel";
-import CSPViewer from "./csp/CSPViewer";
-import CSPViewerModel from "./csp/CSPViewerModel";
+import CSPViewer from "./csp/CSPVisualizer";
+import CSPViewerModel from "./csp/CSPVisualizerModel";
 import SearchBuilder from "./search/SearchBuilder";
 import SearchBuilderModel from "./search/SearchBuilderModel";
-import SearchViewer from "./search/SearchViewer";
-import SearchViewerModel from "./search/SearchViewerModel";
+import SearchViewer from "./search/SearchVisualizer";
+import SearchViewerModel from "./search/SearchVisualizerModel";
 
 // Export widget models and views, and the npm package version number.
 module.exports = {

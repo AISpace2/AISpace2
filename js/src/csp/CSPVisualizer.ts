@@ -6,9 +6,9 @@ import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
 import { d3ForceLayoutEngine } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
-import CSPGraphInteractor from "./components/CSPGraphInteractor.vue";
-import * as Events from "./CSPViewerEvents";
-import CSPViewerModel from "./CSPViewerModel";
+import CSPGraphInteractor from "./components/CSPVisualizer.vue";
+import CSPViewerModel from "./CSPVisualizerModel";
+import * as Events from "./SearchVisualizerEvents";
 
 export default class CSPViewer extends widgets.DOMWidgetView {
   private static readonly ARC_CLICK = "arc:click";

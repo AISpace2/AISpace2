@@ -4,7 +4,7 @@ import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph } from "../Graph";
 import { d3ForceLayoutEngine } from "../GraphLayout";
-import SearchGraphBuilder from "./components/SearchGraphBuilder.vue";
+import SearchGraphBuilder from "./components/SearchBuilder.vue";
 import SearchBuilderModel from "./SearchBuilderModel";
 declare let Jupyter: any;
 

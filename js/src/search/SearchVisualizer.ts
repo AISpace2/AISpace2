@@ -11,8 +11,8 @@ import {
 } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
-import * as SearchViewerEvents from "./SearchViewerEvents";
-import SearchViewerModel from "./SearchViewerModel";
+import * as SearchViewerEvents from "./SearchVisualizerEvents";
+import SearchViewerModel from "./SearchVisualizerModel";
 
 export default class SearchViewer extends widgets.DOMWidgetView {
   public model: SearchViewerModel;

@@ -55,7 +55,7 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 
-import CSPToolbar from "./CSPToolbar.vue";
+import CSPToolbar from "./CSPBuilderToolbar.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";

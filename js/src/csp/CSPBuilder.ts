@@ -4,7 +4,7 @@ import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
 import { d3ForceLayoutEngine } from "../GraphLayout";
-import CSPGraphBuilder from "./components/CSPGraphBuilder.vue";
+import CSPGraphBuilder from "./components/CSPBuilder.vue";
 import CSPBuilderModel from "./CSPBuilderModel";
 declare let Jupyter: any;
 
