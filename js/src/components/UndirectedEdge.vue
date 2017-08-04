@@ -1,8 +1,5 @@
 <template>
-  <line
-    :x1="x1" :y1="y1" :x2="x2" :y2="y2" :stroke="stroke"
-    :stroke-width="strokeWidth">
-  </line>
+  <path :d="path" :stroke="stroke" :stroke-width="strokeWidth"></path>
 </template>
 
 <script lang="ts">
@@ -29,8 +26,9 @@ export default class UndirectedEdge extends Vue {
   /** The width of the edge, in pixels. */
   @Prop({ default: 4 })
   strokeWidth: number;
-  /** True if the edge is being hovered over. */
-  @Prop({ default: false })
-  hover: boolean;
+
+  get path() {
+    return `M${this.x1},${this.y1}L${this.x2},${this.y2}`;
+  }
 }
 </script>

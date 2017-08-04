@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { IGraph, IGraphEdge, IGraphNode } from "./Graph";
+import { Graph, IGraph, IGraphEdge, IGraphNode } from "./Graph";
 
 /**
  * Layout parameters used for laying out the graph.
@@ -11,50 +11,84 @@ export interface IGraphLayoutParams {
   height: number;
 }
 
+/** A function that lays out a graph by assigning x and y properties to the nodes in the graph. */
+type LayoutFunction = (
+  graph: Graph,
+  layoutParams: IGraphLayoutParams
+) => Promise<void>;
+
 /**
- * Lays out a graph by giving nodes x and y properties.
+ * A graph layout configuration object that specifies layout functions to be called.
+ * 
+ * - The `setup` function is called once on the graph, right before displaying.
+ * - The `relayout` function is called subsequently; for example, when the graph has updated,
+ *   or the window has been resized.
+ * 
+ * @example
+ * ```
+ * new GraphLayout(d3ForceLayout());
+ * new GraphLayout(d3ForceLayout(), d3TreeLayout({rootId: '1234'}));
+ * ```
  */
-export interface IGraphLayoutEngine {
-  /**
-   * Performs one-time setup before layout.
-   *
-   * This function is only called once before the graph is drawn for the first time.
-   * If your graph layout algorithm never requires relayout when the graph is updated,
-   * perhaps because nodes will be created at mouse position, you may assign
-   * x and y positions as properties to each node datum right here.
-   * 
-   * When the promise is resolved, the nodes of the graph will have assigned x, y positions.
-   */
-  setup(
-    graph: IGraph,
-    layoutParams: IGraphLayoutParams,
-    opts?: {}
-  ): Promise<void>;
+export class GraphLayout {
+  private setupLayoutFunction: LayoutFunction;
+  private relayoutLayoutFunction: LayoutFunction;
+
+  constructor(
+    /**
+     * Function that performs one-time setup before layout.
+     *
+     * This function is only called once before the graph is drawn for the first time.
+     * If your graph layout algorithm never requires relayout when the graph is updated,
+     * perhaps because nodes will be created at mouse position, you may assign
+     * x and y positions as properties to each node datum right here.
+     */
+    setup: LayoutFunction,
+    /**
+     * Function that re-layouts the graph as a result of graph/layout param changes.
+     *
+     * This function is not called initially for the first render.
+     * You may call this function from the setup function if necessary.
+     * When the promise is resolved, the nodes of the graph should have assigned x, y positions.
+     * 
+     * If not provided, defaults to the same layout function as `setup`.
+     */
+    relayout?: LayoutFunction
+  ) {
+    this.setupLayoutFunction = setup;
+    this.relayoutLayoutFunction = relayout || this.setupLayoutFunction;
+  }
 
   /**
-   * Re-layouts the graph as a result of graph changes.
-   *
-   * This function is not called initially for the first render.
-   * You may call this function from the setup function if necessary.
-   * When the promise is resolved, the nodes of the graph will have assigned x, y positions.
+   * Perform one-time, initial layout for the graph, right before displaying.
    * 
-   * You should update the x and y properties of each node datum.
+   * @param graph The graph to perform layout on.
+   * @param layoutParams Layout parameters that should be obeyed by the layout algorithm.
    */
-  relayout(
-    graph: IGraph,
-    layoutParams: IGraphLayoutParams,
-    opts?: {}
-  ): Promise<void>;
+  public setup(graph: Graph, layoutParams: IGraphLayoutParams) {
+    return this.setupLayoutFunction(graph, layoutParams);
+  }
+
+  /**
+   * Lays out the graph as a result of subsequent graph or layout param changes.
+   * 
+   * While this can be the same layout algorithm as the one called during setup,
+   * this is useful if, for example, you want to lay out the graph using a force layout initially,
+   * but during resizing, you only want to scale their relative positions instead of recalculation.
+   * 
+   * @param graph The graph to perform layout on.
+   * @param layoutParams Layout parameters that should be obeyed by the layout algorithm.
+   */
+  public relayout(graph: Graph, layoutParams: IGraphLayoutParams) {
+    return this.relayoutLayoutFunction(graph, layoutParams);
+  }
 }
 
 /**
- * Lays out a graph using D3's force layout simulation.
+ * Creates a `LayoutFunction` that uses D3's force layout simulation.
  */
-export const d3ForceLayoutEngine: IGraphLayoutEngine = {
-  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
-    return Promise.resolve();
-  },
-  setup: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
+export function d3ForceLayout(opts = {}): LayoutFunction {
+  return (graph: IGraph, layoutParams: IGraphLayoutParams) => {
     /**
      * We will work with a copy of the graph to prevent D3 from adding
      * various additional properties, such as `vx` and `fy`, to our nodes.
@@ -77,7 +111,7 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
 
     const edgePadding = 50;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       // Run simulation synchronously the default number of times (300)
       for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
         forceSimulation.tick();
@@ -103,21 +137,14 @@ export const d3ForceLayoutEngine: IGraphLayoutEngine = {
 
       resolve();
     });
-  }
-};
+  };
+}
 
 /**
- * Lays out a graph using D3's tree layout. All nodes of the same depth are placed at the same level.
+ * Creates a `LayoutFunction` that uses D3's tree layout. All nodes of the same depth are placed at the same level.
  */
-export const d3TreeLayoutEngine: IGraphLayoutEngine = {
-  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
-    return Promise.resolve();
-  },
-  setup: (
-    graph: IGraph,
-    layoutParams: IGraphLayoutParams,
-    opts: { root?: IGraphNode } = {}
-  ) => {
+export function d3TreeLayout(opts: { rootId?: string } = {}): LayoutFunction {
+  return (graph: IGraph, layoutParams: IGraphLayoutParams) => {
     /** Maps IDs to nodes */
     const nodeMap: { [key: string]: IGraphNode } = {};
     for (const node of graph.nodes) {
@@ -129,9 +156,9 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
       children: IHierarchyNode[];
     }
 
-    let rootNode = graph.nodes[0];
-    if (opts.root != null) {
-      rootNode = opts.root;
+    let rootNode = graph.nodes.find(n => n.id === opts.rootId);
+    if (rootNode == null) {
+      rootNode = graph.nodes[0];
     }
 
     const rootData = {
@@ -177,7 +204,7 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
       map[edge.source.id].children.push(map[edge.target.id]);
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const treeLayout = d3.tree();
       const root = d3.hierarchy(rootData);
       treeLayout(root); // Sets x and y positions, in [0, 1] range
@@ -207,60 +234,5 @@ export const d3TreeLayoutEngine: IGraphLayoutEngine = {
 
       resolve();
     });
-  }
-};
-
-/*
-   This is a test of using cytoscape and it's layouts.
-   You must install cytoscape and require it before trying the following.
-
-export const cytoscapeLayoutEngine: IGraphLayoutEngine = {
-  relayout: (graph: IGraph, layoutParams: IGraphLayoutParams, opts = {}) => {
-    return;
-  },
-  setup: (
-    graph: IGraph,
-    layoutParams: IGraphLayoutParams,
-    opts: { name?: string } = {}
-  ) => {
-    const elements = [];
-
-    for (const node of graph.nodes) {
-      elements.push({ data: { id: node.id } });
-    }
-
-    for (const edge of graph.edges) {
-      elements.push({
-        data: { id: edge.id, source: edge.source.id, target: edge.target.id }
-      });
-    }
-
-    const c = cytoscape({
-      elements
-    });
-
-    return new Promise((resolve, reject) => {
-    c
-      .layout({
-        name: "dagre",
-        boundingBox: {
-          x1: 60,
-          y1: 60,
-          w: layoutParams.width - 120,
-          h: layoutParams.height - 120
-        },
-        fit: true,
-        stop() {
-          c.nodes().forEach((node: any) => {
-            const i = graph.nodes.findIndex(n => n.id === node.id());
-            graph.nodes[i].x = node.position().x;
-            graph.nodes[i].y = node.position().y;
-          });
-
-          resolve();
-        }
-      })
-      .run();
-    });
-  }
-};*/
+  };
+}

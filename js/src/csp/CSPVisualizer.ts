@@ -4,7 +4,7 @@ import { debounce } from "underscore";
 import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
-import { d3ForceLayoutEngine } from "../GraphLayout";
+import { d3ForceLayout, GraphLayout } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import CSPGraphInteractor from "./components/CSPVisualizer.vue";
 import CSPViewerModel from "./CSPVisualizerModel";
@@ -24,17 +24,6 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
     this.graph = Graph.fromJSON(this.model.graphJSON) as Graph<ICSPGraphNode>;
 
-    // Functions called on the Python backend are queued until first render
-    if (this.model.initial_render) {
-      this.send({ event: "initial_render" });
-      this.highlightArcs({
-        action: "highlightArcs",
-        arcIds: null,
-        colour: "blue",
-        style: "normal"
-      });
-    }
-
     this.listenTo(this.model, "view:msg", (event: IEvent) => {
       // tslint:disable-next-line:no-console
       console.log(event);
@@ -49,28 +38,19 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.vue.output = event.text;
       }
     });
-
-    $(window).resize(() => {
-      this.handleResize();
-    });
   }
 
   public render() {
     timeout(() => {
-      // Workaround: Since nodes need some position before rendering, assign 0
-      this.graph.nodes.forEach(node => {
-        node.x = 0;
-        node.y = 0;
-      });
-
       this.vue = new CSPGraphInteractor({
         data: {
           graph: this.graph,
+          layout: new GraphLayout(d3ForceLayout()),
           width: 0,
           height: 0,
           output: null
         }
-      }).$mount();
+      }).$mount(this.el);
 
       this.vue.$on("click:fine-step", () =>
         this.send({ event: StepEvents.FINE_STEP_CLICK })
@@ -82,14 +62,25 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.AUTO_STEP_CLICK })
       );
 
-      // We debounce after our intial resize, since the first "resize" is when the cell is first executed
-      // We don't want to delay for no reason in that case
-      this.handleResize();
-      this.handleResize = debounce(this.handleResize, 300);
-      this.el.appendChild(this.vue.$el);
+      // Functions called on the Python backend are queued until first render
+      if (this.model.initial_render) {
+        this.send({ event: "initial_render" });
+        this.highlightArcs({
+          action: "highlightArcs",
+          arcIds: null,
+          colour: "blue",
+          style: "normal"
+        });
+      }
     });
 
     return this;
+  }
+
+  public remove() {
+    if (this.vue != null) {
+      this.vue.$destroy();
+    }
   }
 
   /**
@@ -134,18 +125,6 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     for (const nodeId of event.nodeIds) {
       this.vue.$set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
       this.vue.$set(this.graph.idMap[nodeId].styles, "strokeWidth", 2);
-    }
-  }
-
-  /** Resize the width and height of the graph. */
-  private handleResize() {
-    const width = this.$el.width();
-    const height = width / 1.6;
-
-    if (this.vue != null) {
-      d3ForceLayoutEngine.setup(this.graph, { width, height });
-      this.vue.width = width;
-      this.vue.height = height;
     }
   }
 }

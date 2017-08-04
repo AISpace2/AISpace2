@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" :width="width" :height="height" :transitions="true">
+    <GraphVisualizerBase :graph="graph" :width="width" :height="height" :transitions="true" :layout="layout">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                           :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined"
@@ -38,6 +38,7 @@ import DirectedEdge from "../../components/DirectedEdge.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
+import { GraphLayout } from '../../GraphLayout';
 import { nodeFillColour, nodeHText } from '../SearchGraphUtils';
 
 @Component({
@@ -60,6 +61,8 @@ export default class SearchVisualizer extends Vue {
   width: number;
   /** The width, in pixels, of the visualizer. */
   height: number;
+  /** Layout object that controls where nodes are drawn. */
+  layout: GraphLayout;
 
   /** Events Emitted */
   /**

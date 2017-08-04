@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" :width="width" :height="height"
+    <GraphVisualizerBase :graph="graph" :layout="layout"
       @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
       <template slot="node" scope="props">
         <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"
@@ -62,6 +62,7 @@ import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
 
 import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
+import { GraphLayout } from "../../GraphLayout";
 import * as CSPGraphUtils from "../CSPGraphUtils";
 
 type Mode = "select" | "variable" | "constraint" | "edge";
@@ -81,14 +82,11 @@ type Mode = "select" | "variable" | "constraint" | "edge";
 export default class CSPGraphBuilder extends Vue {
   /** The graph being built by this builder. */
   graph: Graph<ICSPGraphNode>;
-  /** The width, in pixels, of the graph builder. */
-  width: number;
-  /** The height, in pixels, of the graph builder. */
-  height: number;
+  /** Layout object that controls where nodes are drawn. */
+  layout: GraphLayout;
 
   /** The mode of the editor. */
   mode: Mode = "select";
-
   /** The currently selected node or edge. Actions are preformed on the selection. */
   selection: ICSPGraphNode | IGraphEdge | null = null;
   /** During edge creation, tracks the source node of the edge to be formed. */

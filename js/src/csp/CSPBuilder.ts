@@ -3,7 +3,7 @@ import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
-import { d3ForceLayoutEngine } from "../GraphLayout";
+import { d3ForceLayout, GraphLayout } from "../GraphLayout";
 import CSPGraphBuilder from "./components/CSPBuilder.vue";
 import CSPBuilderModel from "./CSPBuilderModel";
 declare let Jupyter: any;
@@ -13,6 +13,7 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
 
   public model: CSPBuilderModel;
   public graph: Graph<ICSPGraphNode>;
+  public vue: any;
 
   public initialize(opts: any) {
     super.initialize(opts);
@@ -27,18 +28,11 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
   }
 
   public render() {
-    d3ForceLayoutEngine.setup(this.graph, { width: 800, height: 600 });
-
     timeout(() => {
-      const width = this.$el.width();
-      const height = width / 1.6;
-      d3ForceLayoutEngine.setup(this.graph, { width, height });
-
-      const vue = new CSPGraphBuilder({
+      this.vue = new CSPGraphBuilder({
         data: {
           graph: this.graph,
-          width,
-          height
+          layout: new GraphLayout(d3ForceLayout())
         },
         watch: {
           graph: {
@@ -50,11 +44,15 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
             deep: true
           }
         }
-      }).$mount();
-
-      this.el.appendChild(vue.$el);
+      }).$mount(this.el);
     });
 
     return this;
+  }
+
+  public remove() {
+    if (this.vue != null) {
+      this.vue.$destroy();
+    }
   }
 }

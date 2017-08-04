@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" @click:edge="edgeClicked" :width="width" :height="height" :transitions="true">
+    <GraphVisualizerBase :graph="graph" @click:edge="edgeClicked" :layout="layout" :transitions="true">
       <template slot="node" scope="props">
         <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
                          :subtext="domainText(props.node)" 
@@ -40,6 +40,7 @@ import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
 
 import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
+import { GraphLayout } from "../../GraphLayout";
 import * as CSPGraphUtils from "../CSPGraphUtils";
 
 /**
@@ -57,10 +58,9 @@ export default class CSPGraphInteractor extends Vue {
   /** The graph being displayed. */
   graph: Graph<ICSPGraphNode>;
   /** Text describing what is currently happening. */
-  /** The width, in pixels, of the interactor. */
-  width: number;
-  /** The height, in pixels, of the interactor. */
-  height: number;
+  output: string;
+  /** Layout object that controls where nodes are drawn. */
+  layout: GraphLayout;
 
   /** Events Emitted */
   /**

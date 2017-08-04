@@ -5,8 +5,8 @@
          @mouseleave="dragEnd"
          @keydown.delete="$emit('delete')"
          @dblclick="onDblClick">
-      <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
-                     :transitions="transitions && transitionsAllowed"
+      <EdgeContainer v-for="edge in _graph.edges" :key="edge.id"
+                     :transitions="transitionsAllowed && transitions"
                      @mouseover="edgeMouseOver(edge)"
                      @mouseout="edgeMouseOut(edge)"
                      @click="$emit('click:edge', edge)">
@@ -15,9 +15,9 @@
               :x2="edge.target.x" :y2="edge.target.y"
               :hover="edge === edgeHover"></slot>
       </EdgeContainer>
-      <GraphNodeContainer v-for="node in nodes" :key="node.id"
-                 :transitions="transitions && transitionsAllowed"
-                 :x="node.x" :y="node.y"      
+      <GraphNodeContainer v-for="node in _graph.nodes" :key="node.id"
+                 :x="node.x" :y="node.y"
+                 :transitions="transitionsAllowed && transitions"                 
                  @click="$emit('click:node', node)"
                  @dragstart="dragStart(node, $event)" @dragend="dragEnd"
                  @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
@@ -29,14 +29,16 @@
 </template>
 
 <script lang="ts">
+import { debounce } from "underscore";
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+import { Prop, Watch } from "vue-property-decorator";
 
 import GraphNodeContainer from "./GraphNodeContainer.vue";
 import EdgeContainer from "./EdgeContainer.vue";
 
 import {Graph, IGraphNode, IGraphEdge} from '../Graph';
+import { GraphLayout } from '../GraphLayout';
 
 /**
  * Base class for all graph visualizers.
@@ -68,12 +70,15 @@ export default class GraphVisualizeBase extends Vue {
   /** The graph to render. */
   @Prop({type: Object}) graph: Graph;
   /** The width of the graph, in pixels */
-  @Prop({default: 600}) width: number;
+  width: number = 0;
   /** The height of the graph, in pixels. */
-  @Prop({default: 480}) height: number;
+  height: number = 0;
   /** If true, animates positional changes and other properties of the nodes/edges in this graph. */
   @Prop({default: false})
   transitions: boolean;
+  /** Layout object that controls where nodes are drawn. */
+  @Prop({type: Object})
+  layout: Layout;
 
   /** The node or edge currently being dragged. */
   dragTarget: IGraphNode|IGraphEdge|null = null;
@@ -87,6 +92,16 @@ export default class GraphVisualizeBase extends Vue {
   prevPageY = 0;
   /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
   transitionsAllowed = true;
+  /** 
+   * Same as `graph`, except temporarily after nodes/edges have changed
+   * 
+   * Used to prevent graph updating immediately after nodes/edges are added;
+   * we want to layout first, then redraw. This prevents a flash where nodes
+   * initially have position (0, 0), then move to their final positions.
+   * Instead, we show the previous graph on the screen, then swap it
+   * with the updated one after layout.
+   */
+  _graph: Graph = null;
 
   $refs: {
     /** The SVG element that the graph is drawn in. */
@@ -101,80 +116,116 @@ export default class GraphVisualizeBase extends Vue {
    * 'click:edge': An edge has been clicked. Passes the edge as the first argument.
    */
 
-    get nodes() {
-      let i = this.graph.nodes.indexOf(this.dragTarget as IGraphNode);
+  created() {
+    this._graph = this.graph;
+    this.handleResize = debounce(this.handleResize, 300);
+  }
+
+  mounted() {
+    this.width = this.$el.getBoundingClientRect().width;
+    this.height = this.width / 1.6;
+    this.layout.setup(this.graph, { width: this.width, height: this.height });
+
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  /** Re-layout the graph using the current width/height of the SVG. */
+  handleResize() {
+    this.width = this.$el.getBoundingClientRect().width;
+    this.height = this.width / 1.6;
+    this.layout.relayout(this.graph, { width: this.width, height: this.height });
+  }
+
+  get nodes() {
+    if (this.dragTarget != null) {
+      // Move the node being dragged to the top, so it appears over everything else
+      const i = this._graph.nodes.indexOf(this.dragTarget as IGraphNode);
       if (i !== -1) {
         // Move element at index i to the back of the array
-        this.graph.nodes.push(this.graph.nodes.splice(i, 1)[0]);
-      }
-
-      return this.graph.nodes;
-    }
-
-    dragStart(node: IGraphNode) {
-      this.dragTarget = node;
-    }
-
-    drag(e: MouseEvent) {
-      if (this.dragTarget) {
-        var svgBounds = this.$refs.mySVG.getBoundingClientRect();
-
-        // Everything below can be replaced with:
-        // this.dragTarget.x += e.movementX;
-        // this.dragTarget.y += e.movementY;
-        // if we don't want to support IE11.
-        this.dragTarget.x += this.prevPageX ? e.pageX - this.prevPageX : 0;
-        this.dragTarget.y += this.prevPageY ? e.pageY - this.prevPageY : 0;
-
-        this.prevPageX = e.pageX;
-        this.prevPageY = e.pageY;
+        this._graph.nodes.push(this.graph.nodes.splice(i, 1)[0]);
       }
     }
 
-    dragEnd() {
-      this.dragTarget = null;
-      this.transitionsAllowed = true;
-      this.prevPageX = 0;
-      this.prevPageY = 0;
-    }
+    return this._graph.nodes;
+  }
 
-    edgeMouseOver(edge: IGraphEdge) {
-      this.edgeHover = edge;
-    }
+  dragStart(node: IGraphNode) {
+    this.dragTarget = node;
+  }
 
-    edgeMouseOut(edge: IGraphEdge) {
-      this.edgeHover = null;
-    }
-
-    nodeMouseOver(node: IGraphNode) {
-      this.nodeHover = node;
-    }
-
-    nodeMouseOut(node: IGraphNode) {
-      this.nodeHover = null;
-    }
-
-    /**
-     * Handles the user double-clicking on the graph.
-     * The x and y position within the SVG are calculated and passed to the event.
-     */
-    onDblClick(e: MouseEvent) {
+  drag(e: MouseEvent) {
+    if (this.dragTarget) {
       var svgBounds = this.$refs.mySVG.getBoundingClientRect();
-      var x = e.pageX - svgBounds.left;
-      var y = e.pageY - svgBounds.top;
-      this.$emit("dblclick", x, y, e);
-    }
 
-    /**
-     * Toggles transitions on and off.
-     * 
-     * For example, when nodes are being dragged,
-     * we want to disable transitions on nodes and edges so their positions don't lag the mouse.
-     */
-    toggleTransition(allowed: boolean) {
-      this.transitionsAllowed = allowed;
+      // Everything below can be replaced with:
+      // this.dragTarget.x += e.movementX;
+      // this.dragTarget.y += e.movementY;
+      // if we don't want to support IE11.
+      this.dragTarget.x += this.prevPageX ? e.pageX - this.prevPageX : 0;
+      this.dragTarget.y += this.prevPageY ? e.pageY - this.prevPageY : 0;
+
+      this.prevPageX = e.pageX;
+      this.prevPageY = e.pageY;
     }
   }
+
+  dragEnd() {
+    this.dragTarget = null;
+    this.transitionsAllowed = true;
+    this.prevPageX = 0;
+    this.prevPageY = 0;
+  }
+
+  edgeMouseOver(edge: IGraphEdge) {
+    this.edgeHover = edge;
+  }
+
+  edgeMouseOut(edge: IGraphEdge) {
+    this.edgeHover = null;
+  }
+
+  nodeMouseOver(node: IGraphNode) {
+    this.nodeHover = node;
+  }
+
+  nodeMouseOut(node: IGraphNode) {
+    this.nodeHover = null;
+    this.dragEnd
+  }
+
+  /**
+   * Handles the user double-clicking on the graph.
+   * The x and y position within the SVG are calculated and passed to the event.
+   */
+  onDblClick(e: MouseEvent) {
+    var svgBounds = this.$refs.mySVG.getBoundingClientRect();
+    var x = e.pageX - svgBounds.left;
+    var y = e.pageY - svgBounds.top;
+    this.$emit("dblclick", x, y, e);
+  }
+
+  /**
+   * Toggles transitions on and off.
+   * 
+   * For example, when nodes are being dragged,
+   * we want to disable transitions on nodes and edges so their positions don't lag the mouse.
+   */
+  toggleTransition(allowed: boolean) {
+    this.transitionsAllowed = allowed;
+  }
+
+  @Watch('graph')
+  onGraphChanged(newVal) {
+    // Layout new graph first, then display it. 
+    // This prevents new nodes being drawn at (0, 0) before layout is finished.
+    this.layout.relayout(this.graph, { width: this.width, height: this.height })
+      .then(() => this._graph = newVal);
+  }
+}
 </script>
 
 <style scoped>

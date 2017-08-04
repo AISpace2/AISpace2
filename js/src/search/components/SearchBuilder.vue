@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" :width="width" :height="height"
+    <GraphVisualizerBase :graph="graph" :layout="layout"
                          @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name"
@@ -51,6 +51,7 @@ import DirectedEdge from "../../components/DirectedEdge.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
+import { GraphLayout } from '../../GraphLayout';
 import { nodeFillColour, nodeHText } from '../SearchGraphUtils';
 
 /**
@@ -66,10 +67,8 @@ export default class SearchGraphBuilder extends Vue {
   showEdgeCosts: boolean;
   /** True if node heuristics should be shown on the nodes. */
   showNodeHeuristics: boolean;
-  /** The width, in pixels, of the graph builder. */
-  width: number;
-  /** The height, in pixels, of the graph builder. */
-  height: number;
+  /** Layout object that controls where nodes are drawn. */
+  layout: GraphLayout;
 
   /** The current node or edge being selected. */
   selection: ISearchGraphNode | ISearchGraphEdge | null = null;

@@ -3,7 +3,7 @@ import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph } from "../Graph";
-import { d3ForceLayoutEngine } from "../GraphLayout";
+import { d3ForceLayout, GraphLayout } from "../GraphLayout";
 import SearchGraphBuilder from "./components/SearchBuilder.vue";
 import SearchBuilderModel from "./SearchBuilderModel";
 declare let Jupyter: any;
@@ -13,6 +13,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
 
   public model: SearchBuilderModel;
   public graph: Graph;
+  public vue: any;
 
   public initialize(opts: any) {
     super.initialize(opts);
@@ -27,20 +28,13 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
   }
 
   public render() {
-    d3ForceLayoutEngine.setup(this.graph, { width: 800, height: 600 });
-
     timeout(() => {
-      const width = this.$el.width();
-      const height = width / 1.6;
-      d3ForceLayoutEngine.setup(this.graph, { width, height });
-
-      const vue = new SearchGraphBuilder({
+      this.vue = new SearchGraphBuilder({
         data: {
           graph: this.graph,
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
-          width,
-          height
+          layout: new GraphLayout(d3ForceLayout())
         },
         watch: {
           graph: {
@@ -52,11 +46,15 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
             deep: true
           }
         }
-      }).$mount();
-
-      this.el.appendChild(vue.$el);
+      }).$mount(this.el);
     });
 
     return this;
+  }
+
+  public remove() {
+    if (this.vue != null) {
+      this.vue.$destroy();
+    }
   }
 }
