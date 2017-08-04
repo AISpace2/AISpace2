@@ -1,7 +1,7 @@
 <template>
   <div>
     <svg tabindex="0" ref="mySVG" :width="width" :height="height"
-         @mousemove="dragSVG"
+         @mousemove="drag"
          @mouseleave="dragEnd"
          @keydown.delete="$emit('delete')"
          @dblclick="onDblClick">
@@ -115,7 +115,7 @@ export default class GraphVisualizeBase extends Vue {
       this.dragTarget = node;
     }
 
-    dragSVG(e: MouseEvent) {
+    drag(e: MouseEvent) {
       if (this.dragTarget) {
         var svgBounds = this.$refs.mySVG.getBoundingClientRect();
 
