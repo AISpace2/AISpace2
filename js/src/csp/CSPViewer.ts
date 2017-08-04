@@ -101,16 +101,20 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     if (event.arcIds == null) {
       for (const edge of this.graph.edges) {
         const stroke = event.colour ? event.colour : edge.styles.stroke;
-        Vue.set(edge.styles, "stroke", stroke);
-        Vue.set(edge.styles, "strokeWidth", strokeWidth);
+        this.vue.$set(edge.styles, "stroke", stroke);
+        this.vue.$set(edge.styles, "strokeWidth", strokeWidth);
       }
     } else {
       for (const arcId of event.arcIds) {
         const stroke = event.colour
           ? event.colour
           : this.graph.idMap[arcId].styles.stroke;
-        Vue.set(this.graph.idMap[arcId].styles, "stroke", stroke);
-        Vue.set(this.graph.idMap[arcId].styles, "strokeWidth", strokeWidth);
+        this.vue.$set(this.graph.idMap[arcId].styles, "stroke", stroke);
+        this.vue.$set(
+          this.graph.idMap[arcId].styles,
+          "strokeWidth",
+          strokeWidth
+        );
       }
     }
   }
@@ -128,8 +132,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private highlightNodes(event: Events.ICSPHighlightNodesEvent) {
     for (const nodeId of event.nodeIds) {
-      Vue.set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
-      Vue.set(this.graph.idMap[nodeId].styles, "strokeWidth", 2);
+      this.vue.$set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
+      this.vue.$set(this.graph.idMap[nodeId].styles, "strokeWidth", 2);
     }
   }
 
@@ -140,8 +144,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
     if (this.vue != null) {
       d3ForceLayoutEngine.setup(this.graph, { width, height });
-      this.vue.$data.width = width;
-      this.vue.$data.height = height;
+      this.vue.width = width;
+      this.vue.height = height;
     }
   }
 }

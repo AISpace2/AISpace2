@@ -50,7 +50,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         width: this.$el.width(),
         height: this.$el.width() / 1.6
       }).then(() => {
-        this.vue.$data.graph = this.graph;
+        this.vue.graph = this.graph;
       });
     });
 
@@ -102,13 +102,13 @@ export default class SearchViewer extends widgets.DOMWidgetView {
    */
   private clearStyling() {
     for (const node of this.graph.nodes) {
-      Vue.set(node.styles, "stroke", "black");
-      Vue.set(node.styles, "strokeWidth", 1);
+      this.vue.$set(node.styles, "stroke", "black");
+      this.vue.$set(node.styles, "strokeWidth", 1);
     }
 
     for (const edge of this.graph.edges) {
-      Vue.set(edge.styles, "stroke", "black");
-      Vue.set(edge.styles, "strokeWidth", 4);
+      this.vue.$set(edge.styles, "stroke", "black");
+      this.vue.$set(edge.styles, "strokeWidth", 4);
     }
   }
 
@@ -117,8 +117,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
    */
   private highlightNodes(event: SearchViewerEvents.IHighlightNodeEvent) {
     for (const nodeId of event.nodeIds) {
-      Vue.set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
-      Vue.set(this.graph.idMap[nodeId].styles, "strokeWidth", 3);
+      this.vue.$set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
+      this.vue.$set(this.graph.idMap[nodeId].styles, "strokeWidth", 3);
     }
   }
 
@@ -127,8 +127,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
    */
   private highlightPath(event: SearchViewerEvents.IHighlightPathEvent) {
     for (const edgeId of event.path) {
-      Vue.set(this.graph.idMap[edgeId].styles, "stroke", event.colour);
-      Vue.set(this.graph.idMap[edgeId].styles, "strokeWidth", 8);
+      this.vue.$set(this.graph.idMap[edgeId].styles, "stroke", event.colour);
+      this.vue.$set(this.graph.idMap[edgeId].styles, "strokeWidth", 8);
     }
   }
 
@@ -139,8 +139,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
 
     if (this.vue != null) {
       this.layoutGraph({ width, height });
-      this.vue.$data.width = width;
-      this.vue.$data.height = height;
+      this.vue.width = width;
+      this.vue.height = height;
     }
   }
 
