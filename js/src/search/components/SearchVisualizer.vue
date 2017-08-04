@@ -3,7 +3,7 @@
     <GraphVisualizerBase :graph="graph" :width="width" :height="height" :transitions="true">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
-                          :subtext="showNodeHeuristics ? props.node.h.toFixed(1) : undefined"
+                          :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined"
                           :fill="nodeFillColour(props.node, props.hover)"
                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)">
@@ -38,6 +38,7 @@ import DirectedEdge from "../../components/DirectedEdge.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
+import { nodeFillColour, nodeHText } from '../SearchGraphUtils';
 
 @Component({
   components: {
@@ -72,14 +73,7 @@ export default class SearchVisualizer extends Vue {
       return "black";
     }
 
-    switch (node.type) {
-      case "search:start":
-        return "orchid";
-      case "search:goal":
-        return "gold";
-      default:
-        return "white";
-    }
+    return nodeFillColour(node);
   }
 
   nodeTextColour(node: ISearchGraphNode, hover: boolean) {
@@ -104,6 +98,14 @@ export default class SearchVisualizer extends Vue {
     }
 
     return 1;
+  }
+
+  nodeHText(node: ISearchGraphNode) {
+    if (!this.showNodeHeuristics) {
+      return undefined;
+    }
+
+    return nodeHText(node);
   }
 
   edgeText(edge: ISearchGraphEdge) {

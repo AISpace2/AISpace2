@@ -51,6 +51,7 @@ import DirectedEdge from "../../components/DirectedEdge.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
+import { nodeFillColour, nodeHText } from '../SearchGraphUtils';
 
 /**
  * Component to visually construct a search graph.
@@ -90,14 +91,7 @@ export default class SearchGraphBuilder extends Vue {
   }
 
   nodeFillColour(node: ISearchGraphNode) {
-    switch (node.type) {
-      case "search:start":
-        return "orchid";
-      case "search:goal":
-        return "gold";
-      default:
-        return "white";
-    }
+    return nodeFillColour(node);
   }
 
   nodeHText(node: ISearchGraphNode) {
@@ -105,8 +99,7 @@ export default class SearchGraphBuilder extends Vue {
       return undefined;
     }
 
-    // Ensures proper rounding for e.g. 8.45 -> 8.5, which fails just using toFixed (8.4)
-    return (Math.round(10 * node.h) / 10).toFixed(1);
+    return nodeHText(node);
   }
 
   updateSelection(selection: ISearchGraphNode | ISearchGraphEdge) {
