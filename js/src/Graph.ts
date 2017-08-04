@@ -85,16 +85,16 @@ export class Graph<
       nodes: [] as IGraphNode[]
     };
 
-    const nodeDefaults = {
-      x: 0,
-      y: 0,
-      styles: {
-        rx: 40,
-        ry: 30
-      }
-    };
-
     for (const node of Object.values(json.nodes)) {
+      const nodeDefaults = {
+        x: 0,
+        y: 0,
+        styles: {
+          rx: 40,
+          ry: 30
+        }
+      };
+
       let newNode = { ...nodeDefaults, ...node };
 
       if (prevGraph != null) {
