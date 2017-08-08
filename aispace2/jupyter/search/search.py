@@ -9,7 +9,7 @@ from .searchjsonbridge import (implicit_to_explicit_search_problem,
 from ipywidgets import register
 from traitlets import Bool, Dict, Unicode
 
-from ..stepdomwidget import StepDOMWidget
+from ..stepdomwidget import StepDOMWidget, ReturnableThread
 
 
 @register('aispace2.SearchViewer')
@@ -228,7 +228,7 @@ def visualize(func_bg):
     def wrapper(self, *args, **kwargs):
         # We need to reset display_level so it doesn't carry over to next call
         self.max_display_level = 4
-        self._thread = Thread(
+        self._thread = ReturnableThread(
             target=partial(func_bg, self), args=args, kwargs=kwargs)
         self._thread.start()
 

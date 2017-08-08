@@ -4,28 +4,8 @@ from functools import partial
 from ipywidgets import register
 from traitlets import Dict, Float, Unicode
 
-from ..stepdomwidget import StepDOMWidget
+from ..stepdomwidget import StepDOMWidget, ReturnableThread
 from .cspjsonbridge import csp_to_json
-
-
-class ReturnableThread(threading.Thread):
-    """A thread extended to allow a return value.
-    To get the return value, use this thread as normal, but assign it to a variable on creation.
-    calling var.join() will return the return value.
-    the return value can also be gotten directly via ._return, but this is not safe.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super(ReturnableThread, self).__init__(*args, **kwargs)
-        self._return = None
-
-    def run(self):
-        if self._target is not None:
-            self._return = self._target(*self._args, **self._kwargs)
-
-    def join(self, timeout=None):
-        super().join(timeout)
-        return self._return
 
 
 @register('aispace2.CSPViewer')
