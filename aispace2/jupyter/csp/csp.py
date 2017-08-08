@@ -19,7 +19,6 @@ class Displayable(StepDOMWidget):
 
     graph_json = Dict().tag(sync=True)
     line_width = Float(4.0).tag(sync=True)
-    sleep_time = Float(0.2).tag(sync=True)
 
     def __init__(self):
         super().__init__()
