@@ -74,7 +74,7 @@ export default class GraphVisualizeBase extends Vue {
   transitions: boolean;
   /** Layout object that controls where nodes are drawn. */
   @Prop({type: Object})
-  layout: Layout;
+  layout: GraphLayout;
 
   /** The node or edge currently being dragged. */
   dragTarget: IGraphNode|IGraphEdge|null = null;
