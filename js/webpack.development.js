@@ -26,7 +26,7 @@ if (!fs.existsSync(path.resolve(__dirname, "vendor", "vendor-manifest.json"))) {
 
 const devConfig = {
   main: {
-    devtool: "cheap-module-eval-source-map",
+    devtool: "eval-source-map",
     plugins: [
       new webpack.DllReferencePlugin({
         context: ".",
