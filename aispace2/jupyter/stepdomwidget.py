@@ -38,13 +38,13 @@ class StepDOMWidget(DOMWidget):
                 if not self._thread.is_alive():
                     return_value = self._thread.join()
 
-                    self.send({
-                        'action':
-                        'output',
-                        'text':
-                        'Execution completed. Returned: {}'.format(
-                            str(return_value))
-                    })
+                    if return_value is not None:
+                        self.send({
+                            'action':
+                            'output',
+                            'text':
+                            'Function returned: {}'.format(str(return_value))
+                        })
 
             return step
 
