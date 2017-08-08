@@ -8,8 +8,11 @@
                 translate(${-arrowHalfSize - 2}, 0)`" :stroke="stroke" :fill="stroke" :stroke-width="strokeWidth">
     </polygon>
     <rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect>
-    <text v-if="text" ref="text" :x="centerX" :y="centerY" text-anchor="middle" dominant-baseline="central">{{text}}
-    </text>
+    <g :transform="`translate(${centerX}, ${centerY})`">
+      <!-- Text x/y are not animated, so we wrap it in a group -->
+      <text v-if="text" ref="text" text-anchor="middle" dominant-baseline="central">{{text}}
+      </text>
+    </g>
   </g>
 </template>
 
