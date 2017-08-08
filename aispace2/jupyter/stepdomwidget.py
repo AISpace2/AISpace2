@@ -2,6 +2,7 @@ import threading
 from time import sleep
 
 from ipywidgets import DOMWidget
+from traitlets import validate
 
 
 class ReturnableThread(threading.Thread):
@@ -44,6 +45,18 @@ class StepDOMWidget(DOMWidget):
         # The display level to block on. The visualization will not block on displays > to this.
         self.max_display_level = 4
         self._initialize_controls()
+
+    @validate('sleep_time')
+    def _validate_sleep_time(self, proposal):
+        """Cap sleep_time at a minimum value.
+
+        Too low values freeze the UI, as the messages have no time to be processed.
+        """
+        sleep_time = proposal['value']
+        if sleep_time < 0.05:
+            sleep_time = 0.05
+
+        return sleep_time
 
     def _initialize_controls(self):
         """Sets up functions that can be used to control the visualization."""
