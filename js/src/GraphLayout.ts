@@ -277,7 +277,7 @@ export function relativeLayout() {
         if (node.x == null || node.y == null) {
           continue;
         }
-        
+
         node.x =
           (layoutParams.width - edgePadding * 2) *
             (node.x! - minX) /

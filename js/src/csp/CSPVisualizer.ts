@@ -66,7 +66,14 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.send({
           constId: edge.target.idx,
           event: CSPViewer.ARC_CLICK,
-          varId: edge.source.name
+          varName: edge.source.name
+        });
+      });
+
+      this.vue.$on("click:node", (node: ICSPGraphNode) => {
+        this.send({
+          event: CSPViewer.VAR_CLICK,
+          varName: node.name
         });
       });
 

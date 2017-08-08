@@ -48,17 +48,32 @@ class Displayable(StepDOMWidget):
         # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
         self._displayed_once = False
 
-        # A reference to the arc the user has selected. A tuple of (variable name, Constraint instance).
+        ##############################
+        ### SLS-specific variables ###
+        ##############################
+        # Tracks if this is the first conflict reported.
+        # If so, will also compute non-conflicts to highlight green the first time around.
+        self._sls_first_conflict = True
+
+        ##########################################
+        ### Arc consistency-specific variables ###
+        ##########################################
+        # A reference to the arc the user has selected for arc consistency. A tuple of (variable name, Constraint instance).
         self._selected_arc = None
         # True if the user has selected an arc to perform arc-consistency on. Otherwise, an arc is automatically chosen.
         self._has_user_selected_arc = False
+        # True if the algorithm is at a point where an arc is waiting to be chosen. Used to filter out extraneous clicks otherwise.
+        self._is_waiting_for_arc_selection = False
 
-        # A reference to the variable the user has selected.
+        ###########################################
+        ### Domain splitting-specific variables ###
+        ##########################################
+        # A reference to the variable the user has selected for domain splitting.
         self._selected_var = None
-
-        # If this problem is an SLS, tracks if this is the first conflict reported.
-        # If so, will also compute non-conflicts to highlight green the first time around.
-        self._sls_first_conflict = True
+        # True if the user has selected a var to perform domain splitting on. Otherwise, a variable is automatically chosen.
+        self._has_user_selected_var = False
+        # True if the algorithm is at a point where a var is waiting to be chosen. Used to filter out extraneous clicks otherwise.
+        self._is_waiting_for_var_selection = False
 
         (self.graph_json, self._domain_map,
          self._edge_map) = csp_to_json(self.csp)
@@ -85,9 +100,11 @@ class Displayable(StepDOMWidget):
         if self.max_display_level == 1:
             return to_do.pop()
 
+        self._is_waiting_for_arc_selection = True
         self._block_for_user_input.wait()
 
         if self._has_user_selected_arc:
+            self._has_user_selected_arc = False
             to_do.discard(self._selected_arc)
             return self._selected_arc
 
@@ -95,31 +112,52 @@ class Displayable(StepDOMWidget):
         return to_do.pop()
 
     def wait_for_var_selection(self, iter_var):
+        self._is_waiting_for_var_selection = True
         self._block_for_user_input.wait()
         self.max_display_level = 4
-        if self._selected_var in list(iter_var):
-            return self._selected_var
-        else:
-            self._block_for_user_input.wait()
+        iter_var = list(iter_var)
+
+        if self._has_user_selected_var:
+            self._has_user_selected_var = False
+            if self._selected_var in iter_var:
+                return self._selected_var
+            else:
+                return self.wait_for_var_selection(iter_var)
+
+        return iter_var[0]
 
     def handle_custom_msgs(self, _, content, buffers=None):
         super().handle_custom_msgs(None, content, buffers)
         event = content.get('event', '')
 
         if event == 'arc:click':
-            var_name = content.get('varId')
-            const = self.csp.constraints[content.get('constId')]
-            self.max_display_level = 2
+            """Expects a dictionary containing:
+                    varName (string): the name of the variable connected to this arc.
+                    constId (string): the id of the constraint connected to this arc.
+            """
+            if self._is_waiting_for_arc_selection:
+                var_name = content.get('varName')
+                const = self.csp.constraints[content.get('constId')]
+                self.max_display_level = 2
 
-            self._selected_arc = (var_name, const)
-            self._has_user_selected_arc = True
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
+                self._selected_arc = (var_name, const)
+                self._has_user_selected_arc = True
+                self._block_for_user_input.set()
+                self._block_for_user_input.clear()
+                self._is_waiting_for_arc_selection = False
+
         elif event == 'var:click':
-            var_name = content.get('varId')
-            self._selected_var = var_name
-            self._block_for_user_input.set()
-            self._block_for_user_input.clear()
+            """Expects a dictionary containing:
+                    varName (string): the name of the variable to split on.
+            """
+            if self._is_waiting_for_var_selection:
+                var_name = content.get('varName')
+                self._selected_var = var_name
+                self._has_user_selected_var = True
+                self._block_for_user_input.set()
+                self._block_for_user_input.clear()
+                self._is_waiting_for_var_selection = False
+
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
             if queued_func:

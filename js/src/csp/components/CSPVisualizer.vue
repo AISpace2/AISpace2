@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" @click:edge="edgeClicked" :layout="layout" :transitions="true">
+    <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true">
       <template slot="node" scope="props">
         <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
                          :subtext="domainText(props.node)" 
@@ -72,6 +72,10 @@ export default class CSPGraphInteractor extends Vue {
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
+  }
+
+  nodeClicked(node: ICSPGraphNode) {
+    this.$emit("click:node", node);
   }
 
   nodeStrokeColour(node: ICSPGraphNode, isHovering: boolean = false) {
