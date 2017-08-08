@@ -6,7 +6,7 @@ import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
 import { d3ForceLayout, GraphLayout } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
-import CSPGraphInteractor from "./components/CSPVisualizer.vue";
+import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import CSPViewerModel from "./CSPVisualizerModel";
 import * as Events from "./SearchVisualizerEvents";
 
@@ -42,7 +42,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
   public render() {
     timeout(() => {
-      this.vue = new CSPGraphInteractor({
+      this.vue = new CSPGraphVisualizer({
         data: {
           graph: this.graph,
           layout: new GraphLayout(d3ForceLayout()),
