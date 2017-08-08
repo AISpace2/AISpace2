@@ -34,6 +34,14 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.setDomain(event);
       } else if (Events.isHighlightNodesEvent(event)) {
         this.highlightNodes(event);
+      } else if (Events.isChooseDomainSplitEvent(event)) {
+        const domainString = window.prompt(
+          "Choose domain for first split. Cancel to choose a default split.",
+          event.domain.join()
+        );
+        const newDomain =
+          domainString != null ? domainString.split(",").filter(d => d) : null;
+        this.send({ event: "domain_split", domain: newDomain });
       } else if (isOutputEvent(event)) {
         this.vue.output = event.text;
       }

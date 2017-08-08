@@ -26,6 +26,12 @@ export interface ICSPHighlightNodesEvent extends IEvent {
   colour: string;
 }
 
+export interface ICSPChooseDomainSplitEvent extends IEvent {
+  action: "chooseDomainSplit";
+  /** The domain to choose a split from. */
+  domain: string[];
+}
+
 export function isHighlightArcsEvent(
   event: IEvent
 ): event is ICSPHighlightArcsEvent {
@@ -40,4 +46,10 @@ export function isHighlightNodesEvent(
   event: IEvent
 ): event is ICSPHighlightNodesEvent {
   return event.action === "highlightNodes";
+}
+
+export function isChooseDomainSplitEvent(
+  event: IEvent
+): event is ICSPChooseDomainSplitEvent {
+  return event.action === "chooseDomainSplit";
 }

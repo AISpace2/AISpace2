@@ -54,14 +54,13 @@ class Displayable(StepDOMWidget):
         self._has_user_selected_var = False
         # True if the algorithm is at a point where a var is waiting to be chosen. Used to filter out extraneous clicks otherwise.
         self._is_waiting_for_var_selection = False
+        # The domain the user has chosen as their first split for `_selected_var`.
+        self._domain_split = None
 
         (self.graph_json, self._domain_map,
          self._edge_map) = csp_to_json(self.csp)
 
         self._initialize_controls()
-
-    def before_step(self):
-        self._has_user_selected_arc = False
 
     def wait_for_arc_selection(self, to_do):
         """Pauses execution until an arc has been selected and returned.
@@ -137,6 +136,17 @@ class Displayable(StepDOMWidget):
                 self._block_for_user_input.set()
                 self._block_for_user_input.clear()
                 self._is_waiting_for_var_selection = False
+
+        elif event == 'domain_split':
+            """Expects a dictionary containing:
+                domain (string[]|None):
+                    An array of the elements in the domain to first split on, or None if no choice is made.
+                    In this case, splits the domain in half as a default.
+            """
+            domain = content.get('domain')
+            self._domain_split = domain
+            self._block_for_user_input.set()
+            self._block_for_user_input.clear()
 
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
