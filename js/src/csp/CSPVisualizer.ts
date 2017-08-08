@@ -3,7 +3,7 @@ import * as widgets from "jupyter-js-widgets";
 import { debounce } from "underscore";
 import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";
-import { Graph, ICSPGraphNode } from "../Graph";
+import { Graph, ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
@@ -61,6 +61,14 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       this.vue.$on("click:auto-step", () =>
         this.send({ event: StepEvents.AUTO_STEP_CLICK })
       );
+
+      this.vue.$on("click:edge", (edge: IGraphEdge) => {
+        this.send({
+          constId: edge.target.idx,
+          event: CSPViewer.ARC_CLICK,
+          varId: edge.source.name
+        });
+      });
 
       // Functions called on the Python backend are queued until first render
       if (this.model.initial_render) {
