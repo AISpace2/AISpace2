@@ -115,6 +115,10 @@ export default class GraphVisualizeBase extends Vue {
     this.width = this.$el.getBoundingClientRect().width;
     this.height = this.width / 1.6;
     this.layout.setup(this.graph, { width: this.width, height: this.height });
+    
+    // Disable animations for the first draw, because otherwise they fly in from (0, 0) and it looks weird
+    this.transitionsAllowed = false;
+    Vue.nextTick(() => this.transitionsAllowed = true);
 
     window.addEventListener('resize', this.handleResize);
   }
