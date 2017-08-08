@@ -55,8 +55,13 @@ def search_problem_to_json(problem):
         from_node = str(arc.from_node)
         to_node = str(arc.to_node)
 
-        new_edge = {'id': edge_id, 'name': arc.action, 'source': node_map[from_node],
-                    'target': node_map[to_node], 'cost': arc.cost}
+        new_edge = {
+            'id': edge_id,
+            'name': arc.action,
+            'source': node_map[from_node],
+            'target': node_map[to_node],
+            'cost': arc.cost
+        }
         edge_map[(from_node, to_node)] = edge_id
         edges.append(new_edge)
 
@@ -81,7 +86,8 @@ def implicit_to_explicit_search_problem(implicit_problem):
     """
     start = str(implicit_problem.start_node())
     h = implicit_problem.heuristic(implicit_problem.start_node())
-    return Search_problem_from_explicit_graph(set((start,)), [], start, set(), { start: h })
+    return Search_problem_from_explicit_graph(
+        set((start, )), [], start, set(), {start: h})
 
 
 def json_to_search_problem(json):
@@ -154,4 +160,9 @@ def search_problem_to_python_code(problem):
 
     template = """from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
 search_problem = Search_problem_from_explicit_graph($nodes, [$arcs], $start, $goals, $hmap)"""
-    return Template(template).substitute(nodes=nodes, arcs=', '.join(arcs), start=start.__repr__(), goals=goals, hmap=hmap)
+    return Template(template).substitute(
+        nodes=nodes,
+        arcs=', '.join(arcs),
+        start=start.__repr__(),
+        goals=goals,
+        hmap=hmap)

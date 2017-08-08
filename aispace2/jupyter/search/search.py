@@ -5,7 +5,7 @@ from threading import Thread
 from aipython.searchProblem import (Arc, Search_problem_from_explicit_graph,
                                     problem1)
 from .searchjsonbridge import (implicit_to_explicit_search_problem,
-                                       search_problem_to_json)
+                               search_problem_to_json)
 from ipywidgets import register
 from traitlets import Bool, Dict, Unicode
 
@@ -58,20 +58,21 @@ class Displayable(StepDOMWidget):
             self._explicit_graph_from_problem = self.problem
             self._is_problem_explicit = True
 
-        (graph_json, self.node_map,
-         self.edge_map) = search_problem_to_json(self._explicit_graph_from_problem)
-        
+        (graph_json, self.node_map, self.edge_map
+         ) = search_problem_to_json(self._explicit_graph_from_problem)
+
         self._frontier = []
 
         # Assumption: there is a start node
-        self._layout_root_id = self.node_map[str(self._explicit_graph_from_problem.start)]
-        self.graph_json = graph_json # Need to ensure _layout_root_id gets synced first
+        self._layout_root_id = self.node_map[str(
+            self._explicit_graph_from_problem.start)]
+        self.graph_json = graph_json  # Need to ensure _layout_root_id gets synced first
 
     def display(self, level, *args, **kwargs):
         if args[0] == 'Expanding:':
             path = args[1]
             self._send_clear_action()
-            self._send_highlight_frontier_action()            
+            self._send_highlight_frontier_action()
 
             if path.arc:
                 nodes_along_path = []
@@ -106,20 +107,25 @@ class Displayable(StepDOMWidget):
                         self._explicit_graph_from_problem.goals.add(
                             str(arc.to_node))
 
-                    if (str(arc.from_node), str(arc.to_node)) not in self._implicit_neighbours_added:
+                    if (str(arc.from_node), str(arc.to_node)
+                        ) not in self._implicit_neighbours_added:
                         # Found a new neighbour!
                         self._explicit_graph_from_problem.arcs.append(arc)
                         self._implicit_neighbours_added.add(
                             (str(arc.from_node), str(arc.to_node)))
-                        self._explicit_graph_from_problem.hmap[str(arc.to_node)] = self.problem.heuristic(arc.to_node)
+                        self._explicit_graph_from_problem.hmap[str(
+                            arc.to_node)] = self.problem.heuristic(
+                                arc.to_node)
                         has_graph_changed = True
 
                 if has_graph_changed:
                     # Sync updated explicit representation with the front-end
                     (graph_json, self.node_map,
-                     self.edge_map) = search_problem_to_json(self._explicit_graph_from_problem)
-                    self._layout_root_id = self.node_map[str(self._explicit_graph_from_problem.start)]
-                    self.graph_json = graph_json # Need to ensure _layout_root_id gets synced first
+                     self.edge_map) = search_problem_to_json(
+                         self._explicit_graph_from_problem)
+                    self._layout_root_id = self.node_map[str(
+                        self._explicit_graph_from_problem.start)]
+                    self.graph_json = graph_json  # Need to ensure _layout_root_id gets synced first
 
             neighbour_nodes = []
             arcs_of_path = []
@@ -174,8 +180,11 @@ class Displayable(StepDOMWidget):
         for node in nodes:
             nodeIds.append(self.node_map[str(node)])
 
-        self.send({'action': 'highlightNodes',
-                   'nodeIds': nodeIds, 'colour': colour})
+        self.send({
+            'action': 'highlightNodes',
+            'nodeIds': nodeIds,
+            'colour': colour
+        })
 
     def _send_highlight_path_action(self, arcs, colour='black'):
         """Sends a message to the front-end visualization to highlight a path.
@@ -195,8 +204,11 @@ class Displayable(StepDOMWidget):
             path_edge_ids.append(
                 self.edge_map[(str(arc.from_node), str(arc.to_node))])
 
-        self.send({'action': 'highlightPath',
-                   'path': path_edge_ids, 'colour': colour})
+        self.send({
+            'action': 'highlightPath',
+            'path': path_edge_ids,
+            'colour': colour
+        })
 
 
 def visualize(func_bg):
@@ -219,4 +231,5 @@ def visualize(func_bg):
         self._thread = Thread(
             target=partial(func_bg, self), args=args, kwargs=kwargs)
         self._thread.start()
+
     return wrapper

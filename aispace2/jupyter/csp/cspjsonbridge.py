@@ -50,8 +50,7 @@ def csp_to_json(csp):
         csp_json['nodes'].append({
             'id': node_map[var],
             'name': var,
-            'type':
-            'csp:variable',
+            'type': 'csp:variable',
             'idx': i,
             'domain': list(value)
         })
@@ -107,12 +106,12 @@ def csp_from_json(graph_json):
             # Find the links with the target as this constraint
             for link in graph_json['edges']:
                 if link['target'] == node['id']:
-                    source_node = next(
-                        n for n in graph_json['nodes'] if n['id'] == link['source'])
+                    source_node = next(n for n in graph_json['nodes']
+                                       if n['id'] == link['source'])
                     scope.append(source_node['name'])
                 elif link['source'] == node['id']:
-                    source_node = next(
-                        n for n in graph_json['nodes'] if n['id'] == link['target'])
+                    source_node = next(n for n in graph_json['nodes']
+                                       if n['id'] == link['target'])
                     scope.append(source_node['name'])
 
             if scope:
@@ -147,5 +146,5 @@ def csp_to_python_code(csp):
 from operator import lt
 csp = CSP($domains, [$constraints])"""
 
-    return Template(template).substitute(domains=csp.domains,
-                                         constraints=', '.join(constraint_strings))
+    return Template(template).substitute(
+        domains=csp.domains, constraints=', '.join(constraint_strings))

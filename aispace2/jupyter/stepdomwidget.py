@@ -27,6 +27,7 @@ class StepDOMWidget(DOMWidget):
 
     def _initialize_controls(self):
         """Sets up functions that can be used to control the visualization."""
+
         def step_through_to_level(desired_level):
             def step():
                 self.before_step()
@@ -37,8 +38,14 @@ class StepDOMWidget(DOMWidget):
                 if not self._thread.is_alive():
                     return_value = self._thread.join()
 
-                    self.send({'action': 'output',
-                            'text': 'Execution completed. Returned: {}'.format(str(return_value))})
+                    self.send({
+                        'action':
+                        'output',
+                        'text':
+                        'Execution completed. Returned: {}'.format(
+                            str(return_value))
+                    })
+
             return step
 
         self._fine_step = step_through_to_level(4)

@@ -60,7 +60,8 @@ class Displayable(StepDOMWidget):
         # If so, will also compute non-conflicts to highlight green the first time around.
         self._sls_first_conflict = True
 
-        (self.graph_json, self._domain_map, self._edge_map) = csp_to_json(self.csp)
+        (self.graph_json, self._domain_map,
+         self._edge_map) = csp_to_json(self.csp)
 
         self._initialize_controls()
 
@@ -222,8 +223,8 @@ class Displayable(StepDOMWidget):
                 arcs_to_highlight.append((var, const))
 
             self._send_highlight_nodes_action(nodes_to_highlight, "green")
-            self._send_highlight_arcs_action(
-                arcs_to_highlight, "bold", "green")
+            self._send_highlight_arcs_action(arcs_to_highlight, "bold",
+                                             "green")
 
         elif args[0] == "Became consistent":
             const = args[1]
@@ -235,8 +236,8 @@ class Displayable(StepDOMWidget):
                 arcs_to_highlight.append((var, const))
 
             self._send_highlight_nodes_action(nodes_to_highlight, "green")
-            self._send_highlight_arcs_action(
-                arcs_to_highlight, "bold", "green")
+            self._send_highlight_arcs_action(arcs_to_highlight, "bold",
+                                             "green")
 
         elif args[0] == "Became inconsistent":
             const = args[1]
@@ -267,8 +268,8 @@ class Displayable(StepDOMWidget):
 
                     for node in not_conflict.scope:
                         non_conflict_nodes_to_highlight.add(node)
-                        non_conflict_arcs_to_highlight.append(
-                            (node, not_conflict))
+                        non_conflict_arcs_to_highlight.append((node,
+                                                               not_conflict))
 
                 self._send_highlight_nodes_action(
                     non_conflict_nodes_to_highlight, "green")
@@ -283,10 +284,10 @@ class Displayable(StepDOMWidget):
                     conflict_nodes_to_highlight.add(node)
                     conflict_arcs_to_highlight.append((node, conflict))
 
-            self._send_highlight_nodes_action(
-                conflict_nodes_to_highlight, "red")
-            self._send_highlight_arcs_action(
-                conflict_arcs_to_highlight, "bold", "red")
+            self._send_highlight_nodes_action(conflict_nodes_to_highlight,
+                                              "red")
+            self._send_highlight_arcs_action(conflict_arcs_to_highlight,
+                                             "bold", "red")
 
         super().display(level, *args, **dict(kwargs, should_wait=should_wait))
 
@@ -307,8 +308,11 @@ class Displayable(StepDOMWidget):
         for var in vars:
             nodeIds.append(self._domain_map[var])
 
-        self.send({'action': 'highlightNodes',
-                   'nodeIds': nodeIds, 'colour': colour})
+        self.send({
+            'action': 'highlightNodes',
+            'nodeIds': nodeIds,
+            'colour': colour
+        })
 
     def _send_highlight_arcs_action(self, arcs, style='normal', colour=None):
         """Sends a message to the front-end visualization to highlight arcs.
@@ -329,8 +333,12 @@ class Displayable(StepDOMWidget):
         for arc in arcs:
             arcIds.append(self._edge_map[arc])
 
-        self.send({'action': 'highlightArcs', 'arcIds': arcIds,
-                   'style': style, 'colour': colour})
+        self.send({
+            'action': 'highlightArcs',
+            'arcIds': arcIds,
+            'style': style,
+            'colour': colour
+        })
 
     def _send_set_domain_action(self, var, domain):
         """Sends a message to the front-end visualization to set the domain of a variable.
@@ -339,8 +347,11 @@ class Displayable(StepDOMWidget):
             var (string): The name of the variable whose domain should be changed.
             domain (List[int|string]): The updated domain of the variable.
         """
-        self.send({'action': 'setDomain',
-                   'nodeId': self._domain_map[var], 'domain': list(domain)})
+        self.send({
+            'action': 'setDomain',
+            'nodeId': self._domain_map[var],
+            'domain': list(domain)
+        })
 
 
 def visualize(func_to_delay):
@@ -361,7 +372,8 @@ def visualize(func_to_delay):
         if self._displayed_once is False:
             self._queued_func = {
                 'func': partial(func_to_delay, self),
-                'args': args, 'kwargs': kwargs
+                'args': args,
+                'kwargs': kwargs
             }
         else:
             return func_to_delay(self, *args, **kwargs)

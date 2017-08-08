@@ -1,11 +1,8 @@
 from ipywidgets import DOMWidget, register
 from traitlets import Dict, Unicode, Bool
 
-from .searchjsonbridge import (
-    json_to_search_problem, 
-    search_problem_to_json, 
-    search_problem_to_python_code
-)
+from .searchjsonbridge import (json_to_search_problem, search_problem_to_json,
+                               search_problem_to_python_code)
 
 
 @register('aispace2.SearchBuilder')
@@ -45,5 +42,4 @@ class SearchBuilder(DOMWidget):
         The code is added to a new cell in the notebook.
         """
         code = search_problem_to_python_code(self.search_problem())
-        self.send({'action': 'python-code',
-                   'code': code})
+        self.send({'action': 'python-code', 'code': code})
