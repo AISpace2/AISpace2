@@ -4,7 +4,7 @@ from functools import partial
 from ipywidgets import register
 from traitlets import Dict, Float, Unicode
 
-from ..stepdomwidget import StepDOMWidget, ReturnableThread
+from ..stepdomwidget import ReturnableThread, StepDOMWidget
 from .cspjsonbridge import csp_to_json
 
 
@@ -91,6 +91,18 @@ class Displayable(StepDOMWidget):
         return to_do.pop()
 
     def wait_for_var_selection(self, iter_var):
+        """Pauses execution until a variable has been selected and returned.
+
+        If the user steps instead of clicking on a variable, a random variable is returned.
+        Otherwise, the variable clicked by the user is returned, but only if it is a variable
+        that can be split on. Otherwise, this function continues waiting.
+
+        Args:
+            iter_var (iter): Variables that the user is allowed to split on.
+
+        Returns:
+            (string): The variable to split on.
+        """
         self._is_waiting_for_var_selection = True
         self._block_for_user_input.wait()
         self.max_display_level = 4
@@ -105,14 +117,40 @@ class Displayable(StepDOMWidget):
 
         return iter_var[0]
 
+    def choose_domain_partition(self, domain):
+        """Pauses execution until a domain has been split on.
+
+        If the user chooses to not select a domain (clicks 'Cancel'), splits the domain in half.
+        Otherwise, the subset of the domain chosen by the user is used as the initial split.
+
+        Args:
+            domain (set): Domain of the variable being split on.
+
+        Returns:
+            (set): A subset of the domain to be split on first.
+        """
+        self.send({'action': 'chooseDomainSplit', 'domain': domain})
+        self._block_for_user_input.wait()
+
+        if self._domain_split is None:
+            # Split in half
+            split = len(domain) // 2
+            dom1 = set(list(domain)[:split])
+            dom2 = domain - dom1
+            return dom1, dom2
+
+        split1 = set(self._domain_split)
+        split2 = set(domain) - split1
+        return split1, split2
+
     def handle_custom_msgs(self, _, content, buffers=None):
         super().handle_custom_msgs(None, content, buffers)
         event = content.get('event', '')
 
         if event == 'arc:click':
             """Expects a dictionary containing:
-                    varName (string): the name of the variable connected to this arc.
-                    constId (string): the id of the constraint connected to this arc.
+                    varName (string): The name of the variable connected to this arc.
+                    constId (string): The id of the constraint connected to this arc.
             """
             if self._is_waiting_for_arc_selection:
                 var_name = content.get('varName')
@@ -127,7 +165,7 @@ class Displayable(StepDOMWidget):
 
         elif event == 'var:click':
             """Expects a dictionary containing:
-                    varName (string): the name of the variable to split on.
+                    varName (string): The name of the variable to split on.
             """
             if self._is_waiting_for_var_selection:
                 var_name = content.get('varName')

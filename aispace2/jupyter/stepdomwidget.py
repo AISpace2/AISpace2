@@ -3,6 +3,7 @@ from time import sleep
 
 from ipywidgets import DOMWidget
 
+
 class ReturnableThread(threading.Thread):
     """A thread extended to allow a return value.
     To get the return value, use this thread as normal, but assign it to a variable on creation.
@@ -21,6 +22,7 @@ class ReturnableThread(threading.Thread):
     def join(self, timeout=None):
         super().join(timeout)
         return self._return
+
 
 class StepDOMWidget(DOMWidget):
     """Base Jupyter widget for visualizations that you can step through.
