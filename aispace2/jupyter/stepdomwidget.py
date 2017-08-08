@@ -30,6 +30,14 @@ class StepDOMWidget(DOMWidget):
 
         def step_through_to_level(desired_level):
             def step():
+                if not hasattr(self, '_thread') or not self._thread:
+                    self.send({
+                        'action': 'output',
+                        'text': 'Run a function to begin stepping.'
+                    })
+
+                    return
+
                 self.before_step()
                 self.max_display_level = desired_level
                 self._block_for_user_input.set()
