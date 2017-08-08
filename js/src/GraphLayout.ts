@@ -260,7 +260,10 @@ export function relativeLayout() {
       let maxY = Number.MIN_SAFE_INTEGER;
 
       for (const node of graph.nodes) {
-        if (node.x == null || node.y == null) continue;
+        if (node.x == null || node.y == null) {
+          continue;
+        }
+
         maxX = Math.max(node.x, maxX);
         maxY = Math.max(node.y, maxY);
         minX = Math.min(node.x, minX);
@@ -271,7 +274,10 @@ export function relativeLayout() {
 
       for (const node of graph.nodes) {
         // Scale node positions to fit new width/height, plus some edge padding
-        if (node.x == null || node.y == null) continue;
+        if (node.x == null || node.y == null) {
+          continue;
+        }
+        
         node.x =
           (layoutParams.width - edgePadding * 2) *
             (node.x! - minX) /
