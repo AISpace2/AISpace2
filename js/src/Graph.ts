@@ -1,25 +1,33 @@
-import * as shortid from "shortid";
-
 export interface IGraphNode {
+  /** A identifier for the node that is unique to all other IDs in the graph. */
   id: string;
+  /** The name of the node. Used for display purposes. */
   name: string;
+  /** A custom string used to track this node's type. */
   type: string;
+  /** The x position of the node. */
   x?: number;
+  /** The y position of the node. */
   y?: number;
   /** An object that can contain arbitrary properties to influence it's rendering. */
   styles: { [key: string]: any };
+  /** Extra properties depending on the node's type. */
   [key: string]: any;
 }
 
 export interface IGraphEdge {
-  source: IGraphNode;
-  target: IGraphNode;
+  /** A identifier for the node that is unique to all other IDs in the graph. */
   id: string;
+  /** The source node for this edge. */
+  source: IGraphNode;
+  /** The target node for this edge. */
+  target: IGraphNode;
+  /** The name of the edge, which may be displayed along the edge. */
   name?: string;
   type: "edge";
   /** An object that can contain arbitrary properties to influence it's rendering. */
-
   styles: { [key: string]: any };
+  /** Extra properties depending on the edge's type. */
   [key: string]: any;
 }
 
@@ -71,60 +79,40 @@ export class Graph<
 > implements IGraph<TNode, TEdge> {
   /**
    * Converts JSON into an instance of the class Graph.
-   * @param json The JSON representation of the graph to convert.
-   * @param prevGraph If provided, the styles of the previous graph are merged
+   * @param json The JSON representation of the graph to convert. This may be modified.
+   * @param prevGraph If provided, the styles of the previous graph are merged.
    * into the new graph. The reason why this is necessary is that styles are *not*
    * preserved when being converted to Python (since those classes do not know about the visualization),
    * so in order to keep them, we need to take the styles from the previous graph.
    * In this way, applied styles can persist even after being converted to and from JSON.
-   * This is only needed when the graph is being updated with more nodes or edges after conversion.
+   * This is only useful when the graph is being updated with more nodes or edges after conversion.
    */
   public static fromJSON(json: IGraphJSON, prevGraph?: Graph): Graph {
-    const newGraph = {
-      edges: [] as IGraphEdge[],
-      nodes: [] as IGraphNode[]
-    };
+    const newGraph = new Graph();
 
     for (const node of Object.values(json.nodes)) {
-      const nodeDefaults = {
-        x: 0,
-        y: 0,
-        styles: {
-          rx: 40,
-          ry: 30
-        }
-      };
-
-      let newNode = { ...nodeDefaults, ...node };
-
       if (prevGraph != null) {
-        // Copy over the styles of the node in the previous graph
         const i = prevGraph.nodes.findIndex(n => n.id === node.id);
         if (i !== -1) {
-          newNode = {
-            ...node,
-            styles: { ...prevGraph.nodes[i].styles },
-            x: prevGraph.nodes[i].x,
-            y: prevGraph.nodes[i].y
-          };
+          // Copy over the styles of the node in the previous graph
+          node.styles = prevGraph.nodes[i].styles;
+          node.x = prevGraph.nodes[i].x;
+          node.y = prevGraph.nodes[i].y;
         }
       }
-      newGraph.nodes.push(newNode);
+
+      newGraph.addNode(node);
     }
 
     for (const edge of Object.values(json.edges)) {
-      // Find source
-      newGraph.edges.push({
-        ...edge,
-        id: edge.id,
-        source: newGraph.nodes.find(n => n.id === edge.source)!,
-        styles: {},
-        target: newGraph.nodes.find(n => n.id === edge.target)!,
-        type: "edge"
-      });
+      if (edge.styles == null) {
+        edge.styles = {};
+      }
+
+      newGraph.addEdge(edge);
     }
 
-    return new Graph(newGraph.nodes, newGraph.edges);
+    return newGraph;
   }
 
   public nodes: TNode[];
@@ -140,7 +128,7 @@ export class Graph<
   constructor(nodes: TNode[] = [], edges: TEdge[] = []) {
     this.nodes = nodes;
     this.edges = edges;
-    this.idMap = this.generateIdMap();
+    this.updateIdMap();
   }
 
   public toJSON(): IGraphJSON {
@@ -152,6 +140,8 @@ export class Graph<
       const newNode = Object.assign({}, node);
       delete newNode.x;
       delete newNode.y;
+
+      delete newNode.styles;
 
       nodes.push(newNode);
     }
@@ -170,35 +160,65 @@ export class Graph<
     }
 
     return {
-      edges,
-      nodes
+      nodes,
+      edges
     };
   }
 
   /** Adds a node to the graph.
-   * @param opts An object containing properties conforming to TNode. Default values are added.
+   * 
+   * Some properties, like `x`, `y`, and the `styles` object are provided by default.
+   * 
+   * @param opts An object containing properties conforming to TNode. These will be added to the node.
    */
-  public addNode(opts: {}) {
-    this.nodes.push(
-      {
-        id: shortid.generate(),
-        styles: {},
-        ...opts
-      } as TNode
-    );
+  public addNode(opts: TNode) {
+    const nodeDefaults = {
+      x: 0,
+      y: 0,
+      styles: {
+        rx: 40,
+        ry: 30
+      }
+    };
+
+    this.nodes.push({
+      ...nodeDefaults,
+      ...opts as any
+    });
+
+    this.updateIdMap();
   }
 
   /** Adds an edge to the graph.
-   * @param opts An object containing properties conforming to TEdge. Default values are added.
+   * 
+   * For convenience, `source` and `target` can either be nodes or IDs.
+   * However, nodes must already be in the graph.
+   * A default `styles` object and `type` is provided.
+   * 
+   * @param opts An object containing properties conforming to TEdge. These will be added to the edge.
    */
-  public addEdge(opts: {}) {
+  public addEdge(opts: TEdge | IGraphEdgeJSON) {
+    let sourceNode = opts.source;
+    if (typeof sourceNode === "string") {
+      sourceNode = this.nodes.find(n => n.id === sourceNode)!;
+    }
+
+    let targetNode = opts.target;
+    if (typeof targetNode === "string") {
+      targetNode = this.nodes.find(n => n.id === targetNode)!;
+    }
+
     this.edges.push(
       {
-        id: shortid.generate(),
+        type: "edge",
         styles: {},
-        ...opts
+        ...opts as any,
+        source: sourceNode,
+        target: targetNode
       } as TEdge
     );
+
+    this.updateIdMap();
   }
 
   /**
@@ -221,6 +241,8 @@ export class Graph<
         this.edges.splice(i, 1);
       }
     }
+
+    this.updateIdMap();
   }
 
   /**
@@ -234,14 +256,15 @@ export class Graph<
     if (edgeIndex === -1) {
       return;
     }
+
     this.edges.splice(edgeIndex, 1);
+    this.updateIdMap();
   }
 
   /**
    * Generates an ID map based off of the current graph.
-   * @returns An ID map, where the keys are IDs and values are either nodes or edges.
    */
-  private generateIdMap() {
+  private updateIdMap() {
     const idMap: { [id: string]: TNode | TEdge } = Object.create(null);
 
     for (const node of this.nodes) {
@@ -252,6 +275,6 @@ export class Graph<
       idMap[edge.id] = edge;
     }
 
-    return idMap;
+    this.idMap = idMap;
   }
 }
