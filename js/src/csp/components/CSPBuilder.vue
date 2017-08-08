@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" :layout="layout"
+    <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
       @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
       <template slot="node" scope="props">
         <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"

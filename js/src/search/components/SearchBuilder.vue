@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" :layout="layout"
+    <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
                          @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
         <EllipseGraphNode :text="props.node.name"

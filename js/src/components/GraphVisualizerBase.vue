@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="graph-container">
     <svg tabindex="0" ref="mySVG" :width="width" :height="height"
          @mousemove="drag"
          @mouseleave="dragEnd"
@@ -216,6 +216,10 @@ export default class GraphVisualizeBase extends Vue {
 </script>
 
 <style scoped>
+  .graph-container {
+    overflow: hidden;
+  }
+
   svg:focus {
     outline: none;
   }

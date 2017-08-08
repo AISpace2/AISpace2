@@ -87,7 +87,7 @@ export class GraphLayout {
 /**
  * Creates a `LayoutFunction` that uses D3's force layout simulation.
  */
-export function d3ForceLayout(opts = {}): LayoutFunction {
+export function d3ForceLayout(): LayoutFunction {
   return (graph: IGraph, layoutParams: IGraphLayoutParams) => {
     /**
      * We will work with a copy of the graph to prevent D3 from adding
@@ -143,7 +143,12 @@ export function d3ForceLayout(opts = {}): LayoutFunction {
 /**
  * Creates a `LayoutFunction` that uses D3's tree layout. All nodes of the same depth are placed at the same level.
  */
-export function d3TreeLayout(opts: { rootId?: string } = {}): LayoutFunction {
+export function d3TreeLayout(
+  opts: {
+    /** The ID of the node that should root the tree. If not provided, uses the first node of the graph. */
+    rootId?: string;
+  } = {}
+): LayoutFunction {
   return (graph: IGraph, layoutParams: IGraphLayoutParams) => {
     /** Maps IDs to nodes */
     const nodeMap: { [key: string]: IGraphNode } = {};
@@ -231,6 +236,53 @@ export function d3TreeLayout(opts: { rootId?: string } = {}): LayoutFunction {
           n.y * (layoutParams.height - heightDivision - heightDivision) +
           heightDivision;
       });
+
+      resolve();
+    });
+  };
+}
+
+/**
+ * Creates a `LayoutFunction` that takes existing node positions and scales them to a new width/height.
+ * 
+ * This should not be used as a setup function, because it depends on nodes already having a position.
+ * Instead, use this for re-layout, where you don't want to recompute a more expensive layout,
+ * and instead just move nodes to fill the new available space. This layout always moves nodes
+ * to fill the entire width/height, ignoring the previous proportion of empty space.
+ */
+export function relativeLayout() {
+  return (graph: Graph, layoutParams: IGraphLayoutParams) => {
+    return new Promise<void>((resolve, reject) => {
+      // Compute min and max X/Y
+      let minX = Number.MAX_SAFE_INTEGER;
+      let minY = Number.MAX_SAFE_INTEGER;
+      let maxX = Number.MIN_SAFE_INTEGER;
+      let maxY = Number.MIN_SAFE_INTEGER;
+
+      for (const node of graph.nodes) {
+        if (node.x == null || node.y == null) continue;
+        maxX = Math.max(node.x, maxX);
+        maxY = Math.max(node.y, maxY);
+        minX = Math.min(node.x, minX);
+        minY = Math.min(node.y, minY);
+      }
+
+      const edgePadding = 30;
+
+      for (const node of graph.nodes) {
+        // Scale node positions to fit new width/height, plus some edge padding
+        if (node.x == null || node.y == null) continue;
+        node.x =
+          (layoutParams.width - edgePadding * 2) *
+            (node.x! - minX) /
+            (maxX - minX) +
+          edgePadding;
+        node.y =
+          (layoutParams.height - edgePadding * 2) *
+            (node.y! - minY) /
+            (maxY - minY) +
+          edgePadding;
+      }
 
       resolve();
     });

@@ -3,7 +3,7 @@ import * as widgets from "jupyter-js-widgets";
 import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph } from "../Graph";
-import { d3ForceLayout, GraphLayout } from "../GraphLayout";
+import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import SearchGraphBuilder from "./components/SearchBuilder.vue";
 import SearchBuilderModel from "./SearchBuilderModel";
 declare let Jupyter: any;
@@ -34,7 +34,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
           graph: this.graph,
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
-          layout: new GraphLayout(d3ForceLayout())
+          layout: new GraphLayout(d3ForceLayout(), relativeLayout())
         },
         watch: {
           graph: {
