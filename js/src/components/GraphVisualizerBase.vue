@@ -184,7 +184,6 @@ export default class GraphVisualizeBase extends Vue {
 
   nodeMouseOut(node: IGraphNode) {
     this.nodeHover = null;
-    this.dragEnd
   }
 
   /**
