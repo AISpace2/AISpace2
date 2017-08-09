@@ -212,7 +212,7 @@ export default class GraphVisualizeBase extends Vue {
   }
 
   @Watch('graph')
-  onGraphChanged(newVal) {
+  onGraphChanged(newVal: Graph) {
     this.layout.relayout(this.graph, { width: this.width, height: this.height });
   }
 }

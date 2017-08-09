@@ -2,7 +2,7 @@ import { ICSPGraphNode } from "../Graph";
 
 /** Returns a formatted string representing the domain of a variable node. */
 export function domainText(node: ICSPGraphNode) {
-  return `{${node.domain.join(",")}}`;
+  return `{${node.domain!.join(",")}}`;
 }
 
 /** Returns a formatted string representing the constraint of a constraint node. */

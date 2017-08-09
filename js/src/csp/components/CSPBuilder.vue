@@ -54,6 +54,7 @@
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
+import * as shortid from "shortid";
 
 import CSPToolbar from "./CSPBuilderToolbar.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
@@ -103,6 +104,7 @@ export default class CSPGraphBuilder extends Vue {
   createNode(x: number, y: number) {
     if (this.mode === "variable") {
       this.graph.addNode({
+        id: shortid.generate(),
         name: "asdf",
         x,
         y,
@@ -111,6 +113,7 @@ export default class CSPGraphBuilder extends Vue {
       });
     } else if (this.mode === "constraint") {
       this.graph.addNode({
+        id: shortid.generate(),
         name: "asdf",
         x,
         y,
@@ -134,8 +137,9 @@ export default class CSPGraphBuilder extends Vue {
       }
 
       this.graph.addEdge({
+        id: shortid.generate(),
         source: this.first,
-        target: this.selection,
+        target: this.selection as ICSPGraphNode,
         name: "edge1"
       });
 

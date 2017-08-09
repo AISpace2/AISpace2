@@ -34,7 +34,7 @@ export interface IGraphEdge {
 export type CSPNodeTypes = "csp:variable" | "csp:constraint";
 export interface ICSPGraphNode extends IGraphNode {
   type: CSPNodeTypes;
-  domain: number[] | string[];
+  domain?: number[] | string[];
 }
 
 export type SearchNodeTypes = "search:start" | "search:goal" | "search:normal";
@@ -47,6 +47,17 @@ export interface ISearchGraphNode extends IGraphNode {
 export interface ISearchGraphEdge extends IGraphEdge {
   /** The cost associated with taking the edge. */
   cost?: number;
+}
+
+export interface IGraphNodeJSON {
+  /** A identifier for the node that is unique to all other IDs in the graph. */
+  id: string;
+  /** The name of the node. Used for display purposes. */
+  name: string;
+  /** A custom string used to track this node's type. */
+  type: string;
+  /** Extra properties depending on the node's type. */
+  [key: string]: any;
 }
 
 export interface IGraphEdgeJSON {
@@ -171,7 +182,7 @@ export class Graph<
    * 
    * @param opts An object containing properties conforming to TNode. These will be added to the node.
    */
-  public addNode(opts: TNode) {
+  public addNode(opts: TNode | IGraphNodeJSON | any) {
     const nodeDefaults = {
       x: 0,
       y: 0,
@@ -197,7 +208,7 @@ export class Graph<
    * 
    * @param opts An object containing properties conforming to TEdge. These will be added to the edge.
    */
-  public addEdge(opts: TEdge | IGraphEdgeJSON) {
+  public addEdge(opts: TEdge | IGraphEdgeJSON | any) {
     let sourceNode = opts.source;
     if (typeof sourceNode === "string") {
       sourceNode = this.nodes.find(n => n.id === sourceNode)!;
