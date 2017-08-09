@@ -30,8 +30,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
       if (Events.isHighlightArcsEvent(event)) {
         this.highlightArcs(event);
-      } else if (Events.isSetDomainEvent(event)) {
-        this.setDomain(event);
+      } else if (Events.isSetDomainsEvent(event)) {
+        this.setDomains(event);
       } else if (Events.isHighlightNodesEvent(event)) {
         this.highlightNodes(event);
       } else if (Events.isChooseDomainSplitEvent(event)) {
@@ -136,9 +136,11 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /**
    * Sets the domain of a variable node, as described by the event object.
    */
-  private setDomain(event: Events.ICSPSetDomainEvent) {
-    const variableNode = this.graph.idMap[event.nodeId] as ICSPGraphNode;
-    variableNode.domain = event.domain;
+  private setDomains(event: Events.ICSPSetDomainsEvent) {
+    for (let i = 0; i < event.nodeIds.length; i++) {
+      const variableNode = this.graph.idMap[event.nodeIds[i]] as ICSPGraphNode;
+      variableNode.domain = event.domains[i];
+    }
   }
 
   /**

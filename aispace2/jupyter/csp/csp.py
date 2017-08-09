@@ -202,14 +202,20 @@ class Displayable(StepDOMWidget):
         if args[0] == 'Performing AC with domains':
             should_wait = False
             domains = args[1]
+            vars_to_change = []
+            domains_to_change = []
+
             for var, domain in domains.items():
-                self._send_set_domain_action(var, domain)
+                vars_to_change.append(var)
+                domains_to_change.append(domain)
+
+            self._send_set_domains_action(vars_to_change, domains_to_change)
 
         elif args[0] == 'Domain pruned':
             variable = args[2]
             domain = args[4]
             constraint = args[6]
-            self._send_set_domain_action(variable, domain)
+            self._send_set_domains_action(variable, domain)
 
         elif args[0] == "Processing arc (":
             variable = args[1]
@@ -254,12 +260,12 @@ class Displayable(StepDOMWidget):
         elif args[0] == "Initial assignment":
             assignment = args[1]
             for (key, val) in assignment.items():
-                self._send_set_domain_action(key, [val])
+                self._send_set_domains_action(key, [val])
 
         elif args[0] == "Assigning" and args[2] == "=":
             var = args[1]
             domain = args[3]
-            self._send_set_domain_action(var, [domain])
+            self._send_set_domains_action(var, [domain])
             self._send_highlight_nodes_action(var, "blue")
 
         elif args[0] == "Checking":
@@ -405,17 +411,24 @@ class Displayable(StepDOMWidget):
             'colour': colour
         })
 
-    def _send_set_domain_action(self, var, domain):
-        """Sends a message to the front-end visualization to set the domain of a variable.
+    def _send_set_domains_action(self, vars, domains):
+        """Sends a message to the front-end visualization to set the domains of variables.
 
         Args:
-            var (string): The name of the variable whose domain should be changed.
-            domain (List[int|string]): The updated domain of the variable.
+            vars (string|string[]): The name of the variable(s) whose domain should be changed.
+            domains (List[int|string]|List[List[int|string]]): The updated domain of the variable(s).
+              If vars is an array, then domain is an array of domains, in the same order.
         """
+        if not isinstance(vars, list):
+            vars = [vars]
+
+        if not isinstance(domains, list):
+            domains = [domains]
+
         self.send({
-            'action': 'setDomain',
-            'nodeId': self._domain_map[var],
-            'domain': list(domain)
+            'action': 'setDomains',
+            'nodeIds': [self._domain_map[var] for var in vars],
+            'domains': [list(domain) for domain in domains]
         })
 
 

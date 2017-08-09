@@ -10,12 +10,12 @@ export interface ICSPHighlightArcsEvent extends IEvent {
   colour: string;
 }
 
-export interface ICSPSetDomainEvent extends IEvent {
-  action: "setDomain";
-  /** The ID of the variable node whose domain is to be set. */
-  nodeId: string;
-  /** The new domain of the node. */
-  domain: string[];
+export interface ICSPSetDomainsEvent extends IEvent {
+  action: "setDomains";
+  /** The IDs of the variable node whose domains are to be set. */
+  nodeIds: string[];
+  /** The new domains of the nodes. */
+  domains: string[][];
 }
 
 export interface ICSPHighlightNodesEvent extends IEvent {
@@ -38,8 +38,8 @@ export function isHighlightArcsEvent(
   return event.action === "highlightArcs";
 }
 
-export function isSetDomainEvent(event: IEvent): event is ICSPSetDomainEvent {
-  return event.action === "setDomain";
+export function isSetDomainsEvent(event: IEvent): event is ICSPSetDomainsEvent {
+  return event.action === "setDomains";
 }
 
 export function isHighlightNodesEvent(
