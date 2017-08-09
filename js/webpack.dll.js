@@ -16,6 +16,7 @@ const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
+  devtool: "eval-source-map",  
   entry: {
     vendor: ["./vendor/vendor.js"]
   },
