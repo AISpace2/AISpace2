@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div tabindex="0" @keydown.stop>
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
                          @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">

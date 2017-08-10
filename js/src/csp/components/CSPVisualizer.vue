@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div tabindex="0" @keydown.stop>
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true">
       <template slot="node" scope="props">
         <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
