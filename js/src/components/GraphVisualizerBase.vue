@@ -38,7 +38,7 @@ import { Prop, Watch } from "vue-property-decorator";
 import GraphNodeContainer from "./GraphNodeContainer.vue";
 import EdgeContainer from "./EdgeContainer.vue";
 
-import {Graph, IGraphNode, IGraphEdge} from '../Graph';
+import { Graph, IGraphNode, IGraphEdge } from '../Graph';
 import { GraphLayout } from '../GraphLayout';
 
 /**
@@ -69,20 +69,20 @@ import { GraphLayout } from '../GraphLayout';
 })
 export default class GraphVisualizeBase extends Vue {
   /** The graph to render. */
-  @Prop({type: Object}) graph: Graph;
+  @Prop({ type: Object }) graph: Graph;
   /** If true, animates positional changes and other properties of the nodes/edges in this graph. */
-  @Prop({default: false})
+  @Prop({ default: false })
   transitions: boolean;
   /** Layout object that controls where nodes are drawn. */
-  @Prop({type: Object})
+  @Prop({ type: Object })
   layout: GraphLayout;
 
   /** The node or edge currently being dragged. */
-  dragTarget: IGraphNode|IGraphEdge|null = null;
+  dragTarget: IGraphNode | IGraphEdge | null = null;
   /** The edge being hovered over. */
-  edgeHover: IGraphEdge|null = null;
+  edgeHover: IGraphEdge | null = null;
   /** The node being hovered over. */
-  nodeHover: IGraphNode|null = null;
+  nodeHover: IGraphNode | null = null;
   /** Tracks the pageX of the previous MouseEvent. Used to compute the delta mouse position. */
   prevPageX = 0;
   /** Tracks the pageY of the previous MouseEvent. Used to compute the delta mouse position. */
@@ -158,10 +158,10 @@ export default class GraphVisualizeBase extends Vue {
     window.removeEventListener('resize', this.handleResize);
   }
 
+
   /** Re-layout the graph using the current width/height of the SVG. */
   handleResize() {
     this.width = this.$el.getBoundingClientRect().width;
-    this.height = this.width / 1.6;
     this.layout.relayout(this.graph, { width: this.width, height: this.height });
   }
 

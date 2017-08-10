@@ -3,9 +3,9 @@
     <path :d="path" stroke="black" stroke-width="5" :stroke="stroke" :stroke-width="strokeWidth">
     </path>
     <polygon :points="`0 0 ${arrowHalfSize * 2} ${arrowHalfSize} 0 ${arrowHalfSize * 2}`" :transform="`
-                translate(${adjustedX2 - arrowHalfSize},${adjustedY2 - arrowHalfSize})
-                rotate(${angle}, ${arrowHalfSize}, ${arrowHalfSize})
-                translate(${-arrowHalfSize - 2}, 0)`" :stroke="stroke" :fill="stroke" :stroke-width="strokeWidth">
+                  translate(${adjustedX2 - arrowHalfSize},${adjustedY2 - arrowHalfSize})
+                  rotate(${angle}, ${arrowHalfSize}, ${arrowHalfSize})
+                  translate(${-arrowHalfSize - 2}, 0)`" :stroke="stroke" :fill="stroke" :stroke-width="strokeWidth">
     </polygon>
     <rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect>
     <g :transform="`translate(${centerX}, ${centerY})`">
@@ -53,7 +53,7 @@ export default class DirectedEdge extends Vue {
   @Prop({ default: 4 })
   strokeWidth: number;
   /** The text displayed on the middle of the line. */
-  @Prop({type: [String, Number], required: false}) 
+  @Prop({ type: [String, Number], required: false })
   text?: string | number;
 
   /** Half the size of the arrow, such that (arrowHalfSize, arrowHalfSize) is the center of the arrow. */
@@ -179,3 +179,11 @@ export default class DirectedEdge extends Vue {
   }
 }
 </script>
+
+<style scoped>
+text {
+  user-select: none;
+  background: none;
+  cursor: default;
+}
+</style>
