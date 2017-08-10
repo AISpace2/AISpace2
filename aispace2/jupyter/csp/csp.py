@@ -215,7 +215,7 @@ class Displayable(StepDOMWidget):
             variable = args[2]
             domain = args[4]
             constraint = args[6]
-            self._send_set_domains_action(variable, domain)
+            self._send_set_domains_action(variable, [domain])
 
         elif args[0] == "Processing arc (":
             variable = args[1]
@@ -419,16 +419,16 @@ class Displayable(StepDOMWidget):
             domains (List[int|string]|List[List[int|string]]): The updated domain of the variable(s).
               If vars is an array, then domain is an array of domains, in the same order.
         """
+
+        singleVar = False
         if not isinstance(vars, list):
             vars = [vars]
-
-        if not isinstance(domains, list):
-            domains = [domains]
+            singleVar = True
 
         self.send({
             'action': 'setDomains',
             'nodeIds': [self._domain_map[var] for var in vars],
-            'domains': [list(domain) for domain in domains]
+            'domains': [list(domain) for domain in domains] if not singleVar else [domains]
         })
 
 
