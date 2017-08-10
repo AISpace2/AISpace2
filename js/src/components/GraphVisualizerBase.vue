@@ -25,6 +25,7 @@
         <slot name="node" :node="node" :hover="node === nodeHover"></slot>
       </GraphNodeContainer>
     </svg>
+    <div class="handle" ref="handle"></div>
   </div>
 </template>
 
@@ -96,6 +97,8 @@ export default class GraphVisualizeBase extends Vue {
   $refs: {
     /** The SVG element that the graph is drawn in. */
     mySVG: SVGElement;
+    /** The div element representing a resize handle. */
+    handle: HTMLDivElement;
   }
 
   /** Emitted Events */
@@ -113,7 +116,7 @@ export default class GraphVisualizeBase extends Vue {
 
   mounted() {
     this.width = this.$el.getBoundingClientRect().width;
-    this.height = this.width / 1.6;
+    this.height = this.width / 1.8;
     this.layout.setup(this.graph, { width: this.width, height: this.height });
     
     // Disable animations for the first draw, because otherwise they fly in from (0, 0) and it looks weird
@@ -121,6 +124,34 @@ export default class GraphVisualizeBase extends Vue {
     Vue.nextTick(() => this.transitionsAllowed = true);
 
     window.addEventListener('resize', this.handleResize);
+
+    // Custom resize handling. In the future, we could switch to using CSS resize.
+    // However, it is not support in IE/Edge right now, and Safari does not emit any resize events,
+    // even with a ResizeObserver polyfill.
+    let initialiseResize = (e) => {
+      window.addEventListener('mousemove', startResizing, false);
+      window.addEventListener('mouseup', stopResizing, false);
+    }
+
+    this.$refs.handle.addEventListener('mousedown', initialiseResize, false);
+
+    let startResizing = (e) => {
+      e.preventDefault();
+
+      // Everything below can be replaced with:
+      // this.width.x += e.movementX;
+      // this.height.y += e.movementY;
+      // if we don't want to support IE11.
+      this.height += this.prevPageY ? e.pageY - this.prevPageY : 0;
+      this.prevPageY = e.pageY;
+      this.handleResize();
+    }
+
+    let stopResizing = (e) => {
+      window.removeEventListener('mousemove', startResizing, false);
+      window.removeEventListener('mouseup', stopResizing, false);
+      this.prevPageY = null;
+    }
   }
 
   beforeDestroy() {
@@ -220,10 +251,27 @@ export default class GraphVisualizeBase extends Vue {
 
 <style scoped>
   .graph-container {
+  border: 1px solid gray;
     overflow: hidden;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+svg {
+  display: block;
   }
 
   svg:focus {
     outline: none;
   }
+
+.handle {
+  background-color: #727272;
+  width: 10px;
+  height: 10px;
+  cursor: ns-resize;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
 </style>
