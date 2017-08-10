@@ -1,7 +1,6 @@
 <template>
   <g>
-    <rect :width="width" :height="height" :x="-width / 2" :y="-height / 2"
-          :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
+    <rect :width="width" :height="height" :x="-width / 2" :y="-height / 2" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
     <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{truncatedText}}
     </text>
@@ -54,6 +53,7 @@ export default class RectangleGraphNode extends Vue {
 
   mounted() {
     this.truncatedText = this.text;
+    this.fitText();
   }
 
   /** Width of the rectangle. */
@@ -85,36 +85,44 @@ export default class RectangleGraphNode extends Vue {
   }
 
   /**
-   * Truncates the text to a certain index if greater than `maxWidth`.
-   * Because of the watchers set up on this component, this will be called recursively
-   * until the text is less than `maxWidth`.
+   * Truncates text until it is less than `maxWidth`.
+   * 
+   * This function uses binary search to speed up the truncation.
    */
-  truncate(truncateTo: number) {
+  _truncateText(lowerBound = 0, upperBound = this.text.length) {
+    Vue.nextTick(() => {
+      if (lowerBound >= upperBound) return;
+
+      const mid = Math.floor((upperBound + lowerBound) / 2);
+      this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
+
+      Vue.nextTick(() => {
+        this.computeWidthAndHeight();
+        if (this.textWidth > this.maxWidth) {
+          this._truncateText(lowerBound, mid - 1);
+        } else {
+          this._truncateText(mid + 1, upperBound);
+        }
+      });
+    });
+  }
+
+  /**
+   * Trims text to fit inside the node as necessary.
+   */
+  fitText() {
     Vue.nextTick(() => {
       this.computeWidthAndHeight();
-
       if (this.textWidth > this.maxWidth) {
-        this.truncatedText = `${this.text.substr(0, truncateTo)}…`;
+        this._truncateText();
       }
     });
   }
 
   @Watch("text")
   onTextChanged() {
-    // Optimization: We can guess that if the new text is too long,
-    // we can chop it off around the previous truncation length
-    // Note: we can't just keep track of the index where the truncation happened,
-    // and use that to bail out of re-truncating,
-    // because if the user edits the beginning of the text, it won't update
-    const subStrIndexEstimate = this.truncatedText.length;
-    // Update text now so we can test to see if it is too long after re-render
     this.truncatedText = this.text;
-    this.truncate(subStrIndexEstimate);
-  }
-
-  @Watch("truncatedText")
-  onTruncatedTextChanged() {
-    this.truncate(this.truncatedText.length - 2);
+    this.fitText();
   }
 }
 

@@ -35,7 +35,7 @@ export default class EllipseGraphNode extends Vue {
   @Prop({ default: 1 })
   strokeWidth: number;
   /** The colour of the (sub)text inside the node. */
-  @Prop({default: 'black'})
+  @Prop({ default: 'black' })
   textColour: string;
 
   /** The final width, in pixels, of the text element containing the (truncated) text. */
@@ -70,7 +70,12 @@ export default class EllipseGraphNode extends Vue {
 
   mounted() {
     this.truncatedText = this.text;
-    this.truncatedSubtext = this.subtext ? this.subtext : "";
+    this.fitText();
+
+    if (this.subtext != null) {
+      this.truncatedSubtext = this.subtext ? this.subtext : "";
+      this.fitSubtext();
+    }
   }
 
   /** The maximum of `computedTextWidth` and `computedSubtextWidth`. */
@@ -121,62 +126,86 @@ export default class EllipseGraphNode extends Vue {
   }
 
   /**
-   * Truncates either the text or subtext to a certain index if greater than `maxWidth`.
-   * Because of the watchers set up on this component, this will be called recursively
-   * until either the text or subtext is less than `maxWidth`.
+   * Truncates text until it is less than `maxWidth`.
+   * 
+   * This function uses binary search to speed up the truncation.
    */
-  truncate(el: "text" | "subtext", truncateTo: number) {
+  _truncateText(lowerBound = 0, upperBound = this.text.length) {
+    Vue.nextTick(() => {
+      if (lowerBound >= upperBound) return;
+
+      const mid = Math.floor((upperBound + lowerBound) / 2);
+      this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
+
+      Vue.nextTick(() => {
+        this.computeWidthAndHeight();
+        if (this.computedTextWidth > this.maxWidth) {
+          this._truncateText(lowerBound, mid - 1);
+        } else {
+          this._truncateText(mid + 1, upperBound);
+        }
+      });
+    });
+  }
+
+  /**
+   * Trims text to fit inside the node as necessary.
+   */
+  fitText() {
     Vue.nextTick(() => {
       this.computeWidthAndHeight();
+      if (this.computedTextWidth > this.maxWidth) {
+        this._truncateText();
+      }
+    });
+  }
 
-      if (this.computedTotalWidth > this.maxWidth) {
-        // Find out which element is to blame for going over the max width
-        if (
-          el === "text" &&
-          this.computedTextWidth === this.computedTotalWidth
-        ) {
-          this.truncatedText = `${this.text.substr(0, truncateTo)}…`;
-        }
+  /**
+   * Truncates subtext until it is less than `maxWidth`.
+   * 
+   * This function uses binary search to speed up the truncation.
+   * It informs the parent that it does not want transitions enabled during this duration.
+   */
+  _truncateSubtext(lowerBound = 0, upperBound = this.subtext.length) {
+    Vue.nextTick(() => {
+      if (lowerBound >= upperBound) return;
 
-        if (
-          el === "subtext" &&
-          this.computedSubtextWidth === this.computedTotalWidth
-        ) {
-          this.truncatedSubtext = `${this.subtext.substr(0, truncateTo)}…`;
+      const mid = Math.floor((upperBound + lowerBound) / 2);
+      this.truncatedSubtext = `${this.subtext.substr(0, mid + 1)}…`;
+
+      Vue.nextTick(() => {
+        this.computeWidthAndHeight();
+        if (this.computedSubtextWidth > this.maxWidth) {
+          this._truncateSubtext(lowerBound, mid - 1);
+        } else {
+          this._truncateSubtext(mid + 1, upperBound);
         }
+      });
+    });
+  }
+
+  /**
+   * Trims subtext to fit inside the node as necessary.
+   */
+  fitSubtext() {
+    Vue.nextTick(() => {
+      this.computeWidthAndHeight();
+      if (this.computedSubtextWidth > this.maxWidth) {
+        this._truncateSubtext();
       }
     });
   }
 
   @Watch("text")
   onTextChanged() {
-    // Optimization: We can guess that if the new text is too long,
-    // we can chop it off around the previous truncation length
-    // Note: we can't just keep track of the index where the truncation happened,
-    // and use that to bail out of re-truncating,
-    // because if the user edits the beginning of the text, it won't update
-    const subStrIndexEstimate = this.truncatedText.length;
-    // Update text now so we can test to see if it is too long after re-render
     this.truncatedText = this.text;
-    this.truncate("text", subStrIndexEstimate);
-  }
-
-  @Watch("truncatedText")
-  onTruncatedTextChanged() {
-    this.truncate("text", this.truncatedText.length - 2);
+    this.fitText();
   }
 
   @Watch("subtext")
   onSubtextChanged() {
-    // See comments in text watcher
-    const subStrIndexEstimate = this.truncatedSubtext.length;
     this.truncatedSubtext = this.subtext;
-    this.truncate("subtext", subStrIndexEstimate);
-  }
-
-  @Watch("truncatedSubtext")
-  onTruncatedSubtextChanged() {
-    this.truncate("subtext", this.truncatedSubtext.length - 2);
+    this.fitSubtext();
   }
 }
 </script>
