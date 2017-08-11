@@ -1,2 +1,2 @@
-matplotlib>=2.0.0
 yapf>=0.16
+setuptools>=32.2.0
