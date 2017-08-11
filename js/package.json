@@ -9,12 +9,8 @@
     "type": "git",
     "url": "https://github.com/aispace2/aispace2.git"
   },
-  "keywords": [
-    "jupyter",
-    "widgets",
-    "ipython",
-    "ipywidgets"
-  ],
+  "keywords": ["jupyter", "widgets", "ipython", "ipywidgets"],
+  "browserslist": ["last 2 versions"],
   "scripts": {
     "dev": "npm run build:dev-dll && webpack-dashboard -m -- webpack --env=development --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -26,6 +22,7 @@
   "devDependencies": {
     "@types/d3": "^4.10.0",
     "@types/node": "^8.0.19",
+    "autoprefixer": "^7.1.2",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -35,6 +32,7 @@
     "fork-ts-checker-webpack-plugin": "^0.2.7",
     "html-loader": "^0.5.1",
     "json-loader": "^0.5.7",
+    "postcss-loader": "^2.0.6",
     "prettier": "^1.5.3",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",

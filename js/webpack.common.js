@@ -92,7 +92,16 @@ module.exports = {
         {
           test: /\.css$/,
           include: [path.join(__dirname, "./src")],
-          loader: "style-loader!css-loader"
+          use: [
+            "style-loader",
+            { loader: "css-loader", options: { importLoaders: 1 } },
+            {
+              loader: "postcss-loader",
+              options: {
+                plugins: loader => [require("autoprefixer")()]
+              }
+            }
+          ]
         },
         {
           test: /\.json$/,
