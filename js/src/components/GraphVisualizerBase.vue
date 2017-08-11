@@ -129,6 +129,7 @@ export default class GraphVisualizeBase extends Vue {
     // However, it is not support in IE/Edge right now, and Safari does not emit any resize events,
     // even with a ResizeObserver polyfill.
     let initialiseResize = (e) => {
+      e.preventDefault();
       window.addEventListener('mousemove', startResizing, false);
       window.addEventListener('mouseup', stopResizing, false);
     }
