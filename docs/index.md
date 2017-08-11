@@ -21,7 +21,7 @@ Depending on your setup, you may have to use `pip3` instead of `pip` to ensure y
     <summary>Search</summary>
     <ul>
         <li>
-        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/search/search.ipynb">A*, Multiple Path Pruning, Branch and Bound</a>
+        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/search/search.ipynb">Depth-First Search, A*, Multiple Path Pruning, Branch and Bound</a>
         </li>
     </ul>
     </details>
