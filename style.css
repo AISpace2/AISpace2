@@ -286,6 +286,11 @@ a.no-link-hover:hover {
     height: 1em;
 }
 
+.turbolinks-progress-bar {
+    height: 4px;
+    background-color: #ffa929;
+}
+
 .footnote {
     font-size: 0.8em;
     font-style: italic;
