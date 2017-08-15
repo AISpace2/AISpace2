@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>AISpace2 - Installation</title>
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400b,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Overpass+Mono" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.0.3/turbolinks.js"></script>
+</head>
+
+<body>
+<div id="navbar">
+    <a href="index.html">Home</a>
+    <a href="install.html" class="selected">Install</a>
+    <a href="notebooks.html">Notebooks</a>
+    <a href="contribute.html">Contribute</a>
+</div>
+
+<header>
+    <h1>Installation</h1>
+    <h2>Interested in trying out AISpace2? Get started here.</h2>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <polygon fill="#F0F7F2" points="0,100 100,0 100,100"/>
+    </svg>
+</header>
+
+<section class="column">
+    <h1 id="installationinstructions">Start Here!</h1>
+    <p>We're happy to have you here. Follow the steps below and you'll be up-and-running
+        in no time.</p>
+    <ol>
+        <li>Are you a <abbr title="University of British Columbia">UBC</abbr> student or
+            have access to a JupyterHub instance (which allows you to access Jupyter
+            by going to a URL)? If so, you can use this extension with Jupyter online
+            without installing anything on your computer <a href="#jupyterhub">→</a>.
+        </li>
+
+        <li>Otherwise, you can install it locally if you have macOS <a href="#macos">→</a> or Windows <a
+                href="#windows">→</a>. If you are running Linux <a href="#linux">→</a>,
+            we have a general installation procedure.
+        </li>
+        <li>Do you already have AISpace2 installed, but just want to get the latest version? This way! <a
+                href="#upgrading">→</a></li>
+    </ol>
+
+    <h2 id="jupyterhub" class="linkify"><a href="#jupyterhub" class="no-link-hover">JupyterHub</a></h2>
+
+    <p>Using JupyterHub means you won't have to install anything on your computer &mdash;
+        everything takes place online.</p>
+
+    <ol>
+        <li>Go to <a href="https://ubc.syzygy.ca/" target="_blank">ubc.syzygy.ca</a> if
+            you are a <abbr title="University of British Columbia">UBC</abbr> student,
+            and sign in with your <abbr title="Campus Wide Login">CWL.</abbr> Otherwise,
+            go to wherever your JupyterHub instance is located and sign in.
+        </li>
+
+        <li>Click <em>Start My Server</em> when prompted.</li>
+
+        <li>Launch a terminal instance. You can do this in the notebook dashboard by selecting
+            <em>New > Terminal</em>.<br/>
+            <img src="assets/open-terminal.png" alt="New > Terminal">
+        </li>
+
+        <li> Now run the following commands:
+            <pre><code>pip install aispace2 --user
+jupyter nbextension enable --py aispace2 --user</code></pre>
+
+            <p>If everything is successful, you should see the following output:</p>
+            <pre><code>Enabling notebook extension aispace2/extension...
+        - Validating: OK</code></pre>
+        </li>
+    </ol>
+
+    <p>That's it! You now have Jupyter and AISpace2 successfully installed. Now download
+        some notebooks <a href="notebooks.html">→</a> to learn about AI and view this extension in action.</p>
+
+    <h2 id="windows" class="linkify"><a href="#windows" class="no-link-hover">Windows</a></h2>
+
+    <ol>
+        <li>Download the latest version of <a href="https://www.python.org/downloads/"
+                                              target="_blank">Python 3</a>. It should be version 3.3 or later.
+        </li>
+
+        <li>Install it, and make sure you select <strong>Add Python to Path</strong>. This
+            is very important!
+            <img src="assets/windows-python-install.png" alt="Installing Python on Windows">
+        </li>
+
+        <li>Open the Command Prompt (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>)
+            and run:
+            <pre><code>pip3 install jupyter
+pip3 install aispace2 --user
+jupyter nbextension install --py aispace2 --user
+jupyter nbextension enable --py widgetsnbextension
+jupyter nbextension enable --py aispace2 --user</code></pre>
+        </li>
+    </ol>
+    <p>If everything is successful, you should see the following output:</p>
+    <pre><code>Enabling notebook extension aispace2/extension...
+- Validating: OK</code></pre>
+    <p>That's it! You now have Jupyter and AISpace2 successfully installed. You can start Jupyter notebook by running
+        <code>jupyter notebook</code> in the Command Prompt, which should launch your default web browser pointing to
+        Jupyter notebook. Now download
+        some notebooks <a href="notebooks.html">→</a> to learn about AI and view this extension in action.</p>
+
+    <h2 id="macos" class="linkify"><a href="#macos" class="no-link-hover">macOS</a></h2>
+
+    <p>If you are unfamiliar with the Python ecosystem and want the simplest installation,
+        use Anaconda <a href="#macos-anaconda">→</a>, a Python distribution with a
+        lot of scientific computing tools already pre-installed. Otherwise, if you
+        prefer installing all the dependencies yourself, go here <a href="#macos-withoutanaconda">→</a>.</p>
+
+    <h3 id="macos-anaconda" class="linkify"><a href="#macos-anaconda" class="no-link-hover">With Anaconda</a></h3>
+
+    <ol>
+        <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a>,
+            making sure to get the Python 3+ version. The Python 2 version is not supported.
+        </li>
+
+        <li>Open a terminal, then execute:</li>
+
+        <pre><code>conda install -c conda-forge ipywidgets
+pip install aispace2 --user
+jupyter nbextension enable --py aispace2 --user</code></pre>
+
+        <p>You should see the following if the installation was successful:</p>
+        <pre><code>Enabling notebook extension aispace2/extension...
+    - Validating: OK</code></pre>
+    </ol>
+    <p>That's it! You now have Jupyter and AISpace2 successfully installed. You can start Jupyter notebook by running
+        <code>jupyter notebook</code> in a terminal, which should launch your default web browser pointing to Jupyter
+        notebook. Now download
+        some notebooks <a href="notebooks.html">→</a> to learn about AI and view this extension in action.</p>
+
+    <h3 id="macos-without-anaconda" class="linkify"><a href="#macos-without-anaconda" class="no-link-hover">Without
+        Anaconda</a></h3>
+
+    <p>By default, macOS contains Python 2.7 (at least on Sierra, 10.12). You will need
+        Python 3.3+ for it to work. Try running <code>python3 --version</code> in the
+        terminal to see if you've already installed it. If it returns 3.3+, skip to
+        the next step. If not, or it errors out, you will need to install Python 3:</p>
+
+    <ol>
+        <li>If you have <a href="https://brew.sh/" target="_blank">homebrew</a>:
+            <ul>
+                <li>Run <code>brew install python3</code> or, if you already have Python 3
+                    installed but need the latest version,
+                    <code>brew upgrade python3</code></li>
+            </ul>
+        </li>
+
+        <li>Otherwise:
+
+
+            <ul>
+                <li>Download the installer from the <a href="https://www.python.org/downloads/mac-osx/"
+                                                       target="_blank">Python website</a> and install it
+                </li>
+            </ul>
+        </li>
+    </ol>
+    <p>Then, confirm that <code>pip</code> (the Python package manager) is also installed
+        (which it should be, as it is usually installed alongisde Python). Run <code>pip3 --version</code> and it should
+        output something like:</p>
+    <pre><code>pip 9.0.1 from /usr/local/lib/python3.6/site-packages (python 3.6)</code></pre>
+    <p>You also want to make sure pip is updated: run <code>pip3 install --upgrade pip</code>.
+        Your <code>pip3 --version</code> should be <code>>9.0.0</code>. If you encounter
+        any problems with <code>pip</code>, refer to the guide <a
+                href="https://packaging.python.org/tutorials/installing-packages/#id10"
+                target="_blank">here</a> for further instructions.</p>
+
+    <p>All that is left to do is to install Jupyter and enable our extension:</p>
+    <pre><code>pip3 install jupyter
+pip3 install aispace2 --user
+jupyter nbextension enable --py aispace2 --user
+jupyter nbextension enable --py widgetsnbextension</code></pre>
+    <p>If everything is successful, you should see the following output:</p>
+    <pre><code>Enabling notebook extension aispace2/extension...
+    - Validating: OK</code></pre>
+
+    <p>That's it! You now have Jupyter and AISpace2 successfully installed. You can start Jupyter notebook by running
+        <code>jupyter notebook</code> in a terminal, which should launch your default web browser pointing to Jupyter
+        notebook. Now download
+        some notebooks <a href="notebooks.html">→</a> to learn about AI and view this extension in action.</p>
+
+
+    <h2 id="linux" class="linkify"><a href="#linux" class="no-link-hover">Linux</a></h2>
+    <p>You will need to install <a href="https://www.python.org/" target="_blank">Python 3.3+</a>.
+        After that, you can install Jupyter and the <strong>AISpace2</strong> extension
+        by running the following:</p>
+    <pre><code>pip3 install jupyter
+pip3 install aispace2 --user
+jupyter nbextension install --py aispace2 --user
+jupyter nbextension enable --py widgetsnbextension
+jupyter nbextension enable --py aispace2 --user</code></pre>
+    <p>That's it! You now have Jupyter and AISpace2 successfully installed. You can start Jupyter notebook by running
+        <code>jupyter notebook</code> in a terminal, which should launch your default web browser pointing to Jupyter
+        notebook. Now download
+        some notebooks <a href="notebooks.html">→</a> to learn about AI and view this extension in action.</p>
+
+    <h2 id="upgrading" class="linkify"><a href="#upgrading" class="no-link-hover">Upgrading</a></h2>
+    <p>
+        Already have AISpace2? No matter which operating system you use, or what method you used to install it, updating
+        AISpace2 is as simple as running one line in the command prompt or terminal:
+    </p>
+    <pre><code>pip3 install aispace2 --user --upgrade</code></pre>
+</section>
+</body>
+
+</html>

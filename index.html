@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>AISpace2 - A Jupyter extension for AI</title>
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400b,700" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.0.3/turbolinks.js"></script>
+</head>
+
+<body>
+    <div id="navbar">
+        <a href="index.html" class="selected">Home</a>
+        <a href="install.html">Install</a>
+        <a href="notebooks.html">Notebooks</a>
+        <a href="contribute.html">Contribute</a>
+    </div>
+    <header>
+        <h1>AISpace2</h1>
+        <h2>A Jupyter extension for learning and <em>understanding</em> AI.</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polygon fill="#F0F7F2" points="0,100 100,0 100,100" />
+        </svg>
+    </header>
+    <section class="column">
+        <h2>What?</h2>
+        <p><strong>AISpace2</strong> exists in two parts: as an extension for <a href="http://jupyter.org/">Jupyter
+        Notebook</a>, a web application that allows you to work with rich documents that combine code, text, and visualizations; and as a series of notebooks that teach and demonstrate AI concepts by integrating Python code implementations with interactive visualizations that are powered by the extension.
+        </p>
+        <p><strong>AISpace2</strong> is the next version of <a href="http://aispace.org">AISpace</a>, and accompanies the book
+            <a href="http://aipython.org">Artifical Intelligence 2E: Foundations of Computational
+            Agents</a> by <a href="http://cs.ubc.ca/~poole/">David Poole</a> and <a href="http://cs.ubc.ca/~mack/">Alan
+            Mackworth</a>.
+        </p>
+    </section>
+    <section id="how-it-works">
+        <h1>How It Works</h1>
+        <div class="column">
+            <p>By combining Python code, explanatory text, and interactive visualizations, Jupyter notebooks and AISpace2 makes learning AI fun and easy.</p>
+            <div class="feature">
+                <h2>Learn.</h2>
+                <img src="assets/text.png" alt="Jupyter notebook showing text">
+                <div>
+                    <p>Get an overview of each algorithm and code. See the high level ideas that can't be explained with just comments. Delve even deeper into the concepts with links to the accompanying textbook.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <h2>Code.</h2>
+                <img src="assets/code.png" alt="Jupyter notebook showing code">
+                <div>
+                    <p>View the exact code that makes each algorithm work. Edit it inline and instantly see how your changes affect the output. Tinker with it to test your understanding.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <h2>Visualize.</h2>
+                <video autoplay loop>
+                    <source src="assets/jupyter-visualization.mp4" type="video/mp4">
+                </video>
+                <div>
+                    <p>See how each algorithm works, step-by-step. Connect changes in the visualization to actual lines of code. Use the controls to step through execution to learn at your own pace.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="column">
+        <h2>Notebooks</h2>
+        <p>To demonstrate the capabilities of the extension, we provide several notebooks that show and explain various AI concepts, including:
+        </p>
+        <h3>Search</h3>
+        <ul>
+            <li>Depth-First Search</li>
+            <li>A* Search (with Multiple Path Pruning)</li>
+            <li>Branch &amp; Bound</li>
+        </ul>
+        <h3>Constraint Satisfaction Problems (CSPs)</h3>
+        <ul>
+            <li>CSPs using Search</li>
+            <li>CSPs using Arc Consistency</li>
+            <li>Stochastic Local Search (SLS)</li>
+        </ul>
+        <h3>Planning</h3>
+        <ul>
+            <li>Forward Planning</li>
+            <li>Regression Planning</li>
+            <li>Planning as CSPs</li>
+        </ul>
+    </section>
+    <section id="install-footer">
+        <h1>Ready? <span class="install"><a href="install.html">Get it now.</a></span></h1>
+    </section>
+</body>
+
+</html>

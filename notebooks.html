@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>AISpace2 - Notebooks</title>
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400b,700" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.0.3/turbolinks.js"></script>
+</head>
+
+<body>
+    <div id="navbar">
+        <a href="index.html">Home</a>
+        <a href="install.html">Install</a>
+        <a href="notebooks.html" class="selected">Notebooks</a>
+        <a href="contribute.html">Contribute</a>
+    </div>
+    <header>
+        <h1>Notebooks</h1>
+        <h2>Code, text, and visualization-filled documents to teach AI.</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polygon fill="#F0F7F2" points="0,100 100,0 100,100" />
+        </svg>
+    </header>
+    <section class="column">
+        <p>Once you have Jupyter and AISpace2 <a href="install.html">installed</a>, you can download some of the notebooks below to learn and visualize many AI concepts. These notebooks provide a easy way to explore concepts and view available functionality without having to create your own. We recommend you start with these notebooks and customize them as you see fit.</p>
+        If this is your first time using Jupyter, we recommend taking a look at the following links to quickly get up to speed:
+        <ul>
+            <li><a href="http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Notebook%20Basics.html">Notebook
+            Basics </a></li>
+            <li><a href="http://jupyter-notebook.readthedocs.io/en/latest/ui_components.html">UI Overview</a></li>
+            <li><a href="http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Running%20Code.html">Running
+            Code</a></li>
+        </ul>
+    </section>
+    <section id="available-notebooks">
+        <div class="column">
+            <h2 id="notebooks">Available Notebooks</h2>
+            <details>
+                <summary>Search</summary>
+                <ul>
+                    <li>
+                        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/search/search.ipynb" download>Simple
+                        &amp; Advanced Search</a>
+                        <p>Includes depth-first search, A* search (with multiple path pruning), and branch &amp; bound</p>
+                    </li>
+                </ul>
+            </details>
+            <details>
+                <summary>Constraint Satisfaction Problems (CSPs)</summary>
+                <ul>
+                    <li>
+                        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/solving_csp_with_search.ipynb" download>Solving CSPs using Search</a>
+                        <p>Pose a CSP as a search problem and use the search strategies you've already learnt</p>
+                    </li>
+                    <li>
+                        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/arc_consistency.ipynb" download>CSPs
+                        using Arc Consistency</a>
+                        <p>Simplify constraint networks to potentially find a solution faster</p>
+                    </li>
+                    <li>
+                        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/csp/stochastic_local_search.ipynb" download>Stochastic Local Search (SLS)</a>
+                        <p>Solve large or even infinite CSPs by moving towards solutions and incorporating randomness</p>
+                    </li>
+                </ul>
+            </details>
+            <details>
+                <summary>Planning</summary>
+                <ul>
+                    <li>
+                        <a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/forward_planning.ipynb" download>Forward Planning</a>
+                        <p>Find a plan by searching through states and actions</p>
+                    </li>
+                    <li><a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/regression_planning.ipynb" download>Regression Planning</a>
+                        <p>Find a plan by searching through subgoals and actions</p>
+                    </li>
+                    <li><a href="https://rawgit.com/AISpace2/AISpace2/master/notebooks/planning/planning_as_csp.ipynb" download>Planning as CSPs</a>
+                        <p>Represent a planning problem as a CSP by unrolling it over a certain number of steps</p>
+                    </li>
+                </ul>
+            </details>
+            <p>If the file doesn't download automatically after clicking the link, and you are redirected to another page instead, you should download these notebooks by right-clicking the link and choosing <strong>Save
+                As</strong>. Some web browsers have the tendency to append a <code>.txt</code> file extension to your notebooks when you do this &mdash; if that's the case, you’ll have to rename the file and remove it yourself. You can do this either by using your file browser, or after uploading the notebook to Jupyter in the next step.
+            </p>
+            <p>Open Jupyter Notebook (by running <code>jupyter notebook</code> in a terminal if you aren't using JupyterHub) and upload the notebook by going to the notebook dashboard, selecting
+                <strong>Upload</strong> and choosing the file you just downloaded.
+                <img src="assets/jupyter-dashboard-upload.png" alt="Uploading a file in Jupyter Notebook">
+            </p>
+            <p>Now, simply open the notebook and run the cells. Congratulations! AISpace2 is now running.</p>
+        </div>
+    </section>
+</body>
+
+</html>
