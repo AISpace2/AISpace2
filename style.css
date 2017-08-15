@@ -45,6 +45,13 @@ li > p {
     margin: 0.3em 0;
 }
 
+@media screen and (max-width: 480px) {
+    ol, ul {
+        padding-left: 0;
+        list-style-position: inside;
+    }    
+}
+
 pre,
 code,
 kbd,
@@ -112,6 +119,16 @@ header h2 {
     font-size: 1.5em;
     text-align: center;
     color: #f0f7f2;
+}
+
+@media screen and (max-width: 480px) {
+    header h1 {
+        font-size: 15vw;
+    }
+
+    header h2 {
+        font-size: 1.3em;
+    }
 }
 
 header > svg {
@@ -208,6 +225,12 @@ a.no-link-hover:hover {
     text-decoration: underline;
     color: #f0f7f2;
     border: none;
+}
+
+@media screen and (max-width: 480px) {
+    #navbar a {
+        display: block;
+    }
 }
 
 #navbar a.selected {
