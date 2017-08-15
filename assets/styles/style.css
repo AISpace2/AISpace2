@@ -49,7 +49,7 @@ li > p {
     ol, ul {
         padding-left: 0;
         list-style-position: inside;
-    }    
+    }
 }
 
 pre,
@@ -153,7 +153,7 @@ a {
     color: #4b97c4;
     border-bottom: 2px solid #4b97c4;
     white-space: nowrap; /** Transition breaks across hanging multi-line. */
-    -webkit-font-smoothing: antialiased; /** Prevents thickness change on Safari. */ 
+    -webkit-font-smoothing: antialiased; /** Prevents thickness change on Safari. */
 }
 
 a:visited,
