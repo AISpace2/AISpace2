@@ -157,7 +157,8 @@ a {
     text-decoration: none;
     color: #4b97c4;
     border-bottom: 2px solid #4b97c4;
-    white-space: nowrap; /** Transition breaks across hanging multi-line. **/
+    white-space: nowrap; /** Transition breaks across hanging multi-line. */
+    -webkit-font-smoothing: antialiased; /** Prevents thickness change on Safari. */ 
 }
 
 a:visited,
@@ -167,6 +168,7 @@ a:focus {
 
 a::before {
     position: absolute;
+    bottom: 0;
     z-index: -1;
     visibility: hidden;
     width: 100%;
