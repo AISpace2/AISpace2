@@ -140,12 +140,7 @@ header > svg {
 }
 
 section {
-    margin-bottom: 50px;
-    padding: 0 15px;
-}
-
-section:last-child {
-    margin-bottom: 0;
+    padding: 0 15px 50px 15px;
 }
 
 a {
@@ -246,7 +241,6 @@ a.no-link-hover:hover {
 .column {
     max-width: 800px;
     margin: 0 auto;
-    margin-bottom: 50px;
 }
 
 .column img,
@@ -324,4 +318,13 @@ a.no-link-hover:hover {
 .footnote-link {
     border: none;
     color: #4b97c4;
+}
+
+figure img {
+    max-height: 300px;
+}
+
+figcaption {
+    text-align: center;
+    font-size: 0.85em;
 }

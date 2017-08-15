@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>AISpace2 &mdash; Reference</title>
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <script src="assets/siema.min.js"></script>
+</head>
+
+<body>
+<div id="navbar">
+    <a href="index.html">Home</a>
+    <a href="install.html">Install</a>
+    <a href="notebooks.html">Notebooks</a>
+    <a href="contribute.html">Contribute</a>
+    <a href="reference.html" class="selected">Reference</a>
+</div>
+
+<header>
+    <h1>Reference</h1>
+    <h2>See a list of all visualizations and their options here.</h2>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <polygon fill="#F0F7F2" points="0,100 100,0 100,100"/>
+    </svg>
+</header>
+
+<section class="column">
+    <h1>Index</h1>
+    <ul>
+        <li><a href="#common">Common</a></li>
+        <li><a href="#search">Search</a></li>
+        <li><a href="#csp">CSP</a></li>
+    </ul>
+    <h2 id="common" class="linkify"><a href="#common" class="no-link-hover">Common</a></h2>
+    <h3>Visualization Options</h3>
+    <p>
+    <ul>
+        <li><code>sleep_time</code>: The time, in seconds, between each step when stepping or auto solving. Defaults
+            to <code>0.2</code>.
+        </li>
+    </ul>
+    </p>
+    <h2 id="search" class="linkify"><a href="#search" class="no-link-hover">Search</a></h2>
+    <h3>Included Problems</h3>
+    <p>
+    <div class="siema">
+        <div>
+            <figure>
+                <img src="assets/problem1.png" alt="Search Problem 1"/>
+                <figcaption>
+                    <code>problem1</code>: A simple search problem.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/problem2.png" alt="Search Problem 2"/>
+                <figcaption>
+                    <code>problem2</code>: Another simple search problem.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/problem3.png" alt="Search Problem 3"/>
+                <figcaption>
+                    <code>problem3</code>: Yet another simple search problem.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/acyclic_delivery_problem.png" alt="Acyclic Search Problem"/>
+                <figcaption>
+                    <code>acyclic_delivery_problem</code>: A robot delivery problem that has no cycles.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/cyclic_delivery_problem.png" alt="Cyclic Search Problem"/>
+                <figcaption>
+                    <code>cyclic_delivery_problem</code>: A robot delivery problem that has cycles.
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+    </p>
+    <h3>Visualization Options</h3>
+    <p>
+    <ul>
+        <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults
+            to <code>True</code>.
+        </li>
+        <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside
+            the node. Defaults to <code>False</code>.
+        </li>
+        <li>
+            <code>layout_method</code>: Either <code>"force"</code>, which is a general graph layout algorithm that
+            works on graphs of all types, or <code>"tree"</code>, if you know the resulting graph is always tree-shaped.
+            Defaults to <code>"force"</code>.
+    </ul>
+    </p>
+
+    <h2 id="csp" class="linkify"><a href="#csp" class="no-link-hover">CSP</a></h2>
+    <h3>Included Problems</h3>
+    <div class="siema">
+        <div>
+            <figure>
+                <img src="assets/csp0.png" alt="CSP 0"/>
+                <figcaption>
+                    <code>csp0</code>: A simple CSP.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/csp1.png" alt="CSP 1"/>
+                <figcaption>
+                    <code>csp1</code>: Another simple CSP.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/csp2.png" alt="CSP 2"/>
+                <figcaption>
+                    <code>csp2</code>: A more complex CSP.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/crossword1.png" alt="CSP Crossword 1"/>
+                <figcaption>
+                    <code>crossword1</code>: A crossword that represents word positions as variables.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/crossword2.png" alt="CSP Crossword 2"/>
+                <figcaption>
+                    <code>crossword2</code>: Another crossword that represents word positions as variables.
+                </figcaption>
+            </figure>
+        </div>
+        <div>
+            <figure>
+                <img src="assets/crossword2d.png" alt="CSP Crossword 2d"/>
+                <figcaption>
+                    <code>crossword2d</code>: A crossword that represents squares as variables.
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+    <h3>Visualization Options</h3>
+    <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4</code>.</li>
+    <script>
+      var siemas = document.querySelectorAll('.siema');
+
+      for (var siema of siemas) {
+        new Siema({
+          selector: siema,
+          threshold: 50
+        })
+      }
+
+    </script>
+</section>
+</body>
+
+</html>
