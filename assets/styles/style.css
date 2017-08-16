@@ -17,6 +17,20 @@ h2 {
     color: #ffa929;
 }
 
+@media screen and (max-width: 480px) {
+    body {
+        font-size: 1em;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+}
+
 h1 a,
 h2 a,
 h3 a {
@@ -95,7 +109,7 @@ details[open] summary {
 }
 
 details ul {
-    margin: 10px 0;
+    margin: 10px 5px;
     color: #143642;
 }
 
@@ -123,11 +137,11 @@ header h2 {
 
 @media screen and (max-width: 480px) {
     header h1 {
-        font-size: 15vw;
+        font-size: 10vw;
     }
 
     header h2 {
-        font-size: 1.3em;
+        font-size: 1.2em;
     }
 }
 
@@ -160,6 +174,8 @@ a:visited,
 a:focus {
     color: #3f80a7;
 }
+
+
 
 a::before {
     position: absolute;
@@ -256,7 +272,7 @@ a.no-link-hover:hover {
 
 .linkify::before {
     position: absolute;
-    left: -1em;
+    left: -1.2em;
     visibility: hidden;
     content: '#';
     font-weight: bold;
@@ -298,6 +314,12 @@ a.no-link-hover:hover {
 #install-footer .install a:visited,
 #install-footer .install a:focus {
     color: white;
+}
+
+@media screen and (max-width: 480px) {
+    #install-footer {
+        font-size: 4vw;
+    }
 }
 
 .github {
