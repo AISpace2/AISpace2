@@ -51,6 +51,12 @@ p, li {
     line-height: 1.4em;
 }
 
+@media screen and (max-width: 480px) {
+    p, li {
+        line-height: 1.2em;
+    }
+}
+
 li {
     padding-bottom: 10px;
 }
@@ -113,6 +119,13 @@ details ul {
     color: #143642;
 }
 
+@media screen and (max-width: 480px) {    
+    details ul {
+        list-style-position: outside;
+        margin-left: 1.5em;
+    }
+}
+
 header {
     position: relative;
     height: 300px;
@@ -160,67 +173,20 @@ section {
 a {
     font-weight: bold;
     line-height: .95em;
-    position: relative;
-    z-index: 1;
-    display: inline;
     text-decoration: none;
     color: #4b97c4;
-    border-bottom: 2px solid #4b97c4;
-    white-space: nowrap; /** Transition breaks across hanging multi-line. */
-    -webkit-font-smoothing: antialiased; /** Prevents thickness change on Safari. */
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.25s ease-in-out;
 }
 
+a:active,
 a:visited,
 a:focus {
     color: #3f80a7;
 }
 
-
-
-a::before {
-    position: absolute;
-    bottom: 0;
-    z-index: -1;
-    visibility: hidden;
-    width: 100%;
-    height: 100%;
-    content: '';
-    transition: all .3s ease-in-out 0s;
-    transform: scaleY(0);
-    transform-origin: left bottom;
-    background-color: #4b97c4;
-}
-
-a:hover::before {
-    visibility: visible;
-    transform: scaleY(1);
-}
-
 a:hover {
-    transition: color .3s ease-in-out 0s;
-    color: #ebf4ee;
-}
-
-a.no-link-hover {
-    color: inherit;
-    white-space: normal;
-}
-
-a.no-link-hover:hover {
-    color: inherit;
-}
-
-a.no-link-hover:visited,
-a:focus {
-    color: inherit;
-}
-
-a.no-link-hover:hover::before {
-    visibility: hidden;
-}
-
-a.no-link-hover:hover {
-    color: inherit;
+    border-color: unset;
 }
 
 #navbar {
@@ -280,6 +246,10 @@ a.no-link-hover:hover {
 
 .linkify:hover::before {
     visibility: visible;
+}
+
+.linkify a {
+    color: inherit;
 }
 
 #how-it-works,
