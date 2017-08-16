@@ -86,7 +86,7 @@ export default class GraphVisualizeBase extends Vue {
   /** Tracks the pageX of the previous MouseEvent. Used to compute the delta mouse position. */
   prevPageX = 0;
   /** Tracks the pageY of the previous MouseEvent. Used to compute the delta mouse position. */
-  prevPageY = 0;
+  prevPageY: null|number = 0;
   /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
   transitionsAllowed = true;
   /** The width of the SVG. Automatically set to width of container. */
@@ -128,7 +128,7 @@ export default class GraphVisualizeBase extends Vue {
     // Custom resize handling. In the future, we could switch to using CSS resize.
     // However, it is not support in IE/Edge right now, and Safari does not emit any resize events,
     // even with a ResizeObserver polyfill.
-    let initialiseResize = (e) => {
+    let initialiseResize = (e: Event) => {
       e.preventDefault();
       window.addEventListener('mousemove', startResizing, false);
       window.addEventListener('mouseup', stopResizing, false);
@@ -136,7 +136,7 @@ export default class GraphVisualizeBase extends Vue {
 
     this.$refs.handle.addEventListener('mousedown', initialiseResize, false);
 
-    let startResizing = (e) => {
+    let startResizing = (e: MouseEvent) => {
       e.preventDefault();
 
       // Everything below can be replaced with:
@@ -148,7 +148,7 @@ export default class GraphVisualizeBase extends Vue {
       this.handleResize();
     }
 
-    let stopResizing = (e) => {
+    let stopResizing = (e: MouseEvent) => {
       window.removeEventListener('mousemove', startResizing, false);
       window.removeEventListener('mouseup', stopResizing, false);
       this.prevPageY = null;
