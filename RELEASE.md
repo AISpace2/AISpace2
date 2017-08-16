@@ -18,12 +18,11 @@ username=pypi username
 password=pypi password
 ```
 
-- Update `_version.py`, removing 'dev'
-- `git add` and `git commit` the version changes
+- Check `_version.py` and make sure its version is larger than the currently released version
 - `python setup.py sdist upload`
 - `python setup.py bdist_wheel`
 - `git tag -a X.X.X -m 'comment'`. You can also draft a release on GitHub if you prefer (push first).
-- Update `_version.py` (add 'dev' and increment minor)
+- Update `_version.py` (generally by incrementing minor)
 - `git add` and `git commit`
 - `git push`
 - `git push --tags` (or `git fetch` if you drafted the release on GitHub so you get the new tags)
