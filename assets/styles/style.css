@@ -325,8 +325,11 @@ figcaption {
 @keyframes fade-in {
     0%   { opacity: 0; }
     100% { opacity: 1; }
-  }
+}
 
-.fade-in {
-    animation: fade-in 3s ease-in-out;    
+@media screen and (min-width: 480px) {    
+    .fade-in {
+        transform: translatez(0);
+        animation: fade-in 2.5s ease-in-out;    
+    }
 }
