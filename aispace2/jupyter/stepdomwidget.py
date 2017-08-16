@@ -76,6 +76,10 @@ class StepDOMWidget(DOMWidget):
                 self._block_for_user_input.set()
                 self._block_for_user_input.clear()
 
+                # HACK: Allows the thread to die, if it returns.
+                # Otherwise, it will only be dead on the next step, not this one.
+                sleep(0.1)
+
                 if not self._thread.is_alive():
                     return_value = self._thread.join()
 
