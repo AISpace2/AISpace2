@@ -13,7 +13,7 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
       _view_module: "aispace2",
       _view_module_version: "0.1.0",
       _view_name: "CSPViewer",
-      initial_render: true
+      _previously_rendered: false
     };
   }
 
@@ -36,12 +36,8 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
    * doesn't work. Neither does sending a message from Python, for the same reason.
    * Instead, check if a view has rendered this model yet. If not, render the initial state.
    */
-  get initial_render(): boolean {
-    return this.get("initial_render");
-  }
-
-  set initial_render(val: boolean) {
-    this.set("initial_render", val);
+  get previouslyRendered(): boolean {
+    return this.get("_previously_rendered");
   }
 
   /** The base line width of the graph to draw. Bold arcs will be several pixels thicker than this. */

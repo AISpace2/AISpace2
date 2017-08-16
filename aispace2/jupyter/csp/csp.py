@@ -2,7 +2,7 @@ import threading
 from functools import partial
 
 from ipywidgets import register
-from traitlets import Dict, Float, Unicode
+from traitlets import Bool, Dict, Float, Unicode
 
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
 from .cspjsonbridge import csp_to_json
@@ -20,12 +20,12 @@ class Displayable(StepDOMWidget):
     graph_json = Dict().tag(sync=True)
     line_width = Float(4.0).tag(sync=True)
 
+    # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
+    _previously_rendered = Bool(False).tag(sync=True)
+
     def __init__(self):
         super().__init__()
         self.visualizer = self
-
-        # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
-        self._displayed_once = False
 
         ##############################
         ### SLS-specific variables ###
@@ -187,11 +187,12 @@ class Displayable(StepDOMWidget):
 
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
+
             if queued_func:
                 func = queued_func['func']
                 args = queued_func['args']
                 kwargs = queued_func['kwargs']
-                self._displayed_once = True
+                self._previously_rendered = True
                 self._thread = ReturnableThread(
                     target=func, args=args, kwargs=kwargs)
                 self._thread.start()
@@ -426,9 +427,11 @@ class Displayable(StepDOMWidget):
             singleVar = True
 
         self.send({
-            'action': 'setDomains',
+            'action':
+            'setDomains',
             'nodeIds': [self._domain_map[var] for var in vars],
-            'domains': [list(domain) for domain in domains] if not singleVar else [domains]
+            'domains': [list(domain) for domain in domains]
+            if not singleVar else [domains]
         })
 
 
@@ -447,7 +450,7 @@ def visualize(func_to_delay):
     """
 
     def wrapper(self, *args, **kwargs):
-        if self._displayed_once is False:
+        if self._previously_rendered is False:
             self._queued_func = {
                 'func': partial(func_to_delay, self),
                 'args': args,

@@ -38,6 +38,9 @@ class Displayable(StepDOMWidget):
     # Only applicable when using tree layout. Set automatically to the problem's start node.
     _layout_root_id = Unicode('').tag(sync=True)
 
+    # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
+    _previously_rendered = Bool(False).tag(sync=True)
+
     def __init__(self):
         super().__init__()
 
@@ -67,6 +70,22 @@ class Displayable(StepDOMWidget):
         self._layout_root_id = self.node_map[str(
             self._explicit_graph_from_problem.start)]
         self.graph_json = graph_json  # Need to ensure _layout_root_id gets synced first
+
+    def handle_custom_msgs(self, _, content, buffers=None):
+        super().handle_custom_msgs(None, content, buffers)
+        event = content.get('event', '')
+
+        if event == 'initial_render':
+            self._previously_rendered = True
+            queued_func = getattr(self, '_queued_func', None)
+
+            if queued_func:
+                func = queued_func['func']
+                args = queued_func['args']
+                kwargs = queued_func['kwargs']
+                self._thread = ReturnableThread(
+                    target=func, args=args, kwargs=kwargs)
+                self._thread.start()
 
     def display(self, level, *args, **kwargs):
         if args[0] == 'Expanding:':
@@ -228,8 +247,16 @@ def visualize(func_bg):
     def wrapper(self, *args, **kwargs):
         # We need to reset display_level so it doesn't carry over to next call
         self.max_display_level = 4
-        self._thread = ReturnableThread(
-            target=partial(func_bg, self), args=args, kwargs=kwargs)
-        self._thread.start()
+
+        if self._previously_rendered:
+            self._thread = ReturnableThread(
+                target=partial(func_bg, self), args=args, kwargs=kwargs)
+            self._thread.start()
+        else:
+            self._queued_func = {
+                'func': partial(func_bg, self),
+                'args': args,
+                'kwargs': kwargs
+            }
 
     return wrapper

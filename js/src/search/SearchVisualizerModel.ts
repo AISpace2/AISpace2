@@ -16,7 +16,8 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
       show_edge_costs: true,
       show_node_heuristics: false,
       layout_method: "force",
-      _layout_root_id: null
+      _layout_root_id: null,
+      _previously_rendered: false      
     };
   }
 
@@ -30,6 +31,17 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
       // Instead, we register it once here, and broadcast it to views.
       this.trigger("view:msg", event);
     });
+  }
+
+  /** True if this model has not been rendered in any cell yet.
+   *
+   * This is used to work around timing issues: when the model is initialized,
+   * the views may not be created, so sending a re-render message (to trigger the initial state)
+   * doesn't work. Neither does sending a message from Python, for the same reason.
+   * Instead, check if a view has rendered this model yet. If not, render the initial state.
+   */
+  get previouslyRendered(): boolean {
+    return this.get("_previously_rendered");
   }
 
   /** The JSON representation of the search graph. */

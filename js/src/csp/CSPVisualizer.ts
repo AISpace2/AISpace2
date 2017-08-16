@@ -86,7 +86,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       });
 
       // Functions called on the Python backend are queued until first render
-      if (this.model.initial_render) {
+      if (!this.model.previouslyRendered) {
         this.send({ event: "initial_render" });
         this.highlightArcs({
           action: "highlightArcs",
