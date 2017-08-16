@@ -64,7 +64,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.vue.$on("click:step", () =>
         this.send({ event: StepEvents.STEP_CLICK })
       );
-      this.vue.$on("click:auto-step", () =>
+      this.vue.$on("click:auto-solve", () =>
         this.send({ event: StepEvents.AUTO_STEP_CLICK })
       );
     });

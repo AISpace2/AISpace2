@@ -21,7 +21,7 @@
       <div id="controls" class="btn-group">
         <button id="fine-step" class="btn btn-default" @click="$emit('click:fine-step')">Fine Step</button>
         <button id="step" class="btn btn-default" @click="$emit('click:step')">Step</button>
-        <button id="auto-step" class="btn btn-default" @click="$emit('click:auto-step')">Auto Step</button>
+        <button id="auto-solve" class="btn btn-default" @click="$emit('click:auto-solve')">Auto Solve</button>
       </div>
       <div class="output">{{output}}</div>
     </div>
@@ -68,7 +68,7 @@ export default class SearchVisualizer extends Vue {
   /**
     * 'click:fine-step': The "fine step" button has been clicked.
     * 'click:step': The "step" button has been clicked.
-    * 'click:auto-step': The "autostep" button has been clicked.
+    * 'click:auto-solve': The "auto solve" button has been clicked.
     */
 
   nodeFillColour(node: ISearchGraphNode, hover: boolean) {

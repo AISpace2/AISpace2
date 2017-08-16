@@ -91,7 +91,7 @@ class StepDOMWidget(DOMWidget):
 
         self._fine_step = step_through_to_level(4)
         self._step = step_through_to_level(2)
-        self._auto_step = step_through_to_level(1)
+        self._auto_solve = step_through_to_level(1)
 
     def before_step(self):
         """Override this to provide custom logic before every (fine/auto) step.
@@ -107,8 +107,8 @@ class StepDOMWidget(DOMWidget):
             self._fine_step()
         elif event == 'step:click':
             self._step()
-        elif event == 'auto-step:click':
-            self._auto_step()
+        elif event == 'auto-solve:click':
+            self._auto_solve()
 
     def display(self, level, *args, **kwargs):
         """Informs the widget about a new state to update the visualization in response to.
