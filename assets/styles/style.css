@@ -278,6 +278,7 @@ a:hover {
     padding: 50px 15px;
     text-align: center;
     background-color: #009ffd;
+    font-size: 2.5em;
 }
 
 #install-footer .install a,
@@ -288,7 +289,7 @@ a:hover {
 
 @media screen and (max-width: 480px) {
     #install-footer {
-        font-size: 4vw;
+        font-size: 8vw;
     }
 }
 
