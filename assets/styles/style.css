@@ -4,7 +4,7 @@ body {
     margin: 0 auto;
     letter-spacing: .4px;
     color: #0d242c;
-    background: #f0f7f2;
+    background: #ebf4ee;
 }
 
 h1 {
@@ -112,13 +112,13 @@ header h1 {
     margin-bottom: 10px;
     padding-top: 60px;
     text-align: center;
-    color: #f0f7f2;
+    color: #ebf4ee;
 }
 
 header h2 {
     font-size: 1.5em;
     text-align: center;
-    color: #f0f7f2;
+    color: #ebf4ee;
 }
 
 @media screen and (max-width: 480px) {
@@ -182,7 +182,7 @@ a:hover::before {
 
 a:hover {
     transition: color .3s ease-in-out 0s;
-    color: #f0f7f2;
+    color: #ebf4ee;
 }
 
 a.no-link-hover {
@@ -211,7 +211,7 @@ a.no-link-hover:hover {
     padding-top: 20px;
     padding-left: 20px;
     text-align: right;
-    color: #f0f7f2;
+    color: #ebf4ee;
     background: #0427af;
 }
 
@@ -220,7 +220,7 @@ a.no-link-hover:hover {
     font-weight: normal;
     margin: 10px 15px 0 0;
     text-decoration: underline;
-    color: #f0f7f2;
+    color: #ebf4ee;
     border: none;
 }
 
@@ -269,7 +269,7 @@ a.no-link-hover:hover {
 #how-it-works,
 #available-notebooks {
     padding: 50px 15px;
-    color: #f0f7f2;
+    color: #ebf4ee;
     background-color: #143642;
 }
 
@@ -297,7 +297,7 @@ a.no-link-hover:hover {
 #install-footer .install a,
 #install-footer .install a:visited,
 #install-footer .install a:focus {
-    color: #f0f7f2;
+    color: white;
 }
 
 .github {
