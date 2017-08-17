@@ -41,10 +41,14 @@ img,
 video {
     max-width: 100%;
     margin: 10px 0;
-    user-select: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
     pointer-events: none;
     border: 1px solid rgba(179, 179, 179, .47);
-    box-shadow: 7px 6px 12px 0 rgba(21, 21, 21, .27);
+    -webkit-box-shadow: 7px 6px 12px 0 rgba(21, 21, 21, .27);
+            box-shadow: 7px 6px 12px 0 rgba(21, 21, 21, .27);
 }
 
 p, li {
@@ -130,6 +134,9 @@ header {
     position: relative;
     height: 300px;
     padding: 0 15px;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#0427af), to(#1c74ca));
+    background-image: -webkit-linear-gradient(#0427af, #1c74ca);
+    background-image: -o-linear-gradient(#0427af, #1c74ca);
     background-image: linear-gradient(#0427af, #1c74ca);
 }
 
@@ -176,6 +183,8 @@ a {
     text-decoration: none;
     color: #4b97c4;
     border-bottom: 2px solid transparent;
+    -webkit-transition: border-color 0.25s ease-in-out;
+    -o-transition: border-color 0.25s ease-in-out;
     transition: border-color 0.25s ease-in-out;
 }
 
@@ -322,19 +331,32 @@ figcaption {
     font-size: 0.85em;
 }
 
+@-webkit-keyframes fade-in {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 @keyframes fade-in {
     0%   { opacity: 0; }
     100% { opacity: 1; }
 }
 
+@-webkit-keyframes move-in-left {
+    0%   { -webkit-transform: translateX(-80px); transform: translateX(-80px); }
+    100% { -webkit-transform: translateX(0); transform: translateX(0); }
+}
+
 @keyframes move-in-left {
-    0%   { transform: translateX(-80px); }
-    100% { transform: translateX(0); }
+    0%   { -webkit-transform: translateX(-80px); transform: translateX(-80px); }
+    100% { -webkit-transform: translateX(0); transform: translateX(0); }
 }
 
 @media screen and (min-width: 480px) {    
     #hero-text {
-        transform: translatez(0);
-        animation: fade-in 2.5s ease-in-out, move-in-left 1.7s ease-in-out;
+        -webkit-transform: translatez(0);
+            -ms-transform: translatez(0);
+                transform: translatez(0);
+        -webkit-animation: fade-in 2.5s ease-in-out, move-in-left 1.7s ease-in-out;
+                animation: fade-in 2.5s ease-in-out, move-in-left 1.7s ease-in-out;
     }
 }
