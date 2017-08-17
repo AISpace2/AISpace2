@@ -1,13 +1,5 @@
 # AISpace 2
 
-A Jupyter extension for the next-generation of AISpace.
+This directory contains the "frontend" of the extension - the visualizations the user sees, and also the code that communicates with the Python backend.
 
-Package Install
----------------
-
-**Prerequisites**
-- [node](http://nodejs.org/)
-
-```bash
-npm install --save aispace2
-```
+Head over to the [wiki](https://github.com/AISpace2/AISpace2/wiki), specifically the [Frontend Development](https://github.com/AISpace2/AISpace2/wiki/Frontend-Development) page if you are interested in development.

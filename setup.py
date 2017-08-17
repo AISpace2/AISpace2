@@ -141,13 +141,15 @@ setup_args = {
         'jsdeps': NPM,
     },
 
-    'author': 'dom',
-    'author_email': 'finaiized@gmail.com',
-    'url': 'http://jupyter.org',
+    'author': 'AISpace2',
+    'author_email': 'info@aispace.org',
+    'url': 'https://aispace2.github.io/AISpace2/',
     'keywords': [
         'ipython',
         'jupyter',
         'widgets',
+        'artifical intelligence',
+        'education'
     ],
     'classifiers': [
         'Development Status :: 4 - Beta',

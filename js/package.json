@@ -2,7 +2,7 @@
   "name": "aispace2",
   "version": "0.3.0",
   "description": "A Jupyter extension for the next-generation of AISpace.",
-  "author": "dom",
+  "author": "AISpace2",
   "license": "GPL-3.0",
   "main": "src/index.js",
   "repository": {
