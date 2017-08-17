@@ -33,8 +33,7 @@
 
 <section class="column">
     <h1 id="installationinstructions">Start Here!</h1>
-    <p>We’re happy to have you here. Follow the steps below and you’ll be up-and-running
-        in no time.</p>
+    <p>We’re happy to have you here. Follow the steps below and you’ll learn how to get setup with Jupyter and the AISpace2 extension.</p>
     <ol>
         <li>Are you a <abbr title="University of British Columbia">UBC</abbr> student or
             have access to a JupyterHub instance (which allows you to access Jupyter
@@ -83,7 +82,16 @@ jupyter nbextension enable --py aispace2 --user</code></pre>
         some notebooks <a href="notebooks.html">&rarr;</a> to learn about AI and view this extension in action.</p>
 
     <h2 id="windows" class="linkify"><a href="#windows">Windows</a></h2>
+    <p>If you already have Python 3.3+ installed (or think you do, and need to check), go here <a href="#windows-check-python">&rarr;</a>. Otherwise,
+        proceed to the general installation instructions <a href="#windows-new">&rarr;</a> to install Python and AISpace2 from scratch.
+    </p>
 
+    <h3 id="windows-check-python" class="linkify"><a href="#windows-check-python">Checking if Python is installed</a></h3>
+    <p>You can confirm that you have Python installed by opening the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>) and running <code>python -V</code>. It should output a line similar to this:</p>
+    <pre><code>Python 3.6.3</code></pre>
+    <p>If yours prints out Python 3.3 or higher, then you have the correct version of Python installed and you should continue the installation procedure here <a href="#windows-python">&rarr;</a>. If instead you get an error such as <code>'python' is not recognized as an internal or external command, operable program or batch file.</code>, then Python is either not installed or your path is <a href="https://docs.python.org/3/using/windows.html#configuring-python">not configured correctly</a>. In either case, you can install Python again <a href="#windows-new">&rarr;</a>.   
+
+    <h3 id="windows-new" class="linkify"><a href="#windows-new">Installing Python</a></h3>
     <ol>
         <li>Download the latest version of <a href="https://www.python.org/downloads/"
                                               target="_blank">Python 3</a>. It should be version 3.3 or later.
@@ -93,8 +101,12 @@ jupyter nbextension enable --py aispace2 --user</code></pre>
             is very important!
             <img src="assets/images/windows-python-install.png" alt="Installing Python on Windows">
         </li>
+    </ol>
 
-        <li>Open the Command Prompt (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>)
+    <h3 id="windows-python" class="linkify"><a href="#windows-python">Installing AISpace2</a></h3>
+    <p>Once Python is installed, you can proceed to install Jupyter and the AISpace2 extension.</p>
+    <ol>
+        <li>Open the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>)
             and run:
             <pre><code>pip3 install jupyter
 pip3 install aispace2 --user
