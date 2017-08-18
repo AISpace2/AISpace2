@@ -58,7 +58,7 @@ class Depth_first_search(Displayable):
 # import searchProblem 
 # searcher1 = Depth_first_search(searchProblem.acyclic_delivery_problem)
 # print(searcher1.search())        # find next path
-# searcher2 = Depth_first_search(searchProblem.problem2)
+# searcher2 = Depth_first_search(searchProblem.simple_problem2)
 # print(searcher2.search())        # find next path
 # searcher3 = Depth_first_search(searchProblem.cyclic_delivery_problem)
 # s3=searcher3.search()       # find next path - will go forever(?)

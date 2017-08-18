@@ -48,8 +48,8 @@ def dist(loc1, loc2):
 from aipython.searchGeneric import AStarSearcher
 from aipython.searchMPP import SearcherMPP
 from aipython.stripsForwardPlanner import Forward_STRIPS
-from aipython.stripsProblem import problem0, problem1, problem2
-thisproblem = problem1
+from aipython.stripsProblem import problem0, simple_problem1, simple_problem2
+thisproblem = simple_problem1
 
 print("\n***** FORWARD NO HEURISTIC")
 print(SearcherMPP(Forward_STRIPS(thisproblem)).search())

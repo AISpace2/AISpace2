@@ -126,10 +126,10 @@ class AStarSearcher(Searcher):
 from aipython import searchProblem
 def test(SearchClass):
     print("Testing problem 1:")
-    schr1 = SearchClass(searchProblem.problem1)
+    schr1 = SearchClass(searchProblem.simple_problem1)
     path1 = schr1.search()
     print("Path found: ",path1)
-    assert list(path1.nodes()) == ['g','d','c','b','a'], "Shortest path not found in problem1"
+    assert list(path1.nodes()) == ['g','d','c','b','a'], "Shortest path not found in simple_problem1"
     print("Passed unit test")
 
 if __name__ == "__main__":

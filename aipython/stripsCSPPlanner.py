@@ -86,7 +86,7 @@ def con_plan(prob,horizon):
 from aipython.searchGeneric import Searcher
 from aipython.stripsProblem import delivery_domain
 from aipython.cspConsistency import Search_with_AC_from_CSP, Con_solver
-from aipython.stripsProblem import Planning_problem, problem0, problem1, problem2 
+from aipython.stripsProblem import Planning_problem, problem0, simple_problem1, simple_problem2 
 
 # Problem 0
 # con_plan(problem0,1) # should it succeed?
@@ -97,28 +97,28 @@ from aipython.stripsProblem import Planning_problem, problem0, problem1, problem
 #print(searcher0a.search())
 
 ## Problem 1
-# con_plan(problem1,5) # should it succeed?
-# con_plan(problem1,4) # should it succeed?
+# con_plan(simple_problem1,5) # should it succeed?
+# con_plan(simple_problem1,4) # should it succeed?
 ## To use search to enumerate solutions:
-#searcher15a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(problem1, 5)))
+#searcher15a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(simple_problem1, 5)))
 #print(searcher15a.search())
 
 ## Problem 2
-#con_plan(problem2, 6)  # should fail??
-#con_plan(problem2, 7)  # should succeed???
+#con_plan(simple_problem2, 6)  # should fail??
+#con_plan(simple_problem2, 7)  # should succeed???
 
 ## Example 6.13
-problem3 = Planning_problem(delivery_domain, 
+edgeless_problem = Planning_problem(delivery_domain, 
                             {'SWC':True, 'RHC':False}, {'SWC':False})
-#con_plan(problem3,2)  # Horizon of 2
-#con_plan(problem3,3)  # Horizon of 3
+#con_plan(edgeless_problem,2)  # Horizon of 2
+#con_plan(edgeless_problem,3)  # Horizon of 3
 
 problem4 = Planning_problem(delivery_domain,{'SWC':True},
                                {'SWC':False, 'MW':False, 'RHM':False})
 
 # For the stochastic local search:
 #from cspSLS import SLSearcher, Runtime_distribution
-# cspplanning15 = CSP_from_STRIPS(problem1, 5) # should succeed
+# cspplanning15 = CSP_from_STRIPS(simple_problem1, 5) # should succeed
 #se0 = SLSearcher(cspplanning15); print(se0.search(100000,0.5))
 #p = Runtime_distribution(cspplanning15)
 #p.plot_run(1000,1000,0.7)  # warning will take a few minutes

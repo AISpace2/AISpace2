@@ -29,16 +29,16 @@ def is_(val):
     isv.__name__ = str(val)+"=="
     return isv
 
-csp0 = CSP({'A':{1,2,3},'B':{1,2,3}, 'C':{1,2,3}},
+simple_csp1 = CSP({'A':{1,2,3},'B':{1,2,3}, 'C':{1,2,3}},
            [ Constraint(('A','B'),lt),
              Constraint(('B','C'),lt)])
 
-csp1 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}},
+simple_csp2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}},
            [ Constraint(('A','B'),lt),
              Constraint(('B',),ne_(2)),
              Constraint(('B','C'),lt)])
 
-csp2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}, 
+extended_csp = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}, 
             'D':{1,2,3,4}, 'E':{1,2,3,4}},
            [ Constraint(('B',),ne_(3)),
             Constraint(('C',),ne_(2)),
@@ -110,7 +110,7 @@ crossword2d = CSP({"p00":letters, "p01":letters, "p02":letters,
                    Constraint(("p01","p11","p21"), is_word),
                    Constraint(("p02","p12","p22"), is_word)])
                    
-def test(CSP_solver, csp=csp1,
+def test(CSP_solver, csp=simple_csp2,
              solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
     """CSP_solver is a solver that finds a solution to a CSP.
     CSP_solver takes a csp and returns a solution. 

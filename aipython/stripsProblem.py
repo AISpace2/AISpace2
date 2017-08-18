@@ -67,11 +67,11 @@ problem0 = Planning_problem(delivery_domain,
                             {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
                              'RHM':False}, 
                             {'RLoc':'off'})
-problem1 = Planning_problem(delivery_domain,
+simple_problem1 = Planning_problem(delivery_domain,
                             {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
                              'RHM':False}, 
                             {'SWC':False})
-problem2 = Planning_problem(delivery_domain,
+simple_problem2 = Planning_problem(delivery_domain,
                             {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
                              'RHM':False}, 
                             {'SWC':False, 'MW':False, 'RHM':False})

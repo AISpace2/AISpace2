@@ -190,14 +190,14 @@ def ac_search_solver(csp):
 if __name__ == "__main__":
     test(ac_search_solver)
 
-from aipython.cspExamples import csp1, csp2, crossword1, crossword2, crossword2d
+from aipython.cspExamples import simple_csp2, extended_csp, crossword1, crossword2, crossword2d
 
 ## Test Solving CSPs with Arc consistency and domain splitting:
-#Con_solver(csp1).solve_one()
-#searcher1d = Searcher(Search_with_AC_from_CSP(csp1))
+#Con_solver(simple_csp2).solve_one()
+#searcher1d = Searcher(Search_with_AC_from_CSP(simple_csp2))
 #print(searcher1d.search())
 #Searcher.max_display_level = 2  # display search trace (0 turns off)
-#searcher2c = Searcher(Search_with_AC_from_CSP(csp2))
+#searcher2c = Searcher(Search_with_AC_from_CSP(extended_csp))
 #print(searcher2c.search())
 #searcher3c = Searcher(Search_with_AC_from_CSP(crossword1))
 #print(searcher3c.search())

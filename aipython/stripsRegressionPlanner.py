@@ -92,9 +92,9 @@ class Regression_STRIPS(Search_problem):
 from aipython.searchBranchAndBound import DF_branch_and_bound
 from aipython.searchGeneric import AStarSearcher
 from aipython.searchMPP import SearcherMPP 
-from aipython.stripsProblem import problem0, problem1, problem2 
+from aipython.stripsProblem import problem0, simple_problem1, simple_problem2 
 
-# AStarSearcher(Regression_STRIPS(problem1)).search()  #A*
-# SearcherMPP(Regression_STRIPS(problem1)).search()   #A* with MPP
-# DF_branch_and_bound(Regression_STRIPS(problem1),10).search() #B&B
+# AStarSearcher(Regression_STRIPS(simple_problem1)).search()  #A*
+# SearcherMPP(Regression_STRIPS(simple_problem1)).search()   #A* with MPP
+# DF_branch_and_bound(Regression_STRIPS(simple_problem1),10).search() #B&B
 

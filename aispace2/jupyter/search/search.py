@@ -3,7 +3,7 @@ from functools import partial
 from threading import Thread
 
 from aipython.searchProblem import (Arc, Search_problem_from_explicit_graph,
-                                    problem1)
+                                    simple_problem1)
 from .searchjsonbridge import (implicit_to_explicit_search_problem,
                                search_problem_to_json)
 from ipywidgets import register

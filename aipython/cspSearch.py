@@ -41,7 +41,7 @@ class Search_from_CSP(Search_problem):
                 res.append(Arc(node,new_env))
         return res
 
-from aipython.cspExamples import csp1,csp2,test
+from aipython.cspExamples import simple_csp2,extended_csp,test
 from aipython.searchGeneric import Searcher
 
 def dfs_solver(csp):
@@ -56,8 +56,8 @@ if __name__ == "__main__":
     test(dfs_solver)
 
 ## Test Solving CSPs with Search:
-searcher1 = Searcher(Search_from_CSP(csp1))
+searcher1 = Searcher(Search_from_CSP(simple_csp2))
 #print(searcher1.search())  # get next solution
-searcher2 = Searcher(Search_from_CSP(csp2))
+searcher2 = Searcher(Search_from_CSP(extended_csp))
 #print(searcher2.search())  # get next solution
 

@@ -89,12 +89,12 @@ class Forward_STRIPS(Search_problem):
 from aipython.searchBranchAndBound import DF_branch_and_bound
 from aipython.searchGeneric import AStarSearcher
 from aipython.searchMPP import SearcherMPP
-from aipython.stripsProblem import problem0, problem1, problem2, blocks1, blocks2, blocks3
+from aipython.stripsProblem import problem0, simple_problem1, simple_problem2, blocks1, blocks2, blocks3
 
-# AStarSearcher(Forward_STRIPS(problem1)).search()  #A*
-# SearcherMPP(Forward_STRIPS(problem1)).search()  #A* with MPP
-# DF_branch_and_bound(Forward_STRIPS(problem1),10).search() #B&B
+# AStarSearcher(Forward_STRIPS(simple_problem1)).search()  #A*
+# SearcherMPP(Forward_STRIPS(simple_problem1)).search()  #A* with MPP
+# DF_branch_and_bound(Forward_STRIPS(simple_problem1),10).search() #B&B
 # To find more than one plan:
-# s1 =AStarSearcher(Forward_STRIPS(problem1))  #A*
+# s1 =AStarSearcher(Forward_STRIPS(simple_problem1))  #A*
 # s1.search()  #find another plan
 

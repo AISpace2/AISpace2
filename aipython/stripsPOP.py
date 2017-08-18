@@ -198,11 +198,11 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
 from searchBranchAndBound import DF_branch_and_bound
 from searchGeneric import AStarSearcher
 from searchMPP import SearcherMPP 
-from stripsProblem import problem0, problem1, problem2 
+from stripsProblem import problem0, simple_problem1, simple_problem2 
 
 rplanning0 = POP_search_from_STRIPS(problem0)
-rplanning1 = POP_search_from_STRIPS(problem1)
-rplanning2 = POP_search_from_STRIPS(problem2)
+rplanning1 = POP_search_from_STRIPS(simple_problem1)
+rplanning2 = POP_search_from_STRIPS(simple_problem2)
 searcher0 = DF_branch_and_bound(rplanning0,5)
 searcher0a = AStarSearcher(rplanning0)
 searcher1 = DF_branch_and_bound(rplanning1,10)
