@@ -4,7 +4,7 @@ from traitlets import Dict, Unicode
 from .cspjsonbridge import csp_from_json, csp_to_json, csp_to_python_code
 
 
-@register('aispace2.CSPBuilder')
+@register
 class CSPBuilder(DOMWidget):
     """A Jupyter widget that allows for visual creation of a CSP."""
     _view_name = Unicode('CSPBuilder').tag(sync=True)

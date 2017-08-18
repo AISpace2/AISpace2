@@ -8,7 +8,7 @@ from ..stepdomwidget import ReturnableThread, StepDOMWidget
 from .cspjsonbridge import csp_to_json
 
 
-@register('aispace2.CSPViewer')
+@register
 class Displayable(StepDOMWidget):
     _view_name = Unicode('CSPViewer').tag(sync=True)
     _model_name = Unicode('CSPViewerModel').tag(sync=True)

@@ -8,7 +8,6 @@ if (window.require) {
     map: {
       "*": {
         aispace2: "nbextensions/aispace2/index",
-        "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension",
         vendor_lib: "nbextensions/aispace2/vendor_lib" // Only applicable for development
       }
     }

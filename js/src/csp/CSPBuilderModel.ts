@@ -1,4 +1,4 @@
-import * as widgets from "jupyter-js-widgets";
+import * as widgets from "@jupyter-widgets/base";
 import { IEvent } from "../Events";
 import { IGraphJSON } from "../Graph";
 

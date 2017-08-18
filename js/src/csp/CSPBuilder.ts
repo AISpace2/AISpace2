@@ -1,5 +1,5 @@
 import { timeout } from "d3";
-import * as widgets from "jupyter-js-widgets";
+import * as widgets from "@jupyter-widgets/base";
 import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";

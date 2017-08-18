@@ -12,7 +12,7 @@ from traitlets import Bool, Dict, Unicode
 from ..stepdomwidget import StepDOMWidget, ReturnableThread
 
 
-@register('aispace2.SearchViewer')
+@register
 class Displayable(StepDOMWidget):
     """A Jupyter widget for visualizing search problems."""
     _view_name = Unicode('SearchViewer').tag(sync=True)

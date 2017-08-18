@@ -116,7 +116,7 @@ module.exports = {
         vue$: "vue/dist/vue.esm.js"
       }
     },
-    externals: ["jupyter-js-widgets", "underscore"]
+    externals: ["@jupyter-widgets/base", "underscore"]
   },
   embeddable: {
     // Embeddable aispace2 bundle
@@ -140,6 +140,6 @@ module.exports = {
       libraryTarget: "amd",
       publicPath: "https://unpkg.com/aispace2@" + version + "/dist/"
     },
-    externals: ["jupyter-js-widgets"]
+    externals: ["@jupyter-widgets/base"]
   }
 };

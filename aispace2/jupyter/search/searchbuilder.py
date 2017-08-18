@@ -5,7 +5,7 @@ from .searchjsonbridge import (json_to_search_problem, search_problem_to_json,
                                search_problem_to_python_code)
 
 
-@register('aispace2.SearchBuilder')
+@register
 class SearchBuilder(DOMWidget):
     """A Jupyter widget that allows for visual creation of an explicit search problem."""
     _view_name = Unicode('SearchBuilder').tag(sync=True)
