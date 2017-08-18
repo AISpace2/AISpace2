@@ -43,7 +43,7 @@ You may also omit the password line completely, and it will prompt you each time
 7. Run the following commands:  
     ```sh
     git add aispace2/_version.py js/package.json
-    git commit -m "Prepare to release of version X"
+    git commit -m "Prepare for next version X"
     git push
     ```
 8. Run `git fetch --tags` to synchronize the tag you created on GitHub locally. This will be useful if you need to quickly checkout a version to examine a bug, for example.
