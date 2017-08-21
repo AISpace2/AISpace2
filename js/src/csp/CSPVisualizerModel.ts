@@ -40,7 +40,7 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("_previously_rendered");
   }
 
-  /** The base line width of the graph to draw. Bold arcs will be several pixels thicker than this. */
+  /** The base line width of the edges to draw. Bold arcs will be several pixels thicker than this. */
   get lineWidth(): number {
     return this.get("line_width");
   }

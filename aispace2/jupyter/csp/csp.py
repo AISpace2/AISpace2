@@ -18,7 +18,6 @@ class Displayable(StepDOMWidget):
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
 
     graph_json = Dict().tag(sync=True)
-    line_width = Float(4.0).tag(sync=True)
 
     # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
     _previously_rendered = Bool(False).tag(sync=True)

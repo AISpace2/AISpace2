@@ -110,7 +110,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Highlights an arc (or all arcs), as described by the event object.
    */
   private highlightArcs(event: Events.ICSPHighlightArcsEvent) {
-    const strokeWidth = event.style === "bold" ? 7 : 4;
+    const strokeWidth = event.style === "bold" ? this.model.lineWidth + 3 : this.model.lineWidth;
 
     if (event.arcIds == null) {
       for (const edge of this.graph.edges) {

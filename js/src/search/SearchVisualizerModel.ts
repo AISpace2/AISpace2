@@ -44,6 +44,11 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     return this.get("_previously_rendered");
   }
 
+  /** The line width of the edges in the graph. */
+  get lineWidth(): number {
+    return this.get("line_width");
+  }
+
   /** The JSON representation of the search graph. */
   get graphJSON(): IGraphJSON {
     return this.get("graph_json");

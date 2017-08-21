@@ -2,7 +2,7 @@ import threading
 from time import sleep
 
 from ipywidgets import DOMWidget
-from traitlets import validate
+from traitlets import Float, validate
 
 
 class ReturnableThread(threading.Thread):
@@ -29,8 +29,11 @@ class StepDOMWidget(DOMWidget):
     """Base Jupyter widget for visualizations that you can step through.
     
     Attributes:
-        sleep_time (int): The minimum time delay between consecutive display calls.
+        sleep_time (float): The time delay between consecutive display calls.
+        line_width (float): The width of the edges in the visualization.
     """
+
+    line_width = Float(4.0).tag(sync=True)
 
     def __init__(self):
         super().__init__()
@@ -57,6 +60,11 @@ class StepDOMWidget(DOMWidget):
             sleep_time = 0.05
 
         return sleep_time
+
+    def _validate_line_width(self, proposal):
+        """Cap line_width at a minimum value."""
+        line_width = proposal['value']
+        return min(1, line_width)
 
     def _initialize_controls(self):
         """Sets up functions that can be used to control the visualization."""
