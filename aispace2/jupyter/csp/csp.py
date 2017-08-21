@@ -400,13 +400,13 @@ class Displayable(StepDOMWidget):
         if not isinstance(arcs, list):
             arcs = [arcs]
 
-        arcIds = []
+        arc_ids = []
         for arc in arcs:
-            arcIds.append(self._edge_map[arc])
+            arc_ids.append(self._edge_map[arc])
 
         self.send({
             'action': 'highlightArcs',
-            'arcIds': arcIds,
+            'arcIds': arc_ids,
             'style': style,
             'colour': colour
         })
@@ -423,14 +423,14 @@ class Displayable(StepDOMWidget):
         singleVar = False
         if not isinstance(vars, list):
             vars = [vars]
-            singleVar = True
+            is_single_var = True
 
         self.send({
             'action':
             'setDomains',
             'nodeIds': [self._domain_map[var] for var in vars],
             'domains': [list(domain) for domain in domains]
-            if not singleVar else [domains]
+            if not is_single_var else [domains]
         })
 
 
