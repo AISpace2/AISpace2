@@ -169,13 +169,12 @@
     </div>
     <script>
       var siemas = document.querySelectorAll('.siema');
-
-      for (var siema of siemas) {
+      siemas.forEach(function(siema) {
         new Siema({
           selector: siema,
           threshold: 50
         })
-      }
+      });
     </script>
 </section>
 </body>
