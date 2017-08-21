@@ -1,5 +1,5 @@
-import { timeout } from "d3";
 import * as widgets from "@jupyter-widgets/base";
+import { timeout } from "d3";
 import { debounce } from "underscore";
 import Vue from "vue";
 import { IEvent, isOutputEvent } from "../Events";
