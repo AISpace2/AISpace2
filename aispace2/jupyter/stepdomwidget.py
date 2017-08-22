@@ -41,6 +41,10 @@ class StepDOMWidget(DOMWidget):
 
         self.sleep_time = 0.2
 
+        # Set to True to pause when the next display call is triggered
+        # This does not work e.g. within infinite loops that don't call display
+        self._request_pause = False
+
         # Blocks the visualization when waited on for user input.
         # You MUST wait() on this event only on a background thread!
         self._block_for_user_input = threading.Event()
@@ -101,26 +105,34 @@ class StepDOMWidget(DOMWidget):
 
             return step
 
+        def pause():
+            self._request_pause = True
+
         self._fine_step = step_through_to_level(4)
         self._step = step_through_to_level(2)
         self._auto_solve = step_through_to_level(1)
+        self._pause = pause
 
     def before_step(self):
         """Override this to provide custom logic before every (fine/auto) step.
         
         For example, you may reset state variables."""
-        pass
+        self._request_pause = False
 
     def handle_custom_msgs(self, _, content, buffers=None):
         """Handle messages sent from the front-end."""
         event = content.get('event', '')
 
+        # Note that these messages are received on the main thread!
+        # Don't block here!
         if event == 'fine-step:click':
             self._fine_step()
         elif event == 'step:click':
             self._step()
         elif event == 'auto-solve:click':
             self._auto_solve()
+        elif event == 'pause:click':
+            self._pause()
 
     def display(self, level, *args, **kwargs):
         """Informs the widget about a new state to update the visualization in response to.
@@ -143,3 +155,7 @@ class StepDOMWidget(DOMWidget):
             self._block_for_user_input.wait()
         else:
             sleep(self.sleep_time)
+
+        if self._request_pause:
+            self._request_pause = False
+            self._block_for_user_input.wait()

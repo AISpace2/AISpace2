@@ -7,8 +7,8 @@ import { Graph, ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
-import CSPViewerModel from "./CSPVisualizerModel";
 import * as Events from "./CSPVisualizerEvents";
+import CSPViewerModel from "./CSPVisualizerModel";
 
 export default class CSPViewer extends widgets.DOMWidgetView {
   private static readonly ARC_CLICK = "arc:click";
@@ -66,6 +66,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       this.vue.$on("click:auto-solve", () =>
         this.send({ event: StepEvents.AUTO_STEP_CLICK })
       );
+      this.vue.$on("click:pause", () => {
+        this.send({ event: StepEvents.PAUSE_CLICK });
+      });
 
       this.vue.$on("click:edge", (edge: IGraphEdge) => {
         this.send({

@@ -63,6 +63,10 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.AUTO_STEP_CLICK })
       );
 
+      this.vue.$on("click:pause", () => {
+        this.send({ event: StepEvents.PAUSE_CLICK });
+      });
+
       if (!this.model.previouslyRendered) {
         this.send({ event: "initial_render" });
       }
