@@ -1,5 +1,4 @@
 import * as widgets from "@jupyter-widgets/base";
-import { extend } from "underscore";
 import { IEvent } from "../Events";
 import {
   deserializeGraph,
@@ -11,7 +10,7 @@ import {
 } from "../Graph";
 
 export default class SearchBuilderModel extends widgets.DOMWidgetModel {
-  public static serializers = extend(
+  public static serializers = Object.assign(
     {
       graph: {
         serialize: serializeGraph,
