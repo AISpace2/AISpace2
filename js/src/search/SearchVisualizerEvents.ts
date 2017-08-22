@@ -20,6 +20,12 @@ export interface IClearEvent extends IEvent {
   action: "clear";
 }
 
+export interface IUpdateFrontierEvent extends IEvent {
+  action: "setFrontier";
+  /** The string representing the new frontier. */
+  frontier: string;
+}
+
 export function isHighlightNodeEvent(
   event: IEvent
 ): event is IHighlightNodeEvent {
@@ -34,4 +40,10 @@ export function isHighlightPathEvent(
 
 export function isClearEvent(event: IEvent): event is IClearEvent {
   return event.action === "clear";
+}
+
+export function isUpdateFrontierEvent(
+  event: IEvent
+): event is IUpdateFrontierEvent {
+  return event.action === "setFrontier";
 }

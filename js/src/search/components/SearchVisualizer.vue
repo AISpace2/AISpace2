@@ -24,6 +24,7 @@
         <button id="auto-solve" class="btn btn-default" @click="$emit('click:auto-solve')">Auto Solve</button>
       </div>
       <div class="output">{{output}}</div>
+      <div class="frontier">Frontier: {{frontier}}</div>
     </div>
   </div>
 </template>
@@ -53,6 +54,8 @@ export default class SearchVisualizer extends Vue {
   graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
   /** Text describing what is currently happening. */
   output: string;
+  /** The text representing the frontier. Persistent until frontier changes. */
+  frontier: string;
   /** True if edge costs should be shown on the edges. */
   showEdgeCosts: boolean;
   /** True if node heuristics should be shown on the nodes. */

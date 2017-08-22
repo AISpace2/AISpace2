@@ -29,6 +29,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         this.highlightNodes(event);
       } else if (SearchViewerEvents.isHighlightPathEvent(event)) {
         this.highlightPath(event);
+      } else if (SearchViewerEvents.isUpdateFrontierEvent(event)) {
+        this.vue.frontier = event.frontier;
       }
     });
 
@@ -46,7 +48,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           layout: this.getLayout(),
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
-          output: null
+          output: null,
+          frontier: []
         }
       }).$mount(this.el);
 

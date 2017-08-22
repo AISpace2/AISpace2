@@ -95,7 +95,7 @@ class Displayable(StepDOMWidget):
         if args[0] == 'Expanding:':
             path = args[1]
             self._send_clear_action()
-            self._send_highlight_frontier_action()
+            self._send_frontier_updated_action()
 
             if path.arc:
                 nodes_along_path = []
@@ -161,7 +161,7 @@ class Displayable(StepDOMWidget):
         elif args[0] == "Frontier:":
             self._frontier = args[1]
             self._send_clear_action()
-            self._send_highlight_frontier_action()
+            self._send_frontier_updated_action()
 
         elif args[1] == "paths have been expanded and":
             args += ('- Run search() again to find more solutions.', )
@@ -172,10 +172,11 @@ class Displayable(StepDOMWidget):
         """Sends a message to the front-end visualization to clear all styles applied to node/arcs."""
         self.send({'action': 'clear'})
 
-    def _send_highlight_frontier_action(self):
-        """Sends a message to the front-end visualization to highlight the nodes on the froniter.
+    def _send_frontier_updated_action(self):
+        """Sends a message to the front-end visualization that the frontier has been updated.
         
-        This is a convenience function that uses the value of `self._frontier` to choose nodes to highlight.
+        This is a convenience function that uses the value of `self._frontier` to select which nodes to highlight.
+        It also sends a message to the frontend asking it to persist the frontier between output calls.
         """
         nodes_to_highlight = []
 
@@ -184,6 +185,7 @@ class Displayable(StepDOMWidget):
 
         self._send_clear_action()
         self._send_highlight_nodes_action(nodes_to_highlight, 'green')
+        self.send({'action': 'setFrontier', 'frontier': str(self._frontier)})
 
     def _send_highlight_nodes_action(self, nodes, colour='black'):
         """Sends a message to the front-end visualization to highlight a node.
@@ -206,6 +208,10 @@ class Displayable(StepDOMWidget):
             'nodeIds': nodeIds,
             'colour': colour
         })
+
+    def _persist_frontier(self):
+        frontier = self._frontier
+        self.send({'action': 'persist_frontier', 'frontier': str(frontier)})
 
     def _send_highlight_path_action(self, arcs, colour='black'):
         """Sends a message to the front-end visualization to highlight a path.
