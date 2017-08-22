@@ -12,13 +12,11 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
   private static readonly SHOW_PYTHON_CODE = "python-code";
 
   public model: CSPBuilderModel;
-  public graph: Graph<ICSPGraphNode>;
   public vue: any;
 
   public initialize(opts: any) {
     super.initialize(opts);
 
-    this.graph = Graph.fromJSON(this.model.graphJSON) as Graph<ICSPGraphNode>;
     this.listenTo(this.model, "view:msg", (event: IEvent) => {
       if (event.action === CSPBuilder.SHOW_PYTHON_CODE) {
         // Replace cell contents with the code
@@ -28,17 +26,21 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
   }
 
   public render() {
+    const initialGraph = this.model.graph;
+
     timeout(() => {
       this.vue = new CSPGraphBuilder({
         data: {
-          graph: this.graph,
+          graph: initialGraph,
           layout: new GraphLayout(d3ForceLayout(), relativeLayout())
         },
         watch: {
           graph: {
-            handler: (val, oldVal) => {
-              const cspCopy = JSON.parse(JSON.stringify(this.graph));
-              this.model.graphJSON = cspCopy;
+            handler: (val: Graph, oldVal: Graph) => {
+              // Creating a copy is necessary as changes are detected by reference by traitlets
+              this.model.graph = Graph.fromJSON(oldVal.toJSON()) as Graph<
+                ICSPGraphNode
+              >;
               this.touch();
             },
             deep: true

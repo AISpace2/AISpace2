@@ -91,27 +91,11 @@ export class Graph<
   /**
    * Converts JSON into an instance of the class Graph.
    * @param json The JSON representation of the graph to convert. This may be modified.
-   * @param prevGraph If provided, the styles of the previous graph are merged.
-   * into the new graph. The reason why this is necessary is that styles are *not*
-   * preserved when being converted to Python (since those classes do not know about the visualization),
-   * so in order to keep them, we need to take the styles from the previous graph.
-   * In this way, applied styles can persist even after being converted to and from JSON.
-   * This is only useful when the graph is being updated with more nodes or edges after conversion.
    */
-  public static fromJSON(json: IGraphJSON, prevGraph?: Graph): Graph {
+  public static fromJSON(json: IGraphJSON): Graph {
     const newGraph = new Graph();
 
     for (const node of Object.values(json.nodes)) {
-      if (prevGraph != null) {
-        const i = prevGraph.nodes.findIndex(n => n.id === node.id);
-        if (i !== -1) {
-          // Copy over the styles of the node in the previous graph
-          node.styles = prevGraph.nodes[i].styles;
-          node.x = prevGraph.nodes[i].x;
-          node.y = prevGraph.nodes[i].y;
-        }
-      }
-
       newGraph.addNode(node);
     }
 
@@ -166,7 +150,6 @@ export class Graph<
 
       // Also delete the style property
       delete newEdge.styles;
-
       edges.push(newEdge);
     }
 
@@ -273,6 +256,30 @@ export class Graph<
   }
 
   /**
+   * Merge the styles object of each node of the previous graph to the new graph.
+   * 
+   * The reason why this is necessary is that styles are *not*
+   * preserved when being converted to Python (since those classes do not know about the visualization),
+   * so in order to keep them, we need to take the styles from the previous graph.
+   * In this way, applied styles can persist even after being converted to and from JSON.
+   * This is only useful when the graph is being updated with more nodes or edges after conversion.
+   * If your graph doesn't have nodes or edges added, it is not necessary to use this!
+   * 
+   * @param prevGraph The styles of the previous graph are merged into the new graph. 
+   */
+  public mergeStylesFrom(prevGraph: Graph) {
+    for (const node of Object.values(this.nodes)) {
+      const i = prevGraph.nodes.findIndex(n => n.id === node.id);
+      if (i !== -1) {
+        // Copy over the styles of the node in the previous graph
+        node.styles = prevGraph.nodes[i].styles;
+        node.x = prevGraph.nodes[i].x;
+        node.y = prevGraph.nodes[i].y;
+      }
+    }
+  }
+
+  /**
    * Generates an ID map based off of the current graph.
    */
   private updateIdMap() {
@@ -288,4 +295,28 @@ export class Graph<
 
     this.idMap = idMap;
   }
+}
+
+/**
+ * Helper function to serialize a graph. Used by Jupyter widgets.
+ * 
+ * @param graph The graph to serialize into JSON.
+ */
+export function serializeGraph(graph: Graph) {
+  if (graph == null) {
+    return null;
+  }
+  return graph.toJSON();
+}
+
+/**
+ * Helper function to deserialize a graph. Used by Jupyter widgets.
+ * 
+ * @param json The JSON to deserialize into a Graph.
+ */
+export function deserializeGraph(json: IGraphJSON) {
+  if (json == null) {
+    return null;
+  }
+  return Graph.fromJSON(json) as Graph<ISearchGraphNode, ISearchGraphEdge>;
 }

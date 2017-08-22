@@ -1,8 +1,26 @@
 import * as widgets from "@jupyter-widgets/base";
+import { extend } from "underscore";
 import { IEvent } from "../Events";
-import { IGraphJSON } from "../Graph";
+import {
+  deserializeGraph,
+  Graph,
+  IGraphJSON,
+  ISearchGraphEdge,
+  ISearchGraphNode,
+  serializeGraph
+} from "../Graph";
 
 export default class SearchViewerModel extends widgets.DOMWidgetModel {
+  public static serializers = extend(
+    {
+      graph: {
+        serialize: serializeGraph,
+        deserialize: deserializeGraph
+      }
+    },
+    widgets.DOMWidgetModel.serializers
+  );
+
   public defaults() {
     return {
       ...super.defaults(),
@@ -12,12 +30,11 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
       _view_module: "aispace2",
       _view_module_version: "0.1.0",
       _view_name: "SearchViewer",
-      graph_json: {} as IGraphJSON,
       show_edge_costs: true,
       show_node_heuristics: false,
       layout_method: "force",
       _layout_root_id: null,
-      _previously_rendered: false      
+      _previously_rendered: false
     };
   }
 
@@ -49,13 +66,13 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     return this.get("line_width");
   }
 
-  /** The JSON representation of the search graph. */
-  get graphJSON(): IGraphJSON {
-    return this.get("graph_json");
+  /** The Graph representing the search problem. */
+  get graph(): Graph<ISearchGraphNode, ISearchGraphEdge> {
+    return this.get("graph");
   }
 
-  set graphJSON(val) {
-    this.set("graph_json", val);
+  set graph(val: Graph<ISearchGraphNode, ISearchGraphEdge>) {
+    this.set("graph", val);
   }
 
   /** True if the visualization should show edge costs. */

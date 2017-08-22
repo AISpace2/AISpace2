@@ -1,9 +1,19 @@
 import * as widgets from "@jupyter-widgets/base";
-
+import { extend } from "underscore";
 import { IEvent } from "../Events";
-import { IGraphJSON } from "../Graph";
+import { deserializeGraph, Graph, IGraphJSON, serializeGraph } from "../Graph";
 
 export default class CSPViewerModel extends widgets.DOMWidgetModel {
+  public static serializers = extend(
+    {
+      graph: {
+        serialize: serializeGraph,
+        deserialize: deserializeGraph
+      }
+    },
+    widgets.DOMWidgetModel.serializers
+  );
+
   public defaults() {
     return {
       ...super.defaults(),
@@ -45,8 +55,8 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("line_width");
   }
 
-  /** The JSON representing the CSP graph. */
-  get graphJSON(): IGraphJSON {
-    return this.get("graph_json");
+  /** The Graph representing the CSP problem. */
+  get graph(): Graph {
+    return this.get("graph");
   }
 }

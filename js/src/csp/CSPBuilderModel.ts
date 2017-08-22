@@ -1,8 +1,25 @@
 import * as widgets from "@jupyter-widgets/base";
+import { extend } from "underscore";
 import { IEvent } from "../Events";
-import { IGraphJSON } from "../Graph";
+import {
+  deserializeGraph,
+  Graph,
+  ICSPGraphNode,
+  IGraphJSON,
+  serializeGraph
+} from "../Graph";
 
 export default class CSPBuilderModel extends widgets.DOMWidgetModel {
+  public static serializers = extend(
+    {
+      graph: {
+        serialize: serializeGraph,
+        deserialize: deserializeGraph
+      }
+    },
+    widgets.DOMWidgetModel.serializers
+  );
+
   public defaults() {
     return {
       ...super.defaults(),
@@ -11,8 +28,7 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
       _model_name: "CSPBuilderModel",
       _view_module: "aispace2",
       _view_module_version: "0.1.0",
-      _view_name: "CSPBuilder",
-      graph_json: {} as IGraphJSON
+      _view_name: "CSPBuilder"
     };
   }
 
@@ -25,11 +41,11 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
   }
 
   /** The JSON representing the CSP graph. */
-  get graphJSON(): IGraphJSON {
-    return this.get("graph_json");
+  get graph(): Graph<ICSPGraphNode> {
+    return this.get("graph");
   }
 
-  set graphJSON(val) {
-    this.set("graph_json", val);
+  set graph(val: Graph<ICSPGraphNode>) {
+    this.set("graph", val);
   }
 }

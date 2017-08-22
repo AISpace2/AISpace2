@@ -12,15 +12,10 @@ import SearchViewerModel from "./SearchVisualizerModel";
 
 export default class SearchViewer extends widgets.DOMWidgetView {
   public model: SearchViewerModel;
-  private graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
   private vue: any;
 
   public initialize(opts: any) {
     super.initialize(opts);
-    this.graph = Graph.fromJSON(this.model.graphJSON) as Graph<
-      ISearchGraphNode,
-      ISearchGraphEdge
-    >;
 
     this.listenTo(this.model, "view:msg", (event: IEvent) => {
       // tslint:disable-next-line:no-console
@@ -37,12 +32,9 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       }
     });
 
-    this.listenTo(this.model, "change:graph_json", () => {
-      this.graph = Graph.fromJSON(this.model.graphJSON, this.graph) as Graph<
-        ISearchGraphNode,
-        ISearchGraphEdge
-      >;
-      this.vue.graph = this.graph;
+    this.listenTo(this.model, "change:graph", () => {
+      this.model.graph.mergeStylesFrom(this.model.previous("graph"));
+      this.vue.graph = this.model.graph;
     });
   }
 
@@ -50,7 +42,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     timeout(() => {
       this.vue = new SearchVisualizer({
         data: {
-          graph: this.graph,
+          graph: this.model.graph,
           layout: this.getLayout(),
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
@@ -84,12 +76,12 @@ export default class SearchViewer extends widgets.DOMWidgetView {
    * Resets all the styles in the graph (stroke colours and stroke width) back to default.
    */
   private clearStyling() {
-    for (const node of this.graph.nodes) {
+    for (const node of this.model.graph.nodes) {
       this.vue.$set(node.styles, "stroke", "black");
       this.vue.$set(node.styles, "strokeWidth", 1);
     }
 
-    for (const edge of this.graph.edges) {
+    for (const edge of this.model.graph.edges) {
       this.vue.$set(edge.styles, "stroke", "black");
       this.vue.$set(edge.styles, "strokeWidth", this.model.lineWidth);
     }
@@ -100,8 +92,12 @@ export default class SearchViewer extends widgets.DOMWidgetView {
    */
   private highlightNodes(event: SearchViewerEvents.IHighlightNodeEvent) {
     for (const nodeId of event.nodeIds) {
-      this.vue.$set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
-      this.vue.$set(this.graph.idMap[nodeId].styles, "strokeWidth", 4);
+      this.vue.$set(
+        this.model.graph.idMap[nodeId].styles,
+        "stroke",
+        event.colour
+      );
+      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 4);
     }
   }
 
@@ -110,8 +106,16 @@ export default class SearchViewer extends widgets.DOMWidgetView {
    */
   private highlightPath(event: SearchViewerEvents.IHighlightPathEvent) {
     for (const edgeId of event.path) {
-      this.vue.$set(this.graph.idMap[edgeId].styles, "stroke", event.colour);
-      this.vue.$set(this.graph.idMap[edgeId].styles, "strokeWidth", this.model.lineWidth + 3);
+      this.vue.$set(
+        this.model.graph.idMap[edgeId].styles,
+        "stroke",
+        event.colour
+      );
+      this.vue.$set(
+        this.model.graph.idMap[edgeId].styles,
+        "strokeWidth",
+        this.model.lineWidth + 3
+      );
     }
   }
 

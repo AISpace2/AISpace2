@@ -1,5 +1,6 @@
+from aipython.searchProblem import Search_problem_from_explicit_graph
 from ipywidgets import DOMWidget, register
-from traitlets import Dict, Unicode, Bool
+from traitlets import Bool, Dict, Instance, Unicode, observe
 
 from .searchjsonbridge import (json_to_search_problem, search_problem_to_json,
                                search_problem_to_python_code)
@@ -15,17 +16,21 @@ class SearchBuilder(DOMWidget):
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
 
-    # The JSON representation of the search graph.
-    graph_json = Dict().tag(sync=True)
+    # The explicit search problem that is synced to the frontend.
+    graph = Instance(
+        klass=Search_problem_from_explicit_graph, allow_none=True).tag(
+            sync=True,
+            from_json=json_to_search_problem,
+            to_json=search_problem_to_json)
 
     # True if the visualization should show edge costs.
     show_edge_costs = Bool(True).tag(sync=True)
     # True if a node's heuristic value should be shown.
     show_node_heuristics = Bool(False).tag(sync=True)
 
-    def __init__(self, csp=None):
+    def __init__(self, search_problem=None):
         super().__init__()
-        (self.graph_json, _, _) = search_problem_to_json(csp)
+        self.graph = search_problem
 
     def search_problem(self):
         """Converts the search problem represented by this builder into a search problem.
@@ -34,7 +39,7 @@ class SearchBuilder(DOMWidget):
             (aipython.searchProblem.Search_problem_from_explicit_graph):
                 An explicit search problem represented by the builder.
         """
-        return json_to_search_problem(self.graph_json)
+        return self.graph
 
     def py_code(self):
         """Converts the search problem represented by this builder into Python code.

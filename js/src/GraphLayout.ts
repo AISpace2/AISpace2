@@ -150,6 +150,10 @@ export function d3TreeLayout(
   } = {}
 ): LayoutFunction {
   return (graph: IGraph, layoutParams: IGraphLayoutParams) => {
+    if (graph.nodes.length === 0) {
+      return Promise.resolve();
+    }
+
     /** Maps IDs to nodes */
     const nodeMap: { [key: string]: IGraphNode } = {};
     for (const node of graph.nodes) {

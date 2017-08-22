@@ -4,36 +4,27 @@ from string import Template
 from aipython.searchProblem import Arc, Search_problem_from_explicit_graph
 
 
-def search_problem_to_json(problem):
+def search_problem_to_json(problem, widget_model=None):
     """Converts a Search_problem into a JSON representation.
 
     The search problem must be defined explicitly (i.e. instance of aipython.searchProblem.Search_problem_from_explicit_graph).
-    If you would like to convert an implicitly defined search problem, use `implicit_to_explicit_search_problem()`. 
-
-    When using this function with a Dict traitlet for Jupyter widgets,
-    this dictionary will automatically be converted into JSON for the client side.
-    Therefore, you don't need to convert the return value into a string,
-    synchronize the string with a traitlet, then convert it to JSON on the client.
+    If you would like to convert an implicitly defined search problem, use `implicit_to_explicit_search_problem()`.
 
     Args:
         problem (aipython.searchProblem.Search_problem_from_explicit_graph):
             The search problem instance to convert to a dictionary.
+        widget_model: Instance of widget model passed by ipywidgets during conversion. Never used; you can ignore it.
 
     Returns:
-        (dict, dict, dict):
-            The first dictionary represents the search graph that can be easily converted into JSON.
-
-            The second dictionary represents the node map. This is a mapping from a *string* representing the node
-            to its corresponding ID. The keys are computed as `str(node)`.
-
-            The third dictionary is an edge map. The keys are tuple of (from_node, to_node),
-            and the values are the ID of the edge that connects those two nodes.
-            Both from_node and to_node are string representation of the nodes, e.g. str(node)
+        (dict or None):
+            A dictionary representation of a search graph that can be easily converted into JSON. None if no problem was provided.
     """
+    if not problem:
+        return None
+
     nodes = []
     edges = []
     node_map = {str(n): str(hash(n)) for n in problem.nodes}
-    edge_map = {}
 
     for node in problem.nodes:
         h = 0
@@ -62,10 +53,42 @@ def search_problem_to_json(problem):
             'target': node_map[to_node],
             'cost': arc.cost
         }
-        edge_map[(from_node, to_node)] = edge_id
         edges.append(new_edge)
 
-    return ({'nodes': nodes, 'edges': edges}, node_map, edge_map)
+    return {'nodes': nodes, 'edges': edges}
+
+
+def generate_search_graph_mappings(problem):
+    """Generate a ID mapping from a search problem for communicating with the frontend.
+
+    Why is this useful? You want to tell the frontend to highlight a node or edge, for example.
+    You aren't able to pass an instance directly to the frontend, because that node/edge instance is a Python object.
+    Therefore, in order to tell the frontend which node/edge to highlight, you pass its ID instead.
+
+    Args:
+        problem (aipython.searchProblem.Search_problem_from_explicit_graph):
+            The search problem instance to generate mappings for.
+
+    Returns:
+        (dict, dict):
+            The first dictionary represents the node map. This is a mapping from a *string* representing the node
+            to its corresponding ID. The keys are computed as `str(node)`.
+
+            The second dictionary is an edge map. The keys are tuple of (from_node, to_node),
+            and the values are the ID of the edge that connects those two nodes.
+            Both from_node and to_node are string representation of the nodes, e.g. str(node)
+    """
+    node_map = {str(n): str(hash(n)) for n in problem.nodes}
+    edge_map = {}
+
+    for arc in problem.arcs:
+        edge_id = str(hash(arc))
+        from_node = str(arc.from_node)
+        to_node = str(arc.to_node)
+
+        edge_map[(from_node, to_node)] = edge_id
+
+    return (node_map, edge_map)
 
 
 def implicit_to_explicit_search_problem(implicit_problem):
@@ -90,17 +113,21 @@ def implicit_to_explicit_search_problem(implicit_problem):
         set((start, )), [], start, set(), {start: h})
 
 
-def json_to_search_problem(json):
+def json_to_search_problem(json, widget_model=None):
     """Converts a JSON representation of a search problem into an explicit graph.
 
     Args:
         json (dict):
             A dictionary that conforms to the interface IGraphJSON<ISearchGraphNode, IGraphEdgeJSON>
+        widget_model: Instance of widget model passed by ipywidgets during conversion. Never used; you can ignore it.
 
     Returns:
-        (aipython.searchProblem.Search_problem_from_explicit_graph):
-            An explicit search problem represented by the provided JSON.
+        (aipython.searchProblem.Search_problem_from_explicit_graph or None):
+            An explicit search problem represented by the provided JSON. None if no JSON was provided.
     """
+    if not json:
+        return None
+
     nodes = set()
     node_map = {}
     start = None

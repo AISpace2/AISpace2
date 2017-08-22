@@ -1,11 +1,13 @@
 import threading
 from functools import partial
 
+from aipython.cspProblem import CSP
 from ipywidgets import register
-from traitlets import Bool, Dict, Float, Unicode
+from traitlets import Bool, Dict, Float, Instance, Unicode
 
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
-from .cspjsonbridge import csp_to_json
+from .cspjsonbridge import (csp_from_json, csp_to_json,
+                            generate_csp_graph_mappings)
 
 
 @register
@@ -17,7 +19,10 @@ class Displayable(StepDOMWidget):
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
 
-    graph_json = Dict().tag(sync=True)
+    # The CSP that is synced as a graph to the frontend.
+    graph = Instance(
+        klass=CSP, allow_none=True).tag(
+            sync=True, to_json=csp_to_json, from_json=csp_from_json)
 
     # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
     _previously_rendered = Bool(False).tag(sync=True)
@@ -55,8 +60,9 @@ class Displayable(StepDOMWidget):
         # The domain the user has chosen as their first split for `_selected_var`.
         self._domain_split = None
 
-        (self.graph_json, self._domain_map,
-         self._edge_map) = csp_to_json(self.csp)
+        self.graph = self.csp
+        (self._domain_map,
+         self._edge_map) = generate_csp_graph_mappings(self.csp)
 
         self._initialize_controls()
 
@@ -420,7 +426,7 @@ class Displayable(StepDOMWidget):
               If vars is an array, then domain is an array of domains, in the same order.
         """
 
-        singleVar = False
+        is_single_var = False
         if not isinstance(vars, list):
             vars = [vars]
             is_single_var = True

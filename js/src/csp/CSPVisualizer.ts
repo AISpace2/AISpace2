@@ -17,12 +17,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   public model: CSPViewerModel;
 
   private vue: any;
-  private graph: Graph<ICSPGraphNode>;
 
   public initialize(opts: any) {
     super.initialize(opts);
-
-    this.graph = Graph.fromJSON(this.model.graphJSON) as Graph<ICSPGraphNode>;
 
     this.listenTo(this.model, "view:msg", (event: IEvent) => {
       // tslint:disable-next-line:no-console
@@ -52,7 +49,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     timeout(() => {
       this.vue = new CSPGraphVisualizer({
         data: {
-          graph: this.graph,
+          graph: this.model.graph,
           layout: new GraphLayout(d3ForceLayout()),
           width: 0,
           height: 0,
@@ -110,10 +107,11 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Highlights an arc (or all arcs), as described by the event object.
    */
   private highlightArcs(event: Events.ICSPHighlightArcsEvent) {
-    const strokeWidth = event.style === "bold" ? this.model.lineWidth + 3 : this.model.lineWidth;
+    const strokeWidth =
+      event.style === "bold" ? this.model.lineWidth + 3 : this.model.lineWidth;
 
     if (event.arcIds == null) {
-      for (const edge of this.graph.edges) {
+      for (const edge of this.model.graph.edges) {
         const stroke = event.colour ? event.colour : edge.styles.stroke;
         this.vue.$set(edge.styles, "stroke", stroke);
         this.vue.$set(edge.styles, "strokeWidth", strokeWidth);
@@ -122,10 +120,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       for (const arcId of event.arcIds) {
         const stroke = event.colour
           ? event.colour
-          : this.graph.idMap[arcId].styles.stroke;
-        this.vue.$set(this.graph.idMap[arcId].styles, "stroke", stroke);
+          : this.model.graph.idMap[arcId].styles.stroke;
+        this.vue.$set(this.model.graph.idMap[arcId].styles, "stroke", stroke);
         this.vue.$set(
-          this.graph.idMap[arcId].styles,
+          this.model.graph.idMap[arcId].styles,
           "strokeWidth",
           strokeWidth
         );
@@ -138,7 +136,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private setDomains(event: Events.ICSPSetDomainsEvent) {
     for (let i = 0; i < event.nodeIds.length; i++) {
-      const variableNode = this.graph.idMap[event.nodeIds[i]] as ICSPGraphNode;
+      const variableNode = this.model.graph.idMap[
+        event.nodeIds[i]
+      ] as ICSPGraphNode;
       variableNode.domain = event.domains[i];
     }
   }
@@ -148,8 +148,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private highlightNodes(event: Events.ICSPHighlightNodesEvent) {
     for (const nodeId of event.nodeIds) {
-      this.vue.$set(this.graph.idMap[nodeId].styles, "stroke", event.colour);
-      this.vue.$set(this.graph.idMap[nodeId].styles, "strokeWidth", 2);
+      this.vue.$set(
+        this.model.graph.idMap[nodeId].styles,
+        "stroke",
+        event.colour
+      );
+      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 2);
     }
   }
 }
