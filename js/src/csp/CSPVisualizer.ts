@@ -8,7 +8,7 @@ import { d3ForceLayout, GraphLayout } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import CSPViewerModel from "./CSPVisualizerModel";
-import * as Events from "./SearchVisualizerEvents";
+import * as Events from "./CSPVisualizerEvents";
 
 export default class CSPViewer extends widgets.DOMWidgetView {
   private static readonly ARC_CLICK = "arc:click";
