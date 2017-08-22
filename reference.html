@@ -25,13 +25,52 @@
 
 <header>
     <h1>Reference</h1>
-    <h2>See a list of all visualizations and their options here.</h2>
+    <h2>Learn more about the details of AISpace2.</h2>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
         <polygon fill="#ebf4ee" points="0,100 100,0 100,100"/>
     </svg>
 </header>
 
 <section class="column">
+    
+<h2 id="difference-aispace2-aipython" class="linkify"><a href="#difference-aispace2-aipython">What's the difference between AISpace2 and AIPython?</a></h2>
+
+<p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the <a href="http://artint.info/">accompanying book</a>; AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for rich visualizations to accompany code.</p>
+
+<p>In order to make this possible, two things were changed from the code in AIPython to the code you see inside AISpace2. Everything else is identical:</p>
+
+<ol>
+    <li> The additional of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance to be visualized within a cell must have their definitions annotated with <code>@visualize</code>. For example, if we had the following class:
+
+    <pre><code>class Example():
+  def bar(self):
+    print('bar')
+    
+  def foo(self):
+    self.bar()
+    print('foo')</code></pre>
+
+    and there was a cell inside Jupyter like this:
+
+    <pre><code>e = Example()
+e.foo()</code></pre>
+
+    Then <code>foo</code> would have to be annotated, because it is called directly on the instance inside a cell; but <code>bar</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo</code>. Annotating <code>foo</code> is as simple as adding a single line right above the declaration:
+
+    <pre><code>@visualize
+def foo(self):
+  self.bar()
+  print('foo')</code></pre>
+
+    On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another), you would have to also add <code>@visualize</code> to <code>bar</code> as well.
+
+    <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions will drive the visualization, so that it can set things up correctly.</p>
+    </li>
+    <li>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2 (where <code>*</code> depends on the algorithm being visualized). The <code>@visualize</code> decorator can also be imported from the same package. 
+        
+        <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that allow it to be displayed inside Jupyter.</p>
+    </li>
+    </ol>
     <h1>Index</h1>
     <p>Below we exhaustively list all the supported classes, options, and sample problems included for your reference. However, the best place to find all the supported visualizations and the ways they are used are by consulting the accompanying <a href="notebooks.html">notebooks</a> directly.</p>
     <ul>
