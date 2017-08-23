@@ -16,3 +16,7 @@ declare module "*.vue" {
 declare module "shortid" {
   export function generate(): string;
 }
+
+interface Window {
+  [key: string]: any;
+}

@@ -1,4 +1,5 @@
 import * as widgets from "@jupyter-widgets/base";
+import * as Analytics from "../Analytics";
 import { IEvent } from "../Events";
 import {
   deserializeGraph,
@@ -39,6 +40,8 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
 
   public initialize(attrs: any, opts: any) {
     super.initialize(attrs, opts);
+
+    Analytics.trackApplet("search");
 
     // Forward message to views
     this.listenTo(this, "msg:custom", (event: IEvent) => {

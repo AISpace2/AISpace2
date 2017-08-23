@@ -2,6 +2,7 @@ import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
 import { debounce } from "underscore";
 import Vue from "vue";
+import * as Analytics from "../Analytics";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout } from "../GraphLayout";
@@ -57,20 +58,28 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         }
       }).$mount(this.el);
 
-      this.vue.$on("click:fine-step", () =>
-        this.send({ event: StepEvents.FINE_STEP_CLICK })
-      );
-      this.vue.$on("click:step", () =>
-        this.send({ event: StepEvents.STEP_CLICK })
-      );
-      this.vue.$on("click:auto-solve", () =>
-        this.send({ event: StepEvents.AUTO_STEP_CLICK })
-      );
+      this.vue.$on("click:fine-step", () => {
+        Analytics.trackEvent("CSP Visualizer", "Fine Step");
+        this.send({ event: StepEvents.FINE_STEP_CLICK });
+      });
+
+      this.vue.$on("click:step", () => {
+        Analytics.trackEvent("CSP Visualizer", "Step");
+        this.send({ event: StepEvents.STEP_CLICK });
+      });
+
+      this.vue.$on("click:auto-solve", () => {
+        Analytics.trackEvent("CSP Visualizer", "Auto Solve");
+        this.send({ event: StepEvents.AUTO_STEP_CLICK });
+      });
+
       this.vue.$on("click:pause", () => {
+        Analytics.trackEvent("CSP Visualizer", "Pause");
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
 
       this.vue.$on("click:edge", (edge: IGraphEdge) => {
+        Analytics.trackEvent("CSP Visualizer", "Edge Clicked");
         this.send({
           constId: edge.target.idx,
           event: CSPViewer.ARC_CLICK,
@@ -79,6 +88,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       });
 
       this.vue.$on("click:node", (node: ICSPGraphNode) => {
+        Analytics.trackEvent("CSP Visualizer", "Node Clicked");
         this.send({
           event: CSPViewer.VAR_CLICK,
           varName: node.name

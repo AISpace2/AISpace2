@@ -2,6 +2,7 @@ import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
 import { debounce } from "underscore";
 import Vue from "vue";
+import * as Analytics from "../Analytics";
 import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
@@ -53,17 +54,23 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         }
       }).$mount(this.el);
 
-      this.vue.$on("click:fine-step", () =>
-        this.send({ event: StepEvents.FINE_STEP_CLICK })
-      );
-      this.vue.$on("click:step", () =>
-        this.send({ event: StepEvents.STEP_CLICK })
-      );
-      this.vue.$on("click:auto-solve", () =>
-        this.send({ event: StepEvents.AUTO_STEP_CLICK })
-      );
+      this.vue.$on("click:fine-step", () => {
+        Analytics.trackEvent("Search Visualizer", "Fine Step");
+        this.send({ event: StepEvents.FINE_STEP_CLICK });
+      });
+
+      this.vue.$on("click:step", () => {
+        Analytics.trackEvent("Search Visualizer", "Step");
+        this.send({ event: StepEvents.STEP_CLICK });
+      });
+
+      this.vue.$on("click:auto-solve", () => {
+        Analytics.trackEvent("Search Visualizer", "Auto Solve");
+        this.send({ event: StepEvents.AUTO_STEP_CLICK });
+      });
 
       this.vue.$on("click:pause", () => {
+        Analytics.trackEvent("Search Visualizer", "Pause");
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
 
