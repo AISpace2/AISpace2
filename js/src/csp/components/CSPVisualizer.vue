@@ -104,15 +104,13 @@ export default class CSPGraphInteractor extends Vue {
   }
 
   strokeWidth(edge: IGraphEdge, isHovering: boolean) {
-    if (isHovering) {
-      return 7;
-    }
+    const hoverWidth = isHovering ? 3 : 0;
 
     if (edge.styles && edge.styles.strokeWidth) {
-      return edge.styles.strokeWidth;
+      return edge.styles.strokeWidth + hoverWidth;
     }
 
-    return 4;
+    return 4 + hoverWidth;
   }
 
   domainText(node: ICSPGraphNode) {
