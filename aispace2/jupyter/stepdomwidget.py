@@ -27,6 +27,8 @@ class ReturnableThread(threading.Thread):
 
 class StepDOMWidget(DOMWidget):
     """Base Jupyter widget for visualizations that you can step through.
+
+    You will probably be most interested in before_step, handle_custom_msgs, and display.
     
     Attributes:
         sleep_time (float): The time delay between consecutive display calls.
