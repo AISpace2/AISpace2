@@ -1,10 +1,8 @@
 # AISpace2
 
 ## About
-This is a work-in-progress Jupyter extension that aims to replace the existing [AISpace](http://aispace.org) Java applets. We want students to be able to interact and play with algorithms, not only visually as with the existing applets, but also by modifying the algorithms' code directly and seeing the results.
+AISpace2 is a set of notebooks and an extension for [Jupyter](jupyter.org), a web application that combines code, text, and visualizations into a single, rich document. These notebooks teach and demonstrate AI concepts by providing detailed explanations alongside Python code implementations, and the accompanying extension brings these concepts to life by providing interactive visualizations driven directly by the code you see.
 
-## User Installation
-See the [website](https://aispace2.github.io/AISpace2/) for the latest installation instructions.
+AISpace2 is the next version of AISpace, and accompanies the book [_Artifical Intelligence 2E: Foundations of Computational Agents_](artint.info) by [David Poole](http://cs.ubc.ca/~poole/) and [Alan Mackworth](http://cs.ubc.ca/~mack/).
 
-## Contributing
-See the wiki for development information.
+We encourage you to check out our [website](https://aispace2.github.io/AISpace2/) for more information, including installation instructions.
