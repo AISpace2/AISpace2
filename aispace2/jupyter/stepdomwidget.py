@@ -100,7 +100,7 @@ class StepDOMWidget(DOMWidget):
                             'action':
                             'output',
                             'text':
-                            'Function returned: {}'.format(str(return_value))
+                            'Output: {}'.format(str(return_value))
                         })
 
             return step
