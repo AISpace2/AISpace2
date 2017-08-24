@@ -64,7 +64,7 @@ import UndirectedEdge from "../../components/UndirectedEdge.vue";
 
 import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
-import * as CSPGraphUtils from "../CSPGraphUtils";
+import * as CSPUtils from "../CSPUtils";
 
 type Mode = "select" | "variable" | "constraint" | "edge";
 
@@ -157,11 +157,11 @@ export default class CSPGraphBuilder extends Vue {
   }
 
   domainText(node: ICSPGraphNode) {
-    return CSPGraphUtils.domainText(node);
+    return CSPUtils.domainText(node);
   }
 
   constraintText(node: ICSPGraphNode) {
-    return CSPGraphUtils.constraintText(node);
+    return CSPUtils.constraintText(node);
   }
 
   /** Updates the user selection. If the selection was previously selected, unselects it. */

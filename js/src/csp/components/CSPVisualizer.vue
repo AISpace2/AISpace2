@@ -42,7 +42,7 @@ import UndirectedEdge from "../../components/UndirectedEdge.vue";
 
 import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
-import * as CSPGraphUtils from "../CSPGraphUtils";
+import * as CSPUtils from "../CSPUtils";
 
 /**
  * Used to draw a CSP graph that can show the visualization of code.
@@ -114,11 +114,11 @@ export default class CSPGraphInteractor extends Vue {
   }
 
   domainText(node: ICSPGraphNode) {
-    return CSPGraphUtils.domainText(node);
+    return CSPUtils.domainText(node);
   }
 
   constraintText(node: ICSPGraphNode) {
-    return CSPGraphUtils.constraintText(node);
+    return CSPUtils.constraintText(node);
   }
 }
 </script>

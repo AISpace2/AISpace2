@@ -41,7 +41,7 @@ import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 import { GraphLayout } from '../../GraphLayout';
-import { nodeFillColour, nodeHText } from '../SearchGraphUtils';
+import { nodeFillColour, nodeHText } from '../SearchUtils';
 
 @Component({
   components: {
