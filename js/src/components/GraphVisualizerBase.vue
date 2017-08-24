@@ -251,28 +251,28 @@ export default class GraphVisualizeBase extends Vue {
 </script>
 
 <style scoped>
-  .graph-container {
-  border: 1px solid gray;
+.graph-container {
+    border: 1px solid gray;
     overflow: hidden;
-  position: relative;
-  margin-bottom: 10px;
+    position: relative;
+    margin-bottom: 10px;
 }
 
 svg {
-  display: block;
-  }
+    display: block;
+}
 
-  svg:focus {
+svg:focus {
     outline: none;
-  }
+}
 
 .handle {
-  background-color: #727272;
-  width: 10px;
-  height: 10px;
-  cursor: ns-resize;
-  position: absolute;
-  right: 0;
-  bottom: 0;
+    background-color: #727272;
+    width: 10px;
+    height: 10px;
+    cursor: ns-resize;
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 </style>
