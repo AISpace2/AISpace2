@@ -97,7 +97,7 @@ class Frontier(object):
 
     def __repr__(self):
         """string representation of the frontier"""
-        return str(["Path: {}, Cost: {}".format(p, n) for (n,c,p) in self.frontierpq])
+        return str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])
     def __len__(self):
         return len(self.frontierpq)
 
