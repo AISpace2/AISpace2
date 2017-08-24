@@ -138,8 +138,8 @@ export default class CSPGraphBuilder extends Vue {
 
       this.graph.addEdge({
         id: shortid.generate(),
-        source: this.first,
-        target: this.selection as ICSPGraphNode,
+        source: this.first.id,
+        target: this.selection.id,
         name: "edge1"
       });
 

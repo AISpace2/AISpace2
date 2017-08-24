@@ -162,10 +162,12 @@ export class Graph<
   /** Adds a node to the graph.
    * 
    * Some properties, like `x`, `y`, and the `styles` object are provided by default.
+   * The reason why this is necessary is because those properties do not exist in the JSON representation,
+   * but are required for visualization.
    * 
    * @param opts An object containing properties conforming to TNode. These will be added to the node.
    */
-  public addNode(opts: TNode | IGraphNodeJSON | any) {
+  public addNode(opts: TNode | IGraphNodeJSON) {
     const nodeDefaults = {
       x: 0,
       y: 0,
@@ -188,10 +190,13 @@ export class Graph<
    * For convenience, `source` and `target` can either be nodes or IDs.
    * However, nodes must already be in the graph.
    * A default `styles` object and `type` is provided.
+   *
+   * The reason why properties are added is because those properties do not exist in the JSON representation,
+   * but are required for visualization.
    * 
    * @param opts An object containing properties conforming to TEdge. These will be added to the edge.
    */
-  public addEdge(opts: TEdge | IGraphEdgeJSON | any) {
+  public addEdge(opts: TEdge | IGraphEdgeJSON) {
     let sourceNode = opts.source;
     if (typeof sourceNode === "string") {
       sourceNode = this.nodes.find(n => n.id === sourceNode)!;
