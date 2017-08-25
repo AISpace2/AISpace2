@@ -86,9 +86,15 @@ kbd,
 samp {
   font-family: 'Overpass Mono', Consolas, monaco, monospace;
   font-size: .95em;
-  color: white;
+  color: #fdfdfd;
   border-radius: 4px;
   background: #0d242c;
+}
+
+:not(pre) > code {
+  padding: 0 3px;
+  color: #0d242c;
+  background: #fdfdfd;
 }
 
 pre {
@@ -335,6 +341,21 @@ figure img {
 figcaption {
   font-size: .85em;
   text-align: center;
+}
+
+#reference-search svg,
+#reference-csp svg {
+  display: inline-block;
+  vertical-align: text-top;
+  margin-right: 8px;
+  height: 1.4em;
+}
+
+@media screen and (max-width: 480px) {
+  #reference-search svg,
+  #reference-csp svg {    
+    height: 1.2em;
+  }
 }
 
 @-webkit-keyframes fade-in {

@@ -13,10 +13,12 @@
   <link href="assets/styles/style.css" rel="stylesheet">
   <script src="assets/scripts/siema.min.js"></script>
   <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-105176225-2', 'auto');
     ga('send', 'pageview');
@@ -34,80 +36,103 @@
 
   <header>
     <h1>Reference</h1>
-    <h2>Learn more about the details of AISpace2.</h2>
+    <h2>The details of AISpace2.</h2>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
     </svg>
   </header>
 
   <section class="column">
-
-    <h2 id="difference-aispace2-aipython" class="linkify"><a href="#difference-aispace2-aipython">What's the difference between AISpace2 and AIPython?</a></h2>
-
-    <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the <a href="http://artint.info/">accompanying book</a>;
-      AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for rich visualizations to accompany
-      code.</p>
-
-    <p>In order to make this possible, two things were changed from the code in AIPython to the code you see inside AISpace2.
-      Everything else is identical.</p>
-
-    <ol>
-      <li> The additional of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
-        to be visualized within a cell must have their definitions annotated with <code>@visualize</code>. For example, if
-        we had the following class:
-
-        <pre><code>class Example():
-  def bar(self):
-    print('bar')
-    
-  def foo(self):
-    self.bar()
-    print('foo')</code></pre> and there was a cell inside Jupyter like this:
-
-        <pre><code>e = Example()
-e.foo()</code></pre> Then <code>foo</code> would have to be annotated, because it is called directly on the instance inside a cell; but
-        <code>bar</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo</code>. Annotating
-        <code>foo</code> is as simple as adding a single line right above the declaration:
-
-        <pre><code>@visualize
-def foo(self):
-  self.bar()
-  print('foo')</code></pre> On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
-        you would have to also add <code>@visualize</code> to <code>bar</code> as well.
-
-        <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
-          will drive the visualization, so that it can set things up correctly.</p>
-      </li>
-      <li>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
-        AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2 (where <code>*</code> depends on the algorithm
-        being visualized). The <code>@visualize</code> decorator can also be imported from the same package.
-
-        <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
-          allow it to be displayed inside Jupyter.</p>
-      </li>
-    </ol>
-    <h1>Index</h1>
-    <p>Below we exhaustively list all the supported classes, options, and sample problems included for your reference. However,
-      the best place to find all the supported visualizations and the ways they are used are by consulting the accompanying
-      <a href="notebooks.html">notebooks</a> directly.</p>
+    <h1>Table of Contents</h1>
     <ul>
-      <li><a href="#common">Common</a></li>
-      <li><a href="#search">Search</a></li>
-      <li><a href="#csp">CSP</a></li>
+      <li><a href="#reference-common">Common</a></li>
+      <li><a href="#reference-search">Search</a></li>
+      <li><a href="#reference-csp">CSP</a></li>
+      <li><a href="#difference-aispace2-aipython">Difference between AISpace2 and AIPython</a></li>
     </ul>
-    <h2 id="common" class="linkify"><a href="#common">Common</a></h2>
-    <h3>Visualization Options</h3>
+  </section>
+
+  <section id="reference-common" class="column">
+    <h2 id="common" class="linkify"><a href="#reference-common">Common</a></h2>
+    <h3 id="reference-common-user-guide" class="linkify"><a href="#reference-common-user-guide">User Guide</a></h3>
     <p>
-      <ul>
-        <li><code>sleep_time</code>: The time, in seconds, between each step when stepping or auto solving. Defaults to <code>0.2</code>.
-        </li>
-        <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
-      </ul>
+      <img src="assets/images/reference-common-controls.png" alt="Main visualizations controls" </img></p>
+    <ul>
+      <li><strong>Fine Step</strong>: Steps to the next <code>display()</code> statement.</li>
+      <li><strong>Step</strong>: Steps until it reaches a <code>display()</code> statement with <code>display_level</code> 2
+        or lower.</li>
+      <li><strong>Auto Solve</strong>: Run the algorithm step-by-step until completion.</li>
+      <li><strong>Pause</strong>: Pauses as soon as the next <code>display()</code> statement has executed. Useful to stop auto
+        solving.
+      </li>
+    </ul>
+    <p>You can resize the height of the visualization by dragging the resize handle (<span style="display: inline-block; width: 10px; height: 10px; background: #727272"></span>)
+      in the bottom right corner. The width of the visualization can be changed by resizing the window. In either case, the
+      nodes will reposition themselves until they all fit on screen.</p>
+    <h3 id="reference-common-visualization-options" class="linkify"><a href="#reference-common-visualization-options">Visualization Options</a></h3>
+    <ul>
+      <li><code>sleep_time</code>: The time, in seconds, between each step when stepping or auto solving. Defaults to <code>0.2</code>.
+      </li>
+      <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
+    </ul>
+    <h3 id="reference-common-notes" class="linkify"><a href="#reference-common-notes">Notes</a></h3>
+    <ul>
+      <li>The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the step
+        button, controls when execution pauses. You can safely change the <code>display_level</code> to adjust the amount
+        of detail you receive.</li>
+      <li>
+        The visualization is entirely driven by remaining parameters of the <code>display()</code> call, so modifying them
+        may break the visualization.
+      </li>
+    </ul>
+  </section>
+
+
+  <section id="reference-search" class="column">
+    <h2 class="linkify"><a href="#reference-search">Search</a></h2>
+    <h3 id="reference-search-user-guide" class="linkify"><a href="#reference-search-user-guide">User Guide</a></h3>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; a start node.
     </p>
-    <h2 id="search" class="linkify"><a href="#search">Search</a></h2>
-    <h3>Supported Classes</h3>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; a regular node.
+    </p>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="gold" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; a goal node.
+    </p>
+    <p>
+      <svg viewBox="0 0 44 34">
+        <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
+      </svg>&mdash; the nodes at the end of each path on the frontier is highlighted in green.</p>
+    <p>
+      <svg viewBox="0 0 130 38">
+        <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="blue" fill="blue" stroke-width="7"></polygon>
+        <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="gold" stroke="blue" stroke-width="3" cx="105" cy="19"></ellipse>
+      </svg>
+      &mdash; the neighbouring nodes of the current path are highlighted in blue.</p>
+    <p>
+      <svg viewBox="0 0 220 38">
+        <path data-v-6814c63b="" d="M40,19L80,19" stroke="red" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
+        <path data-v-6814c63b="" d="M125,19L165,19" stroke="red" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(158, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
+        <ellipse rx="20" ry="15" fill="orchid" stroke="gray" stroke-width="3" cx="22" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="white" stroke="gray" stroke-width="3" cx="105" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="gold" stroke="red" stroke-width="3" cx="189" cy="19"></ellipse>
+      </svg>
+      &mdash; the path being expanded is highlighted in red. The last node on this path is highlighted in red; the rest are highlighted
+      in gray.</p>
+    <h3 id="reference-search-supported-classes" class="linkify"><a href="#reference-search-supported-classes">Supported Classes</a></h3>
     <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
-    <h3>Included Problems</h3>
+    <h3 id="reference-search-included-problems" class="linkify"><a href="#reference-search-included-problems">Included Problems</a></h3>
     <p>
       <div class="siema">
         <div>
@@ -152,25 +177,51 @@ def foo(self):
         </div>
       </div>
     </p>
-    <h3>Visualization Options</h3>
-    <p>
-      <ul>
-        <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.
-        </li>
-        <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
-          Defaults to <code>False</code>.
-        </li>
-        <li>
-          <code>layout_method</code>: Either <code>"force"</code>, which is a general graph layout algorithm that works on
-          graphs of all types, or <code>"tree"</code>, if you know the resulting graph is always tree-shaped. Defaults to
-          <code>"force"</code>.
-      </ul>
-    </p>
+    <h3 id="reference-search-visualization-options" class="linkify"><a href="#reference-search-visualization-options">Visualization Options</a></h3>
+    <ul>
+      <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.
+      </li>
+      <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
+        Defaults to <code>False</code>.
+      </li>
+      <li>
+        <code>layout_method</code>: Controls how the nodes in the graph are positioned. Either <code>"force"</code>, which
+        is a general graph layout algorithm that works on graphs of all types, or <code>"tree"</code>, if you know the resulting
+        graph is always tree-shaped. Defaults to
+        <code>"force"</code>.
+    </ul>
+    <h3 id="reference-search-notes" class="linkify"><a href="#reference-search-notes">Notes</a></h3>
+    <ul>
+      <li>
+        <code>search()</code> can only be run again
+        <emphasis>after</emphasis> the current search method has completed. You will know when this is the case when you see “…paths
+        remain in the frontier” or “Output: …”. Otherwise, the state of the frontier will be corrupted.
+      </li>
+    </ul>
+  </section>
 
-    <h2 id="csp" class="linkify"><a href="#csp">CSP</a></h2>
-    <h3>Supported Classes</h3>
+
+  <section id="reference-csp" class="column">
+    <h2 id="csp" class="linkify"><a href="#reference-csp">CSP</a></h2>
+    <h3 id="reference-csp-user-guide" class="linkify"><a href="#reference-csp-user-guide">User Guide</a></h3>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
+      </svg> &mdash; the arc needs to be checked to see if it is arc consistent.</p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="green" stroke-width="5"></line>
+      </svg> &mdash; the arc is arc consistent.</p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
+      </svg> &mdash; the arc is not arc consistent.</p>
+    <p>You can click on any blue or red arc to perform arc consistency on that arc. Otherwise, a random arc is chosen when you
+      step. After arc consistency is finished, and you are running a function that performs domain splitting (e.g. <code>solve_one()</code>),
+      you can click a node to split its domain.</p>
+    <h3 id="reference-csp-supported-classes" class="linkify"><a href="#reference-csp-supported-classes">Supported Classes</a></h3>
     <p><code>Con_solver</code>, <code>SLSearcher</code></p>
-    <h3>Included Problems</h3>
+    <h3 id="reference-csp-included-problems" class="linkify"><a href="#reference-csp-included-problems">Included Problems</a></h3>
     <div class="siema">
       <div>
         <figure>
@@ -221,16 +272,65 @@ def foo(self):
         </figure>
       </div>
     </div>
-    <script>
-        var siemas = document.querySelectorAll('.siema');
-        siemas.forEach(function (siema) {
-          new Siema({
-            selector: siema,
-            threshold: 50
-          })
-        });
-    </script>
   </section>
+
+
+  <section class="column">
+    <h2 id="difference-aispace2-aipython" class="linkify"><a href="#difference-aispace2-aipython">What's the difference between AISpace2 and AIPython?</a></h2>
+
+    <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the <a href="http://artint.info/">accompanying book</a>;
+      AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for rich visualizations to accompany
+      code.
+    </p>
+
+    <p>In order to make this possible, two things were changed from the code in AIPython to the code you see inside AISpace2.
+      Everything else is identical.</p>
+
+    <ol>
+      <li> The additional of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
+        to be visualized within a cell must have their definitions annotated with <code>@visualize</code>. For example, if
+        we had the following class:
+
+        <pre><code>class Example():
+  def bar(self):
+    print('bar')
+    
+  def foo(self):
+    self.bar()
+    print('foo')</code></pre> and there was a cell inside Jupyter like this:
+
+        <pre><code>e = Example()
+e.foo()</code></pre> Then <code>foo</code> would have to be annotated, because it is called directly on the instance inside a cell; but
+        <code>bar</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo</code>. Annotating
+        <code>foo</code> is as simple as adding a single line right above the declaration:
+
+        <pre><code>@visualize
+def foo(self):
+  self.bar()
+  print('foo')</code></pre> On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
+        you would have to also add <code>@visualize</code> to <code>bar</code> as well.
+
+        <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
+          will drive the visualization, so that it can set things up correctly.</p>
+      </li>
+      <li>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
+        AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2 (where <code>*</code> depends on the algorithm
+        being visualized). The <code>@visualize</code> decorator can also be imported from the same package.
+
+        <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
+          allow it to be displayed inside Jupyter.</p>
+      </li>
+    </ol>
+  </section>
+  <script>
+    var siemas = document.querySelectorAll('.siema');
+    siemas.forEach(function (siema) {
+      new Siema({
+        selector: siema,
+        threshold: 50
+      })
+    });
+  </script>
 </body>
 
 </html>
