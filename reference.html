@@ -3,60 +3,60 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AISpace2 &mdash; Reference</title>
-    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
-    <link href="assets/styles/style.css" rel="stylesheet">
-    <script src="assets/scripts/siema.min.js"></script>
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      
-        ga('create', 'UA-105176225-2', 'auto');
-        ga('send', 'pageview');
-    </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AISpace2 &mdash; Reference</title>
+  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
+  <link href="assets/styles/style.css" rel="stylesheet">
+  <script src="assets/scripts/siema.min.js"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105176225-2', 'auto');
+    ga('send', 'pageview');
+  </script>
 </head>
 
 <body>
-    <div id="navbar">
-        <a href="index.html">Home</a>
-        <a href="install.html">Install</a>
-        <a href="notebooks.html">Notebooks</a>
-        <a href="contribute.html">Contribute</a>
-        <a href="reference.html" class="selected">Reference</a>
-    </div>
+  <div id="navbar">
+    <a href="index.html">Home</a>
+    <a href="install.html">Install</a>
+    <a href="notebooks.html">Notebooks</a>
+    <a href="contribute.html">Contribute</a>
+    <a href="reference.html" class="selected">Reference</a>
+  </div>
 
-    <header>
-        <h1>Reference</h1>
-        <h2>Learn more about the details of AISpace2.</h2>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
-        </svg>
-    </header>
+  <header>
+    <h1>Reference</h1>
+    <h2>Learn more about the details of AISpace2.</h2>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
+    </svg>
+  </header>
 
-    <section class="column">
+  <section class="column">
 
-        <h2 id="difference-aispace2-aipython" class="linkify"><a href="#difference-aispace2-aipython">What's the difference between AISpace2 and AIPython?</a></h2>
+    <h2 id="difference-aispace2-aipython" class="linkify"><a href="#difference-aispace2-aipython">What's the difference between AISpace2 and AIPython?</a></h2>
 
-        <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the <a href="http://artint.info/">accompanying book</a>;
-            AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for rich visualizations
-            to accompany code.</p>
+    <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the <a href="http://artint.info/">accompanying book</a>;
+      AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for rich visualizations to accompany
+      code.</p>
 
-        <p>In order to make this possible, two things were changed from the code in AIPython to the code you see inside AISpace2.
-            Everything else is identical.</p>
+    <p>In order to make this possible, two things were changed from the code in AIPython to the code you see inside AISpace2.
+      Everything else is identical.</p>
 
-        <ol>
-            <li> The additional of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the
-                instance to be visualized within a cell must have their definitions annotated with <code>@visualize</code>.
-                For example, if we had the following class:
+    <ol>
+      <li> The additional of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
+        to be visualized within a cell must have their definitions annotated with <code>@visualize</code>. For example, if
+        we had the following class:
 
-                <pre><code>class Example():
+        <pre><code>class Example():
   def bar(self):
     print('bar')
     
@@ -64,175 +64,173 @@
     self.bar()
     print('foo')</code></pre> and there was a cell inside Jupyter like this:
 
-                <pre><code>e = Example()
-e.foo()</code></pre> Then <code>foo</code> would have to be annotated, because it is called directly on the instance inside a
-                cell; but <code>bar</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo</code>.
-                Annotating <code>foo</code> is as simple as adding a single line right above the declaration:
+        <pre><code>e = Example()
+e.foo()</code></pre> Then <code>foo</code> would have to be annotated, because it is called directly on the instance inside a cell; but
+        <code>bar</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo</code>. Annotating
+        <code>foo</code> is as simple as adding a single line right above the declaration:
 
-                <pre><code>@visualize
+        <pre><code>@visualize
 def foo(self):
   self.bar()
-  print('foo')</code></pre> On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or
-                another), you would have to also add <code>@visualize</code> to <code>bar</code> as well.
+  print('foo')</code></pre> On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
+        you would have to also add <code>@visualize</code> to <code>bar</code> as well.
 
-                <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which
-                    functions will drive the visualization, so that it can set things up correctly.</p>
-            </li>
-            <li>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code>                in AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2 (where <code>*</code> depends
-                on the algorithm being visualized). The <code>@visualize</code> decorator can also be imported from the same
-                package.
+        <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
+          will drive the visualization, so that it can set things up correctly.</p>
+      </li>
+      <li>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
+        AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2 (where <code>*</code> depends on the algorithm
+        being visualized). The <code>@visualize</code> decorator can also be imported from the same package.
 
-                <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks
-                    that allow it to be displayed inside Jupyter.</p>
-            </li>
-        </ol>
-        <h1>Index</h1>
-        <p>Below we exhaustively list all the supported classes, options, and sample problems included for your reference. However,
-            the best place to find all the supported visualizations and the ways they are used are by consulting the accompanying
-            <a href="notebooks.html">notebooks</a> directly.</p>
-        <ul>
-            <li><a href="#common">Common</a></li>
-            <li><a href="#search">Search</a></li>
-            <li><a href="#csp">CSP</a></li>
-        </ul>
-        <h2 id="common" class="linkify"><a href="#common">Common</a></h2>
-        <h3>Visualization Options</h3>
-        <p>
-            <ul>
-                <li><code>sleep_time</code>: The time, in seconds, between each step when stepping or auto solving. Defaults
-                    to <code>0.2</code>.
-                </li>
-                <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
-            </ul>
-        </p>
-        <h2 id="search" class="linkify"><a href="#search">Search</a></h2>
-        <h3>Supported Classes</h3>
-        <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
-        <h3>Included Problems</h3>
-        <p>
-            <div class="siema">
-                <div>
-                    <figure>
-                        <img src="assets/images/simple_problem1.png" alt="Search Problem 1" />
-                        <figcaption>
-                            <code>simple_problem1</code>: A simple search problem.
-                        </figcaption>
-                    </figure>
-                </div>
-                <div>
-                    <figure>
-                        <img src="assets/images/simple_problem2.png" alt="Search Problem 2" />
-                        <figcaption>
-                            <code>simple_problem2</code>: Another simple search problem.
-                        </figcaption>
-                    </figure>
-                </div>
-                <div>
-                    <figure>
-                        <img src="assets/images/edgeless_problem.png" alt="Search Problem 3" />
-                        <figcaption>
-                            <code>edgeless_problem</code>: A search problem where there are no edges.
-                        </figcaption>
-                    </figure>
-                </div>
-                <div>
-                    <figure>
-                        <img src="assets/images/acyclic_delivery_problem.png" alt="Acyclic Search Problem" />
-                        <figcaption>
-                            <code>acyclic_delivery_problem</code>: A robot delivery problem that has no cycles.
-                        </figcaption>
-                    </figure>
-                </div>
-                <div>
-                    <figure>
-                        <img src="assets/images/cyclic_delivery_problem.png" alt="Cyclic Search Problem" />
-                        <figcaption>
-                            <code>cyclic_delivery_problem</code>: A robot delivery problem that has cycles.
-                        </figcaption>
-                    </figure>
-                </div>
-            </div>
-        </p>
-        <h3>Visualization Options</h3>
-        <p>
-            <ul>
-                <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults
-                    to <code>True</code>.
-                </li>
-                <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside
-                    the node. Defaults to <code>False</code>.
-                </li>
-                <li>
-                    <code>layout_method</code>: Either <code>"force"</code>, which is a general graph layout algorithm that
-                    works on graphs of all types, or <code>"tree"</code>, if you know the resulting graph is always tree-shaped.
-                    Defaults to <code>"force"</code>.
-            </ul>
-        </p>
-
-        <h2 id="csp" class="linkify"><a href="#csp">CSP</a></h2>
-        <h3>Supported Classes</h3>
-        <p><code>Con_solver</code>, <code>SLSearcher</code></p>
-        <h3>Included Problems</h3>
-        <div class="siema">
-            <div>
-                <figure>
-                    <img src="assets/images/simple_csp1.png" alt="CSP 0" />
-                    <figcaption>
-                        <code>simple_csp1</code>: A simple CSP.
-                    </figcaption>
-                </figure>
-            </div>
-            <div>
-                <figure>
-                    <img src="assets/images/simple_csp2.png" alt="CSP 1" />
-                    <figcaption>
-                        <code>simple_csp2</code>: Another simple CSP.
-                    </figcaption>
-                </figure>
-            </div>
-            <div>
-                <figure>
-                    <img src="assets/images/extended_csp.png" alt="CSP 2" />
-                    <figcaption>
-                        <code>extended_csp</code>: A more complex CSP.
-                    </figcaption>
-                </figure>
-            </div>
-            <div>
-                <figure>
-                    <img src="assets/images/crossword1.png" alt="CSP Crossword 1" />
-                    <figcaption>
-                        <code>crossword1</code>: A crossword that represents word positions as variables.
-                    </figcaption>
-                </figure>
-            </div>
-            <div>
-                <figure>
-                    <img src="assets/images/crossword2.png" alt="CSP Crossword 2" />
-                    <figcaption>
-                        <code>crossword2</code>: Another crossword that represents word positions as variables.
-                    </figcaption>
-                </figure>
-            </div>
-            <div>
-                <figure>
-                    <img src="assets/images/crossword2d.png" alt="CSP Crossword 2d" />
-                    <figcaption>
-                        <code>crossword2d</code>: A crossword that represents squares as variables.
-                    </figcaption>
-                </figure>
-            </div>
+        <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
+          allow it to be displayed inside Jupyter.</p>
+      </li>
+    </ol>
+    <h1>Index</h1>
+    <p>Below we exhaustively list all the supported classes, options, and sample problems included for your reference. However,
+      the best place to find all the supported visualizations and the ways they are used are by consulting the accompanying
+      <a href="notebooks.html">notebooks</a> directly.</p>
+    <ul>
+      <li><a href="#common">Common</a></li>
+      <li><a href="#search">Search</a></li>
+      <li><a href="#csp">CSP</a></li>
+    </ul>
+    <h2 id="common" class="linkify"><a href="#common">Common</a></h2>
+    <h3>Visualization Options</h3>
+    <p>
+      <ul>
+        <li><code>sleep_time</code>: The time, in seconds, between each step when stepping or auto solving. Defaults to <code>0.2</code>.
+        </li>
+        <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
+      </ul>
+    </p>
+    <h2 id="search" class="linkify"><a href="#search">Search</a></h2>
+    <h3>Supported Classes</h3>
+    <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
+    <h3>Included Problems</h3>
+    <p>
+      <div class="siema">
+        <div>
+          <figure>
+            <img src="assets/images/simple_problem1.png" alt="Search Problem 1" />
+            <figcaption>
+              <code>simple_problem1</code>: A simple search problem.
+            </figcaption>
+          </figure>
         </div>
-        <script>
-            var siemas = document.querySelectorAll('.siema');
-            siemas.forEach(function (siema) {
-                new Siema({
-                    selector: siema,
-                    threshold: 50
-                })
-            });
-        </script>
-    </section>
+        <div>
+          <figure>
+            <img src="assets/images/simple_problem2.png" alt="Search Problem 2" />
+            <figcaption>
+              <code>simple_problem2</code>: Another simple search problem.
+            </figcaption>
+          </figure>
+        </div>
+        <div>
+          <figure>
+            <img src="assets/images/edgeless_problem.png" alt="Search Problem 3" />
+            <figcaption>
+              <code>edgeless_problem</code>: A search problem where there are no edges.
+            </figcaption>
+          </figure>
+        </div>
+        <div>
+          <figure>
+            <img src="assets/images/acyclic_delivery_problem.png" alt="Acyclic Search Problem" />
+            <figcaption>
+              <code>acyclic_delivery_problem</code>: A robot delivery problem that has no cycles.
+            </figcaption>
+          </figure>
+        </div>
+        <div>
+          <figure>
+            <img src="assets/images/cyclic_delivery_problem.png" alt="Cyclic Search Problem" />
+            <figcaption>
+              <code>cyclic_delivery_problem</code>: A robot delivery problem that has cycles.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </p>
+    <h3>Visualization Options</h3>
+    <p>
+      <ul>
+        <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.
+        </li>
+        <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
+          Defaults to <code>False</code>.
+        </li>
+        <li>
+          <code>layout_method</code>: Either <code>"force"</code>, which is a general graph layout algorithm that works on
+          graphs of all types, or <code>"tree"</code>, if you know the resulting graph is always tree-shaped. Defaults to
+          <code>"force"</code>.
+      </ul>
+    </p>
+
+    <h2 id="csp" class="linkify"><a href="#csp">CSP</a></h2>
+    <h3>Supported Classes</h3>
+    <p><code>Con_solver</code>, <code>SLSearcher</code></p>
+    <h3>Included Problems</h3>
+    <div class="siema">
+      <div>
+        <figure>
+          <img src="assets/images/simple_csp1.png" alt="CSP 0" />
+          <figcaption>
+            <code>simple_csp1</code>: A simple CSP.
+          </figcaption>
+        </figure>
+      </div>
+      <div>
+        <figure>
+          <img src="assets/images/simple_csp2.png" alt="CSP 1" />
+          <figcaption>
+            <code>simple_csp2</code>: Another simple CSP.
+          </figcaption>
+        </figure>
+      </div>
+      <div>
+        <figure>
+          <img src="assets/images/extended_csp.png" alt="CSP 2" />
+          <figcaption>
+            <code>extended_csp</code>: A more complex CSP.
+          </figcaption>
+        </figure>
+      </div>
+      <div>
+        <figure>
+          <img src="assets/images/crossword1.png" alt="CSP Crossword 1" />
+          <figcaption>
+            <code>crossword1</code>: A crossword that represents word positions as variables.
+          </figcaption>
+        </figure>
+      </div>
+      <div>
+        <figure>
+          <img src="assets/images/crossword2.png" alt="CSP Crossword 2" />
+          <figcaption>
+            <code>crossword2</code>: Another crossword that represents word positions as variables.
+          </figcaption>
+        </figure>
+      </div>
+      <div>
+        <figure>
+          <img src="assets/images/crossword2d.png" alt="CSP Crossword 2d" />
+          <figcaption>
+            <code>crossword2d</code>: A crossword that represents squares as variables.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+    <script>
+        var siemas = document.querySelectorAll('.siema');
+        siemas.forEach(function (siema) {
+          new Siema({
+            selector: siema,
+            threshold: 50
+          })
+        });
+    </script>
+  </section>
 </body>
 
 </html>
