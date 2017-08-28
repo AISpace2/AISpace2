@@ -18,6 +18,17 @@ import { Prop } from "vue-property-decorator";
 /**
  * A container for nodes with a slot where the actual node is drawn.
  * This container places the node in the correct place and handles mouse events.
+ * 
+ * Events Emitted:
+ * - 'dragstart': The mouse is down over the node and has moved since.
+ * - 'dragend': The mouse has been up since the drag started.
+ * - 'click': The user has clicked on the node. Receives MouseEvent as the first argument.
+ * - 'mouseover': The mouse is over the node. Receives MouseEvent as the first argument.
+ * - 'mouseout': The mouse has left the node. Receives MouseEvent as the first argument.
+ * - 'canTransition': Notifies its parent if it wants transitions enabled.
+ *                    Receives a boolean as the first argument.
+ *                    If false, requests its parent disables transitions on itself and edges (e.g. for dragging);
+ *                    If true, allows the parent to set its transition prop to whatever it wants.
  */
 @Component
 export default class GraphNodeContainer extends Vue {
@@ -26,26 +37,13 @@ export default class GraphNodeContainer extends Vue {
   /** The y-coordinate, in pixels, where the node is drawn.*/
   @Prop() y: number;
   /** If true, animates positional changes and other properties of this node. */
-  @Prop({default: false})
+  @Prop({ default: false })
   transitions: boolean;
 
   /** True if the user is holding mouse down. */
   mouseDown = false;
   /** True if the mouse has moved since the user has held mouse down. */
   moved = false;
-
-  /** Events Emitted */
-  /**
-   * 'dragstart': The mouse is down over the node and has moved since.
-   * 'dragend': The mouse has been up since the drag started.
-   * 'click': The user has clicked on the node. Receives MouseEvent as the first argument.
-   * 'mouseover': The mouse is over the node. Receives MouseEvent as the first argument.
-   * 'mouseout': The mouse has left the node. Receives MouseEvent as the first argument.
-   * 'canTransition': Notifies its parent if it wants transitions enabled.
-   *                  Receives a boolean as the first argument.
-   *                  If false, requests its parent disables transitions on itself and edges (e.g. for dragging);
-   *                  If true, allows the parent to set its transition prop to whatever it wants.
-   */
 
   /** Returns the translation to move this node to the right position. */
   get transform() {
@@ -84,14 +82,12 @@ export default class GraphNodeContainer extends Vue {
     this.$emit("canTransition", true);
   }
 }
+
 </script>
 
 <style scoped>
   text {
     cursor: default;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
   }
 </style>

@@ -70,6 +70,8 @@ type Mode = "select" | "variable" | "constraint" | "edge";
 
 /**
  * Component to visually construct a CSP graph.
+ * 
+ * Currently incomplete.
  */
 @Component({
   components: {
@@ -198,6 +200,7 @@ export default class CSPGraphBuilder extends Vue {
     }
   }
 }
+
 </script>
 
 <style scoped>

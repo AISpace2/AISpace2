@@ -51,11 +51,13 @@ import DirectedEdge from "../../components/DirectedEdge.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
-import { GraphLayout } from '../../GraphLayout';
-import { nodeFillColour, nodeHText } from '../SearchUtils';
+import { GraphLayout } from "../../GraphLayout";
+import { nodeFillColour, nodeHText } from "../SearchUtils";
 
 /**
  * Component to visually construct a search graph.
+ * 
+ * Currently incomplete.
  */
 @Component({
   components: { GraphVisualizerBase, DirectedEdge, EllipseGraphNode }
@@ -109,9 +111,10 @@ export default class SearchGraphBuilder extends Vue {
     }
   }
 
-  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number, ry: number }) {
+  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number; ry: number }) {
     node.styles.rx = bounds.rx;
     node.styles.ry = bounds.ry;
   }
 }
+
 </script>

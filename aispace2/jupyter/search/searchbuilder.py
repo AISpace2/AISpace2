@@ -8,7 +8,10 @@ from .searchjsonbridge import (json_to_search_problem, search_problem_to_json,
 
 @register
 class SearchBuilder(DOMWidget):
-    """A Jupyter widget that allows for visual creation of an explicit search problem."""
+    """A Jupyter widget that allows for visual creation of an explicit search problem.
+    
+    See the accompanying frontend file: `js/src/search/SearchBuilder.ts`
+    """
     _view_name = Unicode('SearchBuilder').tag(sync=True)
     _model_name = Unicode('SearchBuilderModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)

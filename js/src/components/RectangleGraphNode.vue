@@ -43,7 +43,6 @@ export default class RectangleGraphNode extends Vue {
   /** The real width, in pixels, of the text. Updated by calling `computeWidthAndHeight()`. */
   textWidth = 0;
   /** The real height, in pixels, of the text. Updated by calling `computeWidthAndHeight()`. */
-
   textHeight = 0;
 
   $refs: {
@@ -90,20 +89,19 @@ export default class RectangleGraphNode extends Vue {
    * This function uses binary search to speed up the truncation.
    */
   _truncateText(lowerBound = 0, upperBound = this.text.length) {
+    if (lowerBound >= upperBound) return;
+
+    const mid = Math.floor((upperBound + lowerBound) / 2);
+    this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
+
+    // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      if (lowerBound >= upperBound) return;
-
-      const mid = Math.floor((upperBound + lowerBound) / 2);
-      this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
-
-      Vue.nextTick(() => {
-        this.computeWidthAndHeight();
-        if (this.textWidth > this.maxWidth) {
-          this._truncateText(lowerBound, mid - 1);
-        } else {
-          this._truncateText(mid + 1, upperBound);
-        }
-      });
+      this.computeWidthAndHeight();
+      if (this.textWidth > this.maxWidth) {
+        this._truncateText(lowerBound, mid - 1);
+      } else {
+        this._truncateText(mid + 1, upperBound);
+      }
     });
   }
 

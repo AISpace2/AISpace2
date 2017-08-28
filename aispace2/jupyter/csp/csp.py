@@ -12,6 +12,12 @@ from .cspjsonbridge import (csp_from_json, csp_to_json,
 
 @register
 class Displayable(StepDOMWidget):
+    """A Jupyter widget for visualizing constraint satisfaction problems (CSPs).
+
+    Handles arc consistency, domain splitting, and stochastic local search (SLS).
+
+    See the accompanying frontend file: `js/src/csp/CSPVisualizer.ts`
+    """
     _view_name = Unicode('CSPViewer').tag(sync=True)
     _model_name = Unicode('CSPViewerModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)
@@ -152,9 +158,10 @@ class Displayable(StepDOMWidget):
         event = content.get('event', '')
 
         if event == 'arc:click':
-            """Expects a dictionary containing:
-                    varName (string): The name of the variable connected to this arc.
-                    constId (string): The id of the constraint connected to this arc.
+            """
+            Expects a dictionary containing:
+                varName (string): The name of the variable connected to this arc.
+                constId (string): The id of the constraint connected to this arc.
             """
             if self._is_waiting_for_arc_selection:
                 var_name = content.get('varName')
@@ -168,8 +175,9 @@ class Displayable(StepDOMWidget):
                 self._is_waiting_for_arc_selection = False
 
         elif event == 'var:click':
-            """Expects a dictionary containing:
-                    varName (string): The name of the variable to split on.
+            """
+            Expects a dictionary containing:
+                varName (string): The name of the variable to split on.
             """
             if self._is_waiting_for_var_selection:
                 var_name = content.get('varName')
@@ -180,7 +188,8 @@ class Displayable(StepDOMWidget):
                 self._is_waiting_for_var_selection = False
 
         elif event == 'domain_split':
-            """Expects a dictionary containing:
+            """
+            Expects a dictionary containing:
                 domain (string[]|None):
                     An array of the elements in the domain to first split on, or None if no choice is made.
                     In this case, splits the domain in half as a default.
@@ -193,6 +202,7 @@ class Displayable(StepDOMWidget):
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
 
+            # Run queued function after we know the frontend view exists
             if queued_func:
                 func = queued_func['func']
                 args = queued_func['args']
@@ -444,7 +454,9 @@ def visualize(func_to_delay):
     """Enqueues a function that does not run until the Jupyter widget has rendered.
 
     Once the Jupyter widget has rendered once, further invocation of the wrapped function
-    behave as if unwrapped.
+    behave as if unwrapped. Necessary because otherwise, the function runs (and blocks when display is called)
+    immediately, before the view has a chance to render
+    (and so there is no way to unblock using the step buttons!)
 
     Args:
         func_to_delay (function): The function to delay.

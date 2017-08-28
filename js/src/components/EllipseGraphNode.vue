@@ -18,13 +18,21 @@ import { Prop, Watch } from "vue-property-decorator";
 
 /**
  * An elliptical node that supports two lines of text, with automatic truncation and resizing.
+ * 
+ * Events Emitted:
+ * - 'updateBounds':
+ *       The bounds (size of node) have been updated. 
+ *       Passes a size object {rx: number, ry: number} as an argument.
+ *       To correctly implement automatic node sizing, you should listen for this event and update
+ *       the edges to use this information. E.g. for DirectedEdge, update (source|dest)R(x|y) prop.
  */
 @Component
 export default class EllipseGraphNode extends Vue {
   /** The primary text of the node to display. */
   @Prop() text: string;
   /** The secondary text of the node to display. Optional. Only used if a non-null value is provided */
-  @Prop() subtext: string;
+  @Prop({ required: false })
+  subtext: string;
   /** A HTML colour string used for the node's fill colour. */
   @Prop({ default: "white" })
   fill: string;
@@ -35,7 +43,7 @@ export default class EllipseGraphNode extends Vue {
   @Prop({ default: 1 })
   strokeWidth: number;
   /** The colour of the (sub)text inside the node. */
-  @Prop({ default: 'black' })
+  @Prop({ default: "black" })
   textColour: string;
 
   /** The final width, in pixels, of the text element containing the (truncated) text. */
@@ -57,16 +65,10 @@ export default class EllipseGraphNode extends Vue {
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
-    text: SVGTextElement,
+    text: SVGTextElement;
     /** A reference to the secondary text element where the subtext is drawn, if subtext is provided. */
-    subtext: SVGTextElement
+    subtext: SVGTextElement;
   };
-
-  /** Emitted Events */
-  /* 'updateBounds': The bounds have been updated. Passes a size object {rx: number, ry: number} as an argument.
-   *               To correctly implement automatic node sizing, you should listen for this event and update
-   *               the edges to use this information.
-   */
 
   mounted() {
     this.truncatedText = this.text;
@@ -131,20 +133,19 @@ export default class EllipseGraphNode extends Vue {
    * This function uses binary search to speed up the truncation.
    */
   _truncateText(lowerBound = 0, upperBound = this.text.length) {
+    if (lowerBound >= upperBound) return;
+
+    const mid = Math.floor((upperBound + lowerBound) / 2);
+    this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
+
+    // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      if (lowerBound >= upperBound) return;
-
-      const mid = Math.floor((upperBound + lowerBound) / 2);
-      this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
-
-      Vue.nextTick(() => {
-        this.computeWidthAndHeight();
-        if (this.computedTextWidth > this.maxWidth) {
-          this._truncateText(lowerBound, mid - 1);
-        } else {
-          this._truncateText(mid + 1, upperBound);
-        }
-      });
+      this.computeWidthAndHeight();
+      if (this.computedTextWidth > this.maxWidth) {
+        this._truncateText(lowerBound, mid - 1);
+      } else {
+        this._truncateText(mid + 1, upperBound);
+      }
     });
   }
 
@@ -164,23 +165,21 @@ export default class EllipseGraphNode extends Vue {
    * Truncates subtext until it is less than `maxWidth`.
    * 
    * This function uses binary search to speed up the truncation.
-   * It informs the parent that it does not want transitions enabled during this duration.
    */
   _truncateSubtext(lowerBound = 0, upperBound = this.subtext.length) {
+    if (lowerBound >= upperBound) return;
+
+    const mid = Math.floor((upperBound + lowerBound) / 2);
+    this.truncatedSubtext = `${this.subtext.substr(0, mid + 1)}…`;
+
+    // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      if (lowerBound >= upperBound) return;
-
-      const mid = Math.floor((upperBound + lowerBound) / 2);
-      this.truncatedSubtext = `${this.subtext.substr(0, mid + 1)}…`;
-
-      Vue.nextTick(() => {
-        this.computeWidthAndHeight();
-        if (this.computedSubtextWidth > this.maxWidth) {
-          this._truncateSubtext(lowerBound, mid - 1);
-        } else {
-          this._truncateSubtext(mid + 1, upperBound);
-        }
-      });
+      this.computeWidthAndHeight();
+      if (this.computedSubtextWidth > this.maxWidth) {
+        this._truncateSubtext(lowerBound, mid - 1);
+      } else {
+        this._truncateSubtext(mid + 1, upperBound);
+      }
     });
   }
 
@@ -208,4 +207,5 @@ export default class EllipseGraphNode extends Vue {
     this.fitSubtext();
   }
 }
+
 </script>

@@ -3,6 +3,10 @@ import * as Analytics from "../Analytics";
 import { IEvent } from "../Events";
 import { deserializeGraph, Graph, IGraphJSON, serializeGraph } from "../Graph";
 
+/**
+ * The model that receives messages and synced traitlets from the backend.
+ * See the accompanying backend file: `aispace2/jupyter/csp/csp.py`
+ */
 export default class CSPViewerModel extends widgets.DOMWidgetModel {
   public static serializers = Object.assign(
     {

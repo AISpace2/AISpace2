@@ -11,12 +11,16 @@ import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as Events from "./CSPVisualizerEvents";
 import CSPViewerModel from "./CSPVisualizerModel";
 
+/**
+ * Creates a CSP visualization and handles events received from the backend.
+ * 
+ * See the accompanying backend file: `aispace2/jupyter/csp/csp.py`
+ */
 export default class CSPViewer extends widgets.DOMWidgetView {
   private static readonly ARC_CLICK = "arc:click";
   private static readonly VAR_CLICK = "var:click";
 
   public model: CSPViewerModel;
-
   private vue: any;
 
   public initialize(opts: any) {

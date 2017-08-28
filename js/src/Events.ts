@@ -1,3 +1,5 @@
+/** Events that can be received from the backend. */
+
 export interface IEvent {
   action: string;
 }

@@ -131,11 +131,11 @@ export class Graph<
     const edges: IGraphEdgeJSON[] = [];
 
     for (const node of this.nodes) {
-      // Remove x and y properties
       const newNode = Object.assign({}, node);
+
+      // Remove properties not present in the Python model
       delete newNode.x;
       delete newNode.y;
-
       delete newNode.styles;
 
       nodes.push(newNode);
@@ -148,7 +148,7 @@ export class Graph<
       newEdge.source = newEdge.source.id;
       newEdge.target = newEdge.target.id;
 
-      // Also delete the style property
+      // Delete the style property as it is not present on the Python model
       delete newEdge.styles;
       edges.push(newEdge);
     }
@@ -207,15 +207,13 @@ export class Graph<
       targetNode = this.nodes.find(n => n.id === targetNode)!;
     }
 
-    this.edges.push(
-      {
-        type: "edge",
-        styles: {},
-        ...opts as any,
-        source: sourceNode,
-        target: targetNode
-      } as TEdge
-    );
+    this.edges.push({
+      type: "edge",
+      styles: {},
+      ...opts as any,
+      source: sourceNode,
+      target: targetNode
+    } as TEdge);
 
     this.updateIdMap();
   }

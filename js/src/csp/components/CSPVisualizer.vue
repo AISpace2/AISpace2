@@ -45,7 +45,13 @@ import { GraphLayout } from "../../GraphLayout";
 import * as CSPUtils from "../CSPUtils";
 
 /**
- * Used to draw a CSP graph that can show the visualization of code.
+ * A CSP visualization that can be driven by backend code.
+ * 
+ * Events Emitted
+ * - 'click:edge': An edge has been clicked. The first argument is the edge.
+ * - 'click:fine-step': The "fine step" button has been clicked.
+ * - 'click:step': The "step" button has been clicked.
+ * - 'click:auto-solve': The "auto solve" button has been clicked.
  */
 @Component({
   components: {
@@ -62,14 +68,6 @@ export default class CSPGraphInteractor extends Vue {
   output: string;
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
-
-  /** Events Emitted */
-  /**
-    * 'click:edge': An edge has been clicked. The first argument is the edge.
-    * 'click:fine-step': The "fine step" button has been clicked.
-    * 'click:step': The "step" button has been clicked.
-    * 'click:auto-solve': The "auto solve" button has been clicked.
-    */
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
@@ -121,6 +119,7 @@ export default class CSPGraphInteractor extends Vue {
     return CSPUtils.constraintText(node);
   }
 }
+
 </script>
 
 <style scoped>

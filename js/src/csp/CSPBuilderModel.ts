@@ -8,6 +8,10 @@ import {
   serializeGraph
 } from "../Graph";
 
+/**
+ * The model that receives messages and synced traitlets from the backend.
+ * See the accompanying backend file: `aispace2/jupyter/csp/cspbuilder.py`
+ */
 export default class CSPBuilderModel extends widgets.DOMWidgetModel {
   public static serializers = Object.assign(
     {
@@ -34,7 +38,11 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
   public initialize(attrs: any, opts: any) {
     super.initialize(attrs, opts);
 
+    // Forward message to views
     this.listenTo(this, "msg:custom", (event: IEvent) => {
+      // We don't register a listener for Python messages (which go to the model) in the view,
+      // because each new view would attach a new listener.
+      // Instead, we register it once here, and broadcast it to views.
       this.trigger("view:msg", event);
     });
   }

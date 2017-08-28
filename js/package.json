@@ -40,7 +40,7 @@
     "html-loader": "^0.5.1",
     "json-loader": "^0.5.7",
     "postcss-loader": "^2.0.6",
-    "prettier": "^1.5.3",
+    "prettier": "^1.6.0",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
     "ts-loader": "^2.3.3",

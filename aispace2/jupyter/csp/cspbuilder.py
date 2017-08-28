@@ -7,7 +7,19 @@ from .cspjsonbridge import csp_from_json, csp_to_json, csp_to_python_code
 
 @register
 class CSPBuilder(DOMWidget):
-    """A Jupyter widget that allows for visual creation of a CSP."""
+    """A Jupyter widget that allows for visual creation of a CSP.
+
+    See the accompanying frontend file: `js/src/csp/CSPBuilder.ts`
+    
+    Currently incomplete. We have not figured out how to handle how to serialize Python constraints,
+    especially because they can be any arbitrary functions. The imagined scenario is if a user
+    bases their CSP off of a CSP with custom constraints, modifies a few things, then tries to
+    export it. How do we get those constraints back through the JSON serialization process?
+
+    - Reference it from the object they passed in?
+    - Do some weird code introspection and pull in the source code?
+    - Only allow creation of CSPs from scratch and generate code from a whitelist of functions?
+    """
     _view_name = Unicode('CSPBuilder').tag(sync=True)
     _model_name = Unicode('CSPBuilderModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)

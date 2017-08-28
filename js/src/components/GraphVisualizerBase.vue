@@ -1,8 +1,8 @@
 <template>
   <div class="graph-container">
-    <svg tabindex="0" ref="mySVG" :width="width" :height="height"
-         @mousemove="drag"
-         @mouseleave="dragEnd"
+    <svg tabindex="0" ref="svg" :width="width" :height="height"
+         @mousemove="dragNode"
+         @mouseleave="dragNodeEnd"
          @keydown.delete="$emit('delete')"
          @dblclick="onDblClick">
       <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
@@ -13,18 +13,19 @@
         <slot name="edge" :edge="edge"
               :x1="edge.source.x" :y1="edge.source.y"
               :x2="edge.target.x" :y2="edge.target.y"
-              :hover="edge === edgeHover"></slot>
+              :hover="edge === edgeHovered"></slot>
       </EdgeContainer>
       <GraphNodeContainer v-for="node in nodes" :key="node.id"
                  :x="node.x" :y="node.y"
                  :transitions="transitionsAllowed && transitions"                 
                  @click="$emit('click:node', node)"
-                 @dragstart="dragStart(node, $event)" @dragend="dragEnd"
+                 @dragstart="dragNodeStart(node, $event)" @dragend="dragNodeEnd"
                  @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
                  @canTransition="toggleTransition">
-        <slot name="node" :node="node" :hover="node === nodeHover"></slot>
+        <slot name="node" :node="node" :hover="node === nodeHovered"></slot>
       </GraphNodeContainer>
     </svg>
+    <!-- Resize handle -->
     <div class="handle" ref="handle"></div>
   </div>
 </template>
@@ -38,14 +39,14 @@ import { Prop, Watch } from "vue-property-decorator";
 import GraphNodeContainer from "./GraphNodeContainer.vue";
 import EdgeContainer from "./EdgeContainer.vue";
 
-import { Graph, IGraphNode, IGraphEdge } from '../Graph';
-import { GraphLayout } from '../GraphLayout';
+import { Graph, IGraphNode, IGraphEdge } from "../Graph";
+import { GraphLayout } from "../GraphLayout";
 
 /**
  * Base class for all graph visualizers.
  *
  * This component handles rendering nodes and edges, handling drag and hover behaviours,
- * and propogating some events up to the parent. It provides slots to customize
+ * and propagating some events up to the parent. It provides slots to customize
  * how nodes and edges are displayed.
  * 
  * For nodes in the slot with name "node", it passes the following down as props:
@@ -60,16 +61,23 @@ import { GraphLayout } from '../GraphLayout';
  *   hover: boolean, // True if the edge is being hovered over
  *   x1, y1, x2, y2: number // The center coordinates of the source and target of the edge
  * }
+ * 
+ * Events Emitted:
+ * - 'dblclick': The user has double-clicked on the graph. Arguments passed: x, y, MouseEvent
+ * - 'delete': The user has pressed 'Delete' or 'Backspace' while the graph is focused.
+ * - 'click:node': A node has been clicked. Passes the node as the first argument.
+ * - 'click:edge': An edge has been clicked. Passes the edge as the first argument.
  */
 @Component({
   components: {
     GraphNodeContainer,
-    EdgeContainer,
+    EdgeContainer
   }
 })
 export default class GraphVisualizeBase extends Vue {
   /** The graph to render. */
-  @Prop({ type: Object }) graph: Graph;
+  @Prop({ type: Object })
+  graph: Graph;
   /** If true, animates positional changes and other properties of the nodes/edges in this graph. */
   @Prop({ default: false })
   transitions: boolean;
@@ -80,34 +88,27 @@ export default class GraphVisualizeBase extends Vue {
   /** The node or edge currently being dragged. */
   dragTarget: IGraphNode | IGraphEdge | null = null;
   /** The edge being hovered over. */
-  edgeHover: IGraphEdge | null = null;
+  edgeHovered: IGraphEdge | null = null;
   /** The node being hovered over. */
-  nodeHover: IGraphNode | null = null;
+  nodeHovered: IGraphNode | null = null;
   /** Tracks the pageX of the previous MouseEvent. Used to compute the delta mouse position. */
   prevPageX = 0;
   /** Tracks the pageY of the previous MouseEvent. Used to compute the delta mouse position. */
-  prevPageY: null|number = 0;
+  prevPageY: number | null = 0;
   /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
   transitionsAllowed = true;
   /** The width of the SVG. Automatically set to width of container. */
   width = 0;
-  /** The height of the SVG. Automatically set to height of container. */  
+  /** The height of the SVG. Automatically set to height of container. */
+
   height = 0;
 
   $refs: {
     /** The SVG element that the graph is drawn in. */
-    mySVG: SVGElement;
+    svg: SVGElement;
     /** The div element representing a resize handle. */
     handle: HTMLDivElement;
-  }
-
-  /** Emitted Events */
-  /**
-   * 'dblclick': The user has double-clicked on the graph. Arguments passed: x, y, MouseEvent
-   * 'delete': The user has pressed 'Delete' or 'Backspace' while the graph is focused.
-   * 'click:node': A node has been clicked. Passes the node as the first argument.
-   * 'click:edge': An edge has been clicked. Passes the edge as the first argument.
-   */
+  };
 
   created() {
     this.graph = this.graph;
@@ -118,23 +119,23 @@ export default class GraphVisualizeBase extends Vue {
     this.width = this.$el.getBoundingClientRect().width;
     this.height = this.width / 1.8;
     this.layout.setup(this.graph, { width: this.width, height: this.height });
-    
+
     // Disable animations for the first draw, because otherwise they fly in from (0, 0) and it looks weird
     this.transitionsAllowed = false;
-    Vue.nextTick(() => this.transitionsAllowed = true);
+    Vue.nextTick(() => (this.transitionsAllowed = true));
 
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener("resize", this.handleResize);
 
     // Custom resize handling. In the future, we could switch to using CSS resize.
     // However, it is not support in IE/Edge right now, and Safari does not emit any resize events,
     // even with a ResizeObserver polyfill.
     let initialiseResize = (e: Event) => {
       e.preventDefault();
-      window.addEventListener('mousemove', startResizing, false);
-      window.addEventListener('mouseup', stopResizing, false);
-    }
+      window.addEventListener("mousemove", startResizing, false);
+      window.addEventListener("mouseup", stopResizing, false);
+    };
 
-    this.$refs.handle.addEventListener('mousedown', initialiseResize, false);
+    this.$refs.handle.addEventListener("mousedown", initialiseResize, false);
 
     let startResizing = (e: MouseEvent) => {
       e.preventDefault();
@@ -146,24 +147,26 @@ export default class GraphVisualizeBase extends Vue {
       this.height += this.prevPageY ? e.pageY - this.prevPageY : 0;
       this.prevPageY = e.pageY;
       this.handleResize();
-    }
+    };
 
     let stopResizing = (e: MouseEvent) => {
-      window.removeEventListener('mousemove', startResizing, false);
-      window.removeEventListener('mouseup', stopResizing, false);
+      window.removeEventListener("mousemove", startResizing, false);
+      window.removeEventListener("mouseup", stopResizing, false);
       this.prevPageY = null;
-    }
+    };
   }
 
   beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener("resize", this.handleResize);
   }
-
 
   /** Re-layout the graph using the current width/height of the SVG. */
   handleResize() {
     this.width = this.$el.getBoundingClientRect().width;
-    this.layout.relayout(this.graph, { width: this.width, height: this.height });
+    this.layout.relayout(this.graph, {
+      width: this.width,
+      height: this.height
+    });
   }
 
   get nodes() {
@@ -179,13 +182,13 @@ export default class GraphVisualizeBase extends Vue {
     return this.graph.nodes;
   }
 
-  dragStart(node: IGraphNode) {
+  dragNodeStart(node: IGraphNode) {
     this.dragTarget = node;
   }
 
-  drag(e: MouseEvent) {
+  dragNode(e: MouseEvent) {
     if (this.dragTarget) {
-      var svgBounds = this.$refs.mySVG.getBoundingClientRect();
+      var svgBounds = this.$refs.svg.getBoundingClientRect();
 
       // Everything below can be replaced with:
       // this.dragTarget.x += e.movementX;
@@ -199,7 +202,7 @@ export default class GraphVisualizeBase extends Vue {
     }
   }
 
-  dragEnd() {
+  dragNodeEnd() {
     this.dragTarget = null;
     this.transitionsAllowed = true;
     this.prevPageX = 0;
@@ -207,19 +210,19 @@ export default class GraphVisualizeBase extends Vue {
   }
 
   edgeMouseOver(edge: IGraphEdge) {
-    this.edgeHover = edge;
+    this.edgeHovered = edge;
   }
 
   edgeMouseOut(edge: IGraphEdge) {
-    this.edgeHover = null;
+    this.edgeHovered = null;
   }
 
   nodeMouseOver(node: IGraphNode) {
-    this.nodeHover = node;
+    this.nodeHovered = node;
   }
 
   nodeMouseOut(node: IGraphNode) {
-    this.nodeHover = null;
+    this.nodeHovered = null;
   }
 
   /**
@@ -227,7 +230,7 @@ export default class GraphVisualizeBase extends Vue {
    * The x and y position within the SVG are calculated and passed to the event.
    */
   onDblClick(e: MouseEvent) {
-    var svgBounds = this.$refs.mySVG.getBoundingClientRect();
+    var svgBounds = this.$refs.svg.getBoundingClientRect();
     var x = e.pageX - svgBounds.left;
     var y = e.pageY - svgBounds.top;
     this.$emit("dblclick", x, y, e);
@@ -243,11 +246,16 @@ export default class GraphVisualizeBase extends Vue {
     this.transitionsAllowed = allowed;
   }
 
-  @Watch('graph')
+  @Watch("graph")
   onGraphChanged(newVal: Graph) {
-    this.layout.relayout(this.graph, { width: this.width, height: this.height });
+    // Whenever nodes or edges are added, re-layout the graph
+    this.layout.relayout(this.graph, {
+      width: this.width,
+      height: this.height
+    });
   }
 }
+
 </script>
 
 <style scoped>

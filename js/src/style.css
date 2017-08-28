@@ -1,16 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400);
 
-:root {
-  --font-face: 'Roboto', sans-serif;
-}
-
 svg text {
   cursor: default;
   user-select: none;
 }
 
 .p-Widget {
-  font-family: var(--font-face);
+  font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

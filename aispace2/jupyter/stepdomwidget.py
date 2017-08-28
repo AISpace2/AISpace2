@@ -77,6 +77,7 @@ class StepDOMWidget(DOMWidget):
 
         def step_through_to_level(desired_level):
             def step():
+                # Warn if no function is pending but the step buttons are clicked.
                 if not hasattr(self, '_thread') or not self._thread:
                     self.send({
                         'action': 'output',
@@ -90,8 +91,9 @@ class StepDOMWidget(DOMWidget):
                 self._block_for_user_input.set()
                 self._block_for_user_input.clear()
 
-                # HACK: Allows the thread to die, if it returns.
+                # Hack: Allows the thread to die, if it returns.
                 # Otherwise, it will only be dead on the next step, not this one.
+                # That would mean you have to step again to get the return value.
                 sleep(0.1)
 
                 if not self._thread.is_alive():
@@ -118,11 +120,17 @@ class StepDOMWidget(DOMWidget):
     def before_step(self):
         """Override this to provide custom logic before every (fine/auto) step.
         
-        For example, you may reset state variables."""
+        Don't forget to call super()!
+        
+        For example, you may reset state variables.
+        """
         self._request_pause = False
 
     def handle_custom_msgs(self, _, content, buffers=None):
-        """Handle messages sent from the front-end."""
+        """Handle messages sent from the front-end.
+        
+        Don't forget to call super()!
+        """
         event = content.get('event', '')
 
         # Note that these messages are received on the main thread!
@@ -139,6 +147,8 @@ class StepDOMWidget(DOMWidget):
     def display(self, level, *args, **kwargs):
         """Informs the widget about a new state to update the visualization in response to.
 
+        Don't forget to call super()!
+
         Args:
             level (int): An integer in [1, 4] that specifies how "important" the message is.
                 It may also be interpreted as a level of "specificity".
@@ -150,6 +160,8 @@ class StepDOMWidget(DOMWidget):
         self.send({'action': 'output', 'text': text})
 
         if level <= self.max_display_level:
+            # There are some display calls that should not block (probably because the next action
+            # is waiting for user input and blocks again). In that case, pass in should_wait=True to display().
             if 'should_wait' in kwargs:
                 if not kwargs['should_wait']:
                     return

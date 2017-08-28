@@ -40,9 +40,17 @@ import DirectedEdge from "../../components/DirectedEdge.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
-import { GraphLayout } from '../../GraphLayout';
-import { nodeFillColour, nodeHText } from '../SearchUtils';
+import { GraphLayout } from "../../GraphLayout";
+import { nodeFillColour, nodeHText } from "../SearchUtils";
 
+/**
+ * A Search visualization that can be driven by backend code.
+ * 
+ * Events Emitted:
+ * - 'click:fine-step': The "fine step" button has been clicked.
+ * - 'click:step': The "step" button has been clicked.
+ * - 'click:auto-solve': The "auto solve" button has been clicked.
+ */
 @Component({
   components: {
     GraphVisualizerBase,
@@ -67,13 +75,6 @@ export default class SearchVisualizer extends Vue {
   height: number;
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
-
-  /** Events Emitted */
-  /**
-    * 'click:fine-step': The "fine step" button has been clicked.
-    * 'click:step': The "step" button has been clicked.
-    * 'click:auto-solve': The "auto solve" button has been clicked.
-    */
 
   nodeFillColour(node: ISearchGraphNode, hover: boolean) {
     if (hover) {
@@ -116,7 +117,7 @@ export default class SearchVisualizer extends Vue {
   }
 
   edgeText(edge: ISearchGraphEdge) {
-    let text = '';
+    let text = "";
 
     if (edge.name != null) {
       text = edge.name;
@@ -132,9 +133,10 @@ export default class SearchVisualizer extends Vue {
   /**
    * Whenever a node reports it has resized, update it's style so that it redraws.
    */
-  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number, ry: number }) {
+  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number; ry: number }) {
     node.styles.rx = bounds.rx;
     node.styles.ry = bounds.ry;
   }
 }
+
 </script>

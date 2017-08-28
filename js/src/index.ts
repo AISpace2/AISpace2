@@ -47,7 +47,8 @@ if (process.env.NODE_ENV !== "development") {
       i[r] ||
       function() {
         (i[r].q = i[r].q || []).push(arguments);
-      }), (i[r].l = 1 * (<any>new Date()));
+      }),
+      (i[r].l = 1 * <any>new Date());
     (a = <any>s.createElement(o)), (m = <any>s.getElementsByTagName(o)[0]);
     (<any>a).async = 1;
     (<any>a).src = g;

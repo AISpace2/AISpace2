@@ -99,7 +99,10 @@ export function d3ForceLayout(): LayoutFunction {
       .forceSimulation(graphCopy.nodes)
       .force(
         "link",
-        d3.forceLink().id((node: IGraphEdge) => node.id).links(graphCopy.edges)
+        d3
+          .forceLink()
+          .id((node: IGraphEdge) => node.id)
+          .links(graphCopy.edges)
       )
       .force("charge", d3.forceManyBody().strength(-35))
       .force(

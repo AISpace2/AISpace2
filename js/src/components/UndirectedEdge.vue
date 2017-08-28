@@ -1,4 +1,5 @@
 <template>
+  <!-- We only use a path rather than a line because no browsers animate lines but some (Chrome) animate paths. -->
   <path :d="path" :stroke="stroke" :stroke-width="strokeWidth"></path>
 </template>
 
@@ -9,6 +10,10 @@ import { Prop } from "vue-property-decorator";
 
 /**
  * An undirected edge between two nodes.
+ * 
+ * Unlike DirectedEdge, it can just draw the line from point-to-point without worrying
+ * about where the edge of the node is:
+ * the nodes are drawn on top and so we get the occlusion for free.
  */
 @Component
 export default class UndirectedEdge extends Vue {
@@ -31,4 +36,5 @@ export default class UndirectedEdge extends Vue {
     return `M${this.x1},${this.y1}L${this.x2},${this.y2}`;
   }
 }
+
 </script>

@@ -15,7 +15,12 @@ from .searchjsonbridge import (generate_search_graph_mappings,
 
 @register
 class Displayable(StepDOMWidget):
-    """A Jupyter widget for visualizing search problems."""
+    """A Jupyter widget for visualizing search problems.
+
+    Handles events from DFS, A*, B&B, and more. Works with implicit or explicit search problems.
+    
+    See the accompanying frontend file: `js/src/search/SearchVisualizer.ts`
+    """
     _view_name = Unicode('SearchViewer').tag(sync=True)
     _model_name = Unicode('SearchViewerModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)
@@ -51,7 +56,7 @@ class Displayable(StepDOMWidget):
         super().__init__()
 
         # The explicit representation of the problem.
-        # If the problem was already explicit, the problem itself; otherwise, it is converted.
+        # If the problem was already explicit, the problem itself; otherwise, it will be converted next.
         self.graph = None
 
         # Arcs in tuple form (str(from_node), str(to_node)) that have been added to the explicit graph.

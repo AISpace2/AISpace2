@@ -30,6 +30,7 @@ export default class CSPToolbar extends Vue {
     this.$emit("modechanged", this.picked);
   }
 }
+
 </script>
 
 <style scoped>

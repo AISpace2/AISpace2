@@ -1,17 +1,18 @@
 <template>
   <g>
-    <path :d="path" stroke="black" stroke-width="5" :stroke="stroke" :stroke-width="strokeWidth">
-    </path>
+    <path :d="path" stroke="black" stroke-width="5" :stroke="stroke" :stroke-width="strokeWidth"></path>
+    <!-- We draw the marker instead of using marker-end on the path because markers don't inherit the lines colour. -->
     <polygon :points="`0 0 ${arrowHalfSize * 2} ${arrowHalfSize} 0 ${arrowHalfSize * 2}`" :transform="`
                   translate(${adjustedX2 - arrowHalfSize},${adjustedY2 - arrowHalfSize})
                   rotate(${angle}, ${arrowHalfSize}, ${arrowHalfSize})
                   translate(${-arrowHalfSize - 2}, 0)`" :stroke="stroke" :fill="stroke" :stroke-width="strokeWidth">
     </polygon>
+
+    <!-- The white background for the text. There is no way to colour the background of text in SVG. -->
     <rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect>
     <g :transform="`translate(${centerX}, ${centerY})`">
-      <!-- Text x/y are not animated, so we wrap it in a group -->
-      <text v-if="text" ref="text" text-anchor="middle" dominant-baseline="central">{{text}}
-      </text>
+      <!-- Text x/y are not animated, so we wrap it in a group. -->
+      <text v-if="text" ref="text" text-anchor="middle" dominant-baseline="central">{{text}}</text>
     </g>
   </g>
 </template>
@@ -22,7 +23,7 @@ import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 /**
- * An edge with an arrow pointing to the target.
+ * An edge with an arrow pointing to the target, with support for text.
  */
 @Component
 export default class DirectedEdge extends Vue {
@@ -34,16 +35,16 @@ export default class DirectedEdge extends Vue {
   @Prop() x2: number;
   /** The y-coordinate of the center of the target node of the edge. */
   @Prop() y2: number;
-  /** The radius along the x-axis of the source node. Defaults to 0 (i.e. drawn edge at origin of node). */
+  /** The radius along the x-axis of the source node. Defaults to 0 (i.e. drawn at origin of node at x1). */
   @Prop({ default: 0 })
   sourceRx: number;
-  /** The radius along the y-axis of the source node. Defaults to 0 (i.e. drawn edge at origin of node). */
+  /** The radius along the y-axis of the source node. Defaults to 0 (i.e. drawn at origin of node at y1). */
   @Prop({ default: 0 })
   sourceRy: number;
-  /** The radius along the x-axis of the target node. Defaults to 0 (i.e. drawn edge at origin of node). */
+  /** The radius along the x-axis of the target node. Defaults to 0 (i.e. drawn at origin of node at x2). */
   @Prop({ default: 0 })
   targetRx: number;
-  /** The radius along the y-axis of the target node. Defaults to 0 (i.e. drawn edge at origin of node). */
+  /** The radius along the y-axis of the target node. Defaults to 0 (i.e. drawn at origin of node at y2). */
   @Prop({ default: 0 })
   targetRy: number;
   /** A HTML colour string representing the colour of the line. */
@@ -67,7 +68,7 @@ export default class DirectedEdge extends Vue {
 
   $refs: {
     /** The text element containing the text for this edge. */
-    text: SVGTextElement
+    text: SVGTextElement;
   };
 
   mounted() {
@@ -178,6 +179,7 @@ export default class DirectedEdge extends Vue {
     return Math.sqrt(this.deltaX * this.deltaX + this.deltaY * this.deltaY);
   }
 }
+
 </script>
 
 <style scoped>

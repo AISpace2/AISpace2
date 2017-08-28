@@ -1,3 +1,5 @@
+/** Events that can be received from the backend. */
+
 import { IEvent } from "../Events";
 
 export interface ICSPHighlightArcsEvent extends IEvent {

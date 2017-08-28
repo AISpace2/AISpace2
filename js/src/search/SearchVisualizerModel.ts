@@ -10,6 +10,10 @@ import {
   serializeGraph
 } from "../Graph";
 
+/**
+ * The model that receives messages and synced traitlets from the backend.
+ * See the accompanying backend file: `aispace2/jupyter/search/search.py`
+ */
 export default class SearchViewerModel extends widgets.DOMWidgetModel {
   public static serializers = Object.assign(
     {

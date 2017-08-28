@@ -8,6 +8,11 @@ import SearchGraphBuilder from "./components/SearchBuilder.vue";
 import SearchBuilderModel from "./SearchBuilderModel";
 declare let Jupyter: any;
 
+/**
+ * Creates a view to construct a Search problem. Interfaces with Jupyter backend.
+ * 
+ * See the accompanying backend file: `aispace2/jupyter/search/searchbuilder.py`.
+ */
 export default class SearchBuilder extends widgets.DOMWidgetView {
   private static readonly SHOW_PYTHON_CODE = "python-code";
 

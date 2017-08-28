@@ -11,6 +11,11 @@ import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchViewerEvents from "./SearchVisualizerEvents";
 import SearchViewerModel from "./SearchVisualizerModel";
 
+/**
+ * Creates a Search visualization and handles events received from the backend.
+ * 
+ * See the accompanying backend file: `aispace2/jupyter/search/search.py`
+ */
 export default class SearchViewer extends widgets.DOMWidgetView {
   public model: SearchViewerModel;
   private vue: any;
@@ -36,6 +41,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     });
 
     this.listenTo(this.model, "change:graph", () => {
+      // Nodes/edges have been added to the graph from the backend.
       this.model.graph.mergeStylesFrom(this.model.previous("graph"));
       this.vue.graph = this.model.graph;
     });
