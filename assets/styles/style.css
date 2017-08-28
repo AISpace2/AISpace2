@@ -189,6 +189,10 @@ section {
   padding: 0 15px 50px 15px;
 }
 
+section.inline {
+  padding-bottom: 15px;
+}
+
 a {
   font-weight: bold;
   line-height: .95em;

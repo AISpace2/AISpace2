@@ -42,7 +42,7 @@
     </svg>
   </header>
 
-  <section class="column">
+  <section class="column inline">
     <h1>Table of Contents</h1>
     <ul>
       <li><a href="#reference-common">Common</a></li>
@@ -52,7 +52,7 @@
     </ul>
   </section>
 
-  <section id="reference-common" class="column">
+  <section id="reference-common" class="column inline">
     <h2 id="common" class="linkify"><a href="#reference-common">Common</a></h2>
     <h3 id="reference-common-user-guide" class="linkify"><a href="#reference-common-user-guide">User Guide</a></h3>
     <p>
@@ -77,18 +77,18 @@
     </ul>
     <h3 id="reference-common-notes" class="linkify"><a href="#reference-common-notes">Notes</a></h3>
     <ul>
-      <li>The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the step
-        button, controls when execution pauses. You can safely change the <code>display_level</code> to adjust the amount
+      <li>The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
+        step button, controls when execution pauses. You can safely change the <code>display_level</code> to adjust the amount
         of detail you receive.</li>
       <li>
-        The visualization is entirely driven by remaining parameters of the <code>display()</code> call, so modifying them
-        may break the visualization.
+        The visualization is entirely driven by the remaining parameters of the <code>display()</code> call, so modifying
+        them may break the visualization.
       </li>
     </ul>
   </section>
 
 
-  <section id="reference-search" class="column">
+  <section id="reference-search" class="column inline">
     <h2 class="linkify"><a href="#reference-search">Search</a></h2>
     <h3 id="reference-search-user-guide" class="linkify"><a href="#reference-search-user-guide">User Guide</a></h3>
     <p>
@@ -109,7 +109,7 @@
     <p>
       <svg viewBox="0 0 44 34">
         <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
-      </svg>&mdash; the nodes at the end of each path on the frontier is highlighted in green.</p>
+      </svg>&mdash; the nodes at the end of each path on the frontier are highlighted in green.</p>
     <p>
       <svg viewBox="0 0 130 38">
         <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
@@ -201,7 +201,7 @@
   </section>
 
 
-  <section id="reference-csp" class="column">
+  <section id="reference-csp" class="column inline">
     <h2 id="csp" class="linkify"><a href="#reference-csp">CSP</a></h2>
     <h3 id="reference-csp-user-guide" class="linkify"><a href="#reference-csp-user-guide">User Guide</a></h3>
     <p>
@@ -275,7 +275,7 @@
   </section>
 
 
-  <section class="column">
+  <section class="column inline">
     <h2 id="difference-aispace2-aipython" class="linkify"><a href="#difference-aispace2-aipython">What's the difference between AISpace2 and AIPython?</a></h2>
 
     <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the <a href="http://artint.info/">accompanying book</a>;
@@ -287,41 +287,57 @@
       Everything else is identical.</p>
 
     <ol>
-      <li> The additional of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
-        to be visualized within a cell must have their definitions annotated with <code>@visualize</code>. For example, if
-        we had the following class:
+      <li>
+        <p>The additional of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
+          to be visualized within a cell must have their definitions annotated with <code>@visualize</code>. For example,
+          if we had the following class:</p>
 
-        <pre><code>class Example():
-  def bar(self):
-    print('bar')
-    
-  def foo(self):
-    self.bar()
-    print('foo')</code></pre> and there was a cell inside Jupyter like this:
+        <!-- HTML generated using hilite.me -->
+        <pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">class</span> <span style="color: #447fcf; text-decoration: underline">Example</span><span style="color: #d0d0d0">():</span>
+  <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">bar</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
+  <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;bar&#39;</span><span style="color: #d0d0d0">)</span>
+  
+<span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
+  <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
+  <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
+</pre>
 
-        <pre><code>e = Example()
-e.foo()</code></pre> Then <code>foo</code> would have to be annotated, because it is called directly on the instance inside a cell; but
-        <code>bar</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo</code>. Annotating
-        <code>foo</code> is as simple as adding a single line right above the declaration:
+        <p>and there was a cell inside Jupyter like this:</p>
 
-        <pre><code>@visualize
-def foo(self):
-  self.bar()
-  print('foo')</code></pre> On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
-        you would have to also add <code>@visualize</code> to <code>bar</code> as well.
+        <!-- HTML generated using hilite.me -->
+        <pre><span style="color: #d0d0d0">e</span> <span style="color: #d0d0d0">=</span> <span style="color: #447fcf; text-decoration: underline">Example()</span>
+<span style="color: #d0d0d0">e.foo()</span>
+</pre>
+
+        <p>Then <code>foo</code> would have to be annotated, because it is called directly on the instance inside a cell; but
+          <code>bar</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo</code>. Annotating
+          <code>foo</code> is as simple as adding a single line right above the declaration:</p>
+
+        <!-- HTML generated using hilite.me -->
+        <pre style="margin: 0; line-height: 125%"><span style="color: #ffa500">@visualize</span>
+<span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
+  <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
+  <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
+</pre>
+
+        <p>On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
+          you would have to also add <code>@visualize</code> to <code>bar</code> as well.</p>
 
         <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
           will drive the visualization, so that it can set things up correctly.</p>
       </li>
-      <li>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
-        AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2 (where <code>*</code> depends on the algorithm
-        being visualized). The <code>@visualize</code> decorator can also be imported from the same package.
+      <li>
+        <p>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
+          AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2 (where <code>*</code> depends on the
+          algorithm being visualized). The <code>@visualize</code> decorator can also be imported from the same package.</p>
 
         <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
           allow it to be displayed inside Jupyter.</p>
       </li>
     </ol>
   </section>
+
+
   <script>
     var siemas = document.querySelectorAll('.siema');
     siemas.forEach(function (siema) {

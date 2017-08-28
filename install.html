@@ -12,10 +12,12 @@
   <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
   <link href="assets/styles/style.css" rel="stylesheet">
   <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)    
+}, i[r].l = 1 * new Date(); a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-105176225-2', 'auto');
     ga('send', 'pageview');
@@ -44,7 +46,7 @@
     <p>We’re happy to have you here. Follow the steps below and you’ll learn how to get setup with Jupyter and the AISpace2
       extension.
     </p>
-    <ol>
+    <ul>
       <li>Are you a <abbr title="University of British Columbia">UBC</abbr> student or have access to a JupyterHub instance (which
         allows you to access Jupyter by going to a URL)? If so, you can use this extension with Jupyter online without installing
         anything on your computer <a href="#jupyterhub">&rarr;</a>.
@@ -54,7 +56,7 @@
         If you are running Linux <a href="#linux">&rarr;</a>, we have a general installation procedure.
       </li>
       <li>Do you already have AISpace2 installed, but just want to get the latest version? This way! <a href="#upgrading">&rarr;</a></li>
-    </ol>
+    </ul>
 
     <h2 id="jupyterhub" class="linkify"><a href="#jupyterhub">JupyterHub</a></h2>
 
@@ -95,7 +97,7 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
       <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a> for Windows, making sure you select
         the Python 3+ version.</li>
       <li>Run the downloaded installer. The default options are fine.</li>
-      <li>Open the start menu and search for "Anaconda Prompt". Open it.</li>
+      <li>Open the Start menu and search for "Anaconda Prompt". Open it.</li>
       <li>Inside the prompt, run
         <pre><code>conda install -c conda-forge ipywidgets</code></pre> Enter ‘y’ when prompted to confirm the installation.
       </li>
@@ -109,7 +111,7 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
       </li>
     </ol>
     <p>That’s it! You now have Jupyter and AISpace2 successfully installed. You can start Jupyter Notebook by running
-      <code>jupyter notebook</code> in the Anaconda Prompt, or open the start menu and search for "Jupyter Notebook". This
+      <code>jupyter notebook</code> in the Anaconda Prompt, or open the Start menu and search for "Jupyter Notebook". This
       will launch your default web browser pointing to Jupyter Notebook. Now download some notebooks <a href="notebooks.html">&rarr;</a>      to learn about AI and view this extension in action.</p>
 
     <h3 id="windows-check-python" class="linkify"><a href="#windows-check-python">From Scratch</a></h3>
