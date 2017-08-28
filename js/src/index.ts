@@ -39,26 +39,35 @@ module.exports = {
 
 /** Google Analytics */
 /* tslint:disable */
-(function(i, s, o, g, r, a, m) {
-  i["GoogleAnalyticsObject"] = r;
-  (i[r] =
-    i[r] ||
-    function() {
-      (i[r].q = i[r].q || []).push(arguments);
-    }), (i[r].l = 1 * (<any>new Date()));
-  (a = <any>s.createElement(o)), (m = <any>s.getElementsByTagName(o)[0]);
-  (<any>a).async = 1;
-  (<any>a).src = g;
-  (<any>m).parentNode.insertBefore(a, m);
-})(
-  window,
-  document,
-  "script",
-  "https://www.google-analytics.com/analytics.js",
-  "ga"
-);
+if (process.env.NODE_ENV !== "development") {
+  // Only track in production mode
+  (function(i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    (i[r] =
+      i[r] ||
+      function() {
+        (i[r].q = i[r].q || []).push(arguments);
+      }), (i[r].l = 1 * (<any>new Date()));
+    (a = <any>s.createElement(o)), (m = <any>s.getElementsByTagName(o)[0]);
+    (<any>a).async = 1;
+    (<any>a).src = g;
+    (<any>m).parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "https://www.google-analytics.com/analytics.js",
+    "ga"
+  );
 
-ga("create", "UA-105176225-2", "auto");
-ga("set", "page", window.location.href.split("/").pop());
-ga("send", "pageview");
+  ga("create", "UA-105176225-2", "auto");
+  ga("set", "page", window.location.href.split("/").pop());
+  ga("send", "pageview");
+} else {
+  window.ga = (...args: any[]) => {
+    console.groupCollapsed("Google Analytics");
+    console.log(args);
+    console.groupEnd();
+  };
+}
 /* tslint:enable */
