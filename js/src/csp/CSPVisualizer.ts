@@ -57,22 +57,22 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         }
       }).$mount(this.el);
 
-      this.vue.$on("click:fine-step", () => {
+      this.vue.$on(StepEvents.FINE_STEP_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Fine Step");
         this.send({ event: StepEvents.FINE_STEP_CLICK });
       });
 
-      this.vue.$on("click:step", () => {
+      this.vue.$on(StepEvents.STEP_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Step");
         this.send({ event: StepEvents.STEP_CLICK });
       });
 
-      this.vue.$on("click:auto-solve", () => {
+      this.vue.$on(StepEvents.AUTO_SOLVE_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Auto Solve");
-        this.send({ event: StepEvents.AUTO_STEP_CLICK });
+        this.send({ event: StepEvents.AUTO_SOLVE_CLICK });
       });
 
-      this.vue.$on("click:pause", () => {
+      this.vue.$on(StepEvents.PAUSE_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Pause");
         this.send({ event: StepEvents.PAUSE_CLICK });
       });

@@ -136,13 +136,13 @@ class StepDOMWidget(DOMWidget):
 
         # Note that these messages are received on the main thread!
         # Don't block here!
-        if event == 'fine-step:click':
+        if event == 'click:fine-step':
             self._fine_step()
-        elif event == 'step:click':
+        elif event == 'click:step':
             self._step()
-        elif event == 'auto-solve:click':
+        elif event == 'click:auto-solve':
             self._auto_solve()
-        elif event == 'pause:click':
+        elif event == 'click:pause':
             self._pause()
 
     def display(self, level, *args, **kwargs):

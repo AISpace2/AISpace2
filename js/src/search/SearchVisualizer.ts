@@ -62,22 +62,22 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         }
       }).$mount(this.el);
 
-      this.vue.$on("click:fine-step", () => {
+      this.vue.$on(StepEvents.FINE_STEP_CLICK, () => {
         Analytics.trackEvent("Search Visualizer", "Fine Step");
         this.send({ event: StepEvents.FINE_STEP_CLICK });
       });
 
-      this.vue.$on("click:step", () => {
+      this.vue.$on(StepEvents.STEP_CLICK, () => {
         Analytics.trackEvent("Search Visualizer", "Step");
         this.send({ event: StepEvents.STEP_CLICK });
       });
 
-      this.vue.$on("click:auto-solve", () => {
+      this.vue.$on(StepEvents.AUTO_SOLVE_CLICK, () => {
         Analytics.trackEvent("Search Visualizer", "Auto Solve");
-        this.send({ event: StepEvents.AUTO_STEP_CLICK });
+        this.send({ event: StepEvents.AUTO_SOLVE_CLICK });
       });
 
-      this.vue.$on("click:pause", () => {
+      this.vue.$on(StepEvents.PAUSE_CLICK, () => {
         Analytics.trackEvent("Search Visualizer", "Pause");
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
