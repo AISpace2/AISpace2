@@ -3,12 +3,11 @@ import { timeout } from "d3";
 import { debounce } from "underscore";
 import Vue from "vue";
 import * as Analytics from "../Analytics";
-import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
-import * as Events from "./CSPVisualizerEvents";
+import * as CSPEvents from "./CSPVisualizerEvents";
 import CSPViewerModel from "./CSPVisualizerModel";
 
 /**
@@ -26,26 +25,22 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   public initialize(opts: any) {
     super.initialize(opts);
 
-    this.listenTo(this.model, "view:msg", (event: IEvent) => {
+    this.listenTo(this.model, "view:msg", (event: CSPEvents.Events) => {
       // tslint:disable-next-line:no-console
       console.log(event);
 
-      if (Events.isHighlightArcsEvent(event)) {
-        this.highlightArcs(event);
-      } else if (Events.isSetDomainsEvent(event)) {
-        this.setDomains(event);
-      } else if (Events.isHighlightNodesEvent(event)) {
-        this.highlightNodes(event);
-      } else if (Events.isChooseDomainSplitEvent(event)) {
-        const domainString = window.prompt(
-          "Choose domain for first split. Cancel to choose a default split.",
-          event.domain.join()
-        );
-        const newDomain =
-          domainString != null ? domainString.split(",").filter(d => d) : null;
-        this.send({ event: "domain_split", domain: newDomain });
-      } else if (isOutputEvent(event)) {
-        this.vue.output = event.text;
+      switch (event.action) {
+        case "highlightArcs":
+          return this.highlightArcs(event);
+        case "setDomains":
+          return this.setDomains(event);
+        case "highlightNodes":
+          return this.highlightNodes(event);
+        case "chooseDomainSplit":
+          return this.chooseDomainSplit(event);
+        case "output":
+          this.vue.output = event.text;
+          return;
       }
     });
   }
@@ -123,7 +118,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /**
    * Highlights an arc (or all arcs), as described by the event object.
    */
-  private highlightArcs(event: Events.ICSPHighlightArcsEvent) {
+  private highlightArcs(event: CSPEvents.ICSPHighlightArcsEvent) {
     const strokeWidth =
       event.style === "bold" ? this.model.lineWidth + 3 : this.model.lineWidth;
 
@@ -151,7 +146,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /**
    * Sets the domain of a variable node, as described by the event object.
    */
-  private setDomains(event: Events.ICSPSetDomainsEvent) {
+  private setDomains(event: CSPEvents.ICSPSetDomainsEvent) {
     for (let i = 0; i < event.nodeIds.length; i++) {
       const variableNode = this.model.graph.idMap[
         event.nodeIds[i]
@@ -163,7 +158,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /**
    * Highlights nodes, as described by the event object.
    */
-  private highlightNodes(event: Events.ICSPHighlightNodesEvent) {
+  private highlightNodes(event: CSPEvents.ICSPHighlightNodesEvent) {
     for (const nodeId of event.nodeIds) {
       this.vue.$set(
         this.model.graph.idMap[nodeId].styles,
@@ -172,5 +167,18 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       );
       this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 2);
     }
+  }
+
+  /**
+   * Requests the user choose a domain for one side of the split.
+   */
+  private chooseDomainSplit(event: CSPEvents.ICSPChooseDomainSplitEvent) {
+    const domainString = window.prompt(
+      "Choose domain for first split. Cancel to choose a default split.",
+      event.domain.join()
+    );
+    const newDomain =
+      domainString != null ? domainString.split(",").filter(d => d) : null;
+    this.send({ event: "domain_split", domain: newDomain });
   }
 }

@@ -1,6 +1,6 @@
 /** Events that can be received from the backend. */
 
-import { IEvent } from "../Events";
+import { Events, IEvent } from "../Events";
 
 export interface IHighlightNodeEvent extends IEvent {
   action: "highlightNodes";
@@ -28,24 +28,10 @@ export interface IUpdateFrontierEvent extends IEvent {
   frontier: string;
 }
 
-export function isHighlightNodeEvent(
-  event: IEvent
-): event is IHighlightNodeEvent {
-  return event.action === "highlightNodes";
-}
-
-export function isHighlightPathEvent(
-  event: IEvent
-): event is IHighlightPathEvent {
-  return event.action === "highlightPath";
-}
-
-export function isClearEvent(event: IEvent): event is IClearEvent {
-  return event.action === "clear";
-}
-
-export function isUpdateFrontierEvent(
-  event: IEvent
-): event is IUpdateFrontierEvent {
-  return event.action === "setFrontier";
-}
+/** Search Visualizer Events. */
+export type Events =
+  | IHighlightNodeEvent
+  | IHighlightPathEvent
+  | IClearEvent
+  | IUpdateFrontierEvent
+  | Events;

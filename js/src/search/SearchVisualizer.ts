@@ -3,12 +3,11 @@ import { timeout } from "d3";
 import { debounce } from "underscore";
 import Vue from "vue";
 import * as Analytics from "../Analytics";
-import { IEvent, isOutputEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
-import * as SearchViewerEvents from "./SearchVisualizerEvents";
+import * as SearchEvents from "./SearchVisualizerEvents";
 import SearchViewerModel from "./SearchVisualizerModel";
 
 /**
@@ -23,20 +22,23 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   public initialize(opts: any) {
     super.initialize(opts);
 
-    this.listenTo(this.model, "view:msg", (event: IEvent) => {
+    this.listenTo(this.model, "view:msg", (event: SearchEvents.Events) => {
       // tslint:disable-next-line:no-console
       console.log(event);
 
-      if (isOutputEvent(event)) {
-        this.vue.output = event.text;
-      } else if (SearchViewerEvents.isClearEvent(event)) {
-        this.clearStyling();
-      } else if (SearchViewerEvents.isHighlightNodeEvent(event)) {
-        this.highlightNodes(event);
-      } else if (SearchViewerEvents.isHighlightPathEvent(event)) {
-        this.highlightPath(event);
-      } else if (SearchViewerEvents.isUpdateFrontierEvent(event)) {
-        this.vue.frontier = event.frontier;
+      switch (event.action) {
+        case "highlightPath":
+          return this.highlightPath(event);
+        case "highlightNodes":
+          return this.highlightNodes(event);
+        case "clear":
+          return this.clearStyling();
+        case "setFrontier":
+          this.vue.frontier = event.frontier;
+          return;
+        case "output":
+          this.vue.output = event.text;
+          return;
       }
     });
 
@@ -110,7 +112,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   /**
    * Highlights nodes in the visualization, as described by the event object.
    */
-  private highlightNodes(event: SearchViewerEvents.IHighlightNodeEvent) {
+  private highlightNodes(event: SearchEvents.IHighlightNodeEvent) {
     for (const nodeId of event.nodeIds) {
       this.vue.$set(
         this.model.graph.idMap[nodeId].styles,
@@ -124,7 +126,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   /**
    * Highlights a path in the visualization, as described by the event object.
    */
-  private highlightPath(event: SearchViewerEvents.IHighlightPathEvent) {
+  private highlightPath(event: SearchEvents.IHighlightPathEvent) {
     for (const edgeId of event.path) {
       this.vue.$set(
         this.model.graph.idMap[edgeId].styles,

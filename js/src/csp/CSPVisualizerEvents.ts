@@ -1,6 +1,6 @@
 /** Events that can be received from the backend. */
 
-import { IEvent } from "../Events";
+import { Events, IEvent } from "../Events";
 
 export interface ICSPHighlightArcsEvent extends IEvent {
   action: "highlightArcs";
@@ -34,24 +34,10 @@ export interface ICSPChooseDomainSplitEvent extends IEvent {
   domain: string[];
 }
 
-export function isHighlightArcsEvent(
-  event: IEvent
-): event is ICSPHighlightArcsEvent {
-  return event.action === "highlightArcs";
-}
-
-export function isSetDomainsEvent(event: IEvent): event is ICSPSetDomainsEvent {
-  return event.action === "setDomains";
-}
-
-export function isHighlightNodesEvent(
-  event: IEvent
-): event is ICSPHighlightNodesEvent {
-  return event.action === "highlightNodes";
-}
-
-export function isChooseDomainSplitEvent(
-  event: IEvent
-): event is ICSPChooseDomainSplitEvent {
-  return event.action === "chooseDomainSplit";
-}
+/** CSP Visualizer Events. */
+export type Events =
+  | ICSPHighlightArcsEvent
+  | ICSPSetDomainsEvent
+  | ICSPHighlightNodesEvent
+  | ICSPChooseDomainSplitEvent
+  | Events;

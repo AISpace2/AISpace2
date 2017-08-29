@@ -9,6 +9,4 @@ export interface IOutputEvent extends IEvent {
   text: string;
 }
 
-export function isOutputEvent(event: IEvent): event is IOutputEvent {
-  return event.action === "output";
-}
+export type Events = IOutputEvent;
