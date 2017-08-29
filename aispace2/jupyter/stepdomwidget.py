@@ -7,6 +7,7 @@ from traitlets import Float, validate
 
 class ReturnableThread(threading.Thread):
     """A thread extended to allow a return value.
+
     To get the return value, use this thread as normal, but assign it to a variable on creation.
     calling var.join() will return the return value.
     the return value can also be gotten directly via ._return, but this is not safe.
