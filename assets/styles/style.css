@@ -68,10 +68,6 @@ li {
   padding-bottom: 10px;
 }
 
-li > p {
-  margin: .3em 0;
-}
-
 @media screen and (max-width: 480px) {
   ol,
     ul {
@@ -284,6 +280,10 @@ a:hover {
   background-color: #143642;
 }
 
+#available-notebooks li > p {
+  margin: .5em 0;
+}
+
 #how-it-works h1 {
   font-size: 2.5em;
   text-align: center;
@@ -321,11 +321,6 @@ a:hover {
 .github {
   width: 1em;
   height: 1em;
-}
-
-.turbolinks-progress-bar {
-  height: 4px;
-  background-color: #ffa929;
 }
 
 .footnote {
