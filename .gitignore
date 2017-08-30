@@ -1,17 +1,21 @@
+# Python
 *.egg-info/
 .ipynb_checkpoints/
 dist/
 build/
 *.py[cod]
+
+# JavaScript Dependencies
 node_modules/
 
-# Compiled javascript
+# Compiled JavaScript
 aispace2/static/
 js/vendor/*
 !js/vendor/vendor.js
 
-# OS X
+# macOS 
 .DS_Store
 
 # Editors
+*~
 .vscode/
