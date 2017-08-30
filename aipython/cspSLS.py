@@ -39,7 +39,7 @@ class SLSearcher(Displayable):
         self.display(2,"Number of conflicts",len(self.conflicts))
         self.variable_pq = None
 
-    def search(self,max_steps, prob_best=1.0, prob_anycon=1.0):
+    def search(self, max_steps, prob_best=1.0, prob_anycon=1.0):
         """
         returns the number of steps or None if these is no solution
         if there is a solution, it can be found in self.current_assignment
@@ -60,10 +60,10 @@ class SLSearcher(Displayable):
         it does not maintain a priority queue
         """
         self.variable_pq = None   # we are not maintaining the priority queue.
-                                  # This ensures it is regenerated if needed.
+        # This ensures it is regenerated if needed.
         for i in range(max_steps):
-            self.number_of_steps +=1
-            if  random.random() < prob_anycon:
+            self.number_of_steps += 1
+            if random.random() < prob_anycon:
                 con = random_sample(self.conflicts)  # pick random conflict
                 var = random_sample(con.scope)   # pick variable in conflict
             else:
@@ -71,25 +71,31 @@ class SLSearcher(Displayable):
             if len(self.csp.domains[var]) > 1:
                 val = random_sample(self.csp.domains[var] -
                                     {self.current_assignment[var]})
-                self.display(2,"Assigning",var,"=",val)
-                self.current_assignment[var]=val
+                self.display(2, "Assigning", var, "=", val)
+                self.current_assignment[var] = val
                 for varcon in self.csp.var_to_const[var]:
                     if varcon.holds(self.current_assignment):
                         if varcon in self.conflicts:
                             self.conflicts.remove(varcon)
+                            self.display(3, "Became consistent", varcon)
+                        else:
+                            self.display(3, "Still consistent", varcon)
                     else:
                         if varcon not in self.conflicts:
                             self.conflicts.add(varcon)
-                self.display(2,"Number of conflicts",len(self.conflicts))
+                            self.display(3, "Became inconsistent", varcon)
+                        else:
+                            self.display(3, "Still inconsistent", varcon)
+                self.display(2, "Conflicts:", self.conflicts)
             if not self.conflicts:
-                self.display(1,"Solution found",self.current_assignment,
-                                 "in", self.number_of_steps,"steps")
+                self.display(1, "Solution found", self.current_assignment,
+                             "in", self.number_of_steps, "steps")
                 return self.number_of_steps
-        self.display(1,"No solution in",self.number_of_steps,"steps",
-                    len(self.conflicts),"conflicts remain")
+        self.display(1, "No solution in", self.number_of_steps, "steps",
+                     len(self.conflicts), "conflicts remain")
         return None
 
-    def search_with_var_pq(self,max_steps, prob_best=1.0, prob_anycon=1.0):
+    def search_with_var_pq(self, max_steps, prob_best=1.0, prob_anycon=1.0):
         """search with a priority queue of variables.
         This is used to select a variable with the most conflicts.
         """
@@ -97,46 +103,52 @@ class SLSearcher(Displayable):
             self.create_pq()
         pick_best_or_con = prob_best + prob_anycon
         for i in range(max_steps):
-            self.number_of_steps +=1
+            self.number_of_steps += 1
             randnum = random.random()
-            ## Pick a variable
-            if randnum < prob_best: # pick best variable
-                var,oldval = self.variable_pq.top()
+            # Pick a variable
+            if randnum < prob_best:  # pick best variable
+                var, oldval = self.variable_pq.top()
             elif randnum < pick_best_or_con:  # pick a variable in a conflict
                 con = random_sample(self.conflicts)
                 var = random_sample(con.scope)
-            else:  #pick any variable that can be selected
+            else:  # pick any variable that can be selected
                 var = random_sample(self.variables_to_select)
             if len(self.csp.domains[var]) > 1:   # var has other values
-                ## Pick a value
-                val = random_sample(self.csp.domains[var] - 
+                # Pick a value
+                val = random_sample(self.csp.domains[var] -
                                     {self.current_assignment[var]})
-                self.display(2,"Assigning",var,val)
-                ## Update the priority queue
+                self.display(2, "Assigning", var, "=", val)
+                # Update the priority queue
                 var_differential = {}
-                self.current_assignment[var]=val
+                self.current_assignment[var] = val
                 for varcon in self.csp.var_to_const[var]:
-                    self.display(3,"Checking",varcon)
+                    self.display(3, "Checking", varcon)
                     if varcon.holds(self.current_assignment):
-                        if varcon in self.conflicts:  #was incons, now consis
-                            self.display(3,"Became consistent",varcon)
+                        if varcon in self.conflicts:  # was incons, now consis
+                            self.display(3, "Became consistent", varcon)
                             self.conflicts.remove(varcon)
-                            for v in varcon.scope: # v is in one fewer conflicts
-                                var_differential[v] = var_differential.get(v,0)-1
+                            for v in varcon.scope:  # v is in one fewer conflicts
+                                var_differential[v] = var_differential.get(
+                                    v, 0) - 1
+                        else:
+                            self.display(3, "Still consistent", varcon)
                     else:
-                        if varcon not in self.conflicts: # was consis, not now
-                            self.display(3,"Became inconsistent",varcon)
+                        if varcon not in self.conflicts:  # was consis, not now
+                            self.display(3, "Became inconsistent", varcon)
                             self.conflicts.add(varcon)
                             for v in varcon.scope:  # v is in one more conflicts
-                                var_differential[v] = var_differential.get(v,0)+1
+                                var_differential[v] = var_differential.get(
+                                    v, 0) + 1
+                        else:
+                            self.display(3, "Still inconsistent", varcon)
                 self.variable_pq.update_each_priority(var_differential)
-                self.display(2,"Number of conflicts",len(self.conflicts))
-            if not self.conflicts:  #no conflicts, so solution found
-                self.display(1,"Solution found",self.current_assignment,"in",
-                             self.number_of_steps,"steps")
+                self.display(2, "Conflicts:", self.conflicts)
+            if not self.conflicts:  # no conflicts, so solution found
+                self.display(1, "Solution found", self.current_assignment, "in",
+                             self.number_of_steps, "steps")
                 return self.number_of_steps
-        self.display(1,"No solution in",self.number_of_steps,"steps",
-                    len(self.conflicts),"conflicts remain")
+        self.display(1, "No solution in", self.number_of_steps, "steps",
+                     len(self.conflicts), "conflicts remain")
         return None
 
     def create_pq(self):
