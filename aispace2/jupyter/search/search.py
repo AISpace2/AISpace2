@@ -215,6 +215,7 @@ class Displayable(StepDOMWidget):
         })
 
     def _persist_frontier(self):
+        """Sends a message to the front-end visualization to set the current frontier."""
         frontier = self._frontier
         self.send({'action': 'persist_frontier', 'frontier': str(frontier)})
 
