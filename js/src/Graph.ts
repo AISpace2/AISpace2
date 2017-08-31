@@ -199,12 +199,12 @@ export class Graph<
   public addEdge(opts: TEdge | IGraphEdgeJSON) {
     let sourceNode = opts.source;
     if (typeof sourceNode === "string") {
-      sourceNode = this.nodes.find(n => n.id === sourceNode)!;
+      sourceNode = this.idMap[sourceNode] as TNode;
     }
 
     let targetNode = opts.target;
     if (typeof targetNode === "string") {
-      targetNode = this.nodes.find(n => n.id === targetNode)!;
+      targetNode = this.idMap[targetNode] as TNode;
     }
 
     this.edges.push({
@@ -272,12 +272,12 @@ export class Graph<
    */
   public mergeStylesFrom(prevGraph: Graph) {
     for (const node of Object.values(this.nodes)) {
-      const i = prevGraph.nodes.findIndex(n => n.id === node.id);
-      if (i !== -1) {
+      const prevNode = prevGraph.idMap[node.id];
+      if (prevNode != null) {
         // Copy over the styles of the node in the previous graph
-        node.styles = prevGraph.nodes[i].styles;
-        node.x = prevGraph.nodes[i].x;
-        node.y = prevGraph.nodes[i].y;
+        node.styles = prevNode.styles;
+        node.x = prevNode.x;
+        node.y = prevNode.y;
       }
     }
   }
