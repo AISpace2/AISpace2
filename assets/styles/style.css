@@ -14,7 +14,7 @@ h1 {
 h2 {
   font-size: 2em;
   font-weight: bold;
-  color: #ffa929;
+  color: #f99500;
 }
 
 @media screen and (max-width: 480px) {
@@ -197,17 +197,13 @@ a {
   transition: border-color .25s ease-in-out;
   text-decoration: none;
   color: #4b97c4;
-  border-bottom: 2px solid transparent;
+  border-bottom: 2px solid #3f80a7;
 }
 
 a:active,
 a:visited,
 a:focus {
   color: #3f80a7;
-}
-
-a:hover {
-  border-color: unset;
 }
 
 #navbar {
