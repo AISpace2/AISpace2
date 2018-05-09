@@ -53,7 +53,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           layout: new GraphLayout(d3ForceLayout()),
           width: 0,
           height: 0,
-          output: null
+          output: null,
+          textSize: this.model.textSize
         }
       }).$mount(this.el);
 
