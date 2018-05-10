@@ -197,7 +197,6 @@ export default class EllipseGraphNode extends Vue {
   fitText() {
     Vue.nextTick(() => {
       this.computeWidthAndHeight();
-      console.log("max width: " + this.maxWidth);
       if (this.computedTextWidth > this.maxWidth) {
         this._truncateText();
       }
