@@ -77,7 +77,7 @@ class StepDOMWidget(DOMWidget):
         return min(1, line_width)
 
     @validate("text_size")
-    def _validate_line_width(self, proposal):
+    def _validate_text_size(self, proposal):
         """Cap line_width at a minimum value."""
         text_size = proposal['value']
         return max(5, text_size)
