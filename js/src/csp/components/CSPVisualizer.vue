@@ -37,7 +37,7 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
+import EllipseGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";

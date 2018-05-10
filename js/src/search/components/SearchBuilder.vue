@@ -48,7 +48,7 @@ import { Prop } from "vue-property-decorator";
 
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import DirectedEdge from "../../components/DirectedEdge.vue";
-import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
+import EllipseGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
