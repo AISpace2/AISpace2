@@ -2,12 +2,12 @@
   <div tabindex="0" @keydown.stop>
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true">
       <template slot="node" scope="props">
-        <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
+        <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
                          :subtext="domainText(props.node)" :textSize="textSize"
                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                          :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                           :hover="props.hover">
-        </EllipseGraphNode>
+        </RoundedRectangleGraphNode>
         <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)" :text-size="textSize"
                            :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                            :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
@@ -37,7 +37,7 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-import EllipseGraphNode from "../../components/RoundedRectangleGraphNode.vue";
+import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
@@ -57,7 +57,7 @@ import * as CSPUtils from "../CSPUtils";
  */
 @Component({
   components: {
-    EllipseGraphNode,
+    RoundedRectangleGraphNode,
     GraphVisualizerBase,
     RectangleGraphNode,
     UndirectedEdge
