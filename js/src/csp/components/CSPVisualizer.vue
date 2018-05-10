@@ -3,13 +3,15 @@
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true">
       <template slot="node" scope="props">
         <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
-                         :subtext="domainText(props.node)" 
+                         :subtext="domainText(props.node)" :textSize="textSize"
                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
-                         :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'">
+                         :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
+                          :hover="props.hover">
         </EllipseGraphNode>
-        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)"
+        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)" :text-size="textSize"
                            :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
-                           :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'">
+                           :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
+                            :hover="props.hover">
         </RectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
@@ -68,6 +70,8 @@ export default class CSPGraphInteractor extends Vue {
   output: string;
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
+  // The size of the text inside the node
+  textSize: number;
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);

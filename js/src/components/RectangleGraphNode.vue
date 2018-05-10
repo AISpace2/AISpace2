@@ -1,8 +1,8 @@
 <template>
   <g>
     <rect :width="width" :height="height" :x="-width / 2" :y="-height / 2" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
-    <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
-      {{truncatedText}}
+    <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" :font-size="textSize" alignment-baseline="middle">
+      {{displayText}}
     </text>
     <title>{{text}}</title>
   </g>
@@ -35,6 +35,9 @@ export default class RectangleGraphNode extends Vue {
   /** The colour of the text inside the node. */
   @Prop({ default: "black" })
   textColour: string;
+  // The size of the text inside the node
+  @Prop({default: 15}) textSize: number;
+  @Prop({default: false}) hover: boolean;
 
   /** The maximum width of the text, in pixels, before truncation occurs. */
   maxWidth = 90;
@@ -57,12 +60,21 @@ export default class RectangleGraphNode extends Vue {
 
   /** Width of the rectangle. */
   get width() {
-    return Math.min(Math.max(this.textWidth, 50), this.maxWidth) + 10;
+    this.computeWidthAndHeight();
+    if (this.hover){
+      return this.textWidth;
+    } else {
+      return Math.min(Math.max(this.textWidth, 50), this.maxWidth) + 10;
+    }
   }
 
   /** Height of the rectangle. */
   get height() {
     return Math.min(Math.max(this.textHeight, 30), 45) + 5;
+  }
+
+  get displayText() {
+    return this.hover ? this.text : this.truncatedText;
   }
 
   /**
@@ -79,7 +91,7 @@ export default class RectangleGraphNode extends Vue {
         : 0;
     this.textWidth =
       this.$refs.text != null
-        ? this.$refs.text.getBoundingClientRect().width
+        ? this.measureText(this.text)
         : 0;
   }
 
@@ -115,6 +127,14 @@ export default class RectangleGraphNode extends Vue {
         this._truncateText();
       }
     });
+  }
+
+  // measure text width in pixels
+  measureText(text) {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext("2d");
+    context.font = this.textSize.toString() + "pt serif";
+    return context.measureText(text).width;
   }
 
   @Watch("text")

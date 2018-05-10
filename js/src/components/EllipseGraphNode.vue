@@ -1,11 +1,14 @@
 <template>
   <g>
-    <ellipse :rx="size.rx" :ry="size.ry" cx="0" cy="0" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
-    <text ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
-      {{truncatedText}}
+      <rect :width="size.rx" :height="size.ry"
+            :x="-size.rx/2" :y="-size.ry/2"
+            :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="hover ? 30 : 25"></rect>
+
+      <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
+      {{displayText.text}}
     </text>
-    <text v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
-      {{truncatedSubtext}}
+    <text id="subtext" :font-size="textSize"  v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
+      {{displayText.subtext}}
     </text>
     <title>{{text}}</title>
   </g>
@@ -21,7 +24,7 @@ import { Prop, Watch } from "vue-property-decorator";
  * 
  * Events Emitted:
  * - 'updateBounds':
- *       The bounds (size of node) have been updated. 
+ *       The bounds (size of node) have be    en updated.
  *       Passes a size object {rx: number, ry: number} as an argument.
  *       To correctly implement automatic node sizing, you should listen for this event and update
  *       the edges to use this information. E.g. for DirectedEdge, update (source|dest)R(x|y) prop.
@@ -45,15 +48,19 @@ export default class EllipseGraphNode extends Vue {
   /** The colour of the (sub)text inside the node. */
   @Prop({ default: "black" })
   textColour: string;
+  // The size of the text inside the node
+  @Prop({default: 10}) textSize: number;
+  /** Flag to see if the node is hovered over */
+  @Prop({default: false}) hover: boolean
 
+  /** The maximum width of the text, in pixels, before truncation occurs. */
+  maxWidth = 75;
   /** The final width, in pixels, of the text element containing the (truncated) text. */
   computedTextWidth = 0;
   /** The final width, in pixels, of the subtext element containing the (truncated) subtext. */
   computedSubtextWidth = 0;
   /** The total height, in pixels, that the text and subtext (if available) take up. */
   computedTotalHeight = 0;
-  /** The maximum width of the text, in pixels, before truncation occurs. */
-  maxWidth = 75;
   /** The radius along the x-axis of the ellipse. Will be updated whenever the text changes. */
   rx = 0;
   /** The radius along the y-axis of the ellipse. Will be updated whenever the text changes. */
@@ -87,12 +94,43 @@ export default class EllipseGraphNode extends Vue {
 
   /** The size of the node, in terms of it's radius along the x, y axis. */
   get size() {
-    // Arbitrarily chosen magic constants to make things look good
-    this.rx = Math.min(Math.max(this.computedTotalWidth, 25), 50);
-    this.ry = Math.min(Math.max(this.computedTotalHeight - 12, 20), 35);
-    const bounds = { rx: this.rx, ry: this.ry };
+    var bounds = {rx: 0, ry: 0};
+
+    if(!this.hover){
+      // Arbitrarily chosen magic constants to make things look good
+      bounds = {
+        rx: Math.min(Math.max(this.computedTotalWidth, 25), 50),
+        ry: Math.min(Math.max(this.computedTotalHeight - 12, 20), 35)
+      };
+    } else {
+      // custom set by user visualizer (i.e. CSPVisualizer.vue)
+      bounds = {
+        rx: this.computedTotalWidth,
+        ry: this.computedTotalHeight
+      };
+    }
+
+    // this file was originally ellipse but now changed to rectangle with semi circle for its sides, so times the previous
+    // radius by 2 to make it width for the new rectangle
+    bounds.rx *= 2;
+    bounds.ry *= 2;
+
     this.$emit("updateBounds", bounds);
     return bounds;
+  }
+
+  get displayText() {
+    if (!this.hover){
+      return {
+        text: this.truncatedText,
+        subtext: this.truncatedSubtext
+      }
+    } else {
+      return {
+        text: this.text,
+        subtext: this.subtext
+      }
+    }
   }
 
   /**
@@ -103,6 +141,10 @@ export default class EllipseGraphNode extends Vue {
    * - `computedTotalWidth`
    *
    * You should call this whenever you change the (sub)text.
+   * Changed from using getBoundingClientRect().width to measureText
+   * that uses canvas to measure the width of the text content itself
+   *
+   * This is due to long subtext exceeding the space allocated to the textbox itself
    */
   computeWidthAndHeight() {
     const textHeight =
@@ -115,11 +157,11 @@ export default class EllipseGraphNode extends Vue {
         : 0;
     const textWidth =
       this.$refs.text != null
-        ? this.$refs.text.getBoundingClientRect().width
+        ? this.measureText(this.text)
         : 0;
     const subtextWidth =
       this.$refs.subtext != null
-        ? this.$refs.subtext.getBoundingClientRect().width
+        ? this.measureText(this.subtext)
         : 0;
 
     this.computedTextWidth = textWidth;
@@ -155,6 +197,7 @@ export default class EllipseGraphNode extends Vue {
   fitText() {
     Vue.nextTick(() => {
       this.computeWidthAndHeight();
+      console.log("max width: " + this.maxWidth);
       if (this.computedTextWidth > this.maxWidth) {
         this._truncateText();
       }
@@ -193,6 +236,14 @@ export default class EllipseGraphNode extends Vue {
         this._truncateSubtext();
       }
     });
+  }
+
+  // measure text width in pixels
+  measureText(text) {
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext("2d");
+    context.font = this.textSize.toString();
+    return context.measureText(text).width;
   }
 
   @Watch("text")
