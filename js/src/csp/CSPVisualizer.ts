@@ -4,7 +4,7 @@ import { debounce } from "underscore";
 import Vue from "vue";
 import * as Analytics from "../Analytics";
 import { Graph, ICSPGraphNode, IGraphEdge } from "../Graph";
-import { d3ForceLayout, GraphLayout } from "../GraphLayout";
+import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
@@ -45,12 +45,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     });
   }
 
-  public render() {
+  public   render() {
     timeout(() => {
       this.vue = new CSPGraphVisualizer({
         data: {
           graph: this.model.graph,
-          layout: new GraphLayout(d3ForceLayout()),
+          layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
           width: 0,
           height: 0,
           output: null
