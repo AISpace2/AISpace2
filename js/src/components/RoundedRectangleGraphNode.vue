@@ -30,7 +30,7 @@ import { Prop, Watch } from "vue-property-decorator";
  *       the edges to use this information. E.g. for DirectedEdge, update (source|dest)R(x|y) prop.
  */
 @Component
-export default class EllipseGraphNode extends Vue {
+export default class RoundedRectangleGraphNode extends Vue {
   /** The primary text of the node to display. */
   @Prop() text: string;
   /** The secondary text of the node to display. Optional. Only used if a non-null value is provided */
