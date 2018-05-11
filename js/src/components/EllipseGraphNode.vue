@@ -44,11 +44,6 @@
     /** The colour of the (sub)text inside the node. */
     @Prop({ default: "black" })
     textColour: string;
-    // The size of the text inside the node
-    @Prop({default: 10}) textSize: number;
-    /** Flag to see if the node is hovered over */
-    @Prop({default: false}) hover: boolean
-
     /** The final width, in pixels, of the text element containing the (truncated) text. */
     computedTextWidth = 0;
     /** The final width, in pixels, of the subtext element containing the (truncated) subtext. */
@@ -85,23 +80,13 @@
     }
     /** The size of the node, in terms of it's radius along the x, y axis. */
     get size() {
-      var bounds = { rx: 0, ry: 0 };
-
-      if (!this.hover) {
-        // Arbitrarily chosen magic constants to make things look good
-        bounds = {
-          rx: Math.min(Math.max(this.computedTotalWidth, 25), 50),
-          ry: Math.min(Math.max(this.computedTotalHeight - 12, 20), 35)
-        };
-      } else {
-        // custom set by user visualizer (i.e. CSPVisualizer.vue)
-        bounds = {
-          rx: this.computedTotalWidth,
-          ry: this.computedTotalHeight
-        };
-      }
+      // Arbitrarily chosen magic constants to make things look good
+      this.rx = Math.min(Math.max(this.computedTotalWidth, 25), 50);
+      this.ry = Math.min(Math.max(this.computedTotalHeight - 12, 20), 35);
+      const bounds = { rx: this.rx, ry: this.ry };
+      this.$emit("updateBounds", bounds);
+      return bounds;
     }
-
     /**
      * Computes the width and height of the rendered text elements and updates the following:
      * - `computedTextWidth`
@@ -122,11 +107,11 @@
           : 0;
       const textWidth =
         this.$refs.text != null
-          ? this.measureText(this.text)
+          ? this.$refs.text.getBoundingClientRect().width
           : 0;
       const subtextWidth =
         this.$refs.subtext != null
-          ? this.measureText(this.subtext)
+          ? this.$refs.subtext.getBoundingClientRect().width
           : 0;
       this.computedTextWidth = textWidth;
       this.computedSubtextWidth = subtextWidth;
@@ -192,15 +177,6 @@
         }
       });
     }
-
-    // measure text width in pixels
-    measureText(text: string) {
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext("2d");
-      context.font = this.textSize.toString();
-      return context.measureText(text).width;
-    }
-
     @Watch("text")
     onTextChanged() {
       this.truncatedText = this.text;
