@@ -54,7 +54,7 @@ import { nodeFillColour, nodeHText } from "../SearchUtils";
   components: {
     GraphVisualizerBase,
     DirectedEdge,
-    RoundedRectangleGraphNode
+    RoundedRectangleGraphNode,
   }
 })
 export default class SearchVisualizer extends Vue {
