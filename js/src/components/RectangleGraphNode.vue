@@ -47,6 +47,8 @@ export default class RectangleGraphNode extends Vue {
   textWidth = 0;
   /** The real height, in pixels, of the text. Updated by calling `computeWidthAndHeight()`. */
   textHeight = 0;
+  // Minimum text width so that the node doesn't become too small when the text is short
+  minTextWidth = 50;
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
@@ -134,7 +136,8 @@ export default class RectangleGraphNode extends Vue {
     let canvas = document.createElement('canvas');
     let context = canvas.getContext("2d");
     context.font = this.textSize.toString() + "pt serif";
-    return context.measureText(text).width;
+    var textWidth = context.measureText(text).width;
+    return Math.max(this.minTextWidth, this.textWidth);
   }
 
   @Watch("text")

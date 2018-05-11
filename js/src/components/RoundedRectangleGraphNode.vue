@@ -69,6 +69,8 @@ export default class RoundedRectangleGraphNode extends Vue {
   truncatedText = "";
   /** The subtext, truncated to `maxWidth`. This text is displayed in the node, if subtext is provided. */
   truncatedSubtext = "";
+  // Minimum text width so that the node doesn't become too small when the text is short
+  minTextWidth = 50;
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
@@ -239,10 +241,11 @@ export default class RoundedRectangleGraphNode extends Vue {
 
   // measure text width in pixels
   measureText(text) {
-    var canvas = document.createElement('canvas');
-    var context = canvas.getContext("2d");
-    context.font = this.textSize.toString();
-    return context.measureText(text).width;
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext("2d");
+    context.font = this.textSize.toString() + "pt serif";
+    var textWidth = context.measureText(text).width;
+    return Math.max(this.minTextWidth, this.textWidth);
   }
 
   @Watch("text")

@@ -1,7 +1,7 @@
 <template>
     <g>
         <ellipse :rx="size.rx" :ry="size.ry" cx="0" cy="0" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
-        <text ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
+        <text ref="text" x="0" :y="subtext != null ? -8 : 0" :font-size="textSize" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
             {{truncatedText}}
         </text>
         <text v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
@@ -44,6 +44,8 @@
     /** The colour of the (sub)text inside the node. */
     @Prop({ default: "black" })
     textColour: string;
+    @Prop({default: false}) hover: boolean;
+    textSize = 10;
     /** The final width, in pixels, of the text element containing the (truncated) text. */
     computedTextWidth = 0;
     /** The final width, in pixels, of the subtext element containing the (truncated) subtext. */
@@ -60,6 +62,10 @@
     truncatedText = "";
     /** The subtext, truncated to `maxWidth`. This text is displayed in the node, if subtext is provided. */
     truncatedSubtext = "";
+    // Minimum text width so that the node doesn't become too small when the text is short
+    minTextWidth = 50;
+
+
     $refs: {
       /** A reference to the primary text element where the text is drawn. */
       text: SVGTextElement;
@@ -80,10 +86,17 @@
     }
     /** The size of the node, in terms of it's radius along the x, y axis. */
     get size() {
-      // Arbitrarily chosen magic constants to make things look good
-      this.rx = Math.min(Math.max(this.computedTotalWidth, 25), 50);
-      this.ry = Math.min(Math.max(this.computedTotalHeight - 12, 20), 35);
-      const bounds = { rx: this.rx, ry: this.ry };
+      let bounds = {rx: 10, ry: 10};
+
+      if (this.hover) {
+        bounds.rx = this.computedTotalWidth;
+        bounds.ry = this.computedTotalHeight;
+      } else {
+        // Arbitrarily chosen magic constants to make things look good
+        bounds.rx = Math.min(Math.max(this.computedTotalWidth, 25), 50);
+        bounds.ry = Math.min(Math.max(this.computedTotalHeight - 12, 20), 35);
+      }
+
       this.$emit("updateBounds", bounds);
       return bounds;
     }
@@ -107,11 +120,11 @@
           : 0;
       const textWidth =
         this.$refs.text != null
-          ? this.$refs.text.getBoundingClientRect().width
+          ? this.measureText(this.text)
           : 0;
       const subtextWidth =
         this.$refs.subtext != null
-          ? this.$refs.subtext.getBoundingClientRect().width
+          ? this.measureText(this.subtext)
           : 0;
       this.computedTextWidth = textWidth;
       this.computedSubtextWidth = subtextWidth;
@@ -177,6 +190,16 @@
         }
       });
     }
+
+    // measure text width in pixels
+    measureText(text) {
+      let canvas = document.createElement('canvas');
+      let context = canvas.getContext("2d");
+      context.font = this.textSize.toString() + "pt serif";
+      var textWidth = context.measureText(text).width;
+      return Math.max(this.minTextWidth, this.textWidth);
+    }
+
     @Watch("text")
     onTextChanged() {
       this.truncatedText = this.text;
