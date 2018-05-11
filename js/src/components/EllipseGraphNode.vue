@@ -2,10 +2,10 @@
     <g>
         <ellipse :rx="size.rx" :ry="size.ry" cx="0" cy="0" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></ellipse>
         <text ref="text" x="0" :y="subtext != null ? -8 : 0" :font-size="textSize" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
-            {{truncatedText}}
+            {{displayText.text}}
         </text>
         <text v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
-            {{truncatedSubtext}}
+            {{displayText.subtext}}
         </text>
         <title>{{text}}</title>
     </g>
@@ -90,7 +90,7 @@
 
       if (this.hover) {
         bounds.rx = this.computedTotalWidth;
-        bounds.ry = this.computedTotalHeight;
+        bounds.ry = Math.min(Math.max(this.computedTotalHeight - 12, 20), 35);
       } else {
         // Arbitrarily chosen magic constants to make things look good
         bounds.rx = Math.min(Math.max(this.computedTotalWidth, 25), 50);
@@ -99,6 +99,23 @@
 
       this.$emit("updateBounds", bounds);
       return bounds;
+    }
+
+    get displayText() {
+      if (this.hover) {
+        const text = this.text ? this.text : "";
+        const subtext = this.subtext ? this.subtext : "";
+
+        return {
+          text: text,
+          subtext: subtext
+        }
+      } else {
+        return {
+          text: this.truncatedText,
+          subtext: this.truncatedSubtext
+        }
+      }
     }
     /**
      * Computes the width and height of the rendered text elements and updates the following:
