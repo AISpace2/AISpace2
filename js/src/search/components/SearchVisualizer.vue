@@ -2,12 +2,12 @@
   <div>
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout">
       <template slot="node" scope="props">
-        <EllipseGraphNode :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
+        <RoundedRectangleGraphNode hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                           :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined"
-                          :fill="nodeFillColour(props.node, props.hover)"
+                          :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)">
-        </EllipseGraphNode>
+        </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
         <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="props.edge.styles.stroke"
@@ -37,8 +37,7 @@ import { Prop } from "vue-property-decorator";
 
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import DirectedEdge from "../../components/DirectedEdge.vue";
-import EllipseGraphNode from "../../components/RoundedRectangleGraphNode.vue";
-
+import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
 import { nodeFillColour, nodeHText } from "../SearchUtils";
@@ -55,7 +54,7 @@ import { nodeFillColour, nodeHText } from "../SearchUtils";
   components: {
     GraphVisualizerBase,
     DirectedEdge,
-    EllipseGraphNode
+    RoundedRectangleGraphNode
   }
 })
 export default class SearchVisualizer extends Vue {
