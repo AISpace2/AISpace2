@@ -197,7 +197,7 @@
       let context = canvas.getContext("2d");
       context.font = this.textSize.toString() + "pt serif";
       var textWidth = context.measureText(text).width;
-      return Math.max(this.minTextWidth, this.textWidth);
+      return Math.max(this.minTextWidth, textWidth);
     }
 
     @Watch("text")
