@@ -277,7 +277,7 @@ export function relativeLayout() {
         minY = Math.min(node.y, minY);
       }
 
-      const edgePadding = 30;
+      const edgePadding = 60;
 
       for (const node of graph.nodes) {
         // Scale node positions to fit new width/height, plus some edge padding
