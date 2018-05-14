@@ -53,8 +53,6 @@ export default class RoundedRectangleGraphNode extends Vue {
   /** Flag to see if the node is hovered over */
   @Prop({default: false}) hover: boolean
 
-  /** The maximum width of the text, in pixels, before truncation occurs. */
-  maxWidth = 75;
   /** The final width, in pixels, of the text element containing the (truncated) text. */
   computedTextWidth = 0;
   /** The final width, in pixels, of the subtext element containing the (truncated) subtext. */
@@ -71,6 +69,8 @@ export default class RoundedRectangleGraphNode extends Vue {
   truncatedSubtext = "";
   // Minimum text width so that the node doesn't become too small when the text is short
   minTextWidth = 50;
+  /** The maximum width of the text, in pixels, before truncation occurs. */
+  maxWidth = this.minTextWidth;
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
@@ -245,7 +245,7 @@ export default class RoundedRectangleGraphNode extends Vue {
     let context = canvas.getContext("2d");
     context.font = this.textSize.toString() + "pt serif";
     var textWidth = context.measureText(text).width;
-    return Math.max(this.minTextWidth, textWidth);
+    return Math.max(this.minTextWidth, textWidth * 0.5);
   }
 
   @Watch("text")
