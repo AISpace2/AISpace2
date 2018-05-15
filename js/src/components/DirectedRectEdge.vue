@@ -8,7 +8,7 @@
    * An edge with an arrow pointing to the target, with support for text.
    */
   @Component
-  export default class DirectedEdge extends BaseEdge {
+  export default class DirectedRectEdge extends BaseEdge {
 
     /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedX1() {
