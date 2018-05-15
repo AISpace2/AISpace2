@@ -35,18 +35,6 @@
     @Prop() x2: number;
     /** The y-coordinate of the center of the target node of the edge. */
     @Prop() y2: number;
-    /** The radius along the x-axis of the source node. Defaults to 0 (i.e. drawn at origin of node at x1). */
-    @Prop({ default: 0 })
-    sourceRx: number;
-    /** The radius along the y-axis of the source node. Defaults to 0 (i.e. drawn at origin of node at y1). */
-    @Prop({ default: 0 })
-    sourceRy: number;
-    /** The radius along the x-axis of the target node. Defaults to 0 (i.e. drawn at origin of node at x2). */
-    @Prop({ default: 0 })
-    targetRx: number;
-    /** The radius along the y-axis of the target node. Defaults to 0 (i.e. drawn at origin of node at y2). */
-    @Prop({ default: 0 })
-    targetRy: number;
     /** A HTML colour string representing the colour of the line. */
     @Prop({ default: "black" })
     stroke: string;
@@ -88,14 +76,20 @@
 
     /** The x-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
     get adjustedX2() {
-      return this.pathLength === 0 ? 0 : this.x2;
+      //return this.pathLength === 0 ? 0 : this.x2;
+      // let width = 100;
+      // return this.x2+(this.deltaX*width/2)/this.pathLength;
+      return this.intersectPoint().x;
     }
 
     /** The y-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
     get adjustedY2() {
       if (this.pathLength === 0) return 0;
-      let offsetY = this.deltaY * 20 / this.pathLength;
-      return this.y2 - offsetY;
+      // let offsetY = this.deltaY * 20 / this.pathLength;
+      // //return this.y2 - offsetY;
+      // let height = 20;
+      // return this.y2+(this.deltaY*height/2)/this.pathLength;
+      return this.intersectPoint().y
     }
 
     /** The angle of the line, in degrees, between the source and target. */
@@ -172,6 +166,56 @@
     /** The length of the path. This is computed using the original x and y coordinates, not the adjusted ones. */
     get pathLength() {
       return Math.sqrt(this.deltaX * this.deltaX + this.deltaY * this.deltaY);
+    }
+
+    slope() : number {
+      if(this.deltaX === 0){
+        return this.deltaY / 0.00001;
+      }
+      return this.deltaY/this.deltaX;
+    }
+
+    intercept() : number {
+      return this.y1 - this.slope()*this.x1;
+    }
+
+    intersectX(dx: number){
+        return{ x: dx, y: this.slope()*dx+this.intercept()};
+    }
+
+    intersectY(dy: number){
+      return {x: (dy-this.intercept())/this.slope(), y: dy};
+    }
+
+    intersectPoint() : {x: number, y:number} {
+      let width = 100;
+      let height = 20;
+      console.log("p1", this.x1, this.y1);
+      console.log("p2", this.x2, this.y2);
+      let xLeft = this.x2-width/2;
+      let xRight = this.x2+width/2;
+      let yUp = this.y2+height/2;
+      let yDown = this.y2-height/2;
+      let i1 = this.intersectX(xLeft);
+      let i2 = this.intersectX(xRight);
+      let i3 = this.intersectY(yUp);
+      let i4 = this.intersectY(yDown);
+
+      let validPoints : [{x: number, y: number}] = [i1,i2,i3,i4].reduce((acc, point)=>{
+        if(point.x >= xLeft && point.x <= xRight && point.y <= yUp && point.y >= yDown){
+          acc.push(point);
+        }
+        return acc;
+      }, []);
+      let smallX = this.x1 < this.x2 ? this.x1 : this.x2;
+      let largeX = this.x1 < this.x2 ? this.x2 : this.x1;
+      validPoints = validPoints.reduce((acc, point)=>{
+        if(point.x >= smallX && point.x <= largeX){
+          acc.push(point);
+        }
+        return acc;
+      }, []);
+      return validPoints[0];
     }
   }
 
