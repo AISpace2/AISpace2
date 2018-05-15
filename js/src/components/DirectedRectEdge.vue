@@ -76,20 +76,14 @@
 
     /** The x-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
     get adjustedX2() {
-      //return this.pathLength === 0 ? 0 : this.x2;
-      // let width = 100;
-      // return this.x2+(this.deltaX*width/2)/this.pathLength;
-      return this.intersectPoint().x;
+      let point = this.intersectPoint();
+      return point ? point.x : this.x2;
     }
 
     /** The y-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
     get adjustedY2() {
-      if (this.pathLength === 0) return 0;
-      // let offsetY = this.deltaY * 20 / this.pathLength;
-      // //return this.y2 - offsetY;
-      // let height = 20;
-      // return this.y2+(this.deltaY*height/2)/this.pathLength;
-      return this.intersectPoint().y
+      let point = this.intersectPoint();
+      return point ? point.y : this.y2;
     }
 
     /** The angle of the line, in degrees, between the source and target. */
@@ -188,10 +182,8 @@
     }
 
     intersectPoint() : {x: number, y:number} {
-      let width = 100;
-      let height = 20;
-      console.log("p1", this.x1, this.y1);
-      console.log("p2", this.x2, this.y2);
+      let width = 105;
+      let height = 45;
       let xLeft = this.x2-width/2;
       let xRight = this.x2+width/2;
       let yUp = this.y2+height/2;
@@ -209,8 +201,12 @@
       }, []);
       let smallX = this.x1 < this.x2 ? this.x1 : this.x2;
       let largeX = this.x1 < this.x2 ? this.x2 : this.x1;
+      let smallY = this.y1 < this.y2 ? this.y1 : this.y2;
+      let largeY = this.y1 < this.y2 ? this.y2 : this.y1;
       validPoints = validPoints.reduce((acc, point)=>{
         if(point.x >= smallX && point.x <= largeX){
+          acc.push(point);
+        } else if(point.y >= smallY && point.y <= largeY) {
           acc.push(point);
         }
         return acc;
