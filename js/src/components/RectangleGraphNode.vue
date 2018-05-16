@@ -40,7 +40,7 @@ export default class RectangleGraphNode extends Vue {
   @Prop({default: false}) hover: boolean;
 
   /** The maximum width of the text, in pixels, before truncation occurs. */
-  maxWidth = 90;
+  maxWidth = 100;
   /** The text, truncated to `maxWidth`. This text is displayed in the node. */
   truncatedText = "";
   /** The real width, in pixels, of the text. Updated by calling `computeWidthAndHeight()`. */
@@ -66,7 +66,7 @@ export default class RectangleGraphNode extends Vue {
     if (this.hover){
       return this.textWidth;
     } else {
-      return Math.min(Math.max(this.textWidth, 50), this.maxWidth) + 10;
+      return Math.min(Math.max(this.textWidth, 50), this.maxWidth);
     }
   }
 
