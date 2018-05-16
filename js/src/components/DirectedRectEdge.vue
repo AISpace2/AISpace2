@@ -35,7 +35,9 @@
 
     slope() : number {
       if(this.deltaX === 0){
-        return this.deltaY / 0.00001;
+        // since delta X cannot be 0 as the denominator for calculating slope, we set it to as close to 0 as possible for
+        // slope calculation
+        return this.deltaY / Number.MIN_VALUE;
       }
       return this.deltaY/this.deltaX;
     }
