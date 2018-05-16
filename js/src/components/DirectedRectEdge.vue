@@ -10,8 +10,8 @@
   @Component
   export default class DirectedRectEdge extends BaseEdge {
     // update these two if the nodes are no longer these or approximately these height and width
-    const DEFAULT_WIDTH = 105;
-    const DEFAULT_HEIGHT = 45;
+    const DEFAULT_NODE_WIDTH = 105;
+    const DEFAULT_NODE_HEIGHT = 45;
 
     /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedX1() {
@@ -69,10 +69,10 @@
     }
 
     intersectPoint() : {x: number, y:number} {
-      const xLeft = this.x2-this.DEFAULT_WIDTH/2;
-      const xRight = this.x2+this.DEFAULT_WIDTH/2;
-      const yUp = this.y2+this.DEFAULT_HEIGHT/2;
-      const yDown = this.y2-this.DEFAULT_HEIGHT/2;
+      const xLeft = this.x2-this.DEFAULT_NODE_WIDTH/2;
+      const xRight = this.x2+this.DEFAULT_NODE_WIDTH/2;
+      const yUp = this.y2+this.DEFAULT_NODE_HEIGHT/2;
+      const yDown = this.y2-this.DEFAULT_NODE_HEIGHT/2;
 
       // setting the valid range for x and y (the range between the two graph nodes for the edge)
       const xBound = this.x1 < this.x2
