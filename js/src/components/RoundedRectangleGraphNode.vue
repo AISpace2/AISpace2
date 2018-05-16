@@ -79,7 +79,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   get height() {
     return Math.min(Math.max(this.textHeight, 30), 45) + 15;
   }
-  
+
   get displaySubText() {
     return this.hover ? this.subtext : this.truncatedSubtext;
   }
@@ -118,40 +118,6 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     this.computedTextWidth = textWidth;
     this.computedSubtextWidth = subtextWidth;
     this.computedTotalHeight = textHeight + subtextHeight;
-  }
-
-  /**
-   * Truncates text until it is less than `maxWidth`.
-   * 
-   * This function uses binary search to speed up the truncation.
-   */
-  _truncateText(lowerBound = 0, upperBound = this.text.length) {
-    if (lowerBound >= upperBound) return;
-
-    const mid = Math.floor((upperBound + lowerBound) / 2);
-    this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
-
-    // Vue doesn't update DOM (and thus box sizes) until next tick
-    Vue.nextTick(() => {
-      this.computeWidthAndHeight();
-      if (this.computedTextWidth > this.maxWidth) {
-        this._truncateText(lowerBound, mid - 1);
-      } else {
-        this._truncateText(mid + 1, upperBound);
-      }
-    });
-  }
-
-  /**
-   * Trims text to fit inside the node as necessary.
-   */
-  fitText() {
-    Vue.nextTick(() => {
-      this.computeWidthAndHeight();
-      if (this.computedTextWidth > this.maxWidth) {
-        this._truncateText();
-      }
-    });
   }
 
   /**
