@@ -1,14 +1,14 @@
 <template>
   <g>
-      <rect :width="size.rx" :height="size.ry"
-            :x="-size.rx/2" :y="-size.ry/2"
+      <rect :width="width" :height="size.ry"
+            :x="-width/2" :y="-size.ry/2"
             :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="hover ? 30 : 25"></rect>
 
       <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
-      {{displayText.text}}
+      {{displayText}}
     </text>
     <text id="subtext" :font-size="textSize"  v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
-      {{displayText.subtext}}
+      {{displaySubText}}
     </text>
     <title>{{text}}</title>
   </g>
@@ -18,6 +18,7 @@
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
+import RectangleGraphNode from "./RectangleGraphNode.vue";
 
 /**
  * An elliptical node that supports two lines of text, with automatic truncation and resizing.
@@ -30,47 +31,17 @@ import { Prop, Watch } from "vue-property-decorator";
  *       the edges to use this information. E.g. for DirectedEdge, update (source|dest)R(x|y) prop.
  */
 @Component
-export default class RoundedRectangleGraphNode extends Vue {
-  /** The primary text of the node to display. */
-  @Prop() text: string;
-  /** The secondary text of the node to display. Optional. Only used if a non-null value is provided */
+export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   @Prop({ required: false })
   subtext: string;
-  /** A HTML colour string used for the node's fill colour. */
-  @Prop({ default: "white" })
-  fill: string;
-  /** A HTML colour string used to outline the node. */
-  @Prop({ default: "black" })
-  stroke: string;
-  /** The width of the stroke to draw around the node. */
-  @Prop({ default: 1 })
-  strokeWidth: number;
-  /** The colour of the (sub)text inside the node. */
-  @Prop({ default: "black" })
-  textColour: string;
-  // The size of the text inside the node
-  @Prop({default: 10}) textSize: number;
-  /** Flag to see if the node is hovered over */
-  @Prop({default: false}) hover: boolean
-
   /** The final width, in pixels, of the text element containing the (truncated) text. */
   computedTextWidth = 0;
   /** The final width, in pixels, of the subtext element containing the (truncated) subtext. */
   computedSubtextWidth = 0;
   /** The total height, in pixels, that the text and subtext (if available) take up. */
   computedTotalHeight = 0;
-  /** The radius along the x-axis of the ellipse. Will be updated whenever the text changes. */
-  rx = 0;
-  /** The radius along the y-axis of the ellipse. Will be updated whenever the text changes. */
-  ry = 0;
-  /** The text, truncated to `maxWidth`. This text is displayed in the node. */
-  truncatedText = "";
   /** The subtext, truncated to `maxWidth`. This text is displayed in the node, if subtext is provided. */
   truncatedSubtext = "";
-  // Minimum text width so that the node doesn't become too small when the text is short
-  minTextWidth = 50;
-  /** The maximum width of the text, in pixels, before truncation occurs. */
-  maxWidth = this.minTextWidth;
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
@@ -121,18 +92,21 @@ export default class RoundedRectangleGraphNode extends Vue {
     return bounds;
   }
 
-  get displayText() {
-    if (!this.hover){
-      return {
-        text: this.truncatedText,
-        subtext: this.truncatedSubtext
-      }
+  get width() {
+    this.computeWidthAndHeight();
+    if (this.hover) {
+      return this.computedTotalWidth;
     } else {
-      return {
-        text: this.text,
-        subtext: this.subtext
-      }
+      return Math.min(Math.max(this.computedTotalWidth, 50), 100);
     }
+  }
+
+  get displayText() {
+    return this.hover ? this.text : this.truncatedText;
+  }
+
+  get displaySubText() {
+    return this.hover ? this.subtext : this.truncatedSubtext;
   }
 
   /**
@@ -237,21 +211,6 @@ export default class RoundedRectangleGraphNode extends Vue {
         this._truncateSubtext();
       }
     });
-  }
-
-  // measure text width in pixels
-  measureText(text) {
-    let canvas = document.createElement('canvas');
-    let context = canvas.getContext("2d");
-    context.font = this.textSize.toString() + "pt serif";
-    var textWidth = context.measureText(text).width;
-    return Math.max(this.minTextWidth, textWidth * 0.5);
-  }
-
-  @Watch("text")
-  onTextChanged() {
-    this.truncatedText = this.text;
-    this.fitText();
   }
 
   @Watch("subtext")
