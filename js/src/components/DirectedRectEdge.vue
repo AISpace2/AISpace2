@@ -9,6 +9,9 @@
    */
   @Component
   export default class DirectedRectEdge extends BaseEdge {
+    // update these two if the nodes are no longer these or approximately these height and width
+    const DEFAULT_WIDTH = 105;
+    const DEFAULT_HEIGHT = 45;
 
     /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedX1() {
@@ -66,36 +69,32 @@
     }
 
     intersectPoint() : {x: number, y:number} {
-      let width = 105;
-      let height = 45;
-      let xLeft = this.x2-width/2;
-      let xRight = this.x2+width/2;
-      let yUp = this.y2+height/2;
-      let yDown = this.y2-height/2;
-      let i1 = this.intersectX(xLeft);
-      let i2 = this.intersectX(xRight);
-      let i3 = this.intersectY(yUp);
-      let i4 = this.intersectY(yDown);
+      const xLeft = this.x2-this.DEFAULT_WIDTH/2;
+      const xRight = this.x2+this.DEFAULT_WIDTH/2;
+      const yUp = this.y2+this.DEFAULT_HEIGHT/2;
+      const yDown = this.y2-this.DEFAULT_HEIGHT/2;
 
-      let validPoints : [{x: number, y: number}] = [i1,i2,i3,i4].reduce((acc, point)=>{
+      // setting the valid range for x and y (the range between the two graph nodes for the edge)
+      const xBound = this.x1 < this.x2
+        ? {lower: this.x1, upper: this.x2} : {lower: this.x2, upper: this.x1};
+      const yBound = this.y1 < this.y2
+        ? {lower: this.y1, upper: this.y2} : {lower: this.y2, upper: this.y1};
+
+      return [
+        this.intersectX(xLeft),
+        this.intersectX(xRight),
+        this.intersectY(yUp),
+        this.intersectY(yDown)
+      ].reduce((acc, point)=>{
         if(point.x >= xLeft && point.x <= xRight && point.y <= yUp && point.y >= yDown){
-          acc.push(point);
+          if(point.x >= xBound.lower && point.x <= xBound.upper){
+            acc = point;
+          } else if(point.y >= yBound.lower && point.y <= yBound.upper) {
+            acc = point;
+          }
         }
         return acc;
-      }, []);
-      let smallX = this.x1 < this.x2 ? this.x1 : this.x2;
-      let largeX = this.x1 < this.x2 ? this.x2 : this.x1;
-      let smallY = this.y1 < this.y2 ? this.y1 : this.y2;
-      let largeY = this.y1 < this.y2 ? this.y2 : this.y1;
-      validPoints = validPoints.reduce((acc, point)=>{
-        if(point.x >= smallX && point.x <= largeX){
-          acc.push(point);
-        } else if(point.y >= smallY && point.y <= largeY) {
-          acc.push(point);
-        }
-        return acc;
-      }, []);
-      return validPoints[0];
+      }, {x:0, y:0});
     }
   }
 
