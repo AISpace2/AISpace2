@@ -33,6 +33,14 @@
       return point ? point.y : this.y2;
     }
 
+    /* The idea is to find the (x, y) by making four linear test lines (y = mx + b) along the boundary of the target box.
+        * Then find the intersection point between the directed rect edge and the test lines. Since expressing the edge in
+        * y = mx + b form will stretch it infinitely, there would be two points touching. We find the one test intersect point,
+        *  (ix, iy) where x1 <= ix <= x2 or if the two boxes are on the same x axis, we test for y where
+        *   y1 <= iy <= y2. The point that fits the given condition will be where the edges points to. */
+
+
+    /* Slope of the edge */
     slope() : number {
       if(this.deltaX === 0){
         // since delta X cannot be 0 as the denominator for calculating slope, we set it to as close to 0 as possible for
@@ -42,14 +50,17 @@
       return this.deltaY/this.deltaX;
     }
 
+    /* The edge is y = mx + b. This intercept is b */
     intercept() : number {
       return this.y1 - this.slope()*this.x1;
     }
 
+    /* Intercept of the edge and the given test vertical line x = dx */
     intersectX(dx: number){
         return{ x: dx, y: this.slope()*dx+this.intercept()};
     }
 
+    /* Intercept of the edge and the given test horizontal line y = dy */
     intersectY(dy: number){
       return {x: (dy-this.intercept())/this.slope(), y: dy};
     }
