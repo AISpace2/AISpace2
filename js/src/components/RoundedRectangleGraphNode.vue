@@ -1,7 +1,7 @@
 <template>
   <g>
-      <rect :width="width" :height="size.ry"
-            :x="-width/2" :y="-size.ry/2"
+      <rect :width="width" :height="height"
+            :x="-width/2" :y="-height/2"
             :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="hover ? 30 : 25"></rect>
 
       <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
@@ -65,33 +65,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     return Math.max(this.computedTextWidth, this.computedSubtextWidth);
   }
 
-  /** The size of the node, in terms of it's radius along the x, y axis. */
-  get size() {
-    var bounds = {rx: 0, ry: 0};
-
-    if(!this.hover){
-      // Arbitrarily chosen magic constants to make things look good
-      bounds = {
-        rx: Math.min(Math.max(this.computedTotalWidth, 25), 50),
-        ry: Math.min(Math.max(this.computedTotalHeight - 12, 20), 35)
-      };
-    } else {
-      // custom set by user visualizer (i.e. CSPVisualizer.vue)
-      bounds = {
-        rx: this.computedTotalWidth,
-        ry: this.computedTotalHeight
-      };
-    }
-
-    // this file was originally ellipse but now changed to rectangle with semi circle for its sides, so times the previous
-    // radius by 2 to make it width for the new rectangle
-    bounds.rx *= 2;
-    bounds.ry *= 2;
-
-    this.$emit("updateBounds", bounds);
-    return bounds;
-  }
-
+  /* Width of the rounded rectangle */
   get width() {
     this.computeWidthAndHeight();
     if (this.hover) {
@@ -101,10 +75,11 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     }
   }
 
-  get displayText() {
-    return this.hover ? this.text : this.truncatedText;
+  /** Height of the rounded rectangle. */
+  get height() {
+    return Math.min(Math.max(this.textHeight, 30), 45) + 15;
   }
-
+  
   get displaySubText() {
     return this.hover ? this.subtext : this.truncatedSubtext;
   }
