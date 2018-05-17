@@ -1,6 +1,6 @@
 <template>
   <g>
-    <rect :width="width" :height="height" :x="-width / 2" :y="-height / 2" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
+    <rect :width="size.width" :height="size.height" :x="-size.width / 2" :y="-size.height / 2" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
     <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" :font-size="textSize" alignment-baseline="middle">
       {{displayText}}
     </text>
@@ -60,8 +60,22 @@ export default class RectangleGraphNode extends Vue {
     this.fitText();
   }
 
+  get size() {
+    let bounds = {
+      width: this.width(),
+      height: this.height()
+    }
+
+    this.$emit("updateBounds", bounds);
+    return bounds
+  }
+
+  get displayText() {
+    return this.hover ? this.text : this.truncatedText;
+  }
+
   /** Width of the rectangle. */
-  get width() {
+  width() {
     this.computeWidthAndHeight();
     if (this.hover){
       return this.textWidth;
@@ -71,12 +85,8 @@ export default class RectangleGraphNode extends Vue {
   }
 
   /** Height of the rectangle. */
-  get height() {
+  height() {
     return Math.min(Math.max(this.textHeight, 30), 45) + 5;
-  }
-
-  get displayText() {
-    return this.hover ? this.text : this.truncatedText;
   }
 
   /**
