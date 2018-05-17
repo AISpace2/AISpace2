@@ -103,10 +103,6 @@
     }
 
     computeWidthAndHeight() {
-      const textHeight =
-        this.$refs.text != null
-          ? this.$refs.text.getBoundingClientRect().height
-          : 0;
       const textWidth =
         this.$refs.text != null
           ? this.measureText(this.nodeName)
