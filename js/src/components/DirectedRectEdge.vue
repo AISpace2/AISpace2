@@ -101,7 +101,6 @@
     }
 
     measureText(text) {
-      console.log("measure text", text);
       let canvas = document.createElement('canvas');
       let context = canvas.getContext("2d");
       context.font = this.textSize.toString() + "pt serif";
