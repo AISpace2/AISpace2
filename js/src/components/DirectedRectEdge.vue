@@ -12,8 +12,6 @@
     @Prop({default: 100}) graph_node_width: number;
     @Prop({default: 45}) graph_node_height: number;
     @Prop({default: 15}) textSize: number;
-    /** The final width, in pixels, of the text element containing the (truncated) text. */
-    computedTextWidth = 0;
     // Minimum text width so that the node doesn't become too small when the text is short
     minTextWidth = 50;
 
@@ -73,9 +71,9 @@
     }
 
     intersectPoint() : {x: number, y:number} {
-      this.computeWidthAndHeight();
-      const xLeft = this.x2-this.computedTextWidth/2;
-      const xRight = this.x2+this.computedTextWidth/2;
+      let computedTextWidth = this.measureText(this.nodeName);
+      const xLeft = this.x2-computedTextWidth/2;
+      const xRight = this.x2+computedTextWidth/2;
       const yUp = this.y2+this.graph_node_height/2;
       const yDown = this.y2-this.graph_node_height/2;
 
@@ -102,15 +100,8 @@
       }, null);
     }
 
-    computeWidthAndHeight() {
-      const textWidth =
-        this.$refs.text != null
-          ? this.measureText(this.nodeName)
-          : 0;
-      this.computedTextWidth = textWidth;
-    }
-
     measureText(text) {
+      console.log("measure text", text);
       let canvas = document.createElement('canvas');
       let context = canvas.getContext("2d");
       context.font = this.textSize.toString() + "pt serif";
