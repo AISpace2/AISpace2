@@ -9,9 +9,8 @@
    */
   @Component
   export default class DirectedRectEdge extends BaseEdge {
-    // update these two if the nodes are no longer these or approximately these height and width
-    const DEFAULT_NODE_WIDTH = 105;
-    const DEFAULT_NODE_HEIGHT = 45;
+    @Prop({default: 100}) graph_node_width: number;
+    @Prop({default: 45}) graph_node_height: number;
 
     /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedX1() {
@@ -48,7 +47,7 @@
       if(this.deltaX === 0){
         // since delta X cannot be 0 as the denominator for calculating slope, we set it to as close to 0 as possible for
         // slope calculation
-        return this.deltaY / Number.MIN_VALUE;
+        return this.deltaY / 0.00005;
       }
       return this.deltaY/this.deltaX;
     }
@@ -69,10 +68,10 @@
     }
 
     intersectPoint() : {x: number, y:number} {
-      const xLeft = this.x2-this.DEFAULT_NODE_WIDTH/2;
-      const xRight = this.x2+this.DEFAULT_NODE_WIDTH/2;
-      const yUp = this.y2+this.DEFAULT_NODE_HEIGHT/2;
-      const yDown = this.y2-this.DEFAULT_NODE_HEIGHT/2;
+      const xLeft = this.x2-this.graph_node_width/2;
+      const xRight = this.x2+this.graph_node_width/2;
+      const yUp = this.y2+this.graph_node_height/2;
+      const yDown = this.y2-this.graph_node_height/2;
 
       // setting the valid range for x and y (the range between the two graph nodes for the edge)
       const xBound = this.x1 < this.x2
@@ -94,7 +93,7 @@
           }
         }
         return acc;
-      }, {x:0, y:0});
+      }, null);
     }
   }
 
