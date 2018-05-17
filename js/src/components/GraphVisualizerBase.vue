@@ -13,6 +13,7 @@
         <slot name="edge" :edge="edge"
               :x1="edge.source.x" :y1="edge.source.y"
               :x2="edge.target.x" :y2="edge.target.y"
+              :nodeName="edge.target.name"
               :hover="edge === edgeHovered"></slot>
       </EdgeContainer>
       <GraphNodeContainer v-for="node in nodes" :key="node.id"

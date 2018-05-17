@@ -11,6 +11,11 @@
   export default class DirectedRectEdge extends BaseEdge {
     @Prop({default: 100}) graph_node_width: number;
     @Prop({default: 45}) graph_node_height: number;
+    @Prop({default: 15}) textSize: number;
+    /** The final width, in pixels, of the text element containing the (truncated) text. */
+    computedTextWidth = 0;
+    // Minimum text width so that the node doesn't become too small when the text is short
+    minTextWidth = 50;
 
     /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedX1() {
@@ -68,8 +73,9 @@
     }
 
     intersectPoint() : {x: number, y:number} {
-      const xLeft = this.x2-this.graph_node_width/2;
-      const xRight = this.x2+this.graph_node_width/2;
+      this.computeWidthAndHeight();
+      const xLeft = this.x2-this.computedTextWidth/2;
+      const xRight = this.x2+this.computedTextWidth/2;
       const yUp = this.y2+this.graph_node_height/2;
       const yDown = this.y2-this.graph_node_height/2;
 
@@ -94,6 +100,26 @@
         }
         return acc;
       }, null);
+    }
+
+    computeWidthAndHeight() {
+      const textHeight =
+        this.$refs.text != null
+          ? this.$refs.text.getBoundingClientRect().height
+          : 0;
+      const textWidth =
+        this.$refs.text != null
+          ? this.measureText(this.nodeName)
+          : 0;
+      this.computedTextWidth = textWidth;
+    }
+
+    measureText(text) {
+      let canvas = document.createElement('canvas');
+      let context = canvas.getContext("2d");
+      context.font = this.textSize.toString() + "pt serif";
+      var textWidth = context.measureText(text).width;
+      return Math.max(this.minTextWidth, textWidth);
     }
   }
 
