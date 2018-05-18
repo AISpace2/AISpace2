@@ -16,6 +16,9 @@
   import Component from "vue-class-component";
   import { Prop, Watch } from "vue-property-decorator";
   /**
+   *
+   * Archived. Kept but not updated.
+   *
    * An elliptical node that supports two lines of text, with automatic truncation and resizing.
    *
    * Events Emitted:
