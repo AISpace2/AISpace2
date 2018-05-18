@@ -10,8 +10,8 @@
         </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <DirectedRectEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="props.edge.styles.stroke"
-                      :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.nodeName" >
+        <DirectedRectEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
+                      :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name" >
         </DirectedRectEdge>
       </template>
     </GraphVisualizerBase>

@@ -11,7 +11,7 @@
         </EllipseGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <DirectedEllipseEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
+        <DirectedEllipseEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                       :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
                       :stroke="strokeColour(props.edge)"

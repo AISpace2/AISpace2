@@ -15,7 +15,7 @@
         </RectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
+        <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                         :stroke="stroke(props.edge)"
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
