@@ -35,7 +35,7 @@
     @Prop() x2: number;
     /** The y-coordinate of the center of the target node of the edge. */
     @Prop() y2: number;
-    @Prop({default: "n/a"}) nodeName: string;
+    @Prop({default: ""}) nodeName: string;
     /** A HTML colour string representing the colour of the line. */
     @Prop({ default: "black" })
     stroke: string;
