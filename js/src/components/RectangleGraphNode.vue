@@ -63,7 +63,7 @@ export default class RectangleGraphNode extends Vue {
     let bounds = {
       width: this.width(),
       height: this.height()
-    }
+    };
 
     this.$emit("updateBounds", bounds);
     return bounds
