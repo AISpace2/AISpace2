@@ -10,7 +10,6 @@
     <text id="subtext" :font-size="textSize"  v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{displaySubText}}
     </text>
-    <title>{{text}}</title>
   </g>
 </template>
 
@@ -76,7 +75,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     if (this.hover) {
       return this.computedTotalWidth;
     } else {
-      return Math.min(Math.max(this.computedTotalWidth, 50), 100);
+      return Math.min(Math.max(this.computedTotalWidth, this.minTextWidth), this.maxWidth);
     }
   }
 

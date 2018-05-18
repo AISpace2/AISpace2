@@ -4,7 +4,6 @@
     <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" :font-size="textSize" alignment-baseline="middle">
       {{displayText}}
     </text>
-    <title>{{text}}</title>
   </g>
 </template>
 
