@@ -71,7 +71,8 @@ export default class RectangleGraphNode extends Vue {
   }
 
   get displayText() {
-    return this.hover ? this.text : this.truncatedText;
+    let text = this.hover ? this.text : this.truncatedText;
+    return this.format(text);
   }
 
   /** Width of the rectangle. */
@@ -148,6 +149,15 @@ export default class RectangleGraphNode extends Vue {
     context.font = this.textSize.toString() + "pt serif";
     var textWidth = context.measureText(text).width;
     return Math.max(this.minTextWidth, textWidth);
+  }
+
+  /* Format text for display purposes
+  * Similar to Java data structure's toString methods
+  * Effect: remove {, }, ' characters from this.text */
+  format(str) {
+    let characters = str.split("");
+    let charsToRemove = ['{', '}', "'"];
+    return _.without(characters, ...charsToRemove).join("");
   }
 
   @Watch("text")

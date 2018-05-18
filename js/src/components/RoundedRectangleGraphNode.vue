@@ -66,7 +66,8 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   }
 
   get displaySubText() {
-    return this.hover ? this.subtext : this.truncatedSubtext;
+    let text = this.hover ? this.subtext : this.truncatedSubtext;
+    return this.format(text);
   }
 
   /* Width of the rounded rectangle */
