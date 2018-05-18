@@ -9,7 +9,6 @@
    */
   @Component
   export default class DirectedRectEdge extends BaseEdge {
-    @Prop({default: 100}) graph_node_width: number;
     @Prop({default: 45}) graph_node_height: number;
     @Prop({default: 15}) textSize: number;
     // Minimum text width so that the node doesn't become too small when the text is short
