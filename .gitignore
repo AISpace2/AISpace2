@@ -19,3 +19,4 @@ js/vendor/*
 # Editors
 *~
 .vscode/
+.idea/
