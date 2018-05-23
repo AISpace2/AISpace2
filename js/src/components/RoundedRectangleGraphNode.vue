@@ -128,7 +128,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   _truncateText(lowerBound = 0, upperBound = this.text.length) {
     if (lowerBound >= upperBound) return;
     const mid = Math.floor((upperBound + lowerBound) / 2);
-    this.truncatedText = `${this.text.substr(0, mid + 1)}DD:`;
+    this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
     // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
       if (this.$refs.text.getBoundingClientRect().width > this.maxWidth) {
