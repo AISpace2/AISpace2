@@ -1,8 +1,8 @@
 <template>
-  <g>
+  <g @click="isExpanded = !isExpanded">
       <rect :width="size.width" :height="size.height"
             :x="-size.width/2" :y="-size.height/2"
-            :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="hover ? 30 : 25"></rect>
+            :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="(hover || isExpanded) ? 30 : 25"></rect>
 
       <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{displayText}}
@@ -65,14 +65,14 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   }
 
   get displaySubText() {
-    let text = this.hover ? this.subtext : this.truncatedSubtext;
+    let text = (this.hover || this.isExpanded) ? this.subtext : this.truncatedSubtext;
     return this.format(text);
   }
 
   /* Width of the rounded rectangle */
   width() {
     this.computeWidthAndHeight();
-    if (this.hover) {
+    if (this.hover || this.isExpanded) {
       return this.computedTotalWidth;
     } else {
       return Math.min(Math.max(this.computedTotalWidth, this.minTextWidth), this.maxWidth);

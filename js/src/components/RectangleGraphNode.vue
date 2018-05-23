@@ -1,5 +1,5 @@
 <template>
-  <g>
+  <g @click="isExpanded = !isExpanded">
     <rect :width="size.width" :height="size.height" :x="-size.width / 2" :y="-size.height / 2" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
     <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" :font-size="textSize" alignment-baseline="middle">
       {{displayText}}
@@ -49,6 +49,8 @@ export default class RectangleGraphNode extends Vue {
   textHeight = 0;
   // Minimum text width so that the node doesn't become too small when the text is short
   minTextWidth = 50;
+  // Expansion toggle flag
+  isExpanded = false;
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
@@ -71,14 +73,14 @@ export default class RectangleGraphNode extends Vue {
   }
 
   get displayText() {
-    let text = this.hover ? this.text : this.truncatedText;
+    let text = (this.hover || this.isExpanded) ? this.text : this.truncatedText;
     return this.format(text);
   }
 
   /** Width of the rectangle. */
   width() {
     this.computeWidthAndHeight();
-    if (this.hover){
+    if (this.hover || this.isExpanded){
       return this.textWidth;
     } else {
       return Math.min(Math.max(this.textWidth, 50), this.maxWidth);
