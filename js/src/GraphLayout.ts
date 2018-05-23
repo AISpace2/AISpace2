@@ -56,7 +56,7 @@ export class GraphLayout {
     relayout?: LayoutFunction
   ) {
     this.setupLayoutFunction = setup;
-    this.relayoutLayoutFunction = relayout || relativeLayout();
+    this.relayoutLayoutFunction = relayout || this.setupLayoutFunction;
   }
 
   /**
