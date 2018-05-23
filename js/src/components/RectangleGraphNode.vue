@@ -11,10 +11,9 @@
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
-
 /**
  * A rectangular node that supports one line of text, with automatic truncation and resizing.
- * 
+ *
  * This is not as robust as EllipseGraphNode. In particularly, it doesn't report size changes,
  * and only supports one line of text.
  */
@@ -38,7 +37,6 @@ export default class RectangleGraphNode extends Vue {
   // The size of the text inside the node
   @Prop({default: 15}) textSize: number;
   @Prop({default: false}) hover: boolean;
-
   /** The maximum width of the text, in pixels, before truncation occurs. */
   maxWidth = 100;
   /** The text, truncated to `maxWidth`. This text is displayed in the node. */
@@ -49,32 +47,28 @@ export default class RectangleGraphNode extends Vue {
   textHeight = 0;
   // Minimum text width so that the node doesn't become too small when the text is short
   minTextWidth = 50;
-
+  // Additional truncate length so there is white padding within a graph node
+  padding = 20;
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
     text: SVGTextElement;
   };
-
   mounted() {
     this.truncatedText = this.text;
     this.fitText();
   }
-
   get size() {
     let bounds = {
       width: this.width(),
       height: this.height()
     };
-
     this.$emit("updateBounds", bounds);
     return bounds;
   }
-
   get displayText() {
     let text = this.hover ? this.text : this.truncatedText;
     return this.format(text);
   }
-
   /** Width of the rectangle. */
   width() {
     this.computeWidthAndHeight();
@@ -84,12 +78,10 @@ export default class RectangleGraphNode extends Vue {
       return Math.min(Math.max(this.textWidth, 50), this.maxWidth);
     }
   }
-
   /** Height of the rectangle. */
   height() {
     return Math.min(Math.max(this.textHeight, 30), 45) + 5;
   }
-
   /**
    * Computes the width and height of the rendered text elements and updates the following:
    * - `textHeight`
@@ -107,41 +99,35 @@ export default class RectangleGraphNode extends Vue {
         ? this.measureText(this.text)
         : 0;
   }
-
   /**
    * Truncates text until it is less than `maxWidth`.
-   * 
+   *
    * This function uses binary search to speed up the truncation.
    */
   _truncateText(lowerBound = 0, upperBound = this.text.length) {
     if (lowerBound >= upperBound) return;
-
     const mid = Math.floor((upperBound + lowerBound) / 2);
     this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
-
     // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      this.computeWidthAndHeight();
-      if (this.textWidth > this.maxWidth) {
+      if (this.$refs.text.getBoundingClientRect().width + this.padding > this.maxWidth) {
         this._truncateText(lowerBound, mid - 1);
       } else {
         this._truncateText(mid + 1, upperBound);
       }
     });
   }
-
   /**
    * Trims text to fit inside the node as necessary.
    */
   fitText() {
     Vue.nextTick(() => {
       this.computeWidthAndHeight();
-      if (this.textWidth > this.maxWidth) {
+      if (this.$refs.text.getBoundingClientRect().width + this.padding > this.maxWidth) {
         this._truncateText();
       }
     });
   }
-
   // measure text width in pixels
   measureText(text) {
     let canvas = document.createElement('canvas');
@@ -150,7 +136,6 @@ export default class RectangleGraphNode extends Vue {
     var textWidth = context.measureText(text).width;
     return Math.max(this.minTextWidth, textWidth);
   }
-
   /* Format text for display purposes
   * Similar to Java data structure's toString methods
   * Effect: remove {, }, ' characters from this.text */
@@ -159,12 +144,10 @@ export default class RectangleGraphNode extends Vue {
     let charsToRemove = ['{', '}', "'"];
     return _.without(characters, ...charsToRemove).join("");
   }
-
   @Watch("text")
   onTextChanged() {
     this.truncatedText = this.text;
     this.fitText();
   }
 }
-
 </script>

@@ -18,10 +18,9 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 import RectangleGraphNode from "./RectangleGraphNode.vue";
-
 /**
  * An elliptical node that supports two lines of text, with automatic truncation and resizing.
- * 
+ *
  * Events Emitted:
  * - 'updateBounds':
  *       The bounds (size of node) have be    en updated.
@@ -41,34 +40,28 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   computedTotalHeight = 0;
   /** The subtext, truncated to `maxWidth`. This text is displayed in the node, if subtext is provided. */
   truncatedSubtext = "";
-
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
     text: SVGTextElement;
     /** A reference to the secondary text element where the subtext is drawn, if subtext is provided. */
     subtext: SVGTextElement;
   };
-
   mounted() {
     this.truncatedText = this.text;
     this.fitText();
-
     if (this.subtext != null) {
       this.truncatedSubtext = this.subtext ? this.subtext : "";
       this.fitSubtext();
     }
   }
-
   /** The maximum of `computedTextWidth` and `computedSubtextWidth`. */
   get computedTotalWidth() {
     return Math.max(this.computedTextWidth, this.computedSubtextWidth);
   }
-
   get displaySubText() {
     let text = this.hover ? this.subtext : this.truncatedSubtext;
     return this.format(text);
   }
-
   /* Width of the rounded rectangle */
   width() {
     this.computeWidthAndHeight();
@@ -78,12 +71,10 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
       return Math.min(Math.max(this.computedTotalWidth, this.minTextWidth), this.maxWidth);
     }
   }
-
   /** Height of the rounded rectangle. */
   height() {
     return Math.min(Math.max(this.textHeight, 30), 45) + 15;
   }
-
   /**
    * Computes the width and height of the rendered text elements and updates the following:
    * - `computedTextWidth`
@@ -114,40 +105,9 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
       this.$refs.subtext != null
         ? this.measureText(this.subtext)
         : 0;
-
     this.computedTextWidth = textWidth;
     this.computedSubtextWidth = subtextWidth;
     this.computedTotalHeight = textHeight + subtextHeight;
-  }
-
-  /**
-   * Truncates text until it is less than `maxWidth`.
-   *
-   * This function uses binary search to speed up the truncation.
-   */
-  _truncateText(lowerBound = 0, upperBound = this.text.length) {
-    if (lowerBound >= upperBound) return;
-    const mid = Math.floor((upperBound + lowerBound) / 2);
-    this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
-    // Vue doesn't update DOM (and thus box sizes) until next tick
-    Vue.nextTick(() => {
-      if (this.$refs.text.getBoundingClientRect().width > this.maxWidth) {
-        this._truncateText(lowerBound, mid - 1);
-      } else {
-        this._truncateText(mid + 1, upperBound);
-      }
-    });
-  }
-  /**
-   * Trims text to fit inside the node as necessary.
-   */
-  fitText() {
-    Vue.nextTick(() => {
-      this.computeWidthAndHeight();
-      if (this.$refs.text.getBoundingClientRect().width > this.maxWidth) {
-        this._truncateText();
-      }
-    });
   }
 
   /**
@@ -161,7 +121,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     this.truncatedSubtext = `${this.subtext.substr(0, mid + 1)}…`;
     // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      if (this.$refs.subtext.getBoundingClientRect().width > this.maxWidth) {
+      if (this.$refs.subtext.getBoundingClientRect().width + this.padding > this.maxWidth) {
         this._truncateSubtext(lowerBound, mid - 1);
       } else {
         this._truncateSubtext(mid + 1, upperBound);
@@ -174,17 +134,15 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   fitSubtext() {
     Vue.nextTick(() => {
       this.computeWidthAndHeight();
-      if (this.$refs.subtext.getBoundingClientRect().width > this.maxWidth) {
+      if (this.$refs.subtext.getBoundingClientRect().width + this.padding > this.maxWidth) {
         this._truncateSubtext();
       }
     });
   }
-
   @Watch("subtext")
   onSubtextChanged() {
     this.truncatedSubtext = this.subtext;
     this.fitSubtext();
   }
 }
-
 </script>
