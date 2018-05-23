@@ -80,7 +80,7 @@ class StepDOMWidget(DOMWidget):
     def _validate_text_size(self, proposal):
         """Cap line_width at a minimum value."""
         text_size = proposal['value']
-        return max(5, text_size)
+        return min(max(10, text_size), 20)
 
     def _initialize_controls(self):
         """Sets up functions that can be used to control the visualization."""
