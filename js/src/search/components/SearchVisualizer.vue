@@ -2,7 +2,7 @@
   <div>
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout">
       <template slot="node" scope="props">
-        <RoundedRectangleGraphNode hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
+        <RoundedRectangleGraphNode :id="props.node.id" hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                           :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined"
                           :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
@@ -10,8 +10,9 @@
         </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <DirectedRectEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
-                      :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name" >
+        <DirectedRectEdge :id="props.edge.id" :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
+                      :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name"
+                      :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
       </template>
     </GraphVisualizerBase>
@@ -130,9 +131,15 @@ export default class SearchVisualizer extends Vue {
   /**
    * Whenever a node reports it has resized, update it's style so that it redraws.
    */
-  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number; ry: number }) {
-    node.styles.rx = bounds.rx;
-    node.styles.ry = bounds.ry;
+  updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
+    node.styles.width = bounds.width;
+    node.styles.height = bounds.height;
+    this.graph.edges
+      .filter(edge => edge.target.id === node.id)
+      .forEach(edge => {
+      this.$set(edge.styles, "targetWidth", bounds.width);
+      this.$set(edge.styles, "targetHeight", bounds.height);
+    });
   }
 }
 

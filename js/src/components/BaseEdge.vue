@@ -27,6 +27,7 @@
    */
   @Component
   export default class BaseEdge extends Vue {
+    @Prop({default: ""}) id: string;
     /** The x-coordinate of the center of the source node of the edge. */
     @Prop() x1: number;
     /** The y-coordinate of the center of the source node of the edge. */

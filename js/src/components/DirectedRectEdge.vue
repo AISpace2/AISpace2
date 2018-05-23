@@ -9,7 +9,8 @@
    */
   @Component
   export default class DirectedRectEdge extends BaseEdge {
-    @Prop({default: 45}) graph_node_height: number;
+    @Prop() graph_node_width: number;
+    @Prop() graph_node_height: number;
     @Prop({default: 15}) textSize: number;
     // Minimum text width so that the node doesn't become too small when the text is short
     minTextWidth = 50;
@@ -70,11 +71,10 @@
     }
 
     intersectPoint() : {x: number, y:number} {
-      let computedTextWidth = this.measureText(this.nodeName);
-      const xLeft = this.x2-computedTextWidth/2;
-      const xRight = this.x2+computedTextWidth/2;
-      const yUp = this.y2+this.graph_node_height/2;
-      const yDown = this.y2-this.graph_node_height/2;
+      const xLeft = this.x2 - this.graph_node_width/2;
+      const xRight = this.x2 + this.graph_node_width/2;
+      const yUp = this.y2 + this.graph_node_height/2;
+      const yDown = this.y2 - this.graph_node_height/2;
 
       // setting the valid range for x and y (the range between the two graph nodes for the edge)
       const xBound = this.x1 < this.x2
@@ -97,14 +97,6 @@
         }
         return acc;
       }, null);
-    }
-
-    measureText(text) {
-      let canvas = document.createElement('canvas');
-      let context = canvas.getContext("2d");
-      context.font = this.textSize.toString() + "pt serif";
-      var textWidth = context.measureText(text).width;
-      return Math.max(this.minTextWidth, textWidth);
     }
   }
 

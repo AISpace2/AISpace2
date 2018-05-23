@@ -20,6 +20,7 @@ import { Prop, Watch } from "vue-property-decorator";
  */
 @Component
 export default class RectangleGraphNode extends Vue {
+  @Prop() id: string;
   /** The primary text of the node to display. */
   @Prop() text: string;
   /** A HTML colour string used for the node's fill colour. */
@@ -66,7 +67,7 @@ export default class RectangleGraphNode extends Vue {
     };
 
     this.$emit("updateBounds", bounds);
-    return bounds
+    return bounds;
   }
 
   get displayText() {
