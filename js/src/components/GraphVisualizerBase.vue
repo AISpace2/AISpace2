@@ -10,10 +10,7 @@
                      @mouseover="edgeMouseOver(edge)"
                      @mouseout="edgeMouseOut(edge)"
                      @click="$emit('click:edge', edge)">
-        <slot name="edge" :edge="edge"
-              :x1="edge.source.x" :y1="edge.source.y"
-              :x2="edge.target.x" :y2="edge.target.y"
-              :hover="edge === edgeHovered"></slot>
+        <slot name="edge" :edge="edge" :hover="edge === edgeHovered"></slot>
       </EdgeContainer>
       <GraphNodeContainer v-for="node in nodes" :key="node.id"
                  :x="node.x" :y="node.y"

@@ -11,7 +11,7 @@
         </RectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="strokeColour(props.edge)"></UndirectedEdge>
+        <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="strokeColour(props.edge)"></UndirectedEdge>
       </template>
     </GraphVisualizerBase>
 

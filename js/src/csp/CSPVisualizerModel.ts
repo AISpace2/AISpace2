@@ -61,6 +61,11 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("line_width");
   }
 
+  // The size of the text inside the node
+  get textSize(): number {
+    return this.get("text_size");
+  }
+
   /** The Graph representing the CSP problem. */
   get graph(): Graph {
     return this.get("graph");

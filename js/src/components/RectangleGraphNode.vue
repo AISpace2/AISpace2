@@ -1,10 +1,9 @@
 <template>
   <g>
-    <rect :width="width" :height="height" :x="-width / 2" :y="-height / 2" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
-    <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
-      {{truncatedText}}
+    <rect :width="size.width" :height="size.height" :x="-size.width / 2" :y="-size.height / 2" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
+    <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" :font-size="textSize" alignment-baseline="middle">
+      {{displayText}}
     </text>
-    <title>{{text}}</title>
   </g>
 </template>
 
@@ -21,6 +20,7 @@ import { Prop, Watch } from "vue-property-decorator";
  */
 @Component
 export default class RectangleGraphNode extends Vue {
+  @Prop() id: string;
   /** The primary text of the node to display. */
   @Prop() text: string;
   /** A HTML colour string used for the node's fill colour. */
@@ -35,15 +35,20 @@ export default class RectangleGraphNode extends Vue {
   /** The colour of the text inside the node. */
   @Prop({ default: "black" })
   textColour: string;
+  // The size of the text inside the node
+  @Prop({default: 15}) textSize: number;
+  @Prop({default: false}) hover: boolean;
 
   /** The maximum width of the text, in pixels, before truncation occurs. */
-  maxWidth = 90;
+  maxWidth = 100;
   /** The text, truncated to `maxWidth`. This text is displayed in the node. */
   truncatedText = "";
   /** The real width, in pixels, of the text. Updated by calling `computeWidthAndHeight()`. */
   textWidth = 0;
   /** The real height, in pixels, of the text. Updated by calling `computeWidthAndHeight()`. */
   textHeight = 0;
+  // Minimum text width so that the node doesn't become too small when the text is short
+  minTextWidth = 50;
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
@@ -55,13 +60,33 @@ export default class RectangleGraphNode extends Vue {
     this.fitText();
   }
 
+  get size() {
+    let bounds = {
+      width: this.width(),
+      height: this.height()
+    };
+
+    this.$emit("updateBounds", bounds);
+    return bounds;
+  }
+
+  get displayText() {
+    let text = this.hover ? this.text : this.truncatedText;
+    return this.format(text);
+  }
+
   /** Width of the rectangle. */
-  get width() {
-    return Math.min(Math.max(this.textWidth, 50), this.maxWidth) + 10;
+  width() {
+    this.computeWidthAndHeight();
+    if (this.hover){
+      return this.textWidth;
+    } else {
+      return Math.min(Math.max(this.textWidth, 50), this.maxWidth);
+    }
   }
 
   /** Height of the rectangle. */
-  get height() {
+  height() {
     return Math.min(Math.max(this.textHeight, 30), 45) + 5;
   }
 
@@ -79,7 +104,7 @@ export default class RectangleGraphNode extends Vue {
         : 0;
     this.textWidth =
       this.$refs.text != null
-        ? this.$refs.text.getBoundingClientRect().width
+        ? this.measureText(this.text)
         : 0;
   }
 
@@ -115,6 +140,24 @@ export default class RectangleGraphNode extends Vue {
         this._truncateText();
       }
     });
+  }
+
+  // measure text width in pixels
+  measureText(text) {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext("2d");
+    context.font = this.textSize.toString() + "pt serif";
+    var textWidth = context.measureText(text).width;
+    return Math.max(this.minTextWidth, textWidth);
+  }
+
+  /* Format text for display purposes
+  * Similar to Java data structure's toString methods
+  * Effect: remove {, }, ' characters from this.text */
+  format(str) {
+    let characters = str.split("");
+    let charsToRemove = ['{', '}', "'"];
+    return _.without(characters, ...charsToRemove).join("");
   }
 
   @Watch("text")

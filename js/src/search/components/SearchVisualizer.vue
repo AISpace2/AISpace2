@@ -2,19 +2,18 @@
   <div>
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout">
       <template slot="node" scope="props">
-        <EllipseGraphNode :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
+        <RoundedRectangleGraphNode :id="props.node.id" hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                           :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined"
-                          :fill="nodeFillColour(props.node, props.hover)"
+                          :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)">
-        </EllipseGraphNode>
+        </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2" :stroke="props.edge.styles.stroke"
-                      :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)"
-                      :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
-                      :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry">
-        </DirectedEdge>
+        <DirectedRectEdge :id="props.edge.id" :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
+                      :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name"
+                      :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
+        </DirectedRectEdge>
       </template>
     </GraphVisualizerBase>
     <div class="footer">
@@ -36,9 +35,8 @@ import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
-import DirectedEdge from "../../components/DirectedEdge.vue";
-import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
-
+import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
+import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
 import { nodeFillColour, nodeHText } from "../SearchUtils";
@@ -54,8 +52,8 @@ import { nodeFillColour, nodeHText } from "../SearchUtils";
 @Component({
   components: {
     GraphVisualizerBase,
-    DirectedEdge,
-    EllipseGraphNode
+    DirectedRectEdge,
+    RoundedRectangleGraphNode,
   }
 })
 export default class SearchVisualizer extends Vue {
@@ -133,9 +131,15 @@ export default class SearchVisualizer extends Vue {
   /**
    * Whenever a node reports it has resized, update it's style so that it redraws.
    */
-  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number; ry: number }) {
-    node.styles.rx = bounds.rx;
-    node.styles.ry = bounds.ry;
+  updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
+    node.styles.width = bounds.width;
+    node.styles.height = bounds.height;
+    this.graph.edges
+      .filter(edge => edge.target.id === node.id)
+      .forEach(edge => {
+      this.$set(edge.styles, "targetWidth", bounds.width);
+      this.$set(edge.styles, "targetHeight", bounds.height);
+    });
   }
 }
 

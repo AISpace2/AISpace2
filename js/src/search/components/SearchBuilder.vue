@@ -11,13 +11,13 @@
         </EllipseGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <DirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
+        <DirectedEllipseEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                       :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
                       :stroke="strokeColour(props.edge)"
                       :strokeWidth="props.edge.styles.strokeWidth"
                       :text="showEdgeCosts ? props.edge.cost : undefined">
-        </DirectedEdge>
+        </DirectedEllipseEdge>
       </template>
     </GraphVisualizerBase>
     <div>
@@ -47,7 +47,7 @@ import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
-import DirectedEdge from "../../components/DirectedEdge.vue";
+import DirectedEllipseEdge from "../../components/DirectedEllipseEdge.vue";
 import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
@@ -60,7 +60,7 @@ import { nodeFillColour, nodeHText } from "../SearchUtils";
  * Currently incomplete.
  */
 @Component({
-  components: { GraphVisualizerBase, DirectedEdge, EllipseGraphNode }
+  components: { GraphVisualizerBase, DirectedEllipseEdge, EllipseGraphNode }
 })
 export default class SearchGraphBuilder extends Vue {
   /** The graph being built. */

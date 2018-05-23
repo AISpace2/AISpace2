@@ -2,18 +2,20 @@
   <div tabindex="0" @keydown.stop>
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true">
       <template slot="node" scope="props">
-        <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
-                         :subtext="domainText(props.node)" 
+        <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
+                         :subtext="domainText(props.node)" :textSize="textSize"
                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
-                         :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'">
-        </EllipseGraphNode>
-        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)"
+                         :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
+                          :hover="props.hover">
+        </RoundedRectangleGraphNode>
+        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)" :text-size="textSize"
                            :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
-                           :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'">
+                           :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
+                            :hover="props.hover">
         </RectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <UndirectedEdge :x1="props.x1" :x2="props.x2" :y1="props.y1" :y2="props.y2"
+        <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                         :stroke="stroke(props.edge)"
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
@@ -35,7 +37,7 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
+import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
@@ -55,7 +57,7 @@ import * as CSPUtils from "../CSPUtils";
  */
 @Component({
   components: {
-    EllipseGraphNode,
+    RoundedRectangleGraphNode,
     GraphVisualizerBase,
     RectangleGraphNode,
     UndirectedEdge
@@ -68,6 +70,8 @@ export default class CSPGraphInteractor extends Vue {
   output: string;
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
+  // The size of the text inside the node
+  textSize: number;
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
