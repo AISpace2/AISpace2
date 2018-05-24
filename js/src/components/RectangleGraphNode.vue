@@ -47,10 +47,21 @@ export default class RectangleGraphNode extends Vue {
   textHeight = 0;
   // Minimum text width so that the node doesn't become too small when the text is short
   minTextWidth = 50;
-  // Additional truncate length so there is white padding within a graph node
-  padding = 20;
   // Expansion toggle flag
   isExpanded = false;
+  padding = {
+    // Additional truncate length so there is white padding within a graph node
+    // reduce padding by not truncating as many text
+    // higher number means more words are truncated -> shorter text
+    text: 30,
+    subtext: 50,
+
+    // percentage to reduce the padding of the graph node [0 - 1]
+    // reduce padding by making the graph node width smaller
+    // usage: width = width * nodeWidthReduction for graph nodes
+    // higher number means more width
+    nodeWidthReduction: 0.85
+  };
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
@@ -75,11 +86,13 @@ export default class RectangleGraphNode extends Vue {
   /** Width of the rectangle. */
   width() {
     this.computeWidthAndHeight();
+    let width = 0;
     if (this.hover || this.isExpanded){
-      return this.textWidth;
+      width = this.textWidth;
     } else {
-      return Math.min(Math.max(this.textWidth, 50), this.maxWidth);
+      width = Math.min(Math.max(this.textWidth, 50), this.maxWidth);
     }
+    return width * this.padding.nodeWidthReduction;
   }
   /** Height of the rectangle. */
   height() {
@@ -113,7 +126,7 @@ export default class RectangleGraphNode extends Vue {
     this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
     // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      if (this.$refs.text.getBoundingClientRect().width + this.padding > this.maxWidth) {
+      if (this.$refs.text.getBoundingClientRect().width + this.padding.text > this.maxWidth) {
         this._truncateText(lowerBound, mid - 1);
       } else {
         this._truncateText(mid + 1, upperBound);
@@ -126,7 +139,7 @@ export default class RectangleGraphNode extends Vue {
   fitText() {
     Vue.nextTick(() => {
       this.computeWidthAndHeight();
-      if (this.$refs.text.getBoundingClientRect().width + this.padding > this.maxWidth) {
+      if (this.$refs.text.getBoundingClientRect().width + this.padding.text > this.maxWidth) {
         this._truncateText();
       }
     });
