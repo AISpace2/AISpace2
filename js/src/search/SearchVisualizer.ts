@@ -23,8 +23,6 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     super.initialize(opts);
 
     this.listenTo(this.model, "view:msg", (event: SearchEvents.Events) => {
-      // tslint:disable-next-line:no-console
-      console.log(event);
 
       switch (event.action) {
         case "highlightPath":
@@ -45,7 +43,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     this.listenTo(this.model, "change:graph", () => {
       // Nodes/edges have been added to the graph from the backend.
       this.model.graph.mergeStylesFrom(this.model.previous("graph"));
-      this.vue.graph = this.model.graph;
+      this.vue.graph = this.getGraph();
     });
   }
 
@@ -152,5 +150,23 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       default:
         return new GraphLayout(d3ForceLayout());
     }
+  }
+
+  private getGraph() {
+    let graph = this.model.graph;
+    for (let edge of graph.edges) {
+      let child = graph.nodes.find(node => node.id === edge.target.id);
+      let parent = graph.nodes.find(node => node.id === edge.source.id);
+      let childText = child ? this.format(child.name) : "";
+      let parentText = parent ? this.format(parent.name) : "";
+      if (child) child.name = childText.replace(parentText + ", ", '');
+    }
+    return graph;
+  }
+
+  private format(str: string): string {
+    let characters = str.split("");
+    let charsToRemove = ['{', '}', "'"];
+    return _.without(characters, ...charsToRemove).join("");
   }
 }
