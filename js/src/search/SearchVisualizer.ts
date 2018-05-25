@@ -154,13 +154,22 @@ export default class SearchViewer extends widgets.DOMWidgetView {
 
   private getGraph() {
     let graph = this.model.graph;
+
+    // make backup text of parent
+    // child and parent have to be defined since it is connected by an edge
     for (let edge of graph.edges) {
       let child = graph.nodes.find(node => node.id === edge.target.id);
       let parent = graph.nodes.find(node => node.id === edge.source.id);
-      let childText = child ? this.format(child.name) : "";
-      let parentText = parent ? this.format(parent.name) : "";
-      if (child) child.name = childText.replace(parentText + ", ", '');
+      child!.parentText = this.format(parent!.name);
     }
+
+    for (let edge of graph.edges) {
+      let child = graph.nodes.find(node => node.id === edge.target.id);
+      let parent = graph.nodes.find(node => node.id === edge.source.id);
+      let childText = this.format(child!.name);
+      let parentText = this.format(parent!.name);
+      child!.name = childText.replace(child.parent + ", ", '');
+      }
     return graph;
   }
 
