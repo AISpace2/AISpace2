@@ -155,6 +155,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   private getGraph() {
     let graph = this.model.graph;
 
+    if (this.model.shorterName){
+
     // make backup text of parent
     // child and parent have to be defined since it is connected by an edge
     for (let edge of graph.edges) {
@@ -170,6 +172,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       let parentText = this.format(parent!.name);
       child!.name = childText.replace(child.parent + ", ", '');
       }
+    }
+
     return graph;
   }
 
