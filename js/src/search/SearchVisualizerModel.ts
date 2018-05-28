@@ -81,6 +81,11 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     this.set("graph", val);
   }
 
+  // True if we want the child node to not include the text of its parent
+  get shortName(): boolean {
+    return this.get("short_name");
+  }
+
   /** True if the visualization should show edge costs. */
   get showEdgeCosts(): boolean {
     return this.get("show_edge_costs");

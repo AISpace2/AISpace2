@@ -2,7 +2,7 @@ import threading
 from time import sleep
 
 from ipywidgets import DOMWidget
-from traitlets import Float, Integer, validate
+from traitlets import Float, Integer, validate, Bool
 
 
 class ReturnableThread(threading.Thread):
@@ -35,11 +35,14 @@ class StepDOMWidget(DOMWidget):
         sleep_time (float): The time delay between consecutive display calls.
         line_width (float): The width of the edges in the visualization.
         text_size (int):    The size of the text inside the node
+        short_name (bool):  True if we want the child nodes to not include parent's common text
+                            Warning: this only removes child's common text if it perfectly matches its parent's
+                            entire text in the same order
     """
 
     line_width = Float(4.0).tag(sync=True)
     text_size = Integer(10).tag(sync=True)
-
+    short_name = Bool(False).tag(sync=True)
 
     def __init__(self):
         super().__init__()
