@@ -43,7 +43,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     this.listenTo(this.model, "change:graph", () => {
       // Nodes/edges have been added to the graph from the backend.
       this.model.graph.mergeStylesFrom(this.model.previous("graph"));
-      this.vue.graph = this.getGraph();
+      this.vue.graph = this.model.shortName ? this.trimGraph() : this.model.graph;
     });
   }
 
@@ -152,11 +152,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     }
   }
 
-  private getGraph() {
+  private trimGraph() {
     let graph = this.model.graph;
-
-    if (this.model.shorterName){
-
     // make backup text of parent
     // child and parent have to be defined since it is connected by an edge
     for (let edge of graph.edges) {
@@ -170,8 +167,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       let parent = graph.nodes.find(node => node.id === edge.source.id);
       let childText = this.format(child!.name);
       let parentText = this.format(parent!.name);
-      child!.name = childText.replace(child.parent + ", ", '');
-      }
+      child!.name = childText.replace(child!.parentText + ", ", '');
     }
 
     return graph;
