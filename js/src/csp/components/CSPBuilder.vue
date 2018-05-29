@@ -56,7 +56,7 @@ import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 import * as shortid from "shortid";
 
-import CSPToolbar from "./CSPBuilderToolbar.vue";=
+import CSPToolbar from "./CSPBuilderToolbar.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
