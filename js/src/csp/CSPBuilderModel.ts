@@ -55,4 +55,8 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
   set graph(val: Graph<ICSPGraphNode>) {
     this.set("graph", val);
   }
+
+  get textSize(): number {
+    return this.get("text_size");
+  }
 }
