@@ -6,7 +6,7 @@
                           :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined"
                           :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                           :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
-                          @updateBounds="updateNodeBounds(props.node, $event)">
+                          @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize">
         </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
@@ -73,6 +73,8 @@ export default class SearchVisualizer extends Vue {
   height: number;
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
+  // The size of the text inside the node
+  textSize: number;
 
   nodeFillColour(node: ISearchGraphNode, hover: boolean) {
     if (hover) {

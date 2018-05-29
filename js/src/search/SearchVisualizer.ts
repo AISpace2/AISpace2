@@ -56,6 +56,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
           output: null,
+          textSize: this.model.textSize,
           frontier: []
         }
       }).$mount(this.el);

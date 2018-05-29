@@ -72,6 +72,10 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     return this.get("line_width");
   }
 
+  get textSize(): number {
+    return this.get("text_size");
+  }
+
   /** The Graph representing the search problem. */
   get graph(): Graph<ISearchGraphNode, ISearchGraphEdge> {
     return this.get("graph");
