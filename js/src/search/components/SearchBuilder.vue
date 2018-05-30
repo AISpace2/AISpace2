@@ -3,21 +3,21 @@
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
                          @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" scope="props">
-        <EllipseGraphNode :text="props.node.name"
+        <RoundedRectangleGraphNode :text="props.node.name"
                           :subtext="nodeHText(props.node)"
                           :fill="nodeFillColour(props.node)"
                           :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
-                          @updateBounds="updateNodeBounds(props.node, $event)">
-        </EllipseGraphNode>
+                          @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize" :hover="props.hover">
+        </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
-        <DirectedEllipseEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
+        <DirectedRectEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                       :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
                       :stroke="strokeColour(props.edge)"
                       :strokeWidth="props.edge.styles.strokeWidth"
-                      :text="showEdgeCosts ? props.edge.cost : undefined">
-        </DirectedEllipseEdge>
+                      :text="showEdgeCosts ? props.edge.cost : undefined" :textSize="textSize" :hover="props.hover">
+        </DirectedRectEdge>
       </template>
     </GraphVisualizerBase>
     <div>
@@ -47,8 +47,8 @@ import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
-import DirectedEllipseEdge from "../../components/DirectedEllipseEdge.vue";
-import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
+import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
+import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
@@ -60,7 +60,7 @@ import { nodeFillColour, nodeHText } from "../SearchUtils";
  * Currently incomplete.
  */
 @Component({
-  components: { GraphVisualizerBase, DirectedEllipseEdge, EllipseGraphNode }
+  components: {RoundedRectangleGraphNode, GraphVisualizerBase, DirectedRectEdge }
 })
 export default class SearchGraphBuilder extends Vue {
   /** The graph being built. */
@@ -71,6 +71,7 @@ export default class SearchGraphBuilder extends Vue {
   showNodeHeuristics: boolean;
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
+  textSize: number;
 
   /** The current node or edge being selected. */
   selection: ISearchGraphNode | ISearchGraphEdge | null = null;
@@ -111,9 +112,9 @@ export default class SearchGraphBuilder extends Vue {
     }
   }
 
-  updateNodeBounds(node: ISearchGraphNode, bounds: { rx: number; ry: number }) {
-    node.styles.rx = bounds.rx;
-    node.styles.ry = bounds.ry;
+  updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
+    node.styles.width = bounds.width;
+    node.styles.height = bounds.height;
   }
 }
 

@@ -8,7 +8,7 @@
                          :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                           :hover="props.hover" :id="props.node.id">
         </RoundedRectangleGraphNode>
-        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)" :text-size="textSize"
+        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)" :textSize="textSize"
                            :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                            :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                             :hover="props.hover" :id="props.node.id">
