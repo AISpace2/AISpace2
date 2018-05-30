@@ -37,6 +37,7 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
       this.vue = new CSPGraphBuilder({
         data: {
           graph: initialGraph,
+          textSize: this.model.textSize,
           layout: new GraphLayout(d3ForceLayout(), relativeLayout())
         },
         watch: {

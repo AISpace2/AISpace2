@@ -37,6 +37,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
       this.vue = new SearchGraphBuilder({
         data: {
           graph: initialGraph,
+          textSize: this.model.textSize,
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
           layout: new GraphLayout(d3ForceLayout(), relativeLayout())

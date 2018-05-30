@@ -1,6 +1,6 @@
 from aipython.cspProblem import CSP
 from ipywidgets import DOMWidget, register
-from traitlets import Dict, Instance, Unicode
+from traitlets import Dict, Instance, Unicode, Integer
 
 from .cspjsonbridge import csp_from_json, csp_to_json, csp_to_python_code
 
@@ -31,6 +31,7 @@ class CSPBuilder(DOMWidget):
     graph = Instance(
         klass=CSP, allow_none=True).tag(
             sync=True, from_json=csp_from_json, to_json=csp_to_json)
+    text_size = Integer(12).tag(sync=True)
 
     def __init__(self, csp=None):
         super().__init__()

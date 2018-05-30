@@ -3,11 +3,11 @@
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
       @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
       <template slot="node" scope="props">
-        <EllipseGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"
-                         :fill="props.node === selection ? 'pink' : 'white'">
-        </EllipseGraphNode>
+        <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"
+                         :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover">
+        </RoundedRectangleGraphNode>
         <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)"
-                           :fill="props.node === selection ? 'pink' : 'white'">
+                           :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover">
         </RectangleGraphNode>
       </template>
       <template slot="edge" scope="props">
@@ -57,7 +57,6 @@ import { Prop, Watch } from "vue-property-decorator";
 import * as shortid from "shortid";
 
 import CSPToolbar from "./CSPBuilderToolbar.vue";
-import EllipseGraphNode from "../../components/EllipseGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
@@ -65,6 +64,7 @@ import UndirectedEdge from "../../components/UndirectedEdge.vue";
 import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
 import * as CSPUtils from "../CSPUtils";
+import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode";
 
 type Mode = "select" | "variable" | "constraint" | "edge";
 
@@ -75,8 +75,8 @@ type Mode = "select" | "variable" | "constraint" | "edge";
  */
 @Component({
   components: {
+    RoundedRectangleGraphNode,
     CSPToolbar,
-    EllipseGraphNode,
     GraphVisualizerBase,
     RectangleGraphNode,
     UndirectedEdge
@@ -94,6 +94,7 @@ export default class CSPGraphBuilder extends Vue {
   selection: ICSPGraphNode | IGraphEdge | null = null;
   /** During edge creation, tracks the source node of the edge to be formed. */
   first: ICSPGraphNode | null = null;
+  textSize: number;
 
   /** Switches to a new mode. */
   setMode(mode: Mode) {

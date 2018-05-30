@@ -41,7 +41,7 @@ class StepDOMWidget(DOMWidget):
     """
 
     line_width = Float(4.0).tag(sync=True)
-    text_size = Integer(10).tag(sync=True)
+    text_size = Integer(12).tag(sync=True)
     short_name = Bool(False).tag(sync=True)
 
     def __init__(self):
@@ -78,12 +78,6 @@ class StepDOMWidget(DOMWidget):
         """Cap line_width at a minimum value."""
         line_width = proposal['value']
         return min(1, line_width)
-
-    @validate("text_size")
-    def _validate_text_size(self, proposal):
-        """Cap line_width at a minimum value."""
-        text_size = proposal['value']
-        return min(max(10, text_size), 20)
 
     def _initialize_controls(self):
         """Sets up functions that can be used to control the visualization."""
