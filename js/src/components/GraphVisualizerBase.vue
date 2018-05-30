@@ -216,6 +216,7 @@ export default class GraphVisualizeBase extends Vue {
 
   nodeMouseOver(node: IGraphNode) {
     this.nodeHovered = node;
+    this.moveToFront(node);
   }
 
   nodeMouseOut(node: IGraphNode) {
@@ -241,6 +242,14 @@ export default class GraphVisualizeBase extends Vue {
    */
   toggleTransition(allowed: boolean) {
     this.transitionsAllowed = allowed;
+  }
+
+  moveToFront(node: IGraphNode) {
+    let svg = $('svg').get(0);
+    let nodeElem = $("#" + node.id).get(0).parentElement; // get the outmost group element
+    nodeElem.setAttribute("x", nodeElem.getBoundingClientRect().x);
+    nodeElem.setAttribute("y", nodeElem.getBoundingClientRect().y);
+    svg.appendChild(nodeElem);
   }
 
   @Watch("graph")

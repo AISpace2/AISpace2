@@ -1,5 +1,5 @@
 <template>
-  <g @click="isExpanded = !isExpanded">
+  <g @click="isExpanded = !isExpanded" :id="id">
     <rect :width="size.width" :height="size.height" :x="-size.width / 2" :y="-size.height / 2" :fill="fill" :stroke="stroke" :stroke-width="strokeWidth"></rect>
     <text ref="text" x="0" :y="0" :fill="textColour" text-anchor="middle" :font-size="textSize" alignment-baseline="middle">
       {{displayText}}
