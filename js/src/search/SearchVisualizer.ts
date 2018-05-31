@@ -43,7 +43,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     this.listenTo(this.model, "change:graph", () => {
       // Nodes/edges have been added to the graph from the backend.
       this.model.graph.mergeStylesFrom(this.model.previous("graph"));
-      this.vue.graph = this.model.shortName ? this.trimGraph() : this.model.graph;
+      this.vue.graph = this.model.showFullDomain ? this.model.graph : this.trimGraph();
     });
   }
 

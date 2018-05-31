@@ -90,8 +90,8 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
   }
 
   // True if we want the child node to not include the text of its parent
-  get shortName(): boolean {
-    return this.get("short_name");
+  get showFullDomain(): boolean {
+    return this.get("show_full_domain");
   }
 
   /** True if the visualization should show edge costs. */
