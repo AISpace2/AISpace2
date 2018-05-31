@@ -39,7 +39,7 @@ export default class RectangleGraphNode extends Vue {
   // Check if this node is hovered by mouse
   @Prop({default: false}) hover: boolean;
   // True if want to truncate or minimize total number of nodes when number of node exceed a set number
-  @Prop({default: true}) doCompress: boolean;
+  @Prop({default: false}) simplifyGraph: boolean;
   /** The maximum width of the text, in pixels, before truncation occurs. */
   maxWidth = 100;
   /** The text, truncated to `maxWidth`. This text is displayed in the node. */
@@ -167,7 +167,7 @@ export default class RectangleGraphNode extends Vue {
     return _.without(characters, ...charsToRemove).join("");
   }
   showNoTextFlag() {
-    return this.doCompress && !this.hover && !this.isExpanded
+    return this.simplifyGraph && !this.hover && !this.isExpanded
   }
   @Watch("text")
   onTextChanged() {

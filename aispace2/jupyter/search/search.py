@@ -52,6 +52,8 @@ class Displayable(StepDOMWidget):
     # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
     _previously_rendered = Bool(False).tag(sync=True)
 
+    simplify_graph = Bool(False).tag(sync=True)
+
     def __init__(self):
         super().__init__()
 
