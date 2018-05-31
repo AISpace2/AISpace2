@@ -77,7 +77,7 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
   }
 
   get simplifyGraph(): boolean {
-    return this.get("simplify_graph");
+    return this.get("hide_text");
   }
 
   /** The Graph representing the search problem. */
