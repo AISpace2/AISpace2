@@ -64,6 +64,9 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   }
   /* Width of the rounded rectangle */
   width() {
+    if (this.showNoTextFlag()) {
+      return this.minTextWidth;
+    }
     this.computeWidthAndHeight();
     let width = 0;
     if (this.hover || this.isExpanded) {
@@ -136,10 +139,13 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
    */
   fitSubtext() {
     Vue.nextTick(() => {
-      this.computeWidthAndHeight();
-      if (this.$refs.subtext.getBoundingClientRect().width + this.padding.subtext > this.maxWidth) {
-        this._truncateSubtext();
-      }
+      if (this.showNoTextFlag()) {
+        this.truncatedSubtext = "";
+      } else {
+        this.computeWidthAndHeight();
+        if (this.$refs.subtext.getBoundingClientRect().width + this.padding.subtext > this.maxWidth) {
+          this._truncateSubtext();
+      }}
     });
   }
   @Watch("subtext")
