@@ -64,18 +64,18 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
   }
   /* Width of the rounded rectangle */
   width() {
-    if (this.showNoTextFlag()) {
-      return this.minTextWidth;
-    }
-    this.computeWidthAndHeight();
-    let width = 0;
-    if (this.hover || this.isExpanded) {
-      width = this.computedTotalWidth;
-    } else {
-      width = Math.min(Math.max(this.computedTotalWidth, this.minTextWidth), this.maxWidth);
-    }
+    if (this.showNoTextFlag()) return this.minTextWidth;
 
-    return width * this.padding.nodeWidthReduction;
+    this.computeWidthAndHeight();
+    let width = this.computedTotalWidth;
+    if (this.hover || this.isExpanded) return Math.max(width + this.padding, this.minTextWidth);
+    else{
+      let widthWithPadding = width + this.padding;
+
+      if (widthWithPadding < this.minTextWidth) return this.minTextWidth;
+      else if (widthWithPadding > this.maxWidth) return this.maxWidth;
+      else return widthWithPadding;
+    }
   }
   /** Height of the rounded rectangle. */
   height() {
@@ -127,7 +127,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     this.truncatedSubtext = `${this.subtext.substr(0, mid + 1)}…`;
     // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      if (this.$refs.subtext.getBoundingClientRect().width + this.padding.subtext > this.maxWidth) {
+      if (this.$refs.subtext.getBoundingClientRect().width > this.maxWidth) {
         this._truncateSubtext(lowerBound, mid - 1);
       } else {
         this._truncateSubtext(mid + 1, upperBound);
@@ -143,7 +143,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
         this.truncatedSubtext = "";
       } else {
         this.computeWidthAndHeight();
-        if (this.$refs.subtext.getBoundingClientRect().width + this.padding.subtext > this.maxWidth) {
+        if (this.$refs.subtext.getBoundingClientRect().width > this.maxWidth) {
           this._truncateSubtext();
       }}
     });
