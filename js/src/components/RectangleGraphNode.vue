@@ -56,7 +56,7 @@ export default class RectangleGraphNode extends Vue {
     // reduce padding by making the graph node width smaller or larger with negative or positive extra padding respectively
     // usage: width = width + padding for graph nodes
     // higher number means more width
-  padding = 15;
+  padding = 25;
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
