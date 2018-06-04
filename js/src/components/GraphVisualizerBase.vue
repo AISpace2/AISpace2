@@ -245,7 +245,7 @@ export default class GraphVisualizeBase extends Vue {
   }
 
   moveToFront(node: IGraphNode) {
-    let svg = $('svg').get(0);
+    let svg = this.$refs.svg;
     let nodeElem = $("#" + node.id).get(0).parentElement; // get the outmost group element
     nodeElem.setAttribute("x", nodeElem.getBoundingClientRect().x);
     nodeElem.setAttribute("y", nodeElem.getBoundingClientRect().y);
