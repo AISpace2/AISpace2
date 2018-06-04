@@ -52,11 +52,18 @@ export default class RectangleGraphNode extends Vue {
   minTextWidth = 50;
   // Expansion toggle flag
   isExpanded = false;
-  // fixed padding to change the width of the graph node
+  padding ={
+    // fixed padding to change the width of the graph node
     // reduce padding by making the graph node width smaller or larger with negative or positive extra padding respectively
     // usage: width = width + padding for graph nodes
     // higher number means more width
-  padding = 25;
+    widthPadding: 25,
+
+    // extra invisible text size when considering truncating words so it doesn't overflow the graph node
+    text: 30,
+    subtext: 50,
+  };
+
 
   $refs: {
     /** A reference to the primary text element where the text is drawn. */
@@ -78,14 +85,14 @@ export default class RectangleGraphNode extends Vue {
     let text = (this.hover || this.isExpanded) ? this.text : this.truncatedText;
     return this.format(text);
   }
-  /** Width of the rectangle. */
+  /* Width of the rounded rectangle */
   width() {
+    if (this.showNoTextFlag()) return this.minTextWidth;
     this.computeWidthAndHeight();
-    let width = this.textWidth;
-    if (this.hover || this.isExpanded) return Math.max(width + this.padding, this.minTextWidth);
-    else{
-      let widthWithPadding = width + this.padding;
 
+    let widthWithPadding = this.rawWidth + this.padding.widthPadding;
+    if (this.hover || this.isExpanded) return Math.max(widthWithPadding, this.minTextWidth);
+    else {
       if (widthWithPadding < this.minTextWidth) return this.minTextWidth;
       else if (widthWithPadding > this.maxWidth) return this.maxWidth;
       else return widthWithPadding;
@@ -123,7 +130,7 @@ export default class RectangleGraphNode extends Vue {
     this.truncatedText = `${this.text.substr(0, mid + 1)}…`;
     // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      if (this.$refs.text.getBoundingClientRect().width > this.maxWidth) {
+      if (this.$refs.text.getBoundingClientRect().width + this.padding.text > this.maxWidth) {
         this._truncateText(lowerBound, mid - 1);
       } else {
         this._truncateText(mid + 1, upperBound);
@@ -139,7 +146,7 @@ export default class RectangleGraphNode extends Vue {
         this.truncatedText = "";
       } else {
       this.computeWidthAndHeight();
-      if (this.$refs.text.getBoundingClientRect().width > this.maxWidth) {
+      if (this.$refs.text.getBoundingClientRect().width + this.padding.text > this.maxWidth) {
         this._truncateText();
       }
     }});
@@ -162,6 +169,11 @@ export default class RectangleGraphNode extends Vue {
   showNoTextFlag() {
     return this.simplifyGraph && !this.hover && !this.isExpanded
   }
+
+  get rawWidth() {
+    return this.textWidth;
+  }
+
   @Watch("text")
   onTextChanged() {
     this.truncatedText = this.text;
