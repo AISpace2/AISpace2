@@ -62,21 +62,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     let text = (this.hover || this.isExpanded) ? this.subtext : this.truncatedSubtext;
     return this.format(text);
   }
-  /* Width of the rounded rectangle */
-  width() {
-    if (this.showNoTextFlag()) return this.minTextWidth;
 
-    this.computeWidthAndHeight();
-    let width = this.computedTotalWidth;
-    if (this.hover || this.isExpanded) return Math.max(width + this.padding, this.minTextWidth);
-    else{
-      let widthWithPadding = width + this.padding;
-
-      if (widthWithPadding < this.minTextWidth) return this.minTextWidth;
-      else if (widthWithPadding > this.maxWidth) return this.maxWidth;
-      else return widthWithPadding;
-    }
-  }
   /** Height of the rounded rectangle. */
   height() {
     return Math.min(Math.max(this.textHeight, 30), 45) + 15;
@@ -127,7 +113,7 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     this.truncatedSubtext = `${this.subtext.substr(0, mid + 1)}…`;
     // Vue doesn't update DOM (and thus box sizes) until next tick
     Vue.nextTick(() => {
-      if (this.$refs.subtext.getBoundingClientRect().width > this.maxWidth) {
+      if (this.$refs.subtext.getBoundingClientRect().width + this.padding.subtext > this.maxWidth) {
         this._truncateSubtext(lowerBound, mid - 1);
       } else {
         this._truncateSubtext(mid + 1, upperBound);
@@ -143,11 +129,16 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
         this.truncatedSubtext = "";
       } else {
         this.computeWidthAndHeight();
-        if (this.$refs.subtext.getBoundingClientRect().width > this.maxWidth) {
+        if (this.$refs.subtext.getBoundingClientRect().width + this.padding.subtext > this.maxWidth) {
           this._truncateSubtext();
       }}
     });
   }
+
+  get rawWidth() {
+    return this.computedTotalWidth;
+  }
+
   @Watch("subtext")
   onSubtextChanged() {
     this.truncatedSubtext = this.subtext;
