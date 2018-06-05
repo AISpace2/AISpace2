@@ -11,6 +11,7 @@
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
+import { without } from "underscore";
 /**
  * A rectangular node that supports one line of text, with automatic truncation and resizing.
  *
@@ -152,19 +153,19 @@ export default class RectangleGraphNode extends Vue {
     }});
   }
   // measure text width in pixels
-  measureText(text) {
+  measureText(text: string) {
     let canvas = document.createElement('canvas');
     let context = canvas.getContext("2d");
-    context.font = this.textSize.toString() + "px serif";
-    return context.measureText(text).width;
+    context!.font = this.textSize.toString() + "px serif";
+    return context!.measureText(text).width;
   }
   /* Format text for display purposes
   * Similar to Java data structure's toString methods
   * Effect: remove {, }, ' characters from this.text */
-  format(str) {
+  format(str: string) {
     let characters = str.split("");
     let charsToRemove = ['{', '}', "'"];
-    return _.without(characters, ...charsToRemove).join("");
+    return without(characters, ...charsToRemove).join("");
   }
   showNoTextFlag() {
     return this.simplifyGraph && !this.hover && !this.isExpanded
