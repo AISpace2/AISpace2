@@ -45,7 +45,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     });
   }
 
-  public   render() {
+  public render() {
     timeout(() => {
       this.vue = new CSPGraphVisualizer({
         data: {

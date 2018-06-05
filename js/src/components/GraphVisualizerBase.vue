@@ -29,6 +29,7 @@
 
 <script lang="ts">
 import { debounce } from "underscore";
+import * as d3 from "d3";
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
@@ -102,7 +103,7 @@ export default class GraphVisualizeBase extends Vue {
 
   $refs: {
     /** The SVG element that the graph is drawn in. */
-    svg: SVGElement;
+    svg: SVGSVGElement;
     /** The div element representing a resize handle. */
     handle: HTMLDivElement;
   };
@@ -151,6 +152,7 @@ export default class GraphVisualizeBase extends Vue {
       window.removeEventListener("mouseup", stopResizing, false);
       this.prevPageY = null;
     };
+
   }
 
   beforeDestroy() {
@@ -245,11 +247,9 @@ export default class GraphVisualizeBase extends Vue {
   }
 
   moveToFront(node: IGraphNode) {
-    let svg = $('svg').get(0);
-    let nodeElem = $("#" + node.id).get(0).parentElement; // get the outmost group element
-    nodeElem.setAttribute("x", nodeElem.getBoundingClientRect().x);
-    nodeElem.setAttribute("y", nodeElem.getBoundingClientRect().y);
-    svg.appendChild(nodeElem);
+     const svg = this.$refs.svg;
+     const nodeElem = svg.getElementById(node.id).parentElement;
+     svg.appendChild(nodeElem!);
   }
 
   @Watch("graph")

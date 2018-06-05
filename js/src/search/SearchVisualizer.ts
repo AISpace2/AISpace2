@@ -1,6 +1,6 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
-import { debounce } from "underscore";
+import { without } from "underscore";
 import Vue from "vue";
 import * as Analytics from "../Analytics";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
@@ -9,7 +9,6 @@ import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchEvents from "./SearchVisualizerEvents";
 import SearchViewerModel from "./SearchVisualizerModel";
-
 /**
  * Creates a Search visualization and handles events received from the backend.
  * 
@@ -23,7 +22,6 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     super.initialize(opts);
 
     this.listenTo(this.model, "view:msg", (event: SearchEvents.Events) => {
-
       switch (event.action) {
         case "highlightPath":
           return this.highlightPath(event);
@@ -43,7 +41,9 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     this.listenTo(this.model, "change:graph", () => {
       // Nodes/edges have been added to the graph from the backend.
       this.model.graph.mergeStylesFrom(this.model.previous("graph"));
-      this.vue.graph = this.model.showFullDomain ? this.model.graph : this.trimGraph();
+      this.vue.graph = this.model.showFullDomain
+        ? this.model.graph
+        : this.trimGraph();
     });
   }
 
@@ -155,29 +155,29 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   }
 
   private trimGraph() {
-    let graph = this.model.graph;
+    const graph = this.model.graph;
     // make backup text of parent
     // child and parent have to be defined since it is connected by an edge
-    for (let edge of graph.edges) {
-      let child = graph.nodes.find(node => node.id === edge.target.id);
-      let parent = graph.nodes.find(node => node.id === edge.source.id);
+    for (const edge of graph.edges) {
+      const child = graph.nodes.find(node => node.id === edge.target.id);
+      const parent = graph.nodes.find(node => node.id === edge.source.id);
       child!.parentText = this.format(parent!.name);
     }
 
-    for (let edge of graph.edges) {
-      let child = graph.nodes.find(node => node.id === edge.target.id);
-      let parent = graph.nodes.find(node => node.id === edge.source.id);
-      let childText = this.format(child!.name);
-      let parentText = this.format(parent!.name);
-      child!.name = childText.replace(child!.parentText + ", ", '');
+    for (const edge of graph.edges) {
+      const child = graph.nodes.find(node => node.id === edge.target.id);
+      const parent = graph.nodes.find(node => node.id === edge.source.id);
+      const childText = this.format(child!.name);
+      const parentText = this.format(parent!.name);
+      child!.name = childText.replace(child!.parentText + ", ", "");
     }
 
     return graph;
   }
 
   private format(str: string): string {
-    let characters = str.split("");
-    let charsToRemove = ['{', '}', "'"];
-    return _.without(characters, ...charsToRemove).join("");
+    const characters = str.split("");
+    const charsToRemove = ["{", "}", "'"];
+    return without(characters, ...charsToRemove).join("");
   }
 }
