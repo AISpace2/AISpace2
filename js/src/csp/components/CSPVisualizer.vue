@@ -1,6 +1,7 @@
 <template>
   <div tabindex="0" @keydown.stop>
-    <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true">
+    <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
+        :legendColor="legendColor" :legendText="legendText">
       <template slot="node" scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
                          :subtext="domainText(props.node)" :textSize="textSize"
@@ -72,6 +73,8 @@ export default class CSPGraphInteractor extends Vue {
   layout: GraphLayout;
   // The size of the text inside the node
   textSize: number;
+  legendText: string[];
+  legendColor: string[];
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
