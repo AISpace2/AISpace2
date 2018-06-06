@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout">
+    <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText">
       <template slot="node" scope="props">
         <RoundedRectangleGraphNode :id="props.node.id" hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                           :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :simplifyGraph="simplifyGraph"
@@ -77,6 +77,8 @@ export default class SearchVisualizer extends Vue {
   textSize: number;
   // True if want to truncate or minimize total number of nodes when number of node exceed a set number
   simplifyGraph: boolean;
+  legendText: string[];
+  legendColor: string[];
 
   nodeFillColour(node: ISearchGraphNode, hover: boolean) {
     if (hover) {
