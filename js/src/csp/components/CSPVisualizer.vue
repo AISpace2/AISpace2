@@ -1,5 +1,5 @@
 <template>
-  <div tabindex="0" @keydown.stop>
+  <div tabindex="0" @keydown.stop class="csp_visualizer">
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
         :legendColor="legendColor" :legendText="legendText">
       <template slot="node" scope="props">
