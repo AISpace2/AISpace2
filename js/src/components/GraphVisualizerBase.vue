@@ -270,7 +270,7 @@ export default class GraphVisualizeBase extends Vue {
     .domain(this.legendText)
     .range(this.legendColor);
 
-    let legend = d3.select('svg')
+    let legend = d3.select(this.$refs.svg)
     .append("g")
     .selectAll("g")
     .data(color.domain())
