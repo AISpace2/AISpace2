@@ -23,7 +23,7 @@ class State(object):
         return self.assignment == st.assignment
     def __str__(self):
         return str(self.assignment)
-        
+
 def zero(*args,**nargs):
     """always returns 0"""
     return 0
@@ -43,6 +43,7 @@ class Forward_STRIPS(Search_problem):
         self.initial_state = State(planning_problem.initial_state)
         self.goal = planning_problem.goal
         self.heur = heur
+        self.positions = planning_problem.positions
 
     def is_goal(self, state):
         """is True if node is a goal.

@@ -35,22 +35,29 @@ def csp_to_json(csp, widget_model=None):
     edge_map = {}
 
     for i, (var, value) in enumerate(csp.domains.items()):
-        csp_json['nodes'].append({
+       csp_json['nodes'].append({
             'id': node_map[var],
             'name': var,
             'type': 'csp:variable',
             'idx': i,
             'domain': list(value)
-        })
+       })
+       if var in csp.positions:
+           csp_json['nodes'][-1]['x'] = csp.positions[var][0]
+           csp_json['nodes'][-1]['y'] = csp.positions[var][1]
 
     for (i, constraint) in enumerate(csp.constraints):
         constraint_id = str(hash(constraint))
+        constraint_name = constraint.__repr__()
         csp_json['nodes'].append({
             'id': constraint_id,
-            'name': constraint.__repr__(),
+            'name': constraint_name,
             'type': 'csp:constraint',
             'idx': i
         })
+        if constraint_name in csp.positions:
+            csp_json['nodes'][-1]['x'] = csp.positions[constraint_name][0]
+            csp_json['nodes'][-1]['y'] = csp.positions[constraint_name][1]
 
         # Create a link from the constraint to each variable in its scope
         for var in constraint.scope:

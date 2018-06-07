@@ -37,7 +37,7 @@ class CSP(Displayable):
     * variables, a set of variables
     * var_to_const, a variable to set of constraints dictionary
     """
-    def __init__(self,domains,constraints):
+    def __init__(self,domains,constraints, positions = {}):
         """domains is a variable:domain dictionary
         constraints is a list of constriants
         """
@@ -48,6 +48,7 @@ class CSP(Displayable):
         for con in constraints:
             for var in con.scope:
                 self.var_to_const[var].add(con)
+        self.positions = positions
 
     def __str__(self):
         """string representation of CSP"""

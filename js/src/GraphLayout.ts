@@ -132,12 +132,17 @@ export function d3ForceLayout(): LayoutFunction {
         });
       }
 
+      scaleNodePositions(layoutParams, graph.nodes);
       // Copy over x and y positions onto original graph once simulation is finished
+      // if the node did not already have an x, y position
       graphCopy.nodes.forEach((node, i) => {
-        graph.nodes[i].x = node.x;
-        graph.nodes[i].y = node.y;
+       if(!graph.nodes[i].x){
+          graph.nodes[i].x = node.x;
+       }
+       if(!graph.nodes[i].y) {
+          graph.nodes[i].y = node.y;
+       }
       });
-
       resolve();
     });
   };
@@ -260,14 +265,21 @@ export function d3TreeLayout(
 export function relativeLayout() {
   return (graph: Graph, layoutParams: IGraphLayoutParams) => {
     return new Promise<void>((resolve, reject) => {
-      // Compute min and max X/Y
+      scaleNodePositions(layoutParams, graph.nodes);
+      resolve();
+    });
+  };
+}
+  // recalculate node positions so that nodes occupy the whole canvas
+  function scaleNodePositions(layoutParams: IGraphLayoutParams, nodes: IGraphNode[]){
+     // Compute min and max X/Y
       let minX = Number.MAX_SAFE_INTEGER;
       let minY = Number.MAX_SAFE_INTEGER;
       let maxX = Number.MIN_SAFE_INTEGER;
       let maxY = Number.MIN_SAFE_INTEGER;
 
-      for (const node of graph.nodes) {
-        if (node.x == null || node.y == null) {
+      for (const node of nodes) {
+        if (!node.x || !node.y) {
           continue;
         }
 
@@ -279,9 +291,9 @@ export function relativeLayout() {
 
       const edgePadding = 60;
 
-      for (const node of graph.nodes) {
+      for (const node of nodes) {
         // Scale node positions to fit new width/height, plus some edge padding
-        if (node.x == null || node.y == null) {
+        if (!node.x || !node.y) {
           continue;
         }
 
@@ -296,8 +308,4 @@ export function relativeLayout() {
             (maxY - minY) +
           edgePadding;
       }
-
-      resolve();
-    });
-  };
-}
+  }

@@ -59,7 +59,7 @@ class Search_problem_from_explicit_graph(Search_problem):
     * a dictionary that maps each node into its heuristic value.
     """
 
-    def __init__(self, nodes, arcs, start=None, goals=set(), hmap={}):
+    def __init__(self, nodes, arcs, start=None, goals=set(), hmap={}, positions={}):
         self.neighs = {}
         self.nodes = nodes
         for node in nodes:
@@ -70,6 +70,7 @@ class Search_problem_from_explicit_graph(Search_problem):
         self.start = start
         self.goals = goals
         self.hmap = hmap
+        self.positions = positions
 
     def start_node(self):
         """returns start node"""
