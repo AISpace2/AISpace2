@@ -10,5 +10,5 @@ const COLOR = {
 export const cspLabelText = ["todo arc", "consistent arc", "inconsistent arc"];
 export const cspLabelColor = [COLOR.BLUE, COLOR.GREEN, COLOR.RED];
 
-export const searchLabelText = ["nodes along path", "action path", "neighbor nodes", "highlight", "origin" , "goal"];
+export const searchLabelText = ["nodes along path", "action path", "neighbor nodes", "frontier", "origin" , "goal"];
 export const searchLabelColor = [COLOR.GREY, COLOR.RED, COLOR.BLUE, COLOR.GREEN, COLOR.PURPLE, COLOR.YELLOW];
