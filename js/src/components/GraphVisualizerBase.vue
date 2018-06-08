@@ -82,6 +82,8 @@ export default class GraphVisualizeBase extends Vue {
   /** Layout object that controls where nodes are drawn. */
   @Prop({ type: Object })
   layout: GraphLayout;
+  @Prop() legendText: string[];
+  @Prop() legendColor: string[];
 
   /** The node or edge currently being dragged. */
   dragTarget: IGraphNode | IGraphEdge | null = null;
@@ -153,6 +155,7 @@ export default class GraphVisualizeBase extends Vue {
       this.prevPageY = null;
     };
 
+    this.addLegend();
   }
 
   beforeDestroy() {
@@ -250,6 +253,46 @@ export default class GraphVisualizeBase extends Vue {
      const svg = this.$refs.svg;
      const nodeElem = svg.getElementById(node.id).parentElement;
      svg.appendChild(nodeElem!);
+  }
+
+  // Taken and modified based on
+  // http://www.competa.com/blog/d3-js-part-7-of-9-adding-a-legend-to-explain-the-data/
+  addLegend() {
+    let legendRectSize = 10;
+    let legendSpacing = 3;
+    let position = {
+      // x and y of the first element in the legend
+      x: 10,
+      y: 20
+    };
+
+    let color = d3.scaleOrdinal()
+    .domain(this.legendText)
+    .range(this.legendColor);
+
+    let legend = d3.select(this.$refs.svg)
+    .append("g")
+    .selectAll("g")
+    .data(color.domain())
+    .enter()
+    .append('g')
+      .attr('class', 'legend')
+      .attr('transform', function(d, i) {
+        let x = position.x;
+        let y = (i + 1) * position.y;
+        return 'translate(' + x + ',' + y + ')';
+    });
+
+    legend.append('rect')
+    .attr('width', legendRectSize)
+    .attr('height', legendRectSize)
+    .style('fill', color)
+    .style('stroke', color);
+
+    legend.append('text')
+    .attr('x', legendRectSize + legendSpacing)
+    .attr('y', legendRectSize - legendSpacing)
+    .text(function(d) { return d; });
   }
 
   @Watch("graph")

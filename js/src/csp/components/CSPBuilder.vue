@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="csp_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
       @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
       <template slot="node" scope="props">

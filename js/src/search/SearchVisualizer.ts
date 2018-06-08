@@ -9,6 +9,7 @@ import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchEvents from "./SearchVisualizerEvents";
 import SearchViewerModel from "./SearchVisualizerModel";
+import * as labelDict from "../labelDictionary";
 /**
  * Creates a Search visualization and handles events received from the backend.
  * 
@@ -58,6 +59,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           output: null,
           textSize: this.model.textSize,
           simplifyGraph: this.model.simplifyGraph,
+          legendText: labelDict.searchLabelText,
+          legendColor: labelDict.searchLabelColor,
           frontier: []
         }
       }).$mount(this.el);
