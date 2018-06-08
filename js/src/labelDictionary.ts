@@ -7,8 +7,25 @@ const COLOR = {
   PURPLE: "#dc7cf4"
 };
 
-export const cspLabelText = ["todo arc", "consistent arc", "inconsistent arc"];
-export const cspLabelColor = [COLOR.BLUE, COLOR.GREEN, COLOR.RED];
+const label = {
+  csp: {
+    "todo arc": COLOR.BLUE,
+    "consistent arc": COLOR.GREEN,
+    "inconsistent arc": COLOR.RED
+  },
 
-export const searchLabelText = ["nodes along path", "action path", "neighbor nodes", "frontier", "origin" , "goal"];
-export const searchLabelColor = [COLOR.GREY, COLOR.RED, COLOR.BLUE, COLOR.GREEN, COLOR.PURPLE, COLOR.YELLOW];
+  search: {
+    "nodes along path": COLOR.GREY,
+    "action path": COLOR.RED,
+    "neighbor nodes": COLOR.BLUE,
+    "frontier nodes": COLOR.GREEN,
+    "origin node": COLOR.PURPLE,
+    "goal node": COLOR.YELLOW
+  }
+};
+
+export const cspLabelText = Object.keys(label.csp);
+export const cspLabelColor = Object.values(label.csp);
+
+export const searchLabelText = Object.keys(label.search);
+export const searchLabelColor = Object.values(label.search);
