@@ -9,6 +9,7 @@ import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
 import CSPViewerModel from "./CSPVisualizerModel";
+import * as labelDict from '../labelDictionary';
 
 /**
  * Creates a CSP visualization and handles events received from the backend.
@@ -45,7 +46,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     });
   }
 
-  public   render() {
+  public render() {
     timeout(() => {
       this.vue = new CSPGraphVisualizer({
         data: {
@@ -54,9 +55,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           width: 0,
           height: 0,
           output: null,
-          textSize: this.model.textSize
-        }
-      }).$mount(this.el);
+          textSize: this.model.textSize,
+          legendText: labelDict.cspLabelText,
+          legendColor: labelDict.cspLabelColor
+        }).$mount(this.el);
 
       this.vue.$on(StepEvents.FINE_STEP_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Fine Step");

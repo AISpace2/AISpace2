@@ -1,6 +1,6 @@
 {
   "name": "aispace2",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A Jupyter extension for the next-generation of AISpace.",
   "author": "AISpace2",
   "license": "GPL-3.0",
@@ -60,6 +60,8 @@
     "ajv": "^5.2.2",
     "babel-polyfill": "^6.26.0",
     "d3": "^4.10.0",
+    "d3-scale": "^2.0.0",
+    "d3-svg-legend": "^2.25.6",
     "jquery": "^3.2.1",
     "shortid": "^2.2.8",
     "underscore": "^1.8.3",

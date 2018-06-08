@@ -38,13 +38,6 @@
       return point ? point.y : this.y2;
     }
 
-    /* The idea is to find the (x, y) by making four linear test lines (y = mx + b) along the boundary of the target box.
-        * Then find the intersection point between the directed rect edge and the test lines. Since expressing the edge in
-        * y = mx + b form will stretch it infinitely, there would be two points touching. We find the one test intersect point,
-        *  (ix, iy) where x1 <= ix <= x2 or if the two boxes are on the same x axis, we test for y where
-        *   y1 <= iy <= y2. The point that fits the given condition will be where the edges points to. */
-
-
     /* Slope of the edge */
     slope() : number {
       if(this.deltaX === 0){
@@ -70,7 +63,10 @@
       return {x: (dy-this.intercept())/this.slope(), y: dy};
     }
 
-    intersectPoint() : {x: number, y:number} {
+    // Find the x,y coordinates of the arrow head i.e. the destination coordinates of a directed edge.
+    intersectPoint() : {x: number, y:number} | null {
+
+      // First make four linear test lines (y = mx + b) along the four boundaries of the target box.
       const xLeft = this.x2 - this.graph_node_width/2;
       const xRight = this.x2 + this.graph_node_width/2;
       const yUp = this.y2 + this.graph_node_height/2;
@@ -82,7 +78,9 @@
       const yBound = this.y1 < this.y2
         ? {lower: this.y1, upper: this.y2} : {lower: this.y2, upper: this.y1};
 
-      return [
+      // Find the intersection point of the directed rect edge and the test lines.
+      // Find the one intersection point, (ix, iy), such that x1 <= ix <= x2 an y1 <= iy <= y2.
+      const intersectionPoint =  [
         this.intersectX(xLeft),
         this.intersectX(xRight),
         this.intersectY(yUp),
@@ -96,7 +94,12 @@
           }
         }
         return acc;
-      }, null);
+      }, {x: -1, y: -1});
+
+      if (intersectionPoint.x != -1 && intersectionPoint.y != -1)
+        return intersectionPoint;
+      else
+        return null;
     }
   }
 
