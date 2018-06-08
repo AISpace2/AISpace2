@@ -80,6 +80,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
 
+      this.vue.$on(StepEvents.PRINT_POSITIONS, ()=>{
+        this.send({event: StepEvents.PRINT_POSITIONS,
+          nodes: this.vue.graph.nodes
+        })
+      });
+
       this.vue.$on("click:edge", (edge: IGraphEdge) => {
         Analytics.trackEvent("CSP Visualizer", "Edge Clicked");
         this.send({

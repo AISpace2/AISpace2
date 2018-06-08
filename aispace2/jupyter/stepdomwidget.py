@@ -119,10 +119,15 @@ class StepDOMWidget(DOMWidget):
         def pause():
             self._request_pause = True
 
+        def print_positions(nodes):
+            for node in nodes:
+                print('{}: ({},{})'.format(node['name'], int(node['x']), int(node['y'])) )
+
         self._fine_step = step_through_to_level(4)
         self._step = step_through_to_level(2)
         self._auto_solve = step_through_to_level(1)
         self._pause = pause
+        self._print_positions = print_positions
 
     def before_step(self):
         """Override this to provide custom logic before every (fine/auto) step.
@@ -150,6 +155,8 @@ class StepDOMWidget(DOMWidget):
             self._auto_solve()
         elif event == 'click:pause':
             self._pause()
+        elif event == 'click:print-positions':
+            self._print_positions(content.get('nodes', ''))
 
     def display(self, level, *args, **kwargs):
         """Informs the widget about a new state to update the visualization in response to.

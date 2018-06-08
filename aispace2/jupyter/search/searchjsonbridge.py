@@ -39,6 +39,11 @@ def search_problem_to_json(problem, widget_model=None):
         else:
             node_to_add['type'] = 'search:regular'
 
+        if str(node) in problem.positions:
+            position = problem.positions[str(node)]
+            node_to_add['x'] = position[0]
+            node_to_add['y'] = position[1]
+
         nodes.append(node_to_add)
 
     for arc in problem.arcs:

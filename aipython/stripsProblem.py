@@ -52,7 +52,7 @@ delivery_domain = STRIPS_domain(
     } )
 
 class Planning_problem(object):
-    def __init__(self, prob_domain, initial_state, goal):
+    def __init__(self, prob_domain, initial_state, goal, positions={}):
         """
         a planning problem consists of
         * a planning domain
@@ -62,6 +62,7 @@ class Planning_problem(object):
         self.prob_domain = prob_domain
         self.initial_state = initial_state
         self.goal = goal
+        self.positions = positions
 
 problem0 = Planning_problem(delivery_domain,
                             {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
