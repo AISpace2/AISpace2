@@ -1,4 +1,4 @@
-<template>
+<template xmlns:html="http://www.w3.org/1999/xhtml">
   <div class="graph-container">
     <svg tabindex="0" ref="svg" :width="width" :height="height"
          @mousemove="dragNode"
@@ -14,13 +14,14 @@
       </EdgeContainer>
       <GraphNodeContainer v-for="node in nodes" :key="node.id"
                  :x="node.x" :y="node.y"
-                 :transitions="transitionsAllowed && transitions"                 
+                 :transitions="transitionsAllowed && transitions"
                  @click="$emit('click:node', node)"
                  @dragstart="dragNodeStart(node, $event)" @dragend="dragNodeEnd"
                  @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
                  @canTransition="toggleTransition">
         <slot name="node" :node="node" :hover="node === nodeHovered"></slot>
       </GraphNodeContainer>
+      <slot name="visualization" :width="width" :height="height"></slot>
     </svg>
     <!-- Resize handle -->
     <div class="handle" ref="handle"></div>
@@ -190,7 +191,7 @@ export default class GraphVisualizeBase extends Vue {
 
   dragNode(e: MouseEvent) {
     if (this.dragTarget) {
-      var svgBounds = this.$refs.svg.getBoundingClientRect();
+      const svgBounds = this.$refs.svg.getBoundingClientRect();
 
       // Everything below can be replaced with:
       // this.dragTarget.x += e.movementX;

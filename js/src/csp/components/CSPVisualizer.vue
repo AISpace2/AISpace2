@@ -20,6 +20,11 @@
                         :stroke="stroke(props.edge)"
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
+      <template slot="visualization" scope="props">
+        <foreignObject :x="props.width - 80" y="20" width="30" height="30"> <Button @click="textSize++">+</Button> </foreignObject>
+        <foreignObject :x="props.width - 80" y="20" width="30" height="30"> <Button @click="textSize++">+</Button> </foreignObject>
+        <foreignObject :x="props.width - 80" y="20" width="30" height="30"> <Button @click="textSize--">-</Button> </foreignObject>
+      </template>
     </GraphVisualizerBase>
     <div>
       <div id="controls" class="btn-group">

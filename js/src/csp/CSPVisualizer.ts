@@ -58,7 +58,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           textSize: this.model.textSize,
           legendText: labelDict.cspLabelText,
           legendColor: labelDict.cspLabelColor
-        }).$mount(this.el);
+        }
+      }).$mount(this.el);
 
       this.vue.$on(StepEvents.FINE_STEP_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Fine Step");
