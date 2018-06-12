@@ -5,11 +5,12 @@ import Vue from "vue";
 import * as Analytics from "../Analytics";
 import { Graph, ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
+import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
 import CSPViewerModel from "./CSPVisualizerModel";
-import * as labelDict from '../labelDictionary';
+
 
 /**
  * Creates a CSP visualization and handles events received from the backend.
@@ -81,10 +82,11 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
 
-      this.vue.$on(StepEvents.PRINT_POSITIONS, ()=>{
-        this.send({event: StepEvents.PRINT_POSITIONS,
+      this.vue.$on(StepEvents.PRINT_POSITIONS, () => {
+        this.send({
+          event: StepEvents.PRINT_POSITIONS,
           nodes: this.vue.graph.nodes
-        })
+        });
       });
 
       this.vue.$on("click:edge", (edge: IGraphEdge) => {

@@ -21,9 +21,15 @@
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
       <template slot="visualization" scope="props">
-        <foreignObject :x="props.width - 80" y="20" width="30" height="30"> <Button @click="textSize++">+</Button> </foreignObject>
-        <foreignObject :x="props.width - 80" y="20" width="30" height="30"> <Button @click="textSize++">+</Button> </foreignObject>
-        <foreignObject :x="props.width - 80" y="20" width="30" height="30"> <Button @click="textSize--">-</Button> </foreignObject>
+        <foreignObject :x="props.width - textBtnProp.width - 120" :y="textBtnProp.y">
+          <Button class="btn-text"  @click="addTextSize">+</Button>
+        </foreignObject>
+        <foreignObject font-size="13" :x="props.width - textBtnProp.width - 80" :y="textBtnProp.y" :width="textBtnProp.width + 30" :height="textBtnProp.height">
+          <label >Text Size</label>
+        </foreignObject>
+        <foreignObject :x="props.width - textBtnProp.width - 20" :y="textBtnProp.y">
+          <Button class="btn-text" @click="minusTextSize">-</Button>
+        </foreignObject>
       </template>
     </GraphVisualizerBase>
     <div>
@@ -131,6 +137,22 @@ export default class CSPGraphInteractor extends Vue {
   constraintText(node: ICSPGraphNode) {
     return CSPUtils.constraintText(node);
   }
+
+  get textBtnProp() {
+    return {
+      width: 30,
+      height: 30,
+      y: 20
+    };
+  }
+
+  addTextSize(){
+    this.textSize ++;
+  }
+
+  minusTextSize(){
+    if(this.textSize > 0) this.textSize --;
+  }
 }
 
 </script>
@@ -139,4 +161,31 @@ export default class CSPGraphInteractor extends Vue {
   text.domain {
     font-size: 12px;
   }
+
+  .btn-text {
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  /*border-radius: 28px;*/
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 2px 10px 2px 10px;
+  text-decoration: none;
+}
+
+.btn-text:hover {
+  background: #3cfc3c;
+  background-image: -webkit-linear-gradient(top, #3cfc3c, #609400);
+  background-image: -moz-linear-gradient(top, #3cfc3c, #609400);
+  background-image: -ms-linear-gradient(top, #3cfc3c, #609400);
+  background-image: -o-linear-gradient(top, #3cfc3c, #609400);
+  background-image: linear-gradient(to bottom, #3cfc3c, #609400);
+  text-decoration: none;
+}
 </style>

@@ -1,15 +1,14 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
 import { without } from "underscore";
-import Vue from "vue";
 import * as Analytics from "../Analytics";
-import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
+import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchEvents from "./SearchVisualizerEvents";
 import SearchViewerModel from "./SearchVisualizerModel";
-import * as labelDict from "../labelDictionary";
+
 /**
  * Creates a Search visualization and handles events received from the backend.
  * 
@@ -85,9 +84,12 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
 
-      this.vue.$on(StepEvents.PRINT_POSITIONS, ()=>{
-        this.send({event: StepEvents.PRINT_POSITIONS, nodes: this.vue.graph.nodes})
-      })
+      this.vue.$on(StepEvents.PRINT_POSITIONS, () => {
+        this.send({
+          event: StepEvents.PRINT_POSITIONS,
+          nodes: this.vue.graph.nodes
+        });
+      });
 
       if (!this.model.previouslyRendered) {
         this.send({ event: "initial_render" });

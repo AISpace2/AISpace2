@@ -136,12 +136,12 @@ export function d3ForceLayout(): LayoutFunction {
       // Copy over x and y positions onto original graph once simulation is finished
       // if the node did not already have an x, y position
       graphCopy.nodes.forEach((node, i) => {
-       if(!graph.nodes[i].x){
+        if (!graph.nodes[i].x) {
           graph.nodes[i].x = node.x;
-       }
-       if(!graph.nodes[i].y) {
+        }
+        if (!graph.nodes[i].y) {
           graph.nodes[i].y = node.y;
-       }
+        }
       });
       resolve();
     });
@@ -270,42 +270,45 @@ export function relativeLayout() {
     });
   };
 }
-  // recalculate node positions so that nodes occupy the whole canvas
-  function scaleNodePositions(layoutParams: IGraphLayoutParams, nodes: IGraphNode[]){
-     // Compute min and max X/Y
-      let minX = Number.MAX_SAFE_INTEGER;
-      let minY = Number.MAX_SAFE_INTEGER;
-      let maxX = Number.MIN_SAFE_INTEGER;
-      let maxY = Number.MIN_SAFE_INTEGER;
+// recalculate node positions so that nodes occupy the whole canvas
+function scaleNodePositions(
+  layoutParams: IGraphLayoutParams,
+  nodes: IGraphNode[]
+) {
+  // Compute min and max X/Y
+  let minX = Number.MAX_SAFE_INTEGER;
+  let minY = Number.MAX_SAFE_INTEGER;
+  let maxX = Number.MIN_SAFE_INTEGER;
+  let maxY = Number.MIN_SAFE_INTEGER;
 
-      for (const node of nodes) {
-        if (!node.x || !node.y) {
-          continue;
-        }
+  for (const node of nodes) {
+    if (!node.x || !node.y) {
+      continue;
+    }
 
-        maxX = Math.max(node.x, maxX);
-        maxY = Math.max(node.y, maxY);
-        minX = Math.min(node.x, minX);
-        minY = Math.min(node.y, minY);
-      }
-
-      const edgePadding = 60;
-
-      for (const node of nodes) {
-        // Scale node positions to fit new width/height, plus some edge padding
-        if (!node.x || !node.y) {
-          continue;
-        }
-
-        node.x =
-          (layoutParams.width - edgePadding * 2) *
-            (node.x! - minX) /
-            (maxX - minX) +
-          edgePadding;
-        node.y =
-          (layoutParams.height - edgePadding * 2) *
-            (node.y! - minY) /
-            (maxY - minY) +
-          edgePadding;
-      }
+    maxX = Math.max(node.x, maxX);
+    maxY = Math.max(node.y, maxY);
+    minX = Math.min(node.x, minX);
+    minY = Math.min(node.y, minY);
   }
+
+  const edgePadding = 60;
+
+  for (const node of nodes) {
+    // Scale node positions to fit new width/height, plus some edge padding
+    if (!node.x || !node.y) {
+      continue;
+    }
+
+    node.x =
+      (layoutParams.width - edgePadding * 2) *
+        (node.x! - minX) /
+        (maxX - minX) +
+      edgePadding;
+    node.y =
+      (layoutParams.height - edgePadding * 2) *
+        (node.y! - minY) /
+        (maxY - minY) +
+      edgePadding;
+  }
+}
