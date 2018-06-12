@@ -4,11 +4,12 @@
   "description": "A Jupyter extension for the next-generation of AISpace.",
   "author": "AISpace2",
   "license": "GPL-3.0",
-  "main": "src/index.js",
+  "jlab_extension_id": "aispace2",
   "repository": {
     "type": "git",
     "url": "https://github.com/aispace2/aispace2.git"
   },
+  "main": "src/index",
   "keywords": [
     "jupyter",
     "widgets",
@@ -24,7 +25,10 @@
     "format": "prettier \"src/**/*.{ts,js,json,css}\" --write",
     "build:dev": "npm run build:dev-dll && webpack --env=development --progress",
     "build:dev-dll": "webpack --config webpack.dll.js",
-    "build:prod": "webpack --env=production --progress"
+    "build:prod": "webpack --env=production --progress",
+    "build": "tsc",
+    "clean": "rimraf lib",
+    "watch": "tsc -w"
   },
   "devDependencies": {
     "@types/d3": "^4.10.0",
@@ -48,15 +52,19 @@
     "tslint-config-prettier": "^1.4.0",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.5.2",
-    "vue-loader": "^13.0.4",
-    "vue-template-compiler": "^2.4.2",
+    "vue-loader": "~13.0.4",
+    "vue-template-compiler": "~2.4.2",
     "webpack": "^3.5.5",
     "webpack-dashboard": "^1.0.0-5",
     "webpack-merge": "^4.1.0",
-    "webpack-sources": "^1.0.1"
+    "webpack-sources": "^1.0.1",
+    "rimraf": "^2.6.1"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1.0.1",
+    "@jupyter-widgets/base": "^1.1.10",
+    "@jupyterlab/application": "^0.16.3",
+    "@jupyterlab/apputils": "^0.16.4",
+    "@jupyterlab/notebook": "^0.16.3",
     "ajv": "^5.2.2",
     "babel-polyfill": "^6.26.0",
     "d3": "^4.10.0",
@@ -68,5 +76,8 @@
     "vue": "^2.4.2",
     "vue-class-component": "^5.0.2",
     "vue-property-decorator": "^5.1.1"
+  },
+  "jupyterlab": {
+    "extension": "preprocess"
   }
 }

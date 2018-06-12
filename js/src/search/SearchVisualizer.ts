@@ -1,9 +1,7 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
 import { without } from "underscore";
-import Vue from "vue";
 import * as Analytics from "../Analytics";
-import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
 import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";

@@ -1,4 +1,5 @@
 import * as widgets from "@jupyter-widgets/base";
+import * as packageJSON from "../../package.json"
 import * as Analytics from "../Analytics";
 import { IEvent } from "../Events";
 import {
@@ -9,6 +10,7 @@ import {
   ISearchGraphNode,
   serializeGraph
 } from "../Graph";
+const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
 
 /**
  * The model that receives messages and synced traitlets from the backend.
@@ -29,10 +31,10 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     return {
       ...super.defaults(),
       _model_module: "aispace2",
-      _model_module_version: "0.1.0",
+      _model_module_version: EXTENSION_SPEC_VERSION,
       _model_name: "SearchViewerModel",
       _view_module: "aispace2",
-      _view_module_version: "0.1.0",
+      _view_module_version: EXTENSION_SPEC_VERSION,
       _view_name: "SearchViewer",
       show_edge_costs: true,
       show_node_heuristics: false,

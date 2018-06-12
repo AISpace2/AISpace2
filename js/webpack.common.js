@@ -42,6 +42,76 @@ module.exports = {
       libraryTarget: "amd"
     }
   },
+  labPreprocess:{
+    entry: ["babel-polyfill", "./src/index.ts"],
+    output: {
+      filename: "preprocess.js",
+      libraryTarget: "amd"
+    },
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          include: [path.join(__dirname, "./src")],
+          use: tsLoader
+        },
+        {
+          test: /\.js$/,
+          include: [path.join(__dirname, "./src")],
+          use: [babelLoader]
+        },
+        {
+          test: /\.vue$/,
+          include: [path.join(__dirname, "./src")],
+          use: [
+            {
+              loader: "vue-loader",
+              options: {
+                loaders: {
+                  ts: tsLoader
+                }
+              }
+            }
+          ]
+        },
+        {
+          test: /\.html$/,
+          include: [path.join(__dirname, "./src")],
+          use: [
+            {
+              loader: "html-loader"
+            }
+          ]
+        },
+        {
+          test: /\.css$/,
+          include: [path.join(__dirname, "./src")],
+          use: [
+            "style-loader",
+            { loader: "css-loader", options: { importLoaders: 1 } },
+            {
+              loader: "postcss-loader",
+              options: {
+                plugins: loader => [require("autoprefixer")()]
+              }
+            }
+          ]
+        },
+        {
+          test: /\.json$/,
+          include: [path.join(__dirname, "./src")],
+          loader: "json-loader"
+        }
+      ]
+    },
+    resolve: {
+      extensions: [".vue", ".ts", ".js"],
+      alias: {
+        vue$: "vue/dist/vue.esm.js"
+      }
+    },
+    externals: ["@jupyter-widgets/base", "underscore"]
+  },
   main: {
     /**
      * Bundle for the notebook containing the custom widget views and models.

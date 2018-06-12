@@ -13,7 +13,7 @@ module.exports = merge.multiple(commonConfig, {
     devtool: "source-map",
     plugins: [
       new webpack.LoaderOptionsPlugin({
-        minimize: true,
+        //minimize: true,
         debug: false
       }),
       new webpack.DefinePlugin({

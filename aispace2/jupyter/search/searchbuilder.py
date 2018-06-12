@@ -5,6 +5,7 @@ from traitlets import Bool, Dict, Instance, Unicode, observe, Integer
 from .searchjsonbridge import (json_to_search_problem, search_problem_to_json,
                                search_problem_to_python_code)
 
+from  ... import __version__
 
 @register
 class SearchBuilder(DOMWidget):
@@ -16,8 +17,8 @@ class SearchBuilder(DOMWidget):
     _model_name = Unicode('SearchBuilderModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)
     _model_module = Unicode('aispace2').tag(sync=True)
-    _view_module_version = Unicode('^0.1.0').tag(sync=True)
-    _model_module_version = Unicode('^0.1.0').tag(sync=True)
+    _view_module_version = Unicode(__version__).tag(sync=True)
+    _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The explicit search problem that is synced to the frontend.
     graph = Instance(
