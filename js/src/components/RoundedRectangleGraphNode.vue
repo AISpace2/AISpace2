@@ -144,5 +144,13 @@ export default class RoundedRectangleGraphNode extends RectangleGraphNode {
     this.truncatedSubtext = this.subtext;
     this.fitSubtext();
   }
+
+  @Watch("simplifyGraph")
+  onSimpliyGraphChanged() {
+    this.truncatedText = this.text;
+    this.fitText();
+    this.truncatedText = this.text;
+    this.fitText();
+  }
 }
 </script>

@@ -180,5 +180,11 @@ export default class RectangleGraphNode extends Vue {
     this.truncatedText = this.text;
     this.fitText();
   }
+
+  @Watch("simplifyGraph")
+  onSimpliyGraphChanged() {
+    this.truncatedText = this.text;
+    this.fitText();
+  }
 }
 </script>
