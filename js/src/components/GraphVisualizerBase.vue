@@ -21,7 +21,7 @@
                  @canTransition="toggleTransition">
         <slot name="node" :node="node" :hover="node === nodeHovered"></slot>
       </GraphNodeContainer>
-      <slot name="visualization" :width="width" :height="height"></slot>
+      <slot name="visualization" :width="width" :height="height" :hideLegend="hideLegend" :showLegend="showLegend"></slot>
     </svg>
     <!-- Resize handle -->
     <div class="handle" ref="handle"></div>
@@ -272,7 +272,7 @@ export default class GraphVisualizeBase extends Vue {
     .range(this.legendColor);
 
     let legend = d3.select(this.$refs.svg)
-    .append("g")
+    .append("g").attr("class", "legend_group")
     .selectAll("g")
     .data(color.domain())
     .enter()
@@ -294,6 +294,14 @@ export default class GraphVisualizeBase extends Vue {
     .attr('x', legendRectSize + legendSpacing)
     .attr('y', legendRectSize - legendSpacing)
     .text(function(d) { return d; });
+  }
+
+  hideLegend() {
+    d3.select(this.$refs.svg).select(".legend_group").style("visibility", "hidden");
+  }
+
+  showLegend() {
+    d3.select(this.$refs.svg).select(".legend_group").style("visibility", "visible");
   }
 
   @Watch("graph")

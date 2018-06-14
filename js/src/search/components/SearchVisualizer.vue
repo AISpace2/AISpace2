@@ -1,6 +1,5 @@
 <template>
   <div class="search_visualizer">
-
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText">
       <template slot="node" scope="props">
         <RoundedRectangleGraphNode :id="props.node.id" hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
@@ -21,6 +20,9 @@
           <div class="btn-group-test">
             <button @click="simplifyGraph = true">Hide Text</button>
             <button @click="simplifyGraph = false">Show Text</button>
+            <button @click="switchGraph">Switch Graph</button>
+            <button @click="props.hideLegend">Hide Legend</button>
+            <button @click="props.showLegend">Show Legend</button>
           </div>
         </foreignObject>
       </template>
@@ -67,6 +69,9 @@
   export default class SearchVisualizer extends Vue {
     /** The graph being visualized. */
     graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
+    originalGraph: Graph<ISearchGraphNode, ISearchGraphEdge>;
+    /** The graph without common text (parent and child mutual text). */
+    simplifiedGraph: Graph<ISearchGraphNode, ISearchGraphEdge>;
     /** Text describing what is currently happening. */
     output: string;
     /** The text representing the frontier. Persistent until frontier changes. */
@@ -87,6 +92,10 @@
     simplifyGraph: boolean;
     legendText: string[];
     legendColor: string[];
+
+    created() {
+      this.graph = this.simplifiedGraph;
+    }
 
     nodeFillColour(node: ISearchGraphNode, hover: boolean) {
       if (hover) {
@@ -166,6 +175,11 @@
         xOffset: 0,
         yOffset: 40,
       }
+    }
+
+    switchGraph() {
+      console.log("switch graph");
+      this.$set(this, "graph", this.simplifiedGraph);
     }
   }
 
