@@ -163,7 +163,7 @@
       return {
         // first btn's and y position
         // which can only be accessed in the template
-        x: canvasWidth - 110,
+        x: canvasWidth - 108,
         y: 0,
         // other btn's offset position from the previous one
         xOffset: 0,
@@ -203,6 +203,7 @@
     font-size: 0.75em;
     text-decoration: none;
     display: block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
   }
 
   .dropdown-content a:hover {background-color: #ddd;}
