@@ -16,13 +16,14 @@
         </DirectedRectEdge>
       </template>
       <template slot="visualization" scope="props">
-        <foreignObject id="toggle_hide_text" :x="props.width - 120" :y="btnProp.y">
-          <div class="btn-group-test">
-            <button @click="simplifyGraph = true">Hide Text</button>
-            <button @click="simplifyGraph = false">Show Text</button>
-            <button @click="$emit('toggle:showFullDomain')">Switch Graph</button>
-            <button @click="props.hideLegend">Hide Legend</button>
-            <button @click="props.showLegend">Show Legend</button>
+        <foreignObject class="dropdown" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
+          <button class="dropbtn">Visualization Options</button>
+          <div class="dropdown-content">
+            <a @click="simplifyGraph = true">Hide Text</a>
+            <a @click="simplifyGraph = false">Show Text</a>
+            <a @click="$emit('toggle:showFullDomain')">Switch Graph</a>
+            <a @click="props.hideLegend">Hide Legend</a>
+            <a @click="props.showLegend">Show Legend</a>
           </div>
         </foreignObject>
       </template>
@@ -158,38 +159,55 @@
         });
     }
 
-    get btnProp() {
+    btnProp(canvasWidth: number) {
       return {
         // first btn's and y position
-        // x is missing because it will be hard coded adjusted based on svg's width
         // which can only be accessed in the template
-        y: 20,
+        x: canvasWidth - 110,
+        y: 0,
         // other btn's offset position from the previous one
         xOffset: 0,
         yOffset: 40,
+        width: "100%"
       }
     }
   }
 
 </script>
 <style scoped>
-
-  .btn-group-test button {
-    background-color: red; /* Green background */
-    border: 1px solid white; /* Green border */
-    color: white; /* White text */
-    cursor: pointer; /* Pointer/hand icon */
-    width: 80pt; /* Set a width if needed */
-    display: block; /* Make the buttons appear below each other */
-    font-size: 10px;
+  .dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1em;
+    font-size: 0.7em;
+    border: none;
   }
 
-  .btn-group-text button:not(:last-child) {
-    border-bottom: none; /* Prevent double borders */
+  .dropdown {
+    position: relative;
+    display: inline-block;
   }
 
-  /* Add a background color on hover */
-  .btn-group-test button:hover {
-    background-color: darkred;
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 8em;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
   }
+
+  .dropdown-content a {
+    color: black;
+    padding: 1em 1em;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {background-color: #ddd;}
+
+  .dropdown:hover .dropdown-content {display: block;}
+
+  .dropdown:hover .dropbtn {background-color: #3e8e41;}
 </style>
