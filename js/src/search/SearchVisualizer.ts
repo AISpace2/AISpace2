@@ -4,6 +4,7 @@ import { without } from "underscore";
 import * as Analytics from "../Analytics";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
 import * as labelDict from "../labelDictionary";
+import * as _ from "lodash";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchEvents from "./SearchVisualizerEvents";
@@ -17,6 +18,7 @@ import SearchViewerModel from "./SearchVisualizerModel";
 export default class SearchViewer extends widgets.DOMWidgetView {
   public model: SearchViewerModel;
   private vue: any;
+  private showFullDomainFlag: boolean;
 
   public initialize(opts: any) {
     super.initialize(opts);
@@ -41,7 +43,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     this.listenTo(this.model, "change:graph", () => {
       // Nodes/edges have been added to the graph from the backend.
       this.model.graph.mergeStylesFrom(this.model.previous("graph"));
-      this.vue.graph = this.model.showFullDomain
+      this.vue.graph = this.showFullDomainFlag
         ? this.model.graph
         : this.trimGraph();
     });
@@ -89,6 +91,16 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           event: StepEvents.PRINT_POSITIONS,
           nodes: this.vue.graph.nodes
         });
+      });
+
+      this.vue.$on("toggle:showFullDomain", () => {
+        this.showFullDomainFlag = !this.showFullDomainFlag;
+        // Nodes/edges have been added to the graph from the backend.
+        this.model.graph.mergeStylesFrom(this.model.previous("graph"));
+
+        this.vue.graph = this.showFullDomainFlag
+          ? this.model.graph
+          : this.trimGraph();
       });
 
       if (!this.model.previouslyRendered) {
@@ -164,7 +176,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   }
 
   private trimGraph() {
-    const graph = this.model.graph;
+    const graph = _.cloneDeep(this.model.graph);
     // make backup text of parent
     // child and parent have to be defined since it is connected by an edge
     for (const edge of graph.edges) {
