@@ -19,9 +19,9 @@
         <foreignObject class="dropdown" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
           <button class="dropbtn">Visualization Options</button>
           <div class="dropdown-content">
+            <a @click="$emit('toggle:showFullDomain')">Switch Graph</a>
             <a @click="simplifyGraph = true">Hide Text</a>
             <a @click="simplifyGraph = false">Show Text</a>
-            <a @click="$emit('toggle:showFullDomain')">Switch Graph</a>
             <a @click="props.hideLegend">Hide Legend</a>
             <a @click="props.showLegend">Show Legend</a>
           </div>
