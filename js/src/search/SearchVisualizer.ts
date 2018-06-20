@@ -1,10 +1,10 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
+import * as _ from "lodash";
 import { without } from "underscore";
 import * as Analytics from "../Analytics";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
 import * as labelDict from "../labelDictionary";
-import * as _ from "lodash";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchEvents from "./SearchVisualizerEvents";
