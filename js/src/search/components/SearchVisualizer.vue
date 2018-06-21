@@ -16,12 +16,15 @@
         </DirectedRectEdge>
       </template>
       <template slot="visualization" scope="props">
-        <foreignObject class="dropdown" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
+        <foreignObject class="dropdown noselect" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
           <button class="dropbtn">Visualization Options</button>
           <div class="dropdown-content">
             <a @click="$emit('toggle:showFullDomain')">Switch Graph</a>
             <a @click="simplifyGraph = true">Hide Text</a>
             <a @click="simplifyGraph = false">Show Text</a>
+            <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
+            <label class="inline-btn-group">{{textSize}}</label>
+            <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
             <a @click="props.hideLegend">Hide Legend</a>
             <a @click="props.showLegend">Show Legend</a>
           </div>
@@ -39,6 +42,7 @@
       <div class="output">{{output}}</div>
       <div class="frontier">Frontier: {{frontier}}</div>
     </div>
+    {{textSize}}
   </div>
 </template>
 
@@ -208,7 +212,40 @@
 
   .dropdown-content a:hover {background-color: #ddd;}
 
+  .dropdown-content a.inline-btn-group {
+    color: white;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
+    background-color: silver;
+    width: 25%;
+  }
+
+  .dropdown-content label.inline-btn-group {
+    color: black;
+    padding: 1em 0.5em;
+    text-align: center;
+    width: 40%;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
+  }
+
+  .dropdown-content a:hover {background-color: #ddd;}
+
   .dropdown:hover .dropdown-content {display: block;}
 
   .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+  .noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
 </style>
