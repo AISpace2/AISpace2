@@ -101,7 +101,7 @@ export function d3ForceLayout(): LayoutFunction {
         "link",
         d3
           .forceLink()
-          .id((node: IGraphEdge) => node.id)
+          .id(node => (node as any).id)
           .links(graphCopy.edges)
       )
       .force("charge", d3.forceManyBody().strength(-35))
@@ -242,10 +242,10 @@ export function d3TreeLayout(
        */
       const heightDivision = layoutParams.height / (maxDepth + 2);
 
-      root.each((n: d3.HierarchyPointNode<IHierarchyNode>) => {
-        n.data.node.x = n.x * layoutParams.width;
+      root.each((n) => {
+        n.data.node.x = (n as any).x * layoutParams.width;
         n.data.node.y =
-          n.y * (layoutParams.height - heightDivision - heightDivision) +
+          (n as any).y * (layoutParams.height - heightDivision - heightDivision) +
           heightDivision;
       });
 
