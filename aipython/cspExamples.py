@@ -38,6 +38,11 @@ simple_csp2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}},
              Constraint(('B',),ne_(2)),
              Constraint(('B','C'),lt)])
 
+simple_csp3 = CSP({'A':{1},'B':{1}, 'C':{1}, 'D':{1}, 'E':{6}, "F":{7}, "G":{5}, "H":{1}, "I":{3}, "J": {4}, "K":{2}},
+           [ Constraint(('A','B'),lt),
+             Constraint(('B',),ne_(2)),
+             Constraint(('B','C'),lt)])
+
 extended_csp = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}, 
             'D':{1,2,3,4}, 'E':{1,2,3,4}},
            [ Constraint(('B',),ne_(3)),
