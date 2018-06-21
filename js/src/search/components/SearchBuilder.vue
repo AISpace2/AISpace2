@@ -46,9 +46,9 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
 import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode";
+import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";

@@ -1,8 +1,9 @@
 import * as widgets from "@jupyter-widgets/base";
+import * as packageJSON from "../../package.json"
 import * as Analytics from "../Analytics";
 import { IEvent } from "../Events";
 import { deserializeGraph, Graph, IGraphJSON, serializeGraph } from "../Graph";
-
+const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
 /**
  * The model that receives messages and synced traitlets from the backend.
  * See the accompanying backend file: `aispace2/jupyter/csp/csp.py`
@@ -22,10 +23,10 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return {
       ...super.defaults(),
       _model_module: "aispace2",
-      _model_module_version: "0.1.0",
+      _model_module_version: EXTENSION_SPEC_VERSION,
       _model_name: "CSPViewerModel",
       _view_module: "aispace2",
-      _view_module_version: "0.1.0",
+      _view_module_version: EXTENSION_SPEC_VERSION,
       _view_name: "CSPViewer",
       _previously_rendered: false
     };

@@ -12,6 +12,7 @@ from .searchjsonbridge import (generate_search_graph_mappings,
                                implicit_to_explicit_search_problem,
                                json_to_search_problem, search_problem_to_json)
 
+from ... import __version__
 
 @register
 class Displayable(StepDOMWidget):
@@ -25,8 +26,8 @@ class Displayable(StepDOMWidget):
     _model_name = Unicode('SearchViewerModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)
     _model_module = Unicode('aispace2').tag(sync=True)
-    _view_module_version = Unicode('^0.1.0').tag(sync=True)
-    _model_module_version = Unicode('^0.1.0').tag(sync=True)
+    _view_module_version = Unicode(__version__).tag(sync=True)
+    _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The explicit search problem that is synced to the frontend.
     # If the problem was already explicit, the problem itself; otherwise, it is converted first.

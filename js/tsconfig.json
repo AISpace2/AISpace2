@@ -2,6 +2,7 @@
   "compilerOptions": {
     "sourceMap": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     "module": "amd",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,

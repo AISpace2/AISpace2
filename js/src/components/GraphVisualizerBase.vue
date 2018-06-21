@@ -266,7 +266,7 @@ export default class GraphVisualizeBase extends Vue {
       y: 20
     };
 
-    let color = d3.scaleOrdinal()
+    let color = d3.scaleOrdinal<string>()
     .domain(this.legendText)
     .range(this.legendColor);
 
@@ -282,7 +282,6 @@ export default class GraphVisualizeBase extends Vue {
         let y = (i + 1) * position.y;
         return 'translate(' + x + ',' + y + ')';
     });
-
     legend.append('rect')
     .attr('width', legendRectSize)
     .attr('height', legendRectSize)

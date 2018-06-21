@@ -1,15 +1,13 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
 import { without } from "underscore";
-import Vue from "vue";
 import * as Analytics from "../Analytics";
-import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
+import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchEvents from "./SearchVisualizerEvents";
 import SearchViewerModel from "./SearchVisualizerModel";
-import * as labelDict from "../labelDictionary";
 /**
  * Creates a Search visualization and handles events received from the backend.
  * 
