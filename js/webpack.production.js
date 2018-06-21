@@ -11,6 +11,9 @@ const commonConfig = require("./webpack.common.js");
 module.exports = merge.multiple(commonConfig, {
   main: {
     devtool: "source-map",
+    optimization: {
+        minimize: true
+    },
     plugins: [
       new webpack.LoaderOptionsPlugin({
         minimize: true,
@@ -21,15 +24,15 @@ module.exports = merge.multiple(commonConfig, {
           NODE_ENV: JSON.stringify("production")
         }
       }),
-      new webpack.optimize.UglifyJsPlugin({
-        beautify: false,
-        compress: {
-          warnings: false,
-          drop_console: true
-        },
-        comments: false,
-        sourceMap: true
-      }),
+      // new webpack.optimize.UglifyJsPlugin({
+      //   beautify: false,
+      //   compress: {
+      //     warnings: false,
+      //     drop_console: true
+      //   },
+      //   comments: false,
+      //   sourceMap: true
+      // }),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.ModuleConcatenationPlugin()
     ]
