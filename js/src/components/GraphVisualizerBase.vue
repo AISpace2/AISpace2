@@ -21,7 +21,7 @@
                  @canTransition="toggleTransition">
         <slot name="node" :node="node" :hover="node === nodeHovered"></slot>
       </GraphNodeContainer>
-      <slot name="visualization" :width="width" :height="height" :hideLegend="hideLegend" :showLegend="showLegend"></slot>
+      <slot name="visualization" :width="width" :height="height"></slot>
     </svg>
     <!-- Resize handle -->
     <div class="handle" ref="handle"></div>
@@ -29,8 +29,8 @@
 </template>
 
 <script lang="ts">
-import { debounce } from "underscore";
 import * as d3 from "d3";
+import { debounce } from "underscore";
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
@@ -294,14 +294,6 @@ export default class GraphVisualizeBase extends Vue {
     .attr('x', legendRectSize + legendSpacing)
     .attr('y', legendRectSize - legendSpacing)
     .text(function(d) { return d; });
-  }
-
-  hideLegend() {
-    d3.select(this.$refs.svg).select(".legend_group").style("visibility", "hidden");
-  }
-
-  showLegend() {
-    d3.select(this.$refs.svg).select(".legend_group").style("visibility", "visible");
   }
 
   @Watch("graph")

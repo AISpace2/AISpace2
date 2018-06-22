@@ -25,8 +25,7 @@
             <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
             <label class="inline-btn-group">{{textSize}}</label>
             <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
-            <a @click="props.hideLegend">Hide Legend</a>
-            <a @click="props.showLegend">Show Legend</a>
+            <a @click="toggleLegendVisibility">Toggle Legend</a>
           </div>
         </foreignObject>
       </template>
@@ -175,6 +174,19 @@
         width: "100%"
       }
     }
+
+    toggleLegendVisibility() {
+      let lg = $(".legend_group");
+      let attr = "visibility";
+      let show = "visible";
+      let hide = "hidden";
+
+      if (lg.css(attr) === hide) {
+        lg.css(attr, show)
+      } else {
+        lg.css(attr, hide);
+      }
+    }
   }
 
 </script>
@@ -240,12 +252,12 @@
   .dropdown:hover .dropbtn {background-color: #3e8e41;}
 
   .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
-}
+  }
 </style>
