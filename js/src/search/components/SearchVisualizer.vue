@@ -20,8 +20,7 @@
           <button class="dropbtn">Visualization Options</button>
           <div class="dropdown-content">
             <a @click="$emit('toggle:showFullDomain')">Switch Graph</a>
-            <a @click="simplifyGraph = true">Hide Text</a>
-            <a @click="simplifyGraph = false">Show Text</a>
+            <a @click="simplifyGraph = !simplifyGraph">Toggle Text</a>
             <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
             <label class="inline-btn-group">{{textSize}}</label>
             <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
