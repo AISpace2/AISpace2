@@ -2,7 +2,7 @@
   <g @click="isExpanded = !isExpanded" :id="id">
     <rect :width="size.width" :height="size.height"
           :x="-size.width/2" :y="-size.height/2"
-          :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="(hover || isExpanded) ? 30 : 25"></rect>
+          :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="this.showFullTextFlag() ? 30 : 25"></rect>
 
     <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{displayText}}
@@ -59,7 +59,7 @@
       return Math.max(this.computedTextWidth, this.computedSubtextWidth);
     }
     get displaySubText() {
-      let text = (this.hover || this.isExpanded) ? this.subtext : this.truncatedSubtext;
+      let text = this.showFullTextFlag() ? this.subtext : this.truncatedSubtext;
       return this.format(text);
     }
 

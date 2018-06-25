@@ -39,8 +39,11 @@
     @Prop({default: 15}) textSize: number;
     // Check if this node is hovered by mouse
     @Prop({default: false}) hover: boolean;
-    // True if want to truncate or minimize total number of nodes when number of node exceed a set number
-    @Prop({default: false}) simplifyGraph: boolean;
+    // Display setting for text
+    // 0 is hide all text
+    // 1 is show truncated version
+    // 2 is show all text
+    @Prop({default: 2}) simplifyGraph: number;
     /** The maximum width of the text, in pixels, before truncation occurs. */
     maxWidth = 100;
     /** The text, truncated to `maxWidth`. This text is displayed in the node. */
@@ -83,17 +86,19 @@
       return bounds;
     }
     get displayText() {
-      let text = (this.hover || this.isExpanded) ? this.text : this.truncatedText;
+      let text = this.showFullTextFlag() ? this.text : this.truncatedText;
       return this.format(text);
     }
     /* Width of the rounded rectangle */
     width() {
-      if (this.showNoTextFlag()) return this.minTextWidth;
       this.computeWidthAndHeight();
-
       let widthWithPadding = this.rawWidth + this.padding.widthPadding;
-      if (this.hover || this.isExpanded) return Math.max(widthWithPadding, this.minTextWidth);
-      else {
+
+      if (this.showNoTextFlag()) return this.minTextWidth;
+      else if (this.showFullTextFlag()) {
+        console.log("raw width", this.rawWidth, this.text);
+        return Math.max(widthWithPadding, this.minTextWidth);
+      } else {
         if (widthWithPadding < this.minTextWidth) return this.minTextWidth;
         else if (widthWithPadding > this.maxWidth) return this.maxWidth;
         else return widthWithPadding;
@@ -143,9 +148,9 @@
      */
     fitText() {
       Vue.nextTick(() => {
-        if (this.showNoTextFlag()){
+        if (this.showNoTextFlag()) {
           this.truncatedText = "";
-        } else {
+        } else if(this.showTruncatedTextFlag()) {
           this.computeWidthAndHeight();
           if (this.$refs.text.getBoundingClientRect().width + this.padding.text > this.maxWidth) {
             this._truncateText();
@@ -168,7 +173,15 @@
       return without(characters, ...charsToRemove).join("");
     }
     showNoTextFlag() {
-      return this.simplifyGraph && !this.hover && !this.isExpanded
+      return this.simplifyGraph == 0 && !this.hover && !this.isExpanded;
+    }
+
+    showTruncatedTextFlag() {
+      return this.simplifyGraph == 1 && !this.hover && !this.isExpanded;
+    }
+
+    showFullTextFlag() {
+      return this.simplifyGraph == 2 || this.hover || this.isExpanded;
     }
 
     get rawWidth() {
