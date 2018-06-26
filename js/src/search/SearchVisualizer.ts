@@ -59,7 +59,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           showNodeHeuristics: this.model.showNodeHeuristics,
           output: null,
           textSize: this.model.textSize,
-          simplifyGraph: this.model.simplifyGraph,
+          detailLevel: this.model.detailLevel,
           legendText: labelDict.searchLabelText,
           legendColor: labelDict.searchLabelColor,
           frontier: []

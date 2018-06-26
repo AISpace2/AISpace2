@@ -3,7 +3,7 @@
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText">
       <template slot="node" scope="props">
         <RoundedRectangleGraphNode :id="props.node.id" hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
-                                   :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :simplifyGraph="simplifyGraph"
+                                   :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :detailLevel="detailLevel"
                                    :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                                    :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                                    @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize">
@@ -19,12 +19,12 @@
         <foreignObject class="dropdown noselect" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
           <button class="dropbtn">Visualization Options</button>
           <div class="dropdown-content">
-            <a @click="$emit('toggle:showFullDomain')">Switch Graph</a>
-            <a @click="simplifyGraph = !simplifyGraph">Toggle Text</a>
+            <a @click="$emit('toggle:showFullDomain')">Change Graph</a>
+            <a @click="detailLevel = (detailLevel + 1) % 3">Change Detail</a>
+            <a @click="toggleLegendVisibility">Toggle Legend</a>
             <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
             <label class="inline-btn-group">{{textSize}}</label>
             <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
-            <a @click="toggleLegendVisibility">Toggle Legend</a>
           </div>
         </foreignObject>
       </template>
@@ -88,8 +88,11 @@
     layout: GraphLayout;
     // The size of the text inside the node
     textSize: number;
-    // True if want to truncate or minimize total number of nodes when number of node exceed a set number
-    simplifyGraph: boolean;
+    // Display setting for text
+    // 0 is hide all text
+    // 1 is show truncated version
+    // 2 is show all text
+    detailLevel: number;
     legendText: string[];
     legendColor: string[];
 

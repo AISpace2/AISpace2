@@ -43,7 +43,7 @@
     // 0 is hide all text
     // 1 is show truncated version
     // 2 is show all text
-    @Prop({default: 2}) simplifyGraph: number;
+    @Prop({default: 0}) detailLevel: number;
     /** The maximum width of the text, in pixels, before truncation occurs. */
     maxWidth = 100;
     /** The text, truncated to `maxWidth`. This text is displayed in the node. */
@@ -96,7 +96,6 @@
 
       if (this.showNoTextFlag()) return this.minTextWidth;
       else if (this.showFullTextFlag()) {
-        console.log("raw width", this.rawWidth, this.text);
         return Math.max(widthWithPadding, this.minTextWidth);
       } else {
         if (widthWithPadding < this.minTextWidth) return this.minTextWidth;
@@ -173,15 +172,15 @@
       return without(characters, ...charsToRemove).join("");
     }
     showNoTextFlag() {
-      return this.simplifyGraph == 0 && !this.hover && !this.isExpanded;
+      return this.detailLevel == 0 && !this.hover && !this.isExpanded;
     }
 
     showTruncatedTextFlag() {
-      return this.simplifyGraph == 1 && !this.hover && !this.isExpanded;
+      return this.detailLevel == 1 && !this.hover && !this.isExpanded;
     }
 
     showFullTextFlag() {
-      return this.simplifyGraph == 2 || this.hover || this.isExpanded;
+      return this.detailLevel == 2 || this.hover || this.isExpanded;
     }
 
     get rawWidth() {
@@ -198,8 +197,8 @@
       this.updateText();
     }
 
-    @Watch("simplifyGraph")
-    onSimpliyGraphChanged() {
+    @Watch("detailLevel")
+    onDetailLevelChanged() {
       this.updateText();
     }
 

@@ -90,11 +90,11 @@
           ? this.$refs.subtext.getBoundingClientRect().height
           : 0;
       const textWidth =
-        this.$refs.text != null
+        this.text != null
           ? this.measureText(this.text)
           : 0;
       const subtextWidth =
-        this.$refs.subtext != null
+        this.subtext != null
           ? this.measureText(this.subtext)
           : 0;
       this.computedTextWidth = textWidth;
@@ -150,8 +150,8 @@
       this.updateText();
     }
 
-    @Watch("simplifyGraph")
-    onSimpliyGraphChanged() {
+    @Watch("detailLevel")
+    onDetailLevelChanged() {
       this.updateText();
     }
 
