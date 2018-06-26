@@ -40,7 +40,6 @@
       <div class="output">{{output}}</div>
       <div class="frontier">Frontier: {{frontier}}</div>
     </div>
-    {{textSize}}
   </div>
 </template>
 
