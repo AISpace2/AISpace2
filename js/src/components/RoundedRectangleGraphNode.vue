@@ -125,6 +125,7 @@
      */
     fitSubtext() {
       Vue.nextTick(() => {
+        if(_.isUndefined(this.$refs.subtext)) return;
         if (this.showNoTextFlag()) {
           this.truncatedSubtext = "";
         } else {
