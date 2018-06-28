@@ -136,12 +136,20 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   private highlightNodes(event: SearchEvents.IHighlightNodeEvent) {
     for (const nodeId of event.nodeIds) {
       this.vue.$set(
+        this.model.graph.idMap[nodeId].styles,
+        "stroke",
+        event.colour
+      );
+      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 4);
+
+      this.vue.$set(
         this.vue.graph.idMap[nodeId].styles,
         "stroke",
         event.colour
       );
       this.vue.$set(this.vue.graph.idMap[nodeId].styles, "strokeWidth", 4);
     }
+
   }
 
   /**

@@ -19,7 +19,7 @@
         <foreignObject class="dropdown noselect" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
           <button class="dropbtn">Visualization Options</button>
           <div class="dropdown-content">
-            <a @click="$emit('toggle:showFullDomain')">Change Graph</a>
+            <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
             <a @click="detailLevel = (detailLevel + 1) % 3">Change Detail</a>
             <a @click="toggleLegendVisibility">Toggle Legend</a>
             <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
