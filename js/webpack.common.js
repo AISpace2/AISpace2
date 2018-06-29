@@ -50,7 +50,7 @@ module.exports = {
      * It must be an AMD module to work with Jupyter.
      */
         
-    entry: ["babel-polyfill", "./src/index.ts"],
+    entry: ["babel-polyfill", "./src/widget.ts"],
     output: {
       filename: "index.js",
       path: path.resolve(__dirname, "..", "aispace2", "static"),
