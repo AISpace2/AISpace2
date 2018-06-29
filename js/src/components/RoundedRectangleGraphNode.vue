@@ -14,6 +14,7 @@
 </template>
 
 <script lang="ts">
+  import _ from "underscore";
   import Vue, { ComponentOptions } from "vue";
   import Component from "vue-class-component";
   import { Prop, Watch } from "vue-property-decorator";
