@@ -19,9 +19,14 @@
         <foreignObject class="dropdown noselect" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
           <button class="dropbtn">Visualization Options</button>
           <div class="dropdown-content">
+            <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
+            <label class="inline-btn-group">{{detailLevelDescription}}</label>
+            <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+
             <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
             <a @click="detailLevel = (detailLevel + 1) % 3">Change Detail</a>
             <a @click="toggleLegendVisibility">Toggle Legend</a>
+
             <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
             <label class="inline-btn-group">{{textSize}}</label>
             <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
@@ -188,6 +193,17 @@
         lg.css(attr, hide);
       }
     }
+
+    get detailLevelDescription() {
+      switch(this.detailLevel) {
+        case 0:
+          return "Hidden";
+        case 1:
+          return "Shorten";
+        case 2:
+          return "Whole";
+      }
+    }
   }
 
 </script>
@@ -251,7 +267,7 @@
   .dropdown:hover .dropdown-content {display: block;}
 
   .dropdown:hover .dropbtn {background-color: #3e8e41;}
-
+  
   .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
