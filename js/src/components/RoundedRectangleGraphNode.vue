@@ -14,7 +14,6 @@
 </template>
 
 <script lang="ts">
-  import _ from "underscore";
   import Vue, { ComponentOptions } from "vue";
   import Component from "vue-class-component";
   import { Prop, Watch } from "vue-property-decorator";
@@ -83,20 +82,20 @@
      */
     computeWidthAndHeight() {
       const textHeight =
-        this.$refs.text != null
-          ? this.$refs.text.getBoundingClientRect().height
+        this.text != null
+          ? this.measureTextProp(this.text).height
           : 0;
       const subtextHeight =
-        this.$refs.subtext != null
-          ? this.$refs.subtext.getBoundingClientRect().height
+        this.subtext != null
+          ? this.measureTextProp(this.subtext).height
           : 0;
       const textWidth =
         this.text != null
-          ? this.measureText(this.text)
+          ? this.measureTextProp(this.text).width
           : 0;
       const subtextWidth =
         this.subtext != null
-          ? this.measureText(this.subtext)
+          ? this.measureTextProp(this.subtext).width
           : 0;
       this.computedTextWidth = textWidth;
       this.computedSubtextWidth = subtextWidth;
@@ -126,7 +125,7 @@
      */
     fitSubtext() {
       Vue.nextTick(() => {
-        if(_.isUndefined(this.$refs.subtext)) return;
+        if(this.$refs.subtext === undefined) return;
         if (this.showNoTextFlag()) {
           this.truncatedSubtext = "";
         } else {

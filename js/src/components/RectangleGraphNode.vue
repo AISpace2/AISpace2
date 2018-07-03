@@ -117,11 +117,11 @@
     computeWidthAndHeight() {
       this.textHeight =
         this.$refs.text != null
-          ? this.$refs.text.getBoundingClientRect().height
+          ? this.measureTextProp(this.text).height
           : 0;
       this.textWidth =
         this.$refs.text != null
-          ? this.measureText(this.text)
+          ? this.measureTextProp(this.text).width
           : 0;
     }
     /**
@@ -156,13 +156,7 @@
           }
         }});
     }
-    // measure text width in pixels
-    measureText(text: string) {
-      let canvas = document.createElement('canvas');
-      let context = canvas.getContext("2d");
-      context!.font = this.textSize.toString() + "px serif";
-      return context!.measureText(text).width;
-    }
+
     /* Format text for display purposes
     * Similar to Java data structure's toString methods
     * Effect: remove {, }, ' characters from this.text */
@@ -205,6 +199,65 @@
     updateText() {
       this.truncatedText = this.text;
       this.fitText();
+    }
+
+    // src: https://stackoverflow.com/questions/16816071/calculate-exact-character-string-height-in-javascript
+    measureTextProp(text) {
+      let width = 1500;
+      let height = 500;
+
+      let canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      let ctx=canvas.getContext("2d");
+      ctx.save();
+      ctx.font=this.textSize.toString() + "px serif";
+      ctx.clearRect(0,0,width,height);
+      ctx.fillText(text, parseInt(width * 0.1, 10), parseInt(height / 2, 10));
+      ctx.restore();
+      document.body.appendChild(canvas);
+      let data = ctx.getImageData(0,0,width,height).data;
+
+      let topMost = false;
+      let bottomMost = false;
+      let leftMost = false;
+      let rightMost = false;
+      for(let x=0; x<width; x++) {
+        for(let y=0; (y<height) && (!leftMost); y++) {
+          if(data[this.getAlphaIndexForCoordinates(x,y,width,height)] != 0) {
+            leftMost = x;
+          }
+        }
+      }
+      for(let y=0; y<height; y++) {
+        for(let x=0; (x<width) && (!topMost); x++) {
+          if(data[this.getAlphaIndexForCoordinates(x,y,width,height)] != 0) {
+            topMost = y;
+          }
+        }
+      }
+      for(let x=width-1; x>=0; x--) {
+        for(let y=height-1; (y>=0) && (!rightMost); y--) {
+          if(data[this.getAlphaIndexForCoordinates(x,y,width,height)] != 0) {
+            rightMost = x;
+          }
+        }
+      }
+      for(let y=height-1; y>=0; y--) {
+        for(let x=width-1; (x>=0) && (!bottomMost); x--) {
+          if(data[this.getAlphaIndexForCoordinates(x,y,width,height)] != 0) {
+            bottomMost = y;
+          }
+        }
+      }
+      return ({
+        width: (rightMost - leftMost) + 1
+        ,height: (bottomMost - topMost) + 1
+      });
+    }
+
+    getAlphaIndexForCoordinates(x,y,width,height) {
+      return (((width*4*y)+4*x)+3);
     }
   }
 </script>
