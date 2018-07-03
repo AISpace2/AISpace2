@@ -283,7 +283,6 @@ export default class GraphVisualizeBase extends Vue {
         let y = (i + 1) * position.y;
         return 'translate(' + x + ',' + y + ')';
     });
-
     legend.append('rect')
     .attr('width', legendRectSize)
     .attr('height', legendRectSize)

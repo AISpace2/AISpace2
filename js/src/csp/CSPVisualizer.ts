@@ -1,16 +1,13 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
-import { debounce } from "underscore";
-import Vue from "vue";
 import * as Analytics from "../Analytics";
-import { Graph, ICSPGraphNode, IGraphEdge } from "../Graph";
+import { ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
 import CSPViewerModel from "./CSPVisualizerModel";
-
 
 /**
  * Creates a CSP visualization and handles events received from the backend.

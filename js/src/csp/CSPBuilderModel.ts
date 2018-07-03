@@ -8,6 +8,9 @@ import {
   serializeGraph
 } from "../Graph";
 
+import * as packageJSON from "../../package.json"
+const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
+
 /**
  * The model that receives messages and synced traitlets from the backend.
  * See the accompanying backend file: `aispace2/jupyter/csp/cspbuilder.py`
@@ -27,10 +30,10 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
     return {
       ...super.defaults(),
       _model_module: "aispace2",
-      _model_module_version: "0.1.0",
+      _model_module_version: EXTENSION_SPEC_VERSION,
       _model_name: "CSPBuilderModel",
       _view_module: "aispace2",
-      _view_module_version: "0.1.0",
+      _view_module_version: EXTENSION_SPEC_VERSION,
       _view_name: "CSPBuilder"
     };
   }

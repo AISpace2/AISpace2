@@ -4,6 +4,7 @@ from traitlets import Dict, Instance, Unicode, Integer
 
 from .cspjsonbridge import csp_from_json, csp_to_json, csp_to_python_code
 
+from ... import __version__
 
 @register
 class CSPBuilder(DOMWidget):
@@ -24,8 +25,8 @@ class CSPBuilder(DOMWidget):
     _model_name = Unicode('CSPBuilderModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)
     _model_module = Unicode('aispace2').tag(sync=True)
-    _view_module_version = Unicode('^0.1.0').tag(sync=True)
-    _model_module_version = Unicode('^0.1.0').tag(sync=True)
+    _view_module_version = Unicode(__version__).tag(sync=True)
+    _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The CSP that is synced as a graph to the frontend.
     graph = Instance(

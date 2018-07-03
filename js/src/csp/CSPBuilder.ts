@@ -1,6 +1,5 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
-import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
