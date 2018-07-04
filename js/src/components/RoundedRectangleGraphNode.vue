@@ -63,10 +63,6 @@
       return this.format(text);
     }
 
-    /** Height of the rounded rectangle. */
-    height() {
-      return Math.min(Math.max(this.textHeight, 30), 45) + 15;
-    }
     /**
      * Computes the width and height of the rendered text elements and updates the following:
      * - `computedTextWidth`
@@ -81,22 +77,34 @@
      * This is due to long subtext exceeding the space allocated to the textbox itself
      */
     computeWidthAndHeight() {
-      const textHeight =
-        this.text != null
-          ? this.measureTextProp(this.text).height
+      var textHeight, textWidth, subtextHeight, subtextWidth = 0;
+
+      if (this.$refs.text === null || this.$refs.text === undefined) {
+        textHeight = 0;
+      } else if (this.cache.height != -1) {
+        textHeight = this.cache.height;
+      } else {
+        textHeight = this.$refs.text.getBoundingClientRect().height;
+      }
+
+      textWidth =
+        this.$refs.text != null
+          ? this.measureTextWidth(this.text)
           : 0;
-      const subtextHeight =
-        this.subtext != null
-          ? this.measureTextProp(this.subtext).height
-          : 0;
-      const textWidth =
-        this.text != null
-          ? this.measureTextProp(this.text).width
-          : 0;
-      const subtextWidth =
-        this.subtext != null
-          ? this.measureTextProp(this.subtext).width
-          : 0;
+
+      if (this.$refs.subtext === null || this.$refs.subtext === undefined) {
+        subtextHeight = 0;
+      } else if (this.cache.subHeight != -1) {
+        subtextHeight = this.cache.subHeight;
+      } else {
+        subtextHeight = this.$refs.subtext.getBoundingClientRect().height;
+      }
+
+      subtextWidth =
+        this.$refs.subtext != null
+        ? this.measureTextWidth(this.subtext)
+        : 0;
+
       this.computedTextWidth = textWidth;
       this.computedSubtextWidth = subtextWidth;
       this.computedTotalHeight = textHeight + subtextHeight;
@@ -148,6 +156,8 @@
 
     @Watch("textSize")
     onTextSizeChange() {
+      this.measureTextHeight(this.text, this.flag.TEXT);
+      this.measureTextHeight(this.subtext, this.flag.SUBTEXT);
       this.updateText();
     }
 

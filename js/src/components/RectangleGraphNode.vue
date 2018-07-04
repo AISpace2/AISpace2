@@ -53,19 +53,35 @@
     /** The real height, in pixels, of the text. Updated by calling `computeWidthAndHeight()`. */
     textHeight = 0;
     // Minimum text width so that the node doesn't become too small when the text is short
-    minTextWidth = 50;
+    minTextWidth = 20;
     // Expansion toggle flag
     isExpanded = false;
+    minHeight = 20;
+    maxHeight = 45;
+    // since calculating node height is expensive, do it only when user change text size
+    cache = {
+      height: -1,
+      subHeight: -1,
+    };
+
     padding ={
       // fixed padding to change the width of the graph node
       // reduce padding by making the graph node width smaller or larger with negative or positive extra padding respectively
       // usage: width = width + padding for graph nodes
       // higher number means more width
       widthPadding: 25,
+      height: 15,
 
       // extra invisible text size when considering truncating words so it doesn't overflow the graph node
       text: 30,
       subtext: 50,
+    };
+
+    // Constants: keys, flags, etc...
+    // DO NOT CHANGE
+    flag = {
+      TEXT: 0,
+      SUBTEXT: 1
     };
 
 
@@ -105,7 +121,8 @@
     }
     /** Height of the rectangle. */
     height() {
-      return Math.min(Math.max(this.textHeight, 30), 45) + 5;
+      this.computeWidthAndHeight();
+      return Math.min(Math.max(this.textHeight, this.minHeight), this.maxHeight) + this.padding.height;
     }
     /**
      * Computes the width and height of the rendered text elements and updates the following:
@@ -115,13 +132,17 @@
      * You should call this whenever you change the text.
      */
     computeWidthAndHeight() {
-      this.textHeight =
-        this.$refs.text != null
-          ? this.measureTextProp(this.text).height
-          : 0;
+      if (this.$refs.text === null) {
+        this.textHeight = 0;
+      } else if (this.cache.height != -1) {
+        this.textHeight = this.cache.height;
+      } else {
+        this.textHeight = this.$refs.text.getBoundingClientRect().height;
+      }
+
       this.textWidth =
         this.$refs.text != null
-          ? this.measureTextProp(this.text).width
+          ? this.measureTextWidth(this.text)
           : 0;
     }
     /**
@@ -188,6 +209,7 @@
 
     @Watch("textSize")
     onTextSizeChange() {
+      this.measureTextHeight(this.text, this.flag.TEXT);
       this.updateText();
     }
 
@@ -201,8 +223,15 @@
       this.fitText();
     }
 
+    measureTextWidth(text) {
+      let canvas = document.createElement('canvas');
+      let context = canvas.getContext("2d");
+      context!.font = this.textSize.toString() + "px serif";
+      return context!.measureText(text).width;
+    }
+
     // src: https://stackoverflow.com/questions/16816071/calculate-exact-character-string-height-in-javascript
-    measureTextProp(text) {
+    measureTextHeight(text, flag) {
       let width = 1500;
       let height = 500;
 
@@ -212,6 +241,7 @@
       let ctx=canvas.getContext("2d");
       ctx.save();
       ctx.font=this.textSize.toString() + "px serif";
+
       ctx.clearRect(0,0,width,height);
       ctx.fillText(text, parseInt(width * 0.1, 10), parseInt(height / 2, 10));
       ctx.restore();
@@ -250,10 +280,13 @@
           }
         }
       }
-      return ({
-        width: (rightMost - leftMost) + 1
-        ,height: (bottomMost - topMost) + 1
-      });
+
+      height = bottomMost - topMost + 1;
+      if (flag === this.flag.TEXT) {
+        this.cache.height = height;
+      } else if (flag === this.flag.SUBTEXT) {
+        this.cache.subHeight = height;
+      }
     }
 
     getAlphaIndexForCoordinates(x,y,width,height) {
