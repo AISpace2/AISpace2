@@ -99,7 +99,8 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
       <li>Run the downloaded installer. The default options are fine.</li>
       <li>Open the Start menu and search for "Anaconda Prompt". Open it.</li>
       <li>Inside the prompt, run
-        <pre><code>conda install -c conda-forge ipywidgets</code></pre> Enter ‘y’ when prompted to confirm the installation.
+        <pre><code>conda install -c conda-forge jupyterlab
+conda install -c conda-forge ipywidgets</code></pre> Enter ‘y’ when prompted to confirm the installation.
       </li>
       <li>Inside the prompt, run the following commands:
         <pre><code>pip install aispace2 --user
@@ -153,6 +154,7 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
       <ol>
         <li>Open the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>) and run:
           <pre><code>pip3 install jupyter
+pip3 install jupyterlab
 pip3 install aispace2 --user
 jupyter nbextension install aispace2 --user --py
 jupyter nbextension enable widgetsnbextension --py
@@ -181,7 +183,8 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
         </li>
           <li>Open a terminal, then execute:
 
-          <pre><code>conda install -c conda-forge ipywidgets # Enter 'y' when prompted to install
+          <pre><code>conda install -c conda-forge jupyterlab
+conda install -c conda-forge ipywidgets # Enter 'y' when prompted to install
 pip install aispace2 --user
 jupyter nbextension install aispace2 --user --py
 jupyter nbextension enable aispace2 --user --py</code></pre>
@@ -225,6 +228,7 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
 
       <p>All that is left to do is to install Jupyter and enable our extension:</p>
       <pre><code>pip3 install jupyter
+pip3 install jupyterlab
 pip3 install aispace2 --user
 jupyter nbextension enable widgetsnbextension --py
 jupyter nbextension install aispace2 --user --py 
@@ -235,11 +239,11 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
 
       <p>You now have Jupyter and the AISpace2 extension successfully installed (you can start Jupyter Notebook by running
         <code>jupyter notebook</code> in a terminal, which should launch your default web browser pointing to Jupyter notebook). The final step is to <a href="notebooks.html">download some AISpace2 notebooks &rarr;</a> to view this extension in action! 
-
       <h2 id="linux" class="linkify"><a href="#linux">Linux</a></h2>
       <p>You will need to install <a href="https://www.python.org/" target="_blank">Python 3.3+</a>. After that, you can install
         Jupyter and the <strong>AISpace2</strong> extension by running the following:</p>
       <pre><code>pip3 install jupyter
+pip3 install jupyterlab
 pip3 install aispace2 --user
 jupyter nbextension install aispace2 --user --py
 jupyter nbextension enable widgetsnbextension --py
@@ -248,8 +252,14 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
       <pre><code>Enabling notebook extension aispace2/extension...
     - Validating: OK</code></pre>
       <p>You now have Jupyter and the AISpace2 extension successfully installed (you can start Jupyter Notebook by running
-        <code>jupyter notebook</code> in a terminal, which should launch your default web browser pointing to Jupyter notebook). The final step is to <a href="notebooks.html">download some AISpace2 notebooks &rarr;</a> to view this extension in action! 
-
+        <code>jupyter notebook</code> in a terminal, which should launch your default web browser pointing to Jupyter notebook). The final step is to <a href="notebooks.html">download some AISpace2 notebooks &rarr;</a> to view this extension in action!
+    <h2 id="jupyterlab" class="linkify"><a href="#jupyterlab">Running JupyterLab</a></h2>
+    <p>You will need to install nodejs and npm if you do not have them already installed. You can find sample installation instructions <a href="https://nodejs.org/en/download/">here</a>.</p>
+    <p>After that, you can install the lab extension by running the following:</p>
+      <pre><code>jupyter labextension install aispace2
+jupyter labextension install @jupyter-widgets/jupyterlab-manager</code></pre>
+    <p>You can start JupyterLab by running
+        <code>jupyter lab</code> in a terminal, which should launch your default web browser pointing to JupyterLab.</p>
       <h2 id="upgrading" class="linkify"><a href="#upgrading">Upgrading</a></h2>
       <p>
         Already have AISpace2? No matter which operating system you use, or what method you used to install it, updating AISpace2
