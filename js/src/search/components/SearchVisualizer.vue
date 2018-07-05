@@ -20,11 +20,10 @@
           <button class="dropbtn">Visualization Options</button>
           <div class="dropdown-content">
             <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
-            <label class="inline-btn-group">{{detailLevelDescription}}</label>
+            <label class="inline-btn-group">Detail</label>
             <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
 
             <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
-            <a @click="detailLevel = (detailLevel + 1) % 3">Change Detail</a>
             <a @click="toggleLegendVisibility">Toggle Legend</a>
 
             <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
@@ -192,17 +191,6 @@
         lg.css(attr, show)
       } else {
         lg.css(attr, hide);
-      }
-    }
-
-    get detailLevelDescription() {
-      switch(this.detailLevel) {
-        case 0:
-          return "Hidden";
-        case 1:
-          return "Shorten";
-        case 2:
-          return "Whole";
       }
     }
   }
