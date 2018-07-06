@@ -1,6 +1,6 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
-import * as _ from "lodash";
+import { cloneDeep } from "lodash";
 import { without } from "underscore";
 import * as Analytics from "../Analytics";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
@@ -194,7 +194,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   }
 
   private trimGraph() {
-    const graph = _.cloneDeep(this.model.graph);
+    const graph = cloneDeep(this.model.graph);
     // make backup text of parent
     // child and parent have to be defined since it is connected by an edge
     for (const edge of graph.edges) {
