@@ -53,11 +53,10 @@
     /** The real height, in pixels, of the text. Updated by calling `computeWidthAndHeight()`. */
     textHeight = 0;
     // Minimum text width so that the node doesn't become too small when the text is short
-    minTextWidth = 20;
+    minTextWidth = 15;
     // Expansion toggle flag
     isExpanded = false;
     minHeight = 20;
-    maxHeight = 45;
     // since calculating node height is expensive, do it only when user change text size
     cache = {
       height: -1,
@@ -69,12 +68,12 @@
       // reduce padding by making the graph node width smaller or larger with negative or positive extra padding respectively
       // usage: width = width + padding for graph nodes
       // higher number means more width
-      widthPadding: 25,
+      widthPadding: 30,
       height: 15,
 
       // extra invisible text size when considering truncating words so it doesn't overflow the graph node
-      text: 30,
-      subtext: 50,
+      text: 2,
+      subtext: 0,
     };
 
     // Constants: keys, flags, etc...
@@ -108,21 +107,27 @@
     /* Width of the rounded rectangle */
     width() {
       this.computeWidthAndHeight();
-      let widthWithPadding = this.rawWidth + this.padding.widthPadding;
+      let finalWidth = 0;
 
-      if (this.showNoTextFlag()) return this.minTextWidth;
-      else if (this.showFullTextFlag()) {
-        return Math.max(widthWithPadding, this.minTextWidth);
+      if (this.showNoTextFlag() || this.text === "{}") {
+        return this.minTextWidth;
+      } else if (this.showFullTextFlag()) {
+        finalWidth = Math.max(this.rawWidth, this.minTextWidth);
       } else {
-        if (widthWithPadding < this.minTextWidth) return this.minTextWidth;
-        else if (widthWithPadding > this.maxWidth) return this.maxWidth;
-        else return widthWithPadding;
+        if (this.rawWidth < this.minTextWidth) finalWidth = this.minTextWidth;
+        else if (this.rawWidth > this.maxWidth) finalWidth = this.maxWidth;
+        else finalWidth = this.rawWidth;
       }
+
+      return finalWidth + this.padding.widthPadding;
     }
     /** Height of the rectangle. */
     height() {
       this.computeWidthAndHeight();
-      return Math.min(Math.max(this.textHeight, this.minHeight), this.maxHeight) + this.padding.height;
+      if (this.showNoTextFlag() || this.text === "{}") {
+        return this.minHeight;
+      }
+      return Math.max(this.textHeight, this.minHeight) + this.padding.height;
     }
     /**
      * Computes the width and height of the rendered text elements and updates the following:

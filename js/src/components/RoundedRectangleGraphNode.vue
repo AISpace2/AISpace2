@@ -53,6 +53,8 @@
         this.truncatedSubtext = this.subtext ? this.subtext : "";
         this.fitSubtext();
       }
+      this.measureTextHeight(this.text, this.flag.TEXT);
+      this.measureTextHeight(this.subtext, this.flag.SUBTEXT);
     }
     /** The maximum of `computedTextWidth` and `computedSubtextWidth`. */
     get computedTotalWidth() {
