@@ -60,7 +60,7 @@
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.13.0",
     "tslint-loader": "^3.6.0",
-    "typescript": "^2.5.2",
+    "typescript": "^2.7.0",
     "underscore": "^1.9.1",
     "vue": "^2.4.4",
     "vue-class-component": "^5.0.2",
