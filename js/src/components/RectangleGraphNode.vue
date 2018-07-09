@@ -246,56 +246,56 @@
       let ctx=canvas.getContext("2d");
       if (ctx != null) {
         ctx.save();
-        ctx.font=this.textSize.toString() + "px serif";
+        ctx.font = this.textSize.toString() + "px serif";
 
-        ctx.clearRect(0,0,width,height);
+        ctx.clearRect(0, 0, width, height);
         ctx.fillText(text, "" + parseInt(width * 0.1, 10), "" + parseInt(height / 2, 10));
         ctx.restore();
 
         document.body.appendChild(canvas);
 
-        let data = ctx.getImageData(0,0,width,height).data;
+        let data = ctx.getImageData(0, 0, width, height).data;
         let topMost = 0;
         let bottomMost = 0;
         let leftMost = 0;
         let rightMost = 0;
-        for(let x=0; x<width; x++) {
-          for(let y=0; (y<height) && (!leftMost); y++) {
-            if(data[this.getAlphaIndexForCoordinates(x,y,width,height)] != 0) {
+        for (let x = 0; x < width; x++) {
+          for (let y = 0; (y < height) && (!leftMost); y++) {
+            if (data[this.getAlphaIndexForCoordinates(x, y, width, height)] != 0) {
               leftMost = x;
             }
           }
         }
-        for(let y=0; y<height; y++) {
-          for(let x=0; (x<width) && (!topMost); x++) {
-            if(data[this.getAlphaIndexForCoordinates(x,y,width,height)] != 0) {
+        for (let y = 0; y < height; y++) {
+          for (let x = 0; (x < width) && (!topMost); x++) {
+            if (data[this.getAlphaIndexForCoordinates(x, y, width, height)] != 0) {
               topMost = y;
             }
           }
         }
-        for(let x=width-1; x>=0; x--) {
-          for(let y=height-1; (y>=0) && (!rightMost); y--) {
-            if(data[this.getAlphaIndexForCoordinates(x,y,width,height)] != 0) {
+        for (let x = width - 1; x >= 0; x--) {
+          for (let y = height - 1; (y >= 0) && (!rightMost); y--) {
+            if (data[this.getAlphaIndexForCoordinates(x, y, width, height)] != 0) {
               rightMost = x;
             }
           }
         }
-        for(let y=height-1; y>=0; y--) {
-          for(let x=width-1; (x>=0) && (!bottomMost); x--) {
-            if(data[this.getAlphaIndexForCoordinates(x,y,width,height)] != 0) {
+        for (let y = height - 1; y >= 0; y--) {
+          for (let x = width - 1; (x >= 0) && (!bottomMost); x--) {
+            if (data[this.getAlphaIndexForCoordinates(x, y, width, height)] != 0) {
               bottomMost = y;
             }
           }
         }
-      }
 
-
-
-      height = bottomMost - topMost + 1;
-      if (flag === this.flag.TEXT) {
-        this.cache.height = height;
-      } else if (flag === this.flag.SUBTEXT) {
-        this.cache.subHeight = height;
+        height = bottomMost - topMost + 1;
+        if (flag === this.flag.TEXT) {
+          this.cache.height = height;
+        } else if (flag === this.flag.SUBTEXT) {
+          this.cache.subHeight = height;
+        }
+      } else {
+        return -1;
       }
     }
 
