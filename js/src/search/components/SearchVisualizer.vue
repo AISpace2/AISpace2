@@ -1,7 +1,7 @@
 <template>
   <div class="search_visualizer">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText">
-      <template slot="node" scope="props">
+      <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :id="props.node.id" hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                                    :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :detailLevel="detailLevel"
                                    :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
@@ -9,13 +9,13 @@
                                    @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize">
         </RoundedRectangleGraphNode>
       </template>
-      <template slot="edge" scope="props">
+      <template slot="edge" slot-scope="props">
         <DirectedRectEdge :id="props.edge.id" :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
                           :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name"
                           :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
       </template>
-      <template slot="visualization" scope="props">
+      <template slot="visualization" slot-scope="props">
         <foreignObject class="dropdown noselect" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
           <button class="dropbtn">Visualization Options</button>
           <div class="dropdown-content">

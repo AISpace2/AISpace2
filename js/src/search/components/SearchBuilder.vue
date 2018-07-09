@@ -2,7 +2,7 @@
   <div tabindex="0" @keydown.stop class="search_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
                          @click:node="updateSelection" @click:edge="updateSelection">
-      <template slot="node" scope="props">
+      <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :text="props.node.name"
                           :subtext="nodeHText(props.node)"
                           :fill="nodeFillColour(props.node)"
@@ -10,7 +10,7 @@
                           @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize" :hover="props.hover">
         </RoundedRectangleGraphNode>
       </template>
-      <template slot="edge" scope="props">
+      <template slot="edge" slot-scope="props">
         <DirectedRectEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                       :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"

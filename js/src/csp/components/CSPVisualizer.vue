@@ -2,7 +2,7 @@
   <div tabindex="0" @keydown.stop class="csp_visualizer">
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
         :legendColor="legendColor" :legendText="legendText">
-      <template slot="node" scope="props">
+      <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
                          :subtext="domainText(props.node)" :textSize="textSize"
                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
@@ -15,20 +15,26 @@
                             :hover="props.hover" :id="props.node.id">
         </RectangleGraphNode>
       </template>
-      <template slot="edge" scope="props">
+      <template slot="edge" slot-scope="props">
         <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                         :stroke="stroke(props.edge)"
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
-      <template slot="visualization" scope="props">
-        <foreignObject :x="props.width - textBtnProp.width - 120" :y="textBtnProp.y">
-          <Button class="btn-text"  @click="addTextSize">+</Button>
-        </foreignObject>
-        <foreignObject font-size="13" :x="props.width - textBtnProp.width - 80" :y="textBtnProp.y" :width="textBtnProp.width + 30" :height="textBtnProp.height">
-          <label >Text Size</label>
-        </foreignObject>
-        <foreignObject :x="props.width - textBtnProp.width - 20" :y="textBtnProp.y">
-          <Button class="btn-text" @click="minusTextSize">-</Button>
+      <template slot="visualization" slot-scope="props">
+        <foreignObject class="dropdown noselect" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
+          <button class="dropbtn">Visualization Options</button>
+          <div class="dropdown-content">
+            <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
+            <label class="inline-btn-group">Detail</label>
+            <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+
+            <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
+            <a @click="toggleLegendVisibility">Toggle Legend</a>
+
+            <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
+            <label class="inline-btn-group">{{textSize}}</label>
+            <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
+          </div>
         </foreignObject>
       </template>
     </GraphVisualizerBase>

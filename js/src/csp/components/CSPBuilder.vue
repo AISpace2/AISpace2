@@ -2,7 +2,7 @@
   <div class="csp_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
       @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
-      <template slot="node" scope="props">
+      <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"
                          :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover">
         </RoundedRectangleGraphNode>
@@ -10,7 +10,7 @@
                            :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover">
         </RectangleGraphNode>
       </template>
-      <template slot="edge" scope="props">
+      <template slot="edge" slot-scope="props">
         <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="strokeColour(props.edge)"></UndirectedEdge>
       </template>
     </GraphVisualizerBase>
