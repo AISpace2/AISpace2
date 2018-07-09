@@ -15,22 +15,17 @@
                           :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
       </template>
-      <template slot="visualization" slot-scope="props">
-        <foreignObject class="dropdown noselect" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
-          <button class="dropbtn">Visualization Options</button>
-          <div class="dropdown-content">
-            <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
-            <label class="inline-btn-group">Detail</label>
-            <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+      <template slot="visualization">
+        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
+        <label class="inline-btn-group">Detail</label>
+        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
 
-            <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
-            <a @click="toggleLegendVisibility">Toggle Legend</a>
+        <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
+        <a @click="toggleLegendVisibility">Toggle Legend</a>
 
-            <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
-            <label class="inline-btn-group">{{textSize}}</label>
-            <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
-          </div>
-        </foreignObject>
+        <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
+        <label class="inline-btn-group">{{textSize}}</label>
+        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
       </template>
     </GraphVisualizerBase>
     <div class="footer">
@@ -168,19 +163,6 @@
         });
     }
 
-    btnProp(canvasWidth: number) {
-      return {
-        // first btn's and y position
-        // which can only be accessed in the template
-        x: canvasWidth - 108,
-        y: 0,
-        // other btn's offset position from the previous one
-        xOffset: 0,
-        yOffset: 40,
-        width: "100%"
-      }
-    }
-
     toggleLegendVisibility() {
       let lg = $(".legend_group");
       let attr = "visibility";
@@ -197,28 +179,6 @@
 
 </script>
 <style scoped>
-  .dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 1em;
-    font-size: 0.7em;
-    border: none;
-  }
-
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 8em;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-
   .dropdown-content a {
     color: black;
     padding: 1em 1em;
@@ -253,17 +213,4 @@
 
   .dropdown-content a:hover {background-color: #ddd;}
 
-  .dropdown:hover .dropdown-content {display: block;}
-
-  .dropdown:hover .dropbtn {background-color: #3e8e41;}
-  
-  .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
-  }
 </style>
