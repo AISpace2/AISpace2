@@ -137,7 +137,7 @@
      * You should call this whenever you change the text.
      */
     computeWidthAndHeight() {
-      if (this.$refs.text === null) {
+      if (this.$refs.text === null || this.$refs.text === undefined) {
         this.textHeight = 0;
       } else if (this.cache.height != -1) {
         this.textHeight = this.cache.height;

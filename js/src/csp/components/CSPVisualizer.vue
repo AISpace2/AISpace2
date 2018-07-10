@@ -20,22 +20,10 @@
                         :stroke="stroke(props.edge)"
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
-      <template slot="visualization" slot-scope="props">
-        <foreignObject class="dropdown noselect" :x="btnProp(props.width).x" :y="btnProp().y" width="100%">
-          <button class="dropbtn">Visualization Options</button>
-          <div class="dropdown-content">
-            <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
-            <label class="inline-btn-group">Detail</label>
-            <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
-
-            <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
-            <a @click="toggleLegendVisibility">Toggle Legend</a>
-
-            <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
-            <label class="inline-btn-group">{{textSize}}</label>
-            <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
-          </div>
-        </foreignObject>
+      <template slot="visualization">
+        <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
+        <label class="inline-btn-group">{{textSize}}</label>
+        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
       </template>
     </GraphVisualizerBase>
     <div>
@@ -91,6 +79,7 @@ export default class CSPGraphInteractor extends Vue {
   layout: GraphLayout;
   // The size of the text inside the node
   textSize: number;
+  detailLevel: number;
   legendText: string[];
   legendColor: string[];
 
@@ -169,29 +158,63 @@ export default class CSPGraphInteractor extends Vue {
   }
 
   .btn-text {
-  background: #3498db;
-  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-  background-image: -o-linear-gradient(top, #3498db, #2980b9);
-  background-image: linear-gradient(to bottom, #3498db, #2980b9);
-  -webkit-border-radius: 28;
-  -moz-border-radius: 28;
-  /*border-radius: 28px;*/
-  font-family: Arial;
-  color: #ffffff;
-  font-size: 16px;
-  padding: 2px 10px 2px 10px;
-  text-decoration: none;
-}
+    background: #3498db;
+    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+    background-image: -o-linear-gradient(top, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    /*border-radius: 28px;*/
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 2px 10px 2px 10px;
+    text-decoration: none;
+  }
 
-.btn-text:hover {
-  background: #3cfc3c;
-  background-image: -webkit-linear-gradient(top, #3cfc3c, #609400);
-  background-image: -moz-linear-gradient(top, #3cfc3c, #609400);
-  background-image: -ms-linear-gradient(top, #3cfc3c, #609400);
-  background-image: -o-linear-gradient(top, #3cfc3c, #609400);
-  background-image: linear-gradient(to bottom, #3cfc3c, #609400);
-  text-decoration: none;
-}
+  .btn-text:hover {
+    background: #3cfc3c;
+    background-image: -webkit-linear-gradient(top, #3cfc3c, #609400);
+    background-image: -moz-linear-gradient(top, #3cfc3c, #609400);
+    background-image: -ms-linear-gradient(top, #3cfc3c, #609400);
+    background-image: -o-linear-gradient(top, #3cfc3c, #609400);
+    background-image: linear-gradient(to bottom, #3cfc3c, #609400);
+    text-decoration: none;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 1em 1em;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
+  }
+
+  .dropdown-content a:hover {background-color: #ddd;}
+
+  .dropdown-content a.inline-btn-group {
+    color: white;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
+    background-color: silver;
+    width: 25%;
+  }
+
+  .dropdown-content label.inline-btn-group {
+    color: black;
+    padding: 1em 0.5em;
+    text-align: center;
+    width: 40%;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
+  }
+
+  .dropdown-content a:hover {background-color: #ddd;}
 </style>
