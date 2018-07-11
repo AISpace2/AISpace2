@@ -211,6 +211,4 @@
     border-bottom: 1px solid rgba(0, 0, 255, .1);
   }
 
-  .dropdown-content a:hover {background-color: #ddd;}
-
 </style>
