@@ -21,7 +21,7 @@
                           @canTransition="toggleTransition">
         <slot name="node" :node="node" :hover="node === nodeHovered"></slot>
       </GraphNodeContainer>
-      <foreignObject class="dropdown noselect" :x="btnProp(width).x" :y="btnProp().y">
+      <foreignObject class="dropdown noselect" :x="btnProp(width).x" :y="btnProp().y" width="112px">
         <button class="dropbtn">Visualization Options</button>
         <div class="dropdown-content">
           <a @click="toggleLegendVisibility">Toggle Legend</a>
@@ -379,7 +379,7 @@
   }
 
   .dropdown-content {
-    /*display: none;*/
+    display: none;
     position: absolute;
     background-color: #f1f1f1;
     min-width: 8em;
@@ -401,7 +401,7 @@
                                   supported by Chrome and Opera */
   }
 
-    .dropdown-content a {
+  .dropdown-content a {
     color: black;
     padding: 1em 1em;
     font-size: 0.75em;
