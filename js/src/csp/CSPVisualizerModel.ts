@@ -57,6 +57,10 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("_previously_rendered");
   }
 
+  get detailLevel(): number {
+    return this.get("detail_level");
+  }
+
   /** The base line width of the edges to draw. Bold arcs will be several pixels thicker than this. */
   get lineWidth(): number {
     return this.get("line_width");

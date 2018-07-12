@@ -21,7 +21,6 @@
         <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
 
         <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
-        <a @click="toggleLegendVisibility">Toggle Legend</a>
 
         <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
         <label class="inline-btn-group">{{textSize}}</label>
@@ -78,10 +77,10 @@
     showEdgeCosts: boolean;
     /** True if node heuristics should be shown on the nodes. */
     showNodeHeuristics: boolean;
-    /** The width, in pixels, of the visualizer. */
-    width: number;
-    /** The width, in pixels, of the visualizer. */
-    height: number;
+    // /** The width, in pixels, of the visualizer. */
+    // width: number;
+    // /** The width, in pixels, of the visualizer. */
+    // height: number;
     /** Layout object that controls where nodes are drawn. */
     layout: GraphLayout;
     // The size of the text inside the node
@@ -162,53 +161,6 @@
           this.$set(edge.styles, "targetHeight", bounds.height);
         });
     }
-
-    toggleLegendVisibility() {
-      let lg = $(".legend_group");
-      let attr = "visibility";
-      let show = "visible";
-      let hide = "hidden";
-
-      if (lg.css(attr) === hide) {
-        lg.css(attr, show)
-      } else {
-        lg.css(attr, hide);
-      }
-    }
   }
 
 </script>
-<style scoped>
-  .dropdown-content a {
-    color: black;
-    padding: 1em 1em;
-    font-size: 0.75em;
-    text-decoration: none;
-    display: block;
-    border-bottom: 1px solid rgba(0, 0, 255, .1);
-  }
-
-  .dropdown-content a:hover {background-color: #ddd;}
-
-  .dropdown-content a.inline-btn-group {
-    color: white;
-    font-size: 0.75em;
-    text-decoration: none;
-    display: inline-block;
-    border-bottom: 1px solid rgba(0, 0, 255, .1);
-    background-color: silver;
-    width: 25%;
-  }
-
-  .dropdown-content label.inline-btn-group {
-    color: black;
-    padding: 1em 0.5em;
-    text-align: center;
-    width: 40%;
-    font-size: 0.75em;
-    text-decoration: none;
-    display: inline-block;
-    border-bottom: 1px solid rgba(0, 0, 255, .1);
-  }
-
-</style>

@@ -21,10 +21,11 @@
                           @canTransition="toggleTransition">
         <slot name="node" :node="node" :hover="node === nodeHovered"></slot>
       </GraphNodeContainer>
-      <foreignObject class="dropdown noselect" :x="btnProp(width).x" :y="btnProp().y" width="100%">
+      <foreignObject class="dropdown noselect" :x="btnProp(width).x" :y="btnProp().y">
         <button class="dropbtn">Visualization Options</button>
         <div class="dropdown-content">
-          <slot name="visualization" :width="width" :height="height"></slot>
+          <a @click="toggleLegendVisibility">Toggle Legend</a>
+          <slot name="visualization"></slot>
         </div>
       </foreignObject>
     </svg>
@@ -300,6 +301,19 @@
         .text(function(d) { return d; });
     }
 
+    toggleLegendVisibility() {
+      let lg = $(".legend_group");
+      let attr = "visibility";
+      let show = "visible";
+      let hide = "hidden";
+
+      if (lg.css(attr) === hide) {
+        lg.css(attr, show)
+      } else {
+        lg.css(attr, hide);
+      }
+    }
+
     btnProp(canvasWidth: number) {
       return {
         // first btn's and y position
@@ -365,7 +379,7 @@
   }
 
   .dropdown-content {
-    display: none;
+    /*display: none;*/
     position: absolute;
     background-color: #f1f1f1;
     min-width: 8em;
@@ -385,5 +399,37 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+  }
+
+    .dropdown-content a {
+    color: black;
+    padding: 1em 1em;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
+  }
+
+  .dropdown-content a:hover {background-color: #ddd;}
+
+  .dropdown-content a.inline-btn-group {
+    color: white;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
+    background-color: darkgrey;
+    width: 25%;
+  }
+
+  .dropdown-content label.inline-btn-group {
+    color: black;
+    padding: 1em 0.5em;
+    text-align: center;
+    width: 40%;
+    font-size: 0.75em;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid rgba(0, 0, 255, .1);
   }
 </style>

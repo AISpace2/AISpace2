@@ -1,18 +1,18 @@
 <template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
-    <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
+    <GraphVisualizerBase :graph="graph" v-on:node="nodeClicked" v-on:edge="edgeClicked" :layout="layout" :transitions="true"
         :legendColor="legendColor" :legendText="legendText">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
                          :subtext="domainText(props.node)" :textSize="textSize"
                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                          :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
-                          :hover="props.hover" :id="props.node.id">
+                          :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel">
         </RoundedRectangleGraphNode>
         <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)" :textSize="textSize"
                            :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                            :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
-                            :hover="props.hover" :id="props.node.id">
+                            :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel">
         </RectangleGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
@@ -21,6 +21,10 @@
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
       <template slot="visualization">
+        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
+        <label class="inline-btn-group">Detail</label>
+        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+
         <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
         <label class="inline-btn-group">{{textSize}}</label>
         <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
@@ -151,70 +155,3 @@ export default class CSPGraphInteractor extends Vue {
 }
 
 </script>
-
-<style scoped>
-  text.domain {
-    font-size: 12px;
-  }
-
-  .btn-text {
-    background: #3498db;
-    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-    background-image: -o-linear-gradient(top, #3498db, #2980b9);
-    background-image: linear-gradient(to bottom, #3498db, #2980b9);
-    -webkit-border-radius: 28;
-    -moz-border-radius: 28;
-    /*border-radius: 28px;*/
-    font-family: Arial;
-    color: #ffffff;
-    font-size: 16px;
-    padding: 2px 10px 2px 10px;
-    text-decoration: none;
-  }
-
-  .btn-text:hover {
-    background: #3cfc3c;
-    background-image: -webkit-linear-gradient(top, #3cfc3c, #609400);
-    background-image: -moz-linear-gradient(top, #3cfc3c, #609400);
-    background-image: -ms-linear-gradient(top, #3cfc3c, #609400);
-    background-image: -o-linear-gradient(top, #3cfc3c, #609400);
-    background-image: linear-gradient(to bottom, #3cfc3c, #609400);
-    text-decoration: none;
-  }
-
-  .dropdown-content a {
-    color: black;
-    padding: 1em 1em;
-    font-size: 0.75em;
-    text-decoration: none;
-    display: block;
-    border-bottom: 1px solid rgba(0, 0, 255, .1);
-  }
-
-  .dropdown-content a:hover {background-color: #ddd;}
-
-  .dropdown-content a.inline-btn-group {
-    color: white;
-    font-size: 0.75em;
-    text-decoration: none;
-    display: inline-block;
-    border-bottom: 1px solid rgba(0, 0, 255, .1);
-    background-color: silver;
-    width: 25%;
-  }
-
-  .dropdown-content label.inline-btn-group {
-    color: black;
-    padding: 1em 0.5em;
-    text-align: center;
-    width: 40%;
-    font-size: 0.75em;
-    text-decoration: none;
-    display: inline-block;
-    border-bottom: 1px solid rgba(0, 0, 255, .1);
-  }
-
-  .dropdown-content a:hover {background-color: #ddd;}
-</style>
