@@ -108,7 +108,6 @@
     width() {
       this.computeWidthAndHeight();
       let finalWidth = 0;
-
       if (this.showNoTextFlag() || this.text === "{}") {
         return this.minTextWidth;
       } else if (this.showFullTextFlag()) {
@@ -215,6 +214,11 @@
     @Watch("textSize")
     onTextSizeChange() {
       this.measureTextHeight(this.text, this.flag.TEXT);
+      this.updateText();
+    }
+
+    @Watch("hover")
+    onHoverChanged() {
       this.updateText();
     }
 
