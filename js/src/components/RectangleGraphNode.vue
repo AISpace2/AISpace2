@@ -144,10 +144,7 @@
         this.textHeight = this.$refs.text.getBoundingClientRect().height;
       }
 
-      this.textWidth =
-        this.$refs.text != null
-          ? this.measureTextWidth(this.text)
-          : 0;
+      this.textWidth = this.measureTextWidth(this.text);
     }
     /**
      * Truncates text until it is less than `maxWidth`.

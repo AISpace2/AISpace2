@@ -89,10 +89,7 @@
         textHeight = this.$refs.text.getBoundingClientRect().height;
       }
 
-      textWidth =
-        this.$refs.text != null
-          ? this.measureTextWidth(this.text)
-          : 0;
+      textWidth = this.measureTextWidth(this.text);
 
       if (this.$refs.subtext === null || this.$refs.subtext === undefined) {
         subtextHeight = 0;
@@ -102,10 +99,7 @@
         subtextHeight = this.$refs.subtext.getBoundingClientRect().height;
       }
 
-      subtextWidth =
-        this.$refs.subtext != null
-        ? this.measureTextWidth(this.subtext)
-        : 0;
+      subtextWidth = this.measureTextWidth(this.subtext);
 
       this.computedTextWidth = textWidth;
       this.computedSubtextWidth = subtextWidth;
