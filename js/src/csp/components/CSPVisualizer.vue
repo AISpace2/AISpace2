@@ -20,7 +20,9 @@
                         :stroke="stroke(props.edge)"
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
-      <template slot="visualization">
+      <template slot="visualization" slot-scope="props">
+        <a @click="props.toggleLegend">Toggle Legend</a>
+
         <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
         <label class="inline-btn-group">Detail</label>
         <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
@@ -83,6 +85,7 @@ export default class CSPGraphInteractor extends Vue {
   layout: GraphLayout;
   // The size of the text inside the node
   textSize: number;
+  // detail of the domain
   detailLevel: number;
   legendText: string[];
   legendColor: string[];

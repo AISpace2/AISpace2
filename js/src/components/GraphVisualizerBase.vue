@@ -24,8 +24,7 @@
       <foreignObject class="dropdown noselect" :x="btnProp(width).x" :y="btnProp().y" width="112px">
         <button class="dropbtn">Visualization Options</button>
         <div class="dropdown-content">
-          <a @click="toggleLegendVisibility">Toggle Legend</a>
-          <slot name="visualization"></slot>
+          <slot name="visualization" :toggleLegend="toggleLegendVisibility"></slot>
         </div>
       </foreignObject>
     </svg>
@@ -302,15 +301,12 @@
     }
 
     toggleLegendVisibility() {
-      let lg = $(".legend_group");
-      let attr = "visibility";
-      let show = "visible";
-      let hide = "hidden";
+      let lg = d3.select(this.$refs.svg).select(".legend_group");
 
-      if (lg.css(attr) === hide) {
-        lg.css(attr, show)
+      if (lg.style("visibility") === "hidden") {
+        lg.attr("visibility", "visible");
       } else {
-        lg.css(attr, hide);
+        lg.attr("visibility", "hidden");
       }
     }
 

@@ -15,12 +15,13 @@
                           :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
       </template>
-      <template slot="visualization">
+      <template slot="visualization" slot-scope="props">
+        <a @click="props.toggleLegend">Toggle Legend</a>
+        <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
+
         <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
         <label class="inline-btn-group">Detail</label>
         <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
-
-        <a @click="$emit('toggle:showFullDomain')">Change Domain</a>
 
         <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
         <label class="inline-btn-group">{{textSize}}</label>

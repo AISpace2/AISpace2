@@ -43,7 +43,7 @@
     // 0 is hide all text
     // 1 is show truncated version
     // 2 is show all text
-    @Prop({default: 0}) detailLevel: number;
+    @Prop({default: 1}) detailLevel: number;
     /** The maximum width of the text, in pixels, before truncation occurs. */
     maxWidth = 100;
     /** The text, truncated to `maxWidth`. This text is displayed in the node. */

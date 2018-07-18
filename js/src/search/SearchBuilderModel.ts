@@ -62,6 +62,10 @@ export default class SearchBuilderModel extends widgets.DOMWidgetModel {
     return this.get("text_size");
   }
 
+  get detailLevel(): number {
+    return this.get("detail_level");
+  }
+
   /** True if the visualization should show edge costs. */
   get showEdgeCosts(): boolean {
     return this.get("show_edge_costs");
