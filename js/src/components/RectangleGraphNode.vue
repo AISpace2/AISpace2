@@ -238,8 +238,8 @@
 
     // src: https://stackoverflow.com/questions/16816071/calculate-exact-character-string-height-in-javascript
     measureTextHeight(text: string, flag: number) {
-      let width = 1500;
-      let height = 500;
+      let width: number = 1500;
+      let height: number = 500;
 
       let canvas = document.createElement("canvas");
       canvas.width = width;
@@ -250,7 +250,7 @@
         ctx.font = this.textSize.toString() + "px serif";
 
         ctx.clearRect(0, 0, width, height);
-        ctx.fillText(text, "" + parseInt(width * 0.1, 10), "" + parseInt(height / 2, 10));
+        ctx.fillText(text, width * 0.1, height / 2);
         ctx.restore();
 
         document.body.appendChild(canvas);
@@ -260,29 +260,29 @@
         let bottomMost = 0;
         let leftMost = 0;
         let rightMost = 0;
-        for (let x = 0; x < width; x++) {
-          for (let y = 0; (y < height) && (!leftMost); y++) {
+        for (let x: number = 0; x < width; x++) {
+          for (let y:number = 0; (y < height) && (!leftMost); y++) {
             if (data[this.getAlphaIndexForCoordinates(x, y, width, height)] != 0) {
               leftMost = x;
             }
           }
         }
-        for (let y = 0; y < height; y++) {
-          for (let x = 0; (x < width) && (!topMost); x++) {
+        for (let y:number = 0; y < height; y++) {
+          for (let x:number = 0; (x < width) && (!topMost); x++) {
             if (data[this.getAlphaIndexForCoordinates(x, y, width, height)] != 0) {
               topMost = y;
             }
           }
         }
-        for (let x = width - 1; x >= 0; x--) {
-          for (let y = height - 1; (y >= 0) && (!rightMost); y--) {
+        for (let x:number = width - 1; x >= 0; x--) {
+          for (let y:number = height - 1; (y >= 0) && (!rightMost); y--) {
             if (data[this.getAlphaIndexForCoordinates(x, y, width, height)] != 0) {
               rightMost = x;
             }
           }
         }
-        for (let y = height - 1; y >= 0; y--) {
-          for (let x = width - 1; (x >= 0) && (!bottomMost); x--) {
+        for (let y:number = height - 1; y >= 0; y--) {
+          for (let x:number = width - 1; (x >= 0) && (!bottomMost); x--) {
             if (data[this.getAlphaIndexForCoordinates(x, y, width, height)] != 0) {
               bottomMost = y;
             }
@@ -300,7 +300,7 @@
       }
     }
 
-    getAlphaIndexForCoordinates(x,y,width,height) {
+    getAlphaIndexForCoordinates(x: number, y:number, width:number, height:number) {
       return (((width*4*y)+4*x)+3);
     }
   }
