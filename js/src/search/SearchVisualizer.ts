@@ -128,6 +128,16 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.vue.$set(edge.styles, "stroke", "black");
       this.vue.$set(edge.styles, "strokeWidth", this.model.lineWidth);
     }
+
+    for (const node of this.vue.graph.nodes) {
+      this.vue.$set(node.styles, "stroke", "black");
+      this.vue.$set(node.styles, "strokeWidth", 1);
+    }
+
+    for (const edge of this.vue.graph.edges) {
+      this.vue.$set(edge.styles, "stroke", "black");
+      this.vue.$set(edge.styles, "strokeWidth", this.model.lineWidth);
+    }
   }
 
   /**
