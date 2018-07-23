@@ -2,7 +2,7 @@
   <div class="search_visualizer">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText">
       <template slot="node" slot-scope="props">
-        <RoundedRectangleGraphNode :id="props.node.id" hover="props.hover" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
+        <RoundedRectangleGraphNode :id="props.node.id" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                                    :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :detailLevel="detailLevel"
                                    :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                                    :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
