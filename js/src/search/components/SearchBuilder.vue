@@ -2,15 +2,16 @@
   <div tabindex="0" @keydown.stop class="search_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
                          @click:node="updateSelection" @click:edge="updateSelection">
-      <template slot="node" scope="props">
+      <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :text="props.node.name"
                           :subtext="nodeHText(props.node)"
                           :fill="nodeFillColour(props.node)"
                           :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
-                          @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize" :hover="props.hover">
+                          @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize" :hover="props.hover"
+        :detailLevel="detailLevel">
         </RoundedRectangleGraphNode>
       </template>
-      <template slot="edge" scope="props">
+      <template slot="edge" slot-scope="props">
         <DirectedRectEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                       :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
@@ -18,6 +19,15 @@
                       :strokeWidth="props.edge.styles.strokeWidth"
                       :text="showEdgeCosts ? props.edge.cost : undefined" :textSize="textSize" :hover="props.hover">
         </DirectedRectEdge>
+      </template>
+      <template slot="visualization" slot-scope="props">
+        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
+        <label class="inline-btn-group">Detail</label>
+        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+
+        <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
+        <label class="inline-btn-group">{{textSize}}</label>
+        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
       </template>
     </GraphVisualizerBase>
     <div>
@@ -72,6 +82,7 @@ export default class SearchGraphBuilder extends Vue {
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
   textSize: number;
+  detailLevel: number;
 
   /** The current node or edge being selected. */
   selection: ISearchGraphNode | ISearchGraphEdge | null = null;

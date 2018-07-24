@@ -78,8 +78,8 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
     return this.get("text_size");
   }
 
-  get simplifyGraph(): boolean {
-    return this.get("hide_text");
+  get detailLevel(): number {
+    return this.get("detail_level");
   }
 
   /** The Graph representing the search problem. */

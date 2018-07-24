@@ -33,6 +33,7 @@ class CSPBuilder(DOMWidget):
         klass=CSP, allow_none=True).tag(
             sync=True, from_json=csp_from_json, to_json=csp_to_json)
     text_size = Integer(12).tag(sync=True)
+    detail_level = Integer(1).tag(sync=True)
 
     def __init__(self, csp=None):
         super().__init__()

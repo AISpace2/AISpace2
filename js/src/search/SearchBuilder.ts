@@ -38,6 +38,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
         data: {
           graph: initialGraph,
           textSize: this.model.textSize,
+          detailLevel: this.model.detailLevel,
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
           layout: new GraphLayout(d3ForceLayout(), relativeLayout())
