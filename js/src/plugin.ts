@@ -14,6 +14,8 @@ import {
   IJupyterWidgetRegistry
  } from '@jupyter-widgets/base';
 
+import BayesViewer from "./bayes/BayesViewer";
+import BayesViewerModel from "./bayes/BayesViewerModel";
 import CSPBuilder from "./csp/CSPBuilder";
 import CSPBuilderModel from "./csp/CSPBuilderModel";
 import CSPViewer from "./csp/CSPVisualizer";
@@ -48,6 +50,8 @@ function activateWidgetExtension(app: Application<Widget>, registry: IJupyterWid
     name: (packageJSON as any).name,
     version: EXTENSION_SPEC_VERSION,
     exports: {
+        BayesViewer,
+        BayesViewerModel,
         CSPBuilder,
         CSPBuilderModel,
         CSPViewer,
