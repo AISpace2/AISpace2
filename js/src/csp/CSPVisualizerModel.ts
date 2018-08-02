@@ -1,5 +1,5 @@
 import * as widgets from "@jupyter-widgets/base";
-import * as packageJSON from "../../package.json"
+import * as packageJSON from "../../package.json";
 import * as Analytics from "../Analytics";
 import { IEvent } from "../Events";
 import { deserializeGraph, Graph, IGraphJSON, serializeGraph } from "../Graph";

@@ -1,6 +1,7 @@
 import * as widgets from "@jupyter-widgets/base";
+import * as packageJSON from "../../package.json";
 import { IEvent } from "../Events";
-import * as packageJSON from "../../package.json"
+
 const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
 
 export default class BayesViewerModel extends widgets.DOMWidgetModel {
@@ -12,7 +13,7 @@ export default class BayesViewerModel extends widgets.DOMWidgetModel {
       _model_module_version: EXTENSION_SPEC_VERSION,
       _view_name: "BayesViewer",
       _view_module: "aispace2",
-      _view_module_version: EXTENSION_SPEC_VERSION,
+      _view_module_version: EXTENSION_SPEC_VERSION
     };
   }
 
@@ -23,5 +24,4 @@ export default class BayesViewerModel extends widgets.DOMWidgetModel {
       this.trigger("view:msg", event);
     });
   }
-
 }

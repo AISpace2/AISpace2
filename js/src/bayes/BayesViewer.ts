@@ -1,6 +1,5 @@
-import {DOMWidgetView} from "@jupyter-widgets/base";
+import { DOMWidgetView } from "@jupyter-widgets/base";
 import BayesViewerModel from "./BayesViewerModel";
-import * as SearchEvents from "../search/SearchVisualizerEvents";
 
 export default class BayesViewer extends DOMWidgetView {
   public model: BayesViewerModel;
@@ -10,15 +9,16 @@ export default class BayesViewer extends DOMWidgetView {
 
     // Receive message from backend
     this.listenTo(this.model, "view:msg", (event: object) => {
-      switch (event.action) {
-        case "highlightPath":
-          return "function";
-      }
+      // switch (event.action) {
+      //   case "highlightPath":
+      //     return "function";
+      // }
+
+      return "";
     });
   }
 
   public render() {
     this.$el.html("Bayes");
   }
-
 }

@@ -9,7 +9,7 @@ import {
   serializeGraph
 } from "../Graph";
 
-import * as packageJSON from "../../package.json"
+import * as packageJSON from "../../package.json";
 const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
 
 /**
