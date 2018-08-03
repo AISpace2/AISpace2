@@ -179,13 +179,21 @@
         }});
     }
 
-    /* Format text for display purposes
+    /*
+    Format text for display purposes
     * Similar to Java data structure's toString methods
-    * Effect: remove {, }, ' characters from this.text */
+    * Effect: remove ' characters from this.text
+    * Effect: remove prefix { and postfix } from string
+    */
     format(str: string) {
       let characters = str.split("");
-      let charsToRemove = ['{', '}', "'"];
-      return without(characters, ...charsToRemove).join("");
+      let charsToRemove = ["'"];
+      let result = without(characters, ...charsToRemove).join("");
+
+      if (result.charAt(0) === '{') result = result.substr(1);
+      if (result.charAt(result.length - 1) === '}') result = result.substr(0, result.length - 1);
+
+      return result;
     }
     showNoTextFlag() {
       return this.detailLevel == 0 && !this.hover && !this.isExpanded;
