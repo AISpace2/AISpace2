@@ -119,7 +119,7 @@ export class Graph<
   public edges: TEdge[];
 
   /** A mapping from IDs in the graph to nodes or edges.
-   * 
+   *
    * This is useful for quick lookups when you have the ID.
    * Assumption: All IDs are unique.
    */
@@ -165,11 +165,11 @@ export class Graph<
   }
 
   /** Adds a node to the graph.
-   * 
+   *
    * Some properties, like `x`, `y`, and the `styles` object are provided by default.
    * The reason why this is necessary is because those properties do not exist in the JSON representation,
    * but are required for visualization.
-   * 
+   *
    * @param opts An object containing properties conforming to TNode. These will be added to the node.
    */
   public addNode(opts: TNode | IGraphNodeJSON) {
@@ -184,21 +184,21 @@ export class Graph<
 
     this.nodes.push({
       ...nodeDefaults,
-      ...opts as any
+      ...(opts as any)
     });
 
     this.updateIdMap();
   }
 
   /** Adds an edge to the graph.
-   * 
+   *
    * For convenience, `source` and `target` can either be nodes or IDs.
    * However, nodes must already be in the graph.
    * A default `styles` object and `type` is provided.
    *
    * The reason why properties are added is because those properties do not exist in the JSON representation,
    * but are required for visualization.
-   * 
+   *
    * @param opts An object containing properties conforming to TEdge. These will be added to the edge.
    */
   public addEdge(opts: TEdge | IGraphEdgeJSON) {
@@ -215,7 +215,7 @@ export class Graph<
     this.edges.push({
       type: "edge",
       styles: {},
-      ...opts as any,
+      ...(opts as any),
       source: sourceNode,
       target: targetNode
     } as TEdge);
@@ -265,15 +265,15 @@ export class Graph<
 
   /**
    * Merge the styles object of each node of the previous graph to the new graph.
-   * 
+   *
    * The reason why this is necessary is that styles are *not*
    * preserved when being converted to Python (since those classes do not know about the visualization),
    * so in order to keep them, we need to take the styles from the previous graph.
    * In this way, applied styles can persist even after being converted to and from JSON.
    * This is only useful when the graph is being updated with more nodes or edges after conversion.
    * If your graph doesn't have nodes or edges added, it is not necessary to use this!
-   * 
-   * @param prevGraph The styles of the previous graph are merged into the new graph. 
+   *
+   * @param prevGraph The styles of the previous graph are merged into the new graph.
    */
   public mergeStylesFrom(prevGraph: Graph) {
     for (const node of Object.values(this.nodes)) {
@@ -307,7 +307,7 @@ export class Graph<
 
 /**
  * Helper function to serialize a graph. Used by Jupyter widgets.
- * 
+ *
  * @param graph The graph to serialize into JSON.
  */
 export function serializeGraph(graph: Graph) {
@@ -319,7 +319,7 @@ export function serializeGraph(graph: Graph) {
 
 /**
  * Helper function to deserialize a graph. Used by Jupyter widgets.
- * 
+ *
  * @param json The JSON to deserialize into a Graph.
  */
 export function deserializeGraph(json: IGraphJSON) {

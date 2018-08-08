@@ -9,7 +9,7 @@ declare let Jupyter: any;
 
 /**
  * Creates a view to construct a CSP. Interfaces with Jupyter backend.
- * 
+ *
  * See the accompanying backend file: `aispace2/jupyter/csp/cspbuilder.py`.
  */
 export default class CSPBuilder extends widgets.DOMWidgetView {

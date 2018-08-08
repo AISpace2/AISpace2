@@ -24,7 +24,7 @@ const label = {
   },
 
   bayes: {
-    "empty": COLOR.GREEN
+    empty: COLOR.GREEN
   }
 };
 

@@ -26,7 +26,6 @@ import SearchBuilderModel from "./search/SearchBuilderModel";
 import SearchViewer from "./search/SearchVisualizer";
 import SearchViewerModel from "./search/SearchVisualizerModel";
 
-
 // Export widget models and views, and the npm package version number.
 module.exports = {
   BayesViewer,

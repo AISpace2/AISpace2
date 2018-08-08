@@ -4,7 +4,7 @@ import { Events } from "./BayesEvents";
 import BayesViewerModel from "./BayesViewerModel";
 import BayesNetInteractor from "./components/BayesNetVisualizer.vue";
 import * as Analytics from "../Analytics";
-import {IBayesGraphNode} from "../Graph";
+import { IBayesGraphNode } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";

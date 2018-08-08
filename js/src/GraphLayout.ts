@@ -19,11 +19,11 @@ type LayoutFunction = (
 
 /**
  * A graph layout configuration object that specifies layout functions to be called.
- * 
+ *
  * - The `setup` function is called once on the graph, right before displaying.
  * - The `relayout` function is called subsequently; for example, when the graph has updated,
  *   or the window has been resized.
- * 
+ *
  * @example
  * ```
  * new GraphLayout(d3ForceLayout());
@@ -50,7 +50,7 @@ export class GraphLayout {
      * This function is not called initially for the first render.
      * You may call this function from the setup function if necessary.
      * When the promise is resolved, the nodes of the graph should have assigned x, y positions.
-     * 
+     *
      * If not provided, defaults to the same layout function as `setup`.
      */
     relayout?: LayoutFunction
@@ -61,7 +61,7 @@ export class GraphLayout {
 
   /**
    * Perform one-time, initial layout for the graph, right before displaying.
-   * 
+   *
    * @param graph The graph to perform layout on.
    * @param layoutParams Layout parameters that should be obeyed by the layout algorithm.
    */
@@ -71,11 +71,11 @@ export class GraphLayout {
 
   /**
    * Lays out the graph as a result of subsequent graph or layout param changes.
-   * 
+   *
    * While this can be the same layout algorithm as the one called during setup,
    * this is useful if, for example, you want to lay out the graph using a force layout initially,
    * but during resizing, you only want to scale their relative positions instead of recalculation.
-   * 
+   *
    * @param graph The graph to perform layout on.
    * @param layoutParams Layout parameters that should be obeyed by the layout algorithm.
    */
@@ -242,10 +242,11 @@ export function d3TreeLayout(
        */
       const heightDivision = layoutParams.height / (maxDepth + 2);
 
-      root.each((n) => {
+      root.each(n => {
         n.data.node.x = (n as any).x * layoutParams.width;
         n.data.node.y =
-          (n as any).y * (layoutParams.height - heightDivision - heightDivision) +
+          (n as any).y *
+            (layoutParams.height - heightDivision - heightDivision) +
           heightDivision;
       });
 
@@ -256,7 +257,7 @@ export function d3TreeLayout(
 
 /**
  * Creates a `LayoutFunction` that takes existing node positions and scales them to a new width/height.
- * 
+ *
  * This should not be used as a setup function, because it depends on nodes already having a position.
  * Instead, use this for re-layout, where you don't want to recompute a more expensive layout,
  * and instead just move nodes to fill the new available space. This layout always moves nodes
@@ -301,13 +302,11 @@ function scaleNodePositions(
     }
 
     node.x =
-      (layoutParams.width - edgePadding * 2) *
-        (node.x! - minX) /
+      ((layoutParams.width - edgePadding * 2) * (node.x! - minX)) /
         (maxX - minX) +
       edgePadding;
     node.y =
-      (layoutParams.height - edgePadding * 2) *
-        (node.y! - minY) /
+      ((layoutParams.height - edgePadding * 2) * (node.y! - minY)) /
         (maxY - minY) +
       edgePadding;
   }
