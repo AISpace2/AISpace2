@@ -31,6 +31,11 @@ export interface IGraphEdge {
   [key: string]: any;
 }
 
+export interface IBayesGraphNode extends IGraphNode {
+  parents: string[];
+  evidences: number[];
+}
+
 export type CSPNodeTypes = "csp:variable" | "csp:constraint";
 export interface ICSPGraphNode extends IGraphNode {
   type: CSPNodeTypes;

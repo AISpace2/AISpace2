@@ -21,9 +21,9 @@ class Displayable(StepDOMWidget):
         super().__init__()
         self.graph = self.problem
 
-    def _handle_custom_msg(self, _, content, buffers=None):
-        super().handle_custom_msgs(None, content, buffers)
-        event = content.get("event", '') # detect the event msg from frontend
+    # def _handle_custom_msg(self, _, content, buffers=None):
+    #     super().handle_custom_msgs(None, content, buffers)
+    #     event = content.get("event", '') # detect the event msg from frontend
 
         # Receive msg from frontend
         # if event == "draw":

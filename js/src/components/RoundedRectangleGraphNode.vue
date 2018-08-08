@@ -79,7 +79,7 @@
      * This is due to long subtext exceeding the space allocated to the textbox itself
      */
     computeWidthAndHeight() {
-      var textHeight, textWidth, subtextHeight, subtextWidth = 0;
+      let textHeight, textWidth, subtextHeight, subtextWidth = 0;
 
       if (this.$refs.text === null || this.$refs.text === undefined) {
         textHeight = 0;

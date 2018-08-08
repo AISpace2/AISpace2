@@ -2,16 +2,6 @@ from aipython.probGraphicalModels import Belief_network
 from aipython.probFactors import Prob
 from aipython.probVariables import Variable
 
-# Example output
-# {
-#     "node": [{"name": "Alarm", "domain": ["True", "False"]},
-#              {"name": "Fire", "domain": ["True", "False"]}],
-#
-#     "probability": [{
-#         "name": "Alarm",
-#         "parents": ["Fire, Tamper"],
-#         "evidences": [0.9999, 0.0001, 0.15, 0.85, 0.01, 0.99, 0.5, 0.5]
-# }]}
 def bayes_to_json(bayesNet, widget_model=None):
     # Converts a Python Belief_network instance to a dictionary representable as JSON.
     #
@@ -27,9 +17,22 @@ def bayes_to_json(bayesNet, widget_model=None):
     #     variables: list of Variable (Variable from probVariables.py)
     # Returns:
     #     List of variable dictionary
-    # Example Output: [{"name": "Alarm", "domain": [True, False]}
-    def parseNode(variables):
-        return [{'id': str(hash(var.name)), 'name': var.name, 'domain': var.domain} for var in variables]
+    def parseNode(variables, factors):
+        nodes = [{'id': str(hash(var.name)),
+                  'name': var.name,
+                  'domain': var.domain,
+                  'parents': [],
+                  'evidences': []
+                  } for var in variables]
+
+        nodesMap = {node["name"]: index for index, node in enumerate(nodes)}
+
+        for f in factors:
+            nodeForF = nodes[nodesMap[f.child.name]]
+            nodeForF["parents"] = [p.name for p in f.parents]
+            nodeForF["evidences"] = f.values
+
+        return nodes
 
     # Args:
     #     factors: list of Prob (Prob from probFactors.py)
@@ -52,37 +55,28 @@ def bayes_to_json(bayesNet, widget_model=None):
                 edges.append(edge)
 
         return edges
-        # return [{
-        #     "id":
-        #     "name": prob.child.name,
-        #     "parents": [p.name for p in prob.parents],
-        #     "evidences": prob.values,
-        # } for prob in factors]
 
     if not bayesNet:
         return None
 
-    #node_map = {str(n): str(hash(n.name)) for n in bayesNet.variables}
-    bayes = {"nodes": parseNode(bayesNet.variables),
+    bayes = {"nodes": parseNode(bayesNet.variables, bayesNet.factors),
              "edges": parseProbability(bayesNet.factors)}
 
     return bayes
 
-# TODO
 def json_to_bayes_problem(json, widget_model=None):
     if not json:
         return None
 
-    listOfVars = [Variable(var["name"], var["domain"]) for var in json["node"]]
+    listOfVars = [Variable(var["name"], var["domain"]) for var in json["nodes"]]
 
     # extra data for easy name to Variable object search for Probability
     dictionary = [{var.name: var} for var in listOfVars]
     listOfProb = []
 
-    for prob in json["probability"]:
-        primaryObj = dictionary[prob["name"]]
-        parentsObj = [dictionary[name] for name in prob["parents"]]
-        listOfProb.append(Prob(primaryObj, parentsObj, prob["evidences"]))
+    for node in json["nodes"]:
+        primaryObj = dictionary[node["name"]]
+        parentsObj = [dictionary[name] for name in node["parents"]]
+        listOfProb.append(Prob(primaryObj, parentsObj, node["evidences"]))
 
-    listOfVars = [Variable(var["name"], var["domain"]) for var in json["node"]]
     return Belief_network(listOfVars, listOfProb)

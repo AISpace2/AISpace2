@@ -1,12 +1,8 @@
 import * as widgets from "@jupyter-widgets/base";
 import * as packageJSON from "../../package.json";
-import { IEvent } from "../Events";
-import {
-  deserializeGraph,
-  Graph,
-  serializeGraph
-} from "../Graph";
 import * as Analytics from "../Analytics";
+import { IEvent } from "../Events";
+import { deserializeGraph, Graph, serializeGraph } from "../Graph";
 
 const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
 
@@ -33,7 +29,7 @@ export default class BayesViewerModel extends widgets.DOMWidgetModel {
     };
   }
 
-public initialize(attrs: any, opts: any) {
+  public initialize(attrs: any, opts: any) {
     super.initialize(attrs, opts);
 
     Analytics.trackApplet("bayes");
