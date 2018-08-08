@@ -3,8 +3,7 @@
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
         :legendColor="legendColor" :legendText="legendText">
       <template slot="node" slot-scope="props">
-        <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
-                         :subtext="domainText(props.node)" :textSize="textSize"
+        <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize"
                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                          :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                           :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel">
@@ -12,7 +11,7 @@
       </template>
       <template slot="edge" slot-scope="props">
         <DirectedRectEdge :id="props.edge.id" :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
-                          :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name"
+                          :strokeWidth="props.edge.styles.strokeWidth" :nodeName="props.edge.target.name"
                           :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
       </template>
@@ -49,11 +48,10 @@ import { Prop } from "vue-property-decorator";
 import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
-import UndirectedEdge from "../../components/UndirectedEdge.vue";
+import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
 
-import { Graph, ICSPGraphNode, IGraphEdge } from "../../Graph";
+import {Graph, ICSPGraphNode, IGraphEdge, ISearchGraphEdge, ISearchGraphNode} from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
-//import * as CSPUtils from "../CSPUtils";
 
 /**
  * A CSP visualization that can be driven by backend code.
@@ -69,12 +67,12 @@ import { GraphLayout } from "../../GraphLayout";
     RoundedRectangleGraphNode,
     GraphVisualizerBase,
     RectangleGraphNode,
-    UndirectedEdge
+    DirectedRectEdge
   }
 })
 export default class BayesNetInteractor extends Vue {
   /** The graph being displayed. */
-  graph: Graph<ICSPGraphNode>;
+  graph: Graph;
   /** Text describing what is currently happening. */
   output: string;
   /** Layout object that controls where nodes are drawn. */
@@ -126,14 +124,6 @@ export default class BayesNetInteractor extends Vue {
     }
 
     return 4 + hoverWidth;
-  }
-
-  domainText(node: ICSPGraphNode) {
-    return CSPUtils.domainText(node);
-  }
-
-  constraintText(node: ICSPGraphNode) {
-    return CSPUtils.constraintText(node);
   }
 
   get textBtnProp() {

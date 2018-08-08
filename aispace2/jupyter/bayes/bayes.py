@@ -14,12 +14,12 @@ class Displayable(StepDOMWidget):
     _view_module_version = Unicode(__version__).tag(sync=True)
     _model_module_version = Unicode(__version__).tag(sync=True)
 
-    bayes_problem = Instance(klass=Belief_network, allow_none=True)\
+    graph = Instance(klass=Belief_network, allow_none=True)\
         .tag(sync=True, from_json=json_to_bayes_problem, to_json=bayes_to_json)
 
-    def __init__(self, problem):
+    def __init__(self):
         super().__init__()
-        self.bayes_problem = problem
+        self.graph = self.problem
 
     def _handle_custom_msg(self, _, content, buffers=None):
         super().handle_custom_msgs(None, content, buffers)

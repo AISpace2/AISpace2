@@ -4,11 +4,8 @@ import { IEvent } from "../Events";
 import {
   deserializeGraph,
   Graph,
-  ISearchGraphEdge,
-  ISearchGraphNode,
   serializeGraph
 } from "../Graph";
-import BayesNet from "./model/BayesNet";
 import * as Analytics from "../Analytics";
 
 const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
@@ -75,11 +72,11 @@ public initialize(attrs: any, opts: any) {
   }
 
   /** The Graph representing the search problem. */
-  get graph(): Graph<ISearchGraphNode, ISearchGraphEdge> {
+  get graph(): Graph {
     return this.get("graph");
   }
 
-  set graph(val: Graph<ISearchGraphNode, ISearchGraphEdge>) {
+  set graph(val: Graph) {
     this.set("graph", val);
   }
 
