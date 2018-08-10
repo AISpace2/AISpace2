@@ -32,6 +32,7 @@ class SearchBuilder(DOMWidget):
     # True if a node's heuristic value should be shown.
     show_node_heuristics = Bool(False).tag(sync=True)
     text_size = Integer(12).tag(sync=True)
+    detail_level = Integer(1).tag(sync=True)
 
     def __init__(self, search_problem=None):
         super().__init__()

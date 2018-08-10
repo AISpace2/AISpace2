@@ -1,5 +1,6 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
+import { cloneDeep } from "lodash";
 import { without } from "underscore";
 import * as Analytics from "../Analytics";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
@@ -8,6 +9,7 @@ import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchEvents from "./SearchVisualizerEvents";
 import SearchViewerModel from "./SearchVisualizerModel";
+
 /**
  * Creates a Search visualization and handles events received from the backend.
  * 
@@ -16,6 +18,7 @@ import SearchViewerModel from "./SearchVisualizerModel";
 export default class SearchViewer extends widgets.DOMWidgetView {
   public model: SearchViewerModel;
   private vue: any;
+  private showFullDomainFlag: boolean;
 
   public initialize(opts: any) {
     super.initialize(opts);
@@ -40,7 +43,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     this.listenTo(this.model, "change:graph", () => {
       // Nodes/edges have been added to the graph from the backend.
       this.model.graph.mergeStylesFrom(this.model.previous("graph"));
-      this.vue.graph = this.model.showFullDomain
+      this.vue.graph = this.showFullDomainFlag
         ? this.model.graph
         : this.trimGraph();
     });
@@ -56,7 +59,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           showNodeHeuristics: this.model.showNodeHeuristics,
           output: null,
           textSize: this.model.textSize,
-          simplifyGraph: this.model.simplifyGraph,
+          detailLevel: this.model.detailLevel,
           legendText: labelDict.searchLabelText,
           legendColor: labelDict.searchLabelColor,
           frontier: []
@@ -83,8 +86,21 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
 
-      this.vue.$on(StepEvents.PRINT_POSITIONS, ()=>{
-        this.send({event: StepEvents.PRINT_POSITIONS, nodes: this.vue.graph.nodes});
+      this.vue.$on(StepEvents.PRINT_POSITIONS, () => {
+        this.send({
+          event: StepEvents.PRINT_POSITIONS,
+          nodes: this.vue.graph.nodes
+        });
+      });
+
+      this.vue.$on("toggle:showFullDomain", () => {
+        this.showFullDomainFlag = !this.showFullDomainFlag;
+        // Nodes/edges have been added to the graph from the backend.
+        this.model.graph.mergeStylesFrom(this.model.previous("graph"));
+
+        this.vue.graph = this.showFullDomainFlag
+          ? this.model.graph
+          : this.trimGraph();
       });
 
       if (!this.model.previouslyRendered) {
@@ -112,6 +128,16 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.vue.$set(edge.styles, "stroke", "black");
       this.vue.$set(edge.styles, "strokeWidth", this.model.lineWidth);
     }
+
+    for (const node of this.vue.graph.nodes) {
+      this.vue.$set(node.styles, "stroke", "black");
+      this.vue.$set(node.styles, "strokeWidth", 1);
+    }
+
+    for (const edge of this.vue.graph.edges) {
+      this.vue.$set(edge.styles, "stroke", "black");
+      this.vue.$set(edge.styles, "strokeWidth", this.model.lineWidth);
+    }
   }
 
   /**
@@ -125,7 +151,15 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         event.colour
       );
       this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 4);
+
+      this.vue.$set(
+        this.vue.graph.idMap[nodeId].styles,
+        "stroke",
+        event.colour
+      );
+      this.vue.$set(this.vue.graph.idMap[nodeId].styles, "strokeWidth", 4);
     }
+
   }
 
   /**
@@ -140,6 +174,16 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       );
       this.vue.$set(
         this.model.graph.idMap[edgeId].styles,
+        "strokeWidth",
+        this.model.lineWidth + 3
+      );
+      this.vue.$set(
+        this.vue.graph.idMap[edgeId].styles,
+        "stroke",
+        event.colour
+      );
+      this.vue.$set(
+        this.vue.graph.idMap[edgeId].styles,
         "strokeWidth",
         this.model.lineWidth + 3
       );
@@ -160,7 +204,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   }
 
   private trimGraph() {
-    const graph = this.model.graph;
+    const graph = cloneDeep(this.model.graph);
     // make backup text of parent
     // child and parent have to be defined since it is connected by an edge
     for (const edge of graph.edges) {

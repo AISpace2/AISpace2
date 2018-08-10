@@ -2,23 +2,34 @@
   <div tabindex="0" @keydown.stop class="csp_visualizer">
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
         :legendColor="legendColor" :legendText="legendText">
-      <template slot="node" scope="props">
+      <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
                          :subtext="domainText(props.node)" :textSize="textSize"
                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                          :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
-                          :hover="props.hover" :id="props.node.id">
+                          :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel">
         </RoundedRectangleGraphNode>
         <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)" :textSize="textSize"
                            :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                            :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
-                            :hover="props.hover" :id="props.node.id">
+                            :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel">
         </RectangleGraphNode>
       </template>
-      <template slot="edge" scope="props">
+      <template slot="edge" slot-scope="props">
         <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                         :stroke="stroke(props.edge)"
                         :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
+      </template>
+      <template slot="visualization" slot-scope="props">
+        <a @click="props.toggleLegend">Toggle Legend</a>
+
+        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
+        <label class="inline-btn-group">Detail</label>
+        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+
+        <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
+        <label class="inline-btn-group">{{textSize}}</label>
+        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
       </template>
     </GraphVisualizerBase>
     <div>
@@ -74,6 +85,8 @@ export default class CSPGraphInteractor extends Vue {
   layout: GraphLayout;
   // The size of the text inside the node
   textSize: number;
+  // detail of the domain
+  detailLevel: number;
   legendText: string[];
   legendColor: string[];
 
@@ -126,12 +139,22 @@ export default class CSPGraphInteractor extends Vue {
   constraintText(node: ICSPGraphNode) {
     return CSPUtils.constraintText(node);
   }
+
+  get textBtnProp() {
+    return {
+      width: 30,
+      height: 30,
+      y: 20
+    };
+  }
+
+  addTextSize(){
+    this.textSize ++;
+  }
+
+  minusTextSize(){
+    if(this.textSize > 0) this.textSize --;
+  }
 }
 
 </script>
-
-<style scoped>
-  text.domain {
-    font-size: 12px;
-  }
-</style>

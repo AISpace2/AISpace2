@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import * as Analytics from "../Analytics";
 import { ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
-import * as labelDict from '../labelDictionary';
+import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
@@ -54,6 +54,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           height: 0,
           output: null,
           textSize: this.model.textSize,
+          detailLevel: this.model.detailLevel,
           legendText: labelDict.cspLabelText,
           legendColor: labelDict.cspLabelColor
         }
@@ -79,10 +80,11 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
 
-      this.vue.$on(StepEvents.PRINT_POSITIONS, ()=>{
-        this.send({event: StepEvents.PRINT_POSITIONS,
+      this.vue.$on(StepEvents.PRINT_POSITIONS, () => {
+        this.send({
+          event: StepEvents.PRINT_POSITIONS,
           nodes: this.vue.graph.nodes
-        })
+        });
       });
 
       this.vue.$on("click:edge", (edge: IGraphEdge) => {

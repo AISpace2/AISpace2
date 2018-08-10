@@ -2,16 +2,27 @@
   <div class="csp_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
       @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
-      <template slot="node" scope="props">
+      <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"
-                         :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover">
+                                   :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover"
+                                   :detailLevel="detailLevel">
         </RoundedRectangleGraphNode>
         <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)"
-                           :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover">
+                            :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover"
+                            :detailLevel="detailLevel">
         </RectangleGraphNode>
       </template>
-      <template slot="edge" scope="props">
+      <template slot="edge" slot-scope="props">
         <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="strokeColour(props.edge)"></UndirectedEdge>
+      </template>
+      <template slot="visualization" slot-scope="props">
+        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
+        <label class="inline-btn-group">Detail</label>
+        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+
+        <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
+        <label class="inline-btn-group">{{textSize}}</label>
+        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
       </template>
     </GraphVisualizerBase>
 
@@ -95,6 +106,7 @@ export default class CSPGraphBuilder extends Vue {
   /** During edge creation, tracks the source node of the edge to be formed. */
   first: ICSPGraphNode | null = null;
   textSize: number;
+  detailLevel: number;
 
   /** Switches to a new mode. */
   setMode(mode: Mode) {

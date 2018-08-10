@@ -5,7 +5,7 @@ from threading import Thread
 
 from aipython.searchProblem import Arc, Search_problem_from_explicit_graph
 from ipywidgets import register
-from traitlets import Bool, Dict, Instance, Unicode, observe
+from traitlets import Bool, Int, Instance, Unicode, observe
 
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
 from .searchjsonbridge import (generate_search_graph_mappings,
@@ -53,7 +53,7 @@ class Displayable(StepDOMWidget):
     # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
     _previously_rendered = Bool(False).tag(sync=True)
 
-    hide_text = Bool(False).tag(sync=True)
+    detail_level = Int(1).tag(sync=True)
 
     def __init__(self):
         super().__init__()

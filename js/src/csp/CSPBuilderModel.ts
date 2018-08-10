@@ -50,6 +50,10 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
     });
   }
 
+  get detailLevel(): number {
+    return this.get("detail_level");
+  }
+
   /** The JSON representing the CSP graph. */
   get graph(): Graph<ICSPGraphNode> {
     return this.get("graph");
