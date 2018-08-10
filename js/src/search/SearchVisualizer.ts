@@ -84,8 +84,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       });
 
       this.vue.$on(StepEvents.PRINT_POSITIONS, ()=>{
-        this.send({event: StepEvents.PRINT_POSITIONS, nodes: this.vue.graph.nodes})
-      })
+        this.send({event: StepEvents.PRINT_POSITIONS, nodes: this.vue.graph.nodes});
+      });
 
       if (!this.model.previouslyRendered) {
         this.send({ event: "initial_render" });
