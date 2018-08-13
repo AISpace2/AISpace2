@@ -260,6 +260,11 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
 jupyter labextension install @jupyter-widgets/jupyterlab-manager</code></pre>
     <p>You can start JupyterLab by running
         <code>jupyter lab</code> in a terminal, which should launch your default web browser pointing to JupyterLab.</p>
+    <h3>Troubleshooting aispace2 labextension installation</h3>
+    <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
+    <p>You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md,">nvm</a> and running
+      <pre><code>nvm install 8
+nvm use 8</code></pre> in the same terminal as where you will be installing the extension.
       <h2 id="upgrading" class="linkify"><a href="#upgrading">Upgrading</a></h2>
       <p>
         Already have AISpace2? No matter which operating system you use, or what method you used to install it, updating AISpace2
