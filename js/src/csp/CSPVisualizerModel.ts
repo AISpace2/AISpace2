@@ -61,6 +61,7 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
 
   get waitForRender(): boolean {
     return this.get("wait_for_render");
+  }
 
   get detailLevel(): number {
     return this.get("detail_level");
