@@ -33,6 +33,7 @@ class Displayable(StepDOMWidget):
 
     # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
     _previously_rendered = Bool(False).tag(sync=True)
+    wait_for_render = Bool(True).tag(sync=True)
 
     def __init__(self):
         super().__init__()
@@ -67,7 +68,8 @@ class Displayable(StepDOMWidget):
         # The domain the user has chosen as their first split for `_selected_var`.
         self._domain_split = None
 
-        self.graph = self.csp
+        #self.graph = self.csp
+        self.graph = CSP(self.csp.domains, self.csp.constraints, self.csp.positions)
         (self._domain_map,
          self._edge_map) = generate_csp_graph_mappings(self.csp)
 
@@ -116,7 +118,6 @@ class Displayable(StepDOMWidget):
         """
         self._is_waiting_for_var_selection = True
         self._block_for_user_input.wait()
-        self.max_display_level = 4
         iter_var = list(iter_var)
 
         if self._has_user_selected_var:
@@ -149,6 +150,13 @@ class Displayable(StepDOMWidget):
             dom1 = set(list(domain)[:split])
             dom2 = domain - dom1
             return dom1, dom2
+
+        # make sure type of chosen domain matches original domain
+        if all(isinstance(n, int) for n in domain):
+            number_domain = set()
+            for n in self._domain_split:
+                number_domain.add(int(n))
+            self._domain_split = number_domain
 
         split1 = set(self._domain_split)
         split2 = set(domain) - split1
@@ -214,6 +222,9 @@ class Displayable(StepDOMWidget):
                 self._thread.start()
 
     def display(self, level, *args, **kwargs):
+        if self.wait_for_render is False:
+            return
+
         should_wait = True
 
         if args[0] == 'Performing AC with domains':
@@ -233,18 +244,14 @@ class Displayable(StepDOMWidget):
             domain = args[4]
             constraint = args[6]
             self._send_set_domains_action(variable, [domain])
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='bold', colour='green')
 
         elif args[0] == "Processing arc (":
             variable = args[1]
             constraint = args[3]
             self._send_highlight_arcs_action(
                 (variable, constraint), style='bold', colour=None)
-
-        elif args[0] == 'Domain pruned':
-            variable = args[2]
-            constraint = args[6]
-            self._send_highlight_arcs_action(
-                (variable, constraint), style='bold', colour='green')
 
         elif args[0] == "Arc: (" and args[4] == ") is inconsistent":
             variable = args[1]
@@ -338,6 +345,9 @@ class Displayable(StepDOMWidget):
 
             self._send_highlight_nodes_action(nodes_to_highlight, "red")
             self._send_highlight_arcs_action(arcs_to_highlight, "bold", "red")
+
+        elif args[0] == "AC done. Reduced domains":
+            should_wait = False
 
         elif args[0] == "Conflicts:":
             conflicts = args[1]
@@ -468,7 +478,7 @@ def visualize(func_to_delay):
     """
 
     def wrapper(self, *args, **kwargs):
-        if self._previously_rendered is False:
+        if self._previously_rendered is False and self.wait_for_render:
             self._queued_func = {
                 'func': partial(func_to_delay, self),
                 'args': args,

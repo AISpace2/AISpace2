@@ -28,7 +28,8 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
       _view_module: "aispace2",
       _view_module_version: EXTENSION_SPEC_VERSION,
       _view_name: "CSPViewer",
-      _previously_rendered: false
+      _previously_rendered: false,
+      wait_for_render: true
     };
   }
 
@@ -56,6 +57,10 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
   get previouslyRendered(): boolean {
     return this.get("_previously_rendered");
   }
+
+
+  get waitForRender(): boolean {
+    return this.get("wait_for_render");
 
   get detailLevel(): number {
     return this.get("detail_level");
