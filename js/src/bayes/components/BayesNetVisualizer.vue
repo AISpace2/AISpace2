@@ -126,7 +126,7 @@
 
     probText(node: IBayesGraphNode) {
       /** Returns a formatted string representing the probability of a variable node after query. */
-      if (node.trueProb === undefined){ return undefined;}
+      if (node.trueProb === undefined || node.falseProb === undefined){ return undefined;}
 
       return "true:" + node.trueProb.toString() + " false:" + node.falseProb.toString();
     }
