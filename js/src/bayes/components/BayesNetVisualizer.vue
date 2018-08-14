@@ -3,9 +3,10 @@
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
                          :legendColor="legendColor" :legendText="legendText">
       <template slot="node" slot-scope="props">
-        <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize"
+        <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext="probText(props.node)"
                                    :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
-                                   :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel" @updateBounds="updateNodeBounds(props.node, $event)">
+                                   :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel" @updateBounds="updateNodeBounds(props.node, $event)"
+                                   :stroke-width="nodeStrokeWidth(props.node)">
         </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
@@ -30,6 +31,7 @@
       <div id="controls" class="btn-group">
         <button id="query-mode" class = "btn btn-default" @click="isQuerying = true">Query</button>
         <button id="observe-mode" class = "btn btn-default" @click="isQuerying = false">Observe</button>
+        <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output">{{output}}</div>
@@ -46,7 +48,7 @@
   import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
   import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
 
-  import {Graph, IBayesGraphNode, IGraphEdge, IGraphNode} from "../../Graph";
+  import {Graph, IBayesGraphNode, IGraphEdge} from "../../Graph";
   import { GraphLayout } from "../../GraphLayout";
 
   /**
@@ -90,10 +92,8 @@
 
     nodeClicked(node: IBayesGraphNode) {
       if (this.isQuerying) {
-        console.log("query", node);
         this.$emit("click:query-node", node);
       } else {
-        console.log("observe", node);
         this.$emit("click:observe-node", node);
       }
     }
@@ -114,6 +114,21 @@
         height: 30,
         y: 20
       };
+    }
+
+    nodeStrokeWidth(node: IBayesGraphNode) {
+      if (node.styles && node.styles.strokeWidth) {
+        return node.styles.strokeWidth;
+      }
+
+      return undefined;
+    }
+
+    probText(node: IBayesGraphNode) {
+      /** Returns a formatted string representing the probability of a variable node after query. */
+      if (node.trueProb === undefined){ return undefined;}
+
+      return "true:" + node.trueProb.toString() + " false:" + node.falseProb.toString();
     }
 
     addTextSize(){

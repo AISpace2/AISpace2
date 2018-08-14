@@ -1,12 +1,13 @@
 from aipython.probGraphicalModels import Belief_network
-from ipywidgets import register, DOMWidget
+from aipython.probVE import VE
+from ipywidgets import register
 from traitlets import Instance, Unicode, Float, Integer, Bool
 from .bayesjsonbridge import bayes_to_json, json_to_bayes_problem
-from ..stepdomwidget import ReturnableThread
+from ..stepdomwidget import ReturnableThread, StepDOMWidget
 from ... import __version__
 
 @register
-class Displayable(DOMWidget):
+class Displayable(StepDOMWidget):
     _view_name = Unicode('BayesViewer').tag(sync=True)
     _model_name = Unicode('BayesViewerModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)
@@ -21,11 +22,12 @@ class Displayable(DOMWidget):
     text_size = Integer(12).tag(sync=True)
     show_full_domain = Bool(False).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
+    probCalculator = VE()
 
     def __init__(self):
         super().__init__()
-        self.on_msg(self.handle_custom_msgs)
         self.graph = self.problem
+        self.probCalculator = VE(self.problem)
 
     def _validate_line_width(self, proposal):
         """Cap line_width at a minimum value."""
@@ -33,18 +35,13 @@ class Displayable(DOMWidget):
         return min(1, line_width)
 
     def handle_custom_msgs(self, _, content, buffers=None):
-        print(content)
-        if content == []:
-            print("error: empty array as content. Dictionary with event expected")
-
         event = content.get('event', '')
 
         # Receive msg from frontend
-        if event == "node:observe":
-            print("observe a node" + str(content.get('varName')))
-            return
-        elif event == "node:query":
-            return
+        if event == "node:query":
+            name = content.get('name')
+            evidences = content.get('evidences')
+            self._query_node(name, evidences)
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
 
@@ -58,6 +55,14 @@ class Displayable(DOMWidget):
                     target=func, args=args, kwargs=kwargs)
                 self._thread.start()
 
-
-
-
+    def _query_node(self, name, evidences):
+        name_to_node = {v.name: v for v in self.graph.variables}
+        node = name_to_node[name]
+        evidence_list = {name_to_node[e['name']]: e['value'] for e in evidences}
+        reply = self.probCalculator.query(node, evidence_list)
+        self.send({
+            "action": "query",
+            "name": name,
+            "trueProb": reply[True],
+            "falseProb": reply[False]
+        })
