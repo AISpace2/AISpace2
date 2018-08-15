@@ -8,8 +8,8 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from probFactors import Factor, Factor_observed, Factor_sum, factor_times
-from probGraphicalModels import Graphical_model, Inference_method
+from .probFactors import Factor, Factor_observed, Factor_sum, factor_times
+from .probGraphicalModels import Graphical_model, Inference_method
 
 class VE(Inference_method):
     """The class that queries Graphical Models using variable elimination.
@@ -71,7 +71,7 @@ class VE(Inference_method):
             not_contains_var.append(newFactor)
             return not_contains_var
 
-from probGraphicalModels import bn1, A,B,C
+from .probGraphicalModels import bn1, A,B,C
 bn1v = VE(bn1)
 ## bn1v.query(A,{})
 ## bn1v.query(C,{})
@@ -80,7 +80,7 @@ bn1v = VE(bn1)
 ## bn1v.query(A,{C:True})
 ## bn1v.query(B,{A:True,C:False})
 
-from probGraphicalModels import bn2,Al,Fi,Le,Re,Sm,Ta
+from .probGraphicalModels import bn2,Al,Fi,Le,Re,Sm,Ta
 bn2v = VE(bn2)    # answers queries using variable elimination
 ## bn2v.query(Ta,{})
 ## Inference_method.max_display_level = 0   # show no detail in displaying
@@ -89,7 +89,7 @@ bn2v = VE(bn2)    # answers queries using variable elimination
 ## bn2v.query(Ta,{Re:True})
 ## bn2v.query(Ta,{Re:True,Sm:False})
 
-from probGraphicalModels import bn3, Season, Sprinkler, Rained, Grass_wet, Grass_shiny, Shoes_wet
+from .probGraphicalModels import bn3, Season, Sprinkler, Rained, Grass_wet, Grass_shiny, Shoes_wet
 bn3v = VE(bn3)
 ## bn3v.query(Shoes_wet,{})
 ## bn3v.query(Shoes_wet,{Rained:True})
