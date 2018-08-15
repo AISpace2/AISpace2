@@ -34,6 +34,7 @@ export interface IGraphEdge {
 export interface IBayesGraphNode extends IGraphNode {
   parents: string[];
   evidences: number[];
+  domain: string[] | boolean[];
   trueProb?: number;
   falseProb?: number;
 }

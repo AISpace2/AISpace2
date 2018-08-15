@@ -103,10 +103,30 @@ export default class BayesViewer extends DOMWidgetView {
   }
 
   private chooseObservation(node: IBayesGraphNode) {
-    let value: null | string | boolean = window.prompt(
-      "Choose only one observation",
-      node.domain.join(", ")
-    );
+    function notProperResponse(res: string): boolean {
+      const containsMultipleDomain: boolean = res.includes(', ');
+      let notOneOfDomain: boolean;
+
+      const domainString: string[] = [];
+
+      for (let e of node.domain) {
+        if(typeof(e) !== "string") {
+          e = e.toString();
+        }
+        domainString.push(e);
+      }
+
+      notOneOfDomain = !domainString.includes(res);
+
+      return containsMultipleDomain || notOneOfDomain || res === "";
+    }
+
+    let value: null | string | boolean;
+
+    do {
+      value = window.prompt(
+        "Choose only one observation", node.domain.join(", "));
+    } while (value !== null && notProperResponse(value));
 
     if (value !== null && !value.includes(', ')) {
       if (value === "true") { value = true; }
