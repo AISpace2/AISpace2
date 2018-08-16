@@ -119,12 +119,15 @@ export default class BayesViewer extends DOMWidgetView {
       return containsMultipleDomain || notOneOfDomain || res === "";
     }
 
-    let value: null | string | boolean;
+    let response: null | string;
 
     do {
-      value = window.prompt(
+      response = window.prompt(
         "Choose only one observation", node.domain.join(", "));
-    } while (value !== null && notProperResponse(value));
+      if (response !== null) {response = response.trim();}
+    } while (response !== null && notProperResponse(response));
+
+    let value: null | string | boolean = response;
 
     if (value !== null && !value.includes(', ')) {
       if (value === "true") { value = true; }
