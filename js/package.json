@@ -1,6 +1,6 @@
 {
   "name": "aispace2",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "A Jupyter extension for the next-generation of AISpace.",
   "author": "AISpace2",
   "license": "GPL-3.0",
@@ -29,10 +29,10 @@
     "update-lab-extension": "webpack --config webpack.labExtension.js"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1.1.10",
-    "@jupyterlab/application": "^0.16.3",
-    "@jupyterlab/apputils": "^0.16.4",
-    "@jupyterlab/notebook": "^0.16.3",
+    "@jupyter-widgets/base": "*",
+    "@jupyterlab/application": "*",
+    "@jupyterlab/apputils": "*",
+    "@jupyterlab/notebook": "*",
     "@types/d3": "^4.13.0",
     "@types/node": "^8.10.20",
     "ajv": "^5.5.2",
