@@ -22,6 +22,8 @@ class Displayable(StepDOMWidget):
     text_size = Integer(12).tag(sync=True)
     show_full_domain = Bool(False).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
+    decimal_place = Integer(10).tag(sync=True)
+
     probCalculator = VE()
 
     def __init__(self):

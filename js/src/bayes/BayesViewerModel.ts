@@ -67,6 +67,10 @@ export default class BayesViewerModel extends widgets.DOMWidgetModel {
     return this.get("detail_level");
   }
 
+  get decimalPlace(): number {
+    return this.get("decimal_place");
+  }
+
   /** The Graph representing the search problem. */
   get graph(): Graph {
     return this.get("graph");

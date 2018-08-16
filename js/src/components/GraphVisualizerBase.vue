@@ -415,14 +415,14 @@
     display: inline-block;
     border-bottom: 1px solid rgba(0, 0, 255, .1);
     background-color: darkgrey;
-    width: 25%;
+    width: 10%;
   }
 
   .dropdown-content label.inline-btn-group {
     color: black;
     padding: 1em 0.5em;
     text-align: center;
-    width: 40%;
+    width: 55%;
     font-size: 0.75em;
     text-decoration: none;
     display: inline-block;

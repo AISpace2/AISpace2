@@ -19,12 +19,16 @@
       </template>
       <template slot="visualization" slot-scope="props">
         <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
-        <label class="inline-btn-group">Detail</label>
+        <label class="inline-btn-group">Detail: {{detailLevel}}</label>
         <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
 
         <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
-        <label class="inline-btn-group">{{textSize}}</label>
+        <label class="inline-btn-group">Size: {{textSize}}</label>
         <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
+
+        <a class="inline-btn-group" @click="decimalPlace = decimalPlace - 1">-</a>
+        <label class="inline-btn-group">Decimal: {{decimalPlace}}</label>
+        <a class="inline-btn-group" @click="decimalPlace = decimalPlace + 1">+</a>
       </template>
     </GraphVisualizerBase>
     <div>
@@ -81,6 +85,8 @@
     // If true, node click will query the node's probability
     // If False, node click will make observation
     isQuerying: boolean;
+    // the number of decimal places to show for the node's probability
+    decimalPlace: number;
 
     edgeClicked(edge: IGraphEdge) {
       this.$emit("click:edge", edge);
@@ -120,11 +126,11 @@
       return undefined;
     }
 
+    /** Returns a formatted string representing the probability of a variable node after query. */
     probText(node: IBayesGraphNode) {
-      /** Returns a formatted string representing the probability of a variable node after query. */
       if (node.trueProb === undefined || node.falseProb === undefined){ return undefined;}
 
-      return "true:" + node.trueProb.toString() + " false:" + node.falseProb.toString();
+      return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace);
     }
 
     addTextSize(){
@@ -149,8 +155,9 @@
         });
     }
 
+    // style selection for state observation and query button
     stateStyle(state: string): string {
-      const selectedStyle = "background-color:grey";
+      const selectedStyle = "color: white; background-color:grey";
       const unselectedStyle = "background-color:white";
 
       if (state === "query") {
