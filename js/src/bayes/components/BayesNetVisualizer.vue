@@ -165,6 +165,8 @@
       } else if (state === "observe") {
         return this.isQuerying ? unselectedStyle : selectedStyle;
       }
+
+      return unselectedStyle;
     }
   }
 
