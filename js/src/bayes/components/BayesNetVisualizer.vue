@@ -1,5 +1,7 @@
 <template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
+    <button id="query-mode" :style="stateStyle('query')" class = "btn btn-default" @click="isQuerying = true">Query</button>
+    <button id="observe-mode" :style="stateStyle('observe')" class = "btn btn-default" @click="isQuerying = false">Observe</button>
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
     >
       <template slot="node" slot-scope="props">
@@ -27,8 +29,6 @@
     </GraphVisualizerBase>
     <div>
       <div id="controls" class="btn-group">
-        <button id="query-mode" class = "btn btn-default" @click="isQuerying = true">Query</button>
-        <button id="observe-mode" class = "btn btn-default" @click="isQuerying = false">Observe</button>
         <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
@@ -147,6 +147,17 @@
           this.$set(edge.styles, "targetWidth", bounds.width);
           this.$set(edge.styles, "targetHeight", bounds.height);
         });
+    }
+
+    stateStyle(state: string): string {
+      const selectedStyle = "background-color:grey";
+      const unselectedStyle = "background-color:white";
+
+      if (state === "query") {
+        return this.isQuerying ? selectedStyle : unselectedStyle;
+      } else if (state === "observe") {
+        return this.isQuerying ? unselectedStyle : selectedStyle;
+      }
     }
   }
 
