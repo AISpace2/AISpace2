@@ -87,6 +87,7 @@ class Displayable(StepDOMWidget):
         super().handle_custom_msgs(None, content, buffers)
         event = content.get('event', '')
 
+        if event == 'initial_render':
             self._previously_rendered = True
             queued_func = getattr(self, '_queued_func', None)
 
