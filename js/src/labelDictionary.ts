@@ -22,10 +22,6 @@ const label = {
     "start node": COLOR.PURPLE,
     "goal node": COLOR.YELLOW
   },
-
-  bayes: {
-    empty: COLOR.GREEN
-  }
 };
 
 export const cspLabelText = Object.keys(label.csp);
@@ -33,6 +29,3 @@ export const cspLabelColor = Object.values(label.csp);
 
 export const searchLabelText = Object.keys(label.search);
 export const searchLabelColor = Object.values(label.search);
-
-export const bayesLabelText = Object.keys(label.bayes);
-export const bayesLabelColor = Object.values(label.bayes);

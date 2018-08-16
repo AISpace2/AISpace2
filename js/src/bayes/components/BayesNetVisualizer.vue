@@ -1,7 +1,7 @@
 <template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
-                         :legendColor="legendColor" :legendText="legendText">
+    >
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext="probText(props.node)"
                                    :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
@@ -16,8 +16,6 @@
         </DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
-        <a @click="props.toggleLegend">Toggle Legend</a>
-
         <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
         <label class="inline-btn-group">Detail</label>
         <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
@@ -80,8 +78,6 @@
     textSize: number;
     // detail of the domain
     detailLevel: number;
-    legendText: string[];
-    legendColor: string[];
     // If true, node click will query the node's probability
     // If False, node click will make observation
     isQuerying: boolean;
