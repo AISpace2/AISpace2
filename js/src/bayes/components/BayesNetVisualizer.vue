@@ -110,6 +110,7 @@
       return 4 + hoverWidth;
     }
 
+    /** Properties for text button for visualization */
     get textBtnProp() {
       return {
         width: 30,
