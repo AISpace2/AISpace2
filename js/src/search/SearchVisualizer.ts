@@ -12,7 +12,7 @@ import SearchViewerModel from "./SearchVisualizerModel";
 
 /**
  * Creates a Search visualization and handles events received from the backend.
- * 
+ *
  * See the accompanying backend file: `aispace2/jupyter/search/search.py`
  */
 export default class SearchViewer extends widgets.DOMWidgetView {
@@ -159,7 +159,6 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       );
       this.vue.$set(this.vue.graph.idMap[nodeId].styles, "strokeWidth", 4);
     }
-
   }
 
   /**

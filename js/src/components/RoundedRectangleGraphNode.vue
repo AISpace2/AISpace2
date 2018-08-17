@@ -7,7 +7,7 @@
     <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{displayText}}
     </text>
-    <text id="subtext" :font-size="textSize"  v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
+    <text :v-show="subtext !== undefined" id="subtext" :font-size="textSize"  v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{displaySubText}}
     </text>
   </g>
@@ -79,7 +79,7 @@
      * This is due to long subtext exceeding the space allocated to the textbox itself
      */
     computeWidthAndHeight() {
-      var textHeight, textWidth, subtextHeight, subtextWidth = 0;
+      let textHeight, textWidth, subtextHeight, subtextWidth = 0;
 
       if (this.$refs.text === null || this.$refs.text === undefined) {
         textHeight = 0;

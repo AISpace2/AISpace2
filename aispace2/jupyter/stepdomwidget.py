@@ -126,7 +126,8 @@ class StepDOMWidget(DOMWidget):
 
         def print_positions(nodes):
             for node in nodes:
-                print('{}: ({},{})'.format(node['name'], int(node['x']), int(node['y'])) )
+                print('{}: ({},{})'.format(node['name'], int(node['x']),
+                                           int(node['y'])))
 
         self._fine_step = step_through_to_level(4)
         self._step = step_through_to_level(2)

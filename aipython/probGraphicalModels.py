@@ -29,15 +29,15 @@ class Belief_network(Graphical_model):
         Graphical_model.__init__(self,vars,factors)
         assert all(isinstance(f,Prob) for f in factors) if factors else True
 
-from utilities import Displayable
+from .utilities import Displayable
 
 class Inference_method(Displayable):
     """The abstract class of graphical model inference methods"""
     def query(self,qvar,obs={}):
         raise NotImplementedError("Inference_method query")   # abstract method
 
-from probVariables import Variable
-from probFactors import Prob
+from .probVariables import Variable
+from .probFactors import Prob
 
 boolean = [False, True]
 A = Variable("A", boolean)

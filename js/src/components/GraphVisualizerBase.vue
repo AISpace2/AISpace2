@@ -263,6 +263,7 @@
 
     // Taken and modified based on
     // http://www.competa.com/blog/d3-js-part-7-of-9-adding-a-legend-to-explain-the-data/
+    /** Adds legend box to the graph */
     addLegend() {
       let legendRectSize = 10;
       let legendSpacing = 3;
@@ -300,6 +301,7 @@
         .text(function(d) { return d; });
     }
 
+    /** Toggle button functionality for displaying and hiding legend box */
     toggleLegendVisibility() {
       let lg = d3.select(this.$refs.svg).select(".legend_group");
 
@@ -310,6 +312,7 @@
       }
     }
 
+    /** Aggregate visualization option's buttons properties here */
     btnProp(canvasWidth: number) {
       return {
         // first btn's and y position
@@ -415,14 +418,14 @@
     display: inline-block;
     border-bottom: 1px solid rgba(0, 0, 255, .1);
     background-color: darkgrey;
-    width: 25%;
+    width: 10%;
   }
 
   .dropdown-content label.inline-btn-group {
     color: black;
     padding: 1em 0.5em;
     text-align: center;
-    width: 40%;
+    width: 55%;
     font-size: 0.75em;
     text-decoration: none;
     display: inline-block;

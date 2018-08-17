@@ -2,18 +2,14 @@
 // Distributed under the terms of the Modified BSD License.
 import * as packageJSON from "../package.json";
 
-import {
-  Application, IPlugin
-} from '@phosphor/application';
+import { Application, IPlugin } from "@phosphor/application";
 
-import {
-  Widget
-} from '@phosphor/widgets';
+import { Widget } from "@phosphor/widgets";
 
-import {
-  IJupyterWidgetRegistry
- } from '@jupyter-widgets/base';
+import { IJupyterWidgetRegistry } from "@jupyter-widgets/base";
 
+import BayesViewer from "./bayes/BayesViewer";
+import BayesViewerModel from "./bayes/BayesViewerModel";
 import CSPBuilder from "./csp/CSPBuilder";
 import CSPBuilderModel from "./csp/CSPBuilderModel";
 import CSPViewer from "./csp/CSPVisualizer";
@@ -25,7 +21,6 @@ import SearchViewerModel from "./search/SearchVisualizerModel";
 
 const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
 const EXTENSION_ID = (packageJSON as any).jlab_extension_id;
-
 
 /**
  * The example plugin.
@@ -39,23 +34,27 @@ const examplePlugin: IPlugin<Application<Widget>, void> = {
 
 export default examplePlugin;
 
-
 /**
  * Activate the widget extension.
  */
-function activateWidgetExtension(app: Application<Widget>, registry: IJupyterWidgetRegistry): void {
+function activateWidgetExtension(
+  app: Application<Widget>,
+  registry: IJupyterWidgetRegistry
+): void {
   registry.registerWidget({
     name: (packageJSON as any).name,
     version: EXTENSION_SPEC_VERSION,
     exports: {
-        CSPBuilder,
-        CSPBuilderModel,
-        CSPViewer,
-        CSPViewerModel,
-        SearchBuilder,
-        SearchBuilderModel,
-        SearchViewer,
-        SearchViewerModel,
+      BayesViewer,
+      BayesViewerModel,
+      CSPBuilder,
+      CSPBuilderModel,
+      CSPViewer,
+      CSPViewerModel,
+      SearchBuilder,
+      SearchBuilderModel,
+      SearchViewer,
+      SearchViewerModel
     }
   });
 }
