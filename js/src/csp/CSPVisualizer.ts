@@ -11,7 +11,7 @@ import CSPViewerModel from "./CSPVisualizerModel";
 
 /**
  * Creates a CSP visualization and handles events received from the backend.
- * 
+ *
  * See the accompanying backend file: `aispace2/jupyter/csp/csp.py`
  */
 export default class CSPViewer extends widgets.DOMWidgetView {

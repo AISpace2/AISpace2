@@ -10,7 +10,7 @@ declare let Jupyter: any;
 
 /**
  * Creates a view to construct a Search problem. Interfaces with Jupyter backend.
- * 
+ *
  * See the accompanying backend file: `aispace2/jupyter/search/searchbuilder.py`.
  */
 export default class SearchBuilder extends widgets.DOMWidgetView {

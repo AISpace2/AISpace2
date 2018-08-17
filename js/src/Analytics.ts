@@ -5,7 +5,7 @@ declare let ga: any;
 
 /**
  * Tracks the use of an applet.
- * 
+ *
  * @param applet The name of the applet being tracked.
  */
 export function trackApplet(applet: string) {
@@ -18,9 +18,9 @@ export function trackApplet(applet: string) {
 
 /**
  * Tracks an event.
- * 
+ *
  * Note that Google Analytics has tracking limits (roughly 1 event per second).
- * 
+ *
  * @param category The applet being used - e.g. "Search Visualizer"
  * @param action The action being tracked - e.g. "Arc Clicked"
  * @param label Additional information to distinguish the category/action pair.

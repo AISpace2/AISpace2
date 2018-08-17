@@ -21,7 +21,7 @@ const label = {
     "frontier nodes": COLOR.GREEN,
     "start node": COLOR.PURPLE,
     "goal node": COLOR.YELLOW
-  }
+  },
 };
 
 export const cspLabelText = Object.keys(label.csp);
