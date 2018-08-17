@@ -44,7 +44,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "css-loader": "^0.28.11",
-    "d3": "^4.13.0",
+    "d3": "^5.5.0",
     "d3-scale": "^2.1.0",
     "d3-svg-legend": "^2.25.6",
     "fork-ts-checker-webpack-plugin": "^0.4.2",
