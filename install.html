@@ -263,6 +263,7 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
               In the folder where you would like to save the notebooks, run <pre><code>git clone https://github.com/AISpace2/AIPython.git
 cd AIPython
 jupyter lab</code></pre>
+      This will launch Jupyter Lab in your default browser. We recommend that you view the widgets using Chrome. After you run <code>jupyter lab</code>, the url at which the jupyter notebooks are running will be printed out in the terminal. You can copy paste this url into Chrome.
           </p>
       <h2 id="upgrading" class="linkify"><a href="#upgrading">Upgrading</a></h2>
       <p>
@@ -272,6 +273,9 @@ jupyter lab</code></pre>
       <pre><code>pip3 install aispace2 --user --upgrade
 jupyter labextension update aispace2</code></pre>
       <p>Make sure to restart Jupyter after doing this for the changes to take effect.</p>
+      <p>If the command to update the jupyter lab extension did not work, you can try uninstalling and reinstalling the extension:</p>
+      <pre><code>jupyter labextension uninstall aispace2
+jupyter labextension install aispace2</code></pre>
   </section>
 </body>
 
