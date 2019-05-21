@@ -35,7 +35,7 @@ class DF_branch_and_bound(Searcher):
         while self.frontier:
             path = self.frontier.pop()
             if path.cost+self.problem.heuristic(path.end()) < self.bound:
-                self.display(3,"Expanding:",path,"cost:",path.cost)
+                self.display(2,"Expanding:",path,"cost:",path.cost)
                 self.num_expanded += 1
                 if self.problem.is_goal(path.end()):
                     self.best_path = path
