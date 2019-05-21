@@ -32,6 +32,7 @@ export interface ICSPChooseDomainSplitEvent extends IEvent {
   action: "chooseDomainSplit";
   /** The domain to choose a split from. */
   domain: string[];
+  var: string;
 }
 
 /** CSP Visualizer Events. */

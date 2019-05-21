@@ -184,7 +184,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private chooseDomainSplit(event: CSPEvents.ICSPChooseDomainSplitEvent) {
     const domainString = window.prompt(
-      "Choose domain for first split. Cancel to choose a default split.",
+      "Choose domain for first split for variable " + event.var + ". Cancel to choose a default split.",
       event.domain.join()
     );
     const newDomain =

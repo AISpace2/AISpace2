@@ -129,7 +129,7 @@ class Displayable(StepDOMWidget):
 
         return iter_var[0]
 
-    def choose_domain_partition(self, domain):
+    def choose_domain_partition(self, domain, var):
         """Pauses execution until a domain has been split on.
 
         If the user chooses to not select a domain (clicks 'Cancel'), splits the domain in half.
@@ -141,7 +141,7 @@ class Displayable(StepDOMWidget):
         Returns:
             (set): A subset of the domain to be split on first.
         """
-        self.send({'action': 'chooseDomainSplit', 'domain': domain})
+        self.send({'action': 'chooseDomainSplit', 'domain': domain, 'var': var})
         self._block_for_user_input.wait()
 
         if self._domain_split is None:
@@ -416,8 +416,8 @@ class Displayable(StepDOMWidget):
         """Sends a message to the front-end visualization to highlight arcs.
 
         Args:
-            arcs ((string, Constraint)|(string, Constraint)[]): 
-                Tuples of (variable name, Constraint instance) that form an arc. 
+            arcs ((string, Constraint)|(string, Constraint)[]):
+                Tuples of (variable name, Constraint instance) that form an arc.
                 For convenience, you do not need to pass a list of tuples of you only have one to highlight.
             style ('normal'|'bold'): Style of the highlight. Applied to every arc passed in.
             colour (string|None): A HTML colour string for the colour of the line.
@@ -472,7 +472,7 @@ def visualize(func_to_delay):
     Args:
         func_to_delay (function): The function to delay.
 
-    Returns: 
+    Returns:
         The original function, wrapped such that it will automatically run
         when the Jupyter widget is rendered.
     """
