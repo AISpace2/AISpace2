@@ -30,12 +30,12 @@ class StepDOMWidget(DOMWidget):
     """Base Jupyter widget for visualizations that you can step through.
 
     You will probably be most interested in before_step, handle_custom_msgs, and display.
-    
+
     Attributes:
         sleep_time (float): The time delay between consecutive display calls.
         line_width (float): The width of the edges in the visualization.
         text_size (int):    The size of the text inside the node
-        short_name (bool):  True if we want the child nodes to not include parent's common text
+        show_full_domain (bool):  False if we want the child nodes not to include parent's common text
                             Warning: this only removes child's common text if it perfectly matches its parent's
                             entire text in the same order
         detail_level (int): 0 - show no text
@@ -137,16 +137,16 @@ class StepDOMWidget(DOMWidget):
 
     def before_step(self):
         """Override this to provide custom logic before every (fine/auto) step.
-        
+
         Don't forget to call super()!
-        
+
         For example, you may reset state variables.
         """
         self._request_pause = False
 
     def handle_custom_msgs(self, _, content, buffers=None):
         """Handle messages sent from the front-end.
-        
+
         Don't forget to call super()!
         """
         event = content.get('event', '')
