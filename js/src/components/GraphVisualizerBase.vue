@@ -79,6 +79,7 @@
     /** The graph to render. */
     @Prop({ type: Object })
     graph: Graph;
+    /** The previous graph. */
     prevgraph: Graph | null = null;
     /** If true, animates positional changes and other properties of the nodes/edges in this graph. */
     @Prop({ default: false })
@@ -291,6 +292,9 @@
     @Watch("graph")
     onGraphChanged(newVal: Graph) {
       // Whenever nodes or edges are added, re-layout the graph
+      // To keep nodes which have been already rendered fixed at its previous position, 
+      // merge the previous graph with current one
+      // Update prevgraph
       this.graph.mergeStylesFrom(this.prevgraph);
       this.prevgraph = this.graph;
       this.layout.relayout(this.graph, {
