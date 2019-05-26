@@ -39,13 +39,10 @@
   import Vue, { ComponentOptions } from "vue";
   import Component from "vue-class-component";
   import { Prop, Watch } from "vue-property-decorator";
-
   import GraphNodeContainer from "./GraphNodeContainer.vue";
   import EdgeContainer from "./EdgeContainer.vue";
-
   import { Graph, IGraphNode, IGraphEdge } from "../Graph";
   import { GraphLayout } from "../GraphLayout";
-
   /**
    * Base class for all graph visualizers.
    *
@@ -82,6 +79,7 @@
     /** The graph to render. */
     @Prop({ type: Object })
     graph: Graph;
+    prevgraph: Graph | null = null;
     /** If true, animates positional changes and other properties of the nodes/edges in this graph. */
     @Prop({ default: false })
     transitions: boolean;
@@ -90,7 +88,6 @@
     layout: GraphLayout;
     @Prop() legendText: string[];
     @Prop() legendColor: string[];
-
     /** The node or edge currently being dragged. */
     dragTarget: IGraphNode | IGraphEdge | null = null;
     /** The edge being hovered over. */
@@ -106,32 +103,26 @@
     /** The width of the SVG. Automatically set to width of container. */
     width = 0;
     /** The height of the SVG. Automatically set to height of container. */
-
     height = 0;
-
     $refs: {
       /** The SVG element that the graph is drawn in. */
       svg: SVGSVGElement;
       /** The div element representing a resize handle. */
       handle: HTMLDivElement;
     };
-
     created() {
       this.graph = this.graph;
+      this.prevgraph = this.graph;
       this.handleResize = debounce(this.handleResize, 300);
     }
-
     mounted() {
       this.width = this.$el.getBoundingClientRect().width;
       this.height = this.width / 1.8;
       this.layout.setup(this.graph, { width: this.width, height: this.height });
-
       // Disable animations for the first draw, because otherwise they fly in from (0, 0) and it looks weird
       this.transitionsAllowed = false;
       Vue.nextTick(() => (this.transitionsAllowed = true));
-
       window.addEventListener("resize", this.handleResize);
-
       // Custom resize handling. In the future, we could switch to using CSS resize.
       // However, it is not support in IE/Edge right now, and Safari does not emit any resize events,
       // even with a ResizeObserver polyfill.
@@ -140,12 +131,9 @@
         window.addEventListener("mousemove", startResizing, false);
         window.addEventListener("mouseup", stopResizing, false);
       };
-
       this.$refs.handle.addEventListener("mousedown", initialiseResize, false);
-
       let startResizing = (e: MouseEvent) => {
         e.preventDefault();
-
         // Everything below can be replaced with:
         // this.width.x += e.movementX;
         // this.height.y += e.movementY;
@@ -154,20 +142,16 @@
         this.prevPageY = e.pageY;
         this.handleResize();
       };
-
       let stopResizing = (e: MouseEvent) => {
         window.removeEventListener("mousemove", startResizing, false);
         window.removeEventListener("mouseup", stopResizing, false);
         this.prevPageY = null;
       };
-
       this.addLegend();
     }
-
     beforeDestroy() {
       window.removeEventListener("resize", this.handleResize);
     }
-
     /** Re-layout the graph using the current width/height of the SVG. */
     handleResize() {
       this.width = this.$el.getBoundingClientRect().width;
@@ -176,7 +160,6 @@
         height: this.height
       });
     }
-
     get nodes() {
       if (this.dragTarget != null) {
         // Move the node being dragged to the top, so it appears over everything else
@@ -186,54 +169,43 @@
           this.graph.nodes.push(this.graph.nodes.splice(i, 1)[0]);
         }
       }
-
       return this.graph.nodes;
     }
-
     dragNodeStart(node: IGraphNode) {
       this.dragTarget = node;
     }
-
     dragNode(e: MouseEvent) {
       if (this.dragTarget) {
         const svgBounds = this.$refs.svg.getBoundingClientRect();
-
         // Everything below can be replaced with:
         // this.dragTarget.x += e.movementX;
         // this.dragTarget.y += e.movementY;
         // if we don't want to support IE11.
         this.dragTarget.x += this.prevPageX ? e.pageX - this.prevPageX : 0;
         this.dragTarget.y += this.prevPageY ? e.pageY - this.prevPageY : 0;
-
         this.prevPageX = e.pageX;
         this.prevPageY = e.pageY;
       }
     }
-
     dragNodeEnd() {
       this.dragTarget = null;
       this.transitionsAllowed = true;
       this.prevPageX = 0;
       this.prevPageY = 0;
     }
-
     edgeMouseOver(edge: IGraphEdge) {
       this.edgeHovered = edge;
     }
-
     edgeMouseOut(edge: IGraphEdge) {
       this.edgeHovered = null;
     }
-
     nodeMouseOver(node: IGraphNode) {
       this.nodeHovered = node;
       this.moveToFront(node);
     }
-
     nodeMouseOut(node: IGraphNode) {
       this.nodeHovered = null;
     }
-
     /**
      * Handles the user double-clicking on the graph.
      * The x and y position within the SVG are calculated and passed to the event.
@@ -244,7 +216,6 @@
       var y = e.pageY - svgBounds.top;
       this.$emit("dblclick", x, y, e);
     }
-
     /**
      * Toggles transitions on and off.
      *
@@ -254,13 +225,11 @@
     toggleTransition(allowed: boolean) {
       this.transitionsAllowed = allowed;
     }
-
     moveToFront(node: IGraphNode) {
       const svg = this.$refs.svg;
       const nodeElem = svg.getElementById(node.id).parentElement;
       svg.appendChild(nodeElem!);
     }
-
     // Taken and modified based on
     // http://www.competa.com/blog/d3-js-part-7-of-9-adding-a-legend-to-explain-the-data/
     /** Adds legend box to the graph */
@@ -272,11 +241,9 @@
         x: 10,
         y: 20
       };
-
       let color = d3.scaleOrdinal<string>()
         .domain(this.legendText)
         .range(this.legendColor);
-
       let legend = d3.select(this.$refs.svg)
         .append("g").attr("class", "legend_group")
         .selectAll("g")
@@ -294,24 +261,20 @@
         .attr('height', legendRectSize)
         .style('fill', color)
         .style('stroke', color);
-
       legend.append('text')
         .attr('x', legendRectSize + legendSpacing)
         .attr('y', legendRectSize - legendSpacing)
         .text(function(d) { return d; });
     }
-
     /** Toggle button functionality for displaying and hiding legend box */
     toggleLegendVisibility() {
       let lg = d3.select(this.$refs.svg).select(".legend_group");
-
       if (lg.style("visibility") === "hidden") {
         lg.attr("visibility", "visible");
       } else {
         lg.attr("visibility", "hidden");
       }
     }
-
     /** Aggregate visualization option's buttons properties here */
     btnProp(canvasWidth: number) {
       return {
@@ -325,17 +288,17 @@
         width: "100%"
       }
     }
-
     @Watch("graph")
     onGraphChanged(newVal: Graph) {
       // Whenever nodes or edges are added, re-layout the graph
+      this.graph.mergeStylesFrom(this.prevgraph);
+      this.prevgraph = this.graph;
       this.layout.relayout(this.graph, {
         width: this.width,
         height: this.height
       });
-    }
+    } 
   }
-
 </script>
 
 <style scoped>
@@ -345,15 +308,12 @@
     position: relative;
     margin-bottom: 10px;
   }
-
   svg {
     display: block;
   }
-
   svg:focus {
     outline: none;
   }
-
   .handle {
     background-color: #727272;
     width: 10px;
@@ -363,7 +323,6 @@
     right: 0;
     bottom: 0;
   }
-
   .dropbtn {
     background-color: #4CAF50;
     color: white;
@@ -371,12 +330,10 @@
     font-size: 0.7em;
     border: none;
   }
-
   .dropdown {
     position: relative;
     display: inline-block;
   }
-
   .dropdown-content {
     display: none;
     position: absolute;
@@ -385,11 +342,8 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
   }
-
   .dropdown:hover .dropdown-content {display: block;}
-
   .dropdown:hover .dropbtn {background-color: #3e8e41;}
-
   .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -399,7 +353,6 @@
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
   }
-
   .dropdown-content a {
     color: black;
     padding: 1em 1em;
@@ -408,9 +361,7 @@
     display: block;
     border-bottom: 1px solid rgba(0, 0, 255, .1);
   }
-
   .dropdown-content a:hover {background-color: #ddd;}
-
   .dropdown-content a.inline-btn-group {
     color: white;
     font-size: 0.75em;
@@ -420,7 +371,6 @@
     background-color: darkgrey;
     width: 10%;
   }
-
   .dropdown-content label.inline-btn-group {
     color: black;
     padding: 1em 0.5em;
