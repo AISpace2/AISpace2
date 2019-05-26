@@ -132,7 +132,7 @@ export function d3ForceLayout(): LayoutFunction {
         });
       }
 
-      scaleNodePositions(layoutParams, graph.nodes);
+      // scaleNodePositions(layoutParams, graph.nodes);
       // Copy over x and y positions onto original graph once simulation is finished
       // if the node did not already have an x, y position
       graphCopy.nodes.forEach((node, i) => {
