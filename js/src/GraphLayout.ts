@@ -95,8 +95,8 @@ export function d3ForceLayout(): LayoutFunction {
      * Later, we'll copy over only the final x and y properties that we're interested in.
      */
     // const graphCopy: IGraph = JSON.parse(JSON.stringify(graph));
-    const links1 = []; // links copied graph.edges
-    const links2 = []; // links for nodes newly added at the same time to force them avoid each other
+    const links1: Array<{source: IGraphNode, target: IGraphNode}> = []; // links copied graph.edges
+    const links2: Array<{source: IGraphNode, target: IGraphNode}> = []; // links for nodes newly added at the same time to force them avoid each other
 
     /* *
     The following codes are intended to make the graph nodes not swap to a random position at each relayout.
@@ -132,18 +132,24 @@ export function d3ForceLayout(): LayoutFunction {
       }
     });
 
-    // Copy graph.edges to link1
-    const n1: number = graph.nodes.length;
-    for (let i = 0; i < n1; i++) {
-        for (let j = i + 1; j < n1; j++) {
-                const link = {
-                    source: graph.nodes[i],
-                    target: graph.nodes[j]
-                }
-                links1.push(link);
-            }
-        }
-    // Link new nodes and push to link2
+    // Pick out nodes that were added in previous one step.
+    const prevadded: IGraphNode[] = [];
+    graph.nodes.forEach(node => {
+      if (node.level === l-1) {
+        prevadded.push(node);
+      }
+    });
+
+    // Copy graph.edges to links1
+    graph.edges.forEach(edge => {
+      const link = {
+        source: edge.source,
+        target: edge.target
+      };
+      links1.push(link);
+    });
+
+    // Link new nodes and push to links2
     const n2: number = newadded.length;
     for (let i = 0; i < n2; i++) {
       for (let j = i + 1; j < n2; j++) {
@@ -154,6 +160,17 @@ export function d3ForceLayout(): LayoutFunction {
         links2.push(link);
       }
     }
+
+    // Link new nodes and nodes added in previous step, push to links2
+    prevadded.forEach(node1 => {
+      newadded.forEach(node2 => {
+        const link = {
+          source: node1,
+          target: node2
+        };
+        links2.push(link);
+      });
+    });
 
     const forceSimulation = d3
       .forceSimulation(graph.nodes)
@@ -169,7 +186,7 @@ export function d3ForceLayout(): LayoutFunction {
         "center",
         d3.forceCenter(layoutParams.width / 2, layoutParams.height / 2)
       )
-      .force("collision", d3.forceCollide(80))
+      .force("collision", d3.forceCollide(70))
       .stop();
 
     const edgePadding = 50;
