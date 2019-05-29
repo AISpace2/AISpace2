@@ -7,8 +7,14 @@ export interface IGraphNode {
   type: string;
   /** The x position of the node. */
   x?: number;
+  /** The fixed x position of the node. */
+  fx?: number;
   /** The y position of the node. */
   y?: number;
+  /** The fixed y position of the node */
+  fy?: number;
+  /** A number to indicate the order of when the node is redered */
+  level?: number;
   /** An object that can contain arbitrary properties to influence it's rendering. */
   styles: { [key: string]: any };
   /** Extra properties depending on the node's type. */
