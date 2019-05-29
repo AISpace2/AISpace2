@@ -94,115 +94,25 @@ export function d3ForceLayout(): LayoutFunction {
      * various additional properties, such as `vx` and `fy`, to our nodes.
      * Later, we'll copy over only the final x and y properties that we're interested in.
      */
-    // const graphCopy: IGraph = JSON.parse(JSON.stringify(graph));
-    const links1: Array<{source: IGraphNode, target: IGraphNode}> = []; // links copied graph.edges
-    const links2: Array<{source: IGraphNode, target: IGraphNode}> = []; // links for nodes newly added at the same time to force them avoid each other
-
-    /* *
-    The following codes are intended to make the graph nodes not swap to a random position at each relayout.
-    The new layout basically adjusts the left side of the graph.
-    The nodes that have already been rendered in previous steps will only move slightly to fit the whole graph.
-    The relative positions among nodes are kept.
-    */
-    // Have all nodes remember when they are added into the graph
-    let l: number = 0;
-    graph.nodes.forEach(node => {
-      if (node.level && node.level > l){
-        l = node.level;
-      }
-    });
-    if (l === 0) {
-      graph.nodes.forEach(node =>{
-        node.level = 1;
-      });
-      l = 1;
-    }
-    graph.nodes.forEach(node => {
-      if (!node.level){
-        node.level = l + 1;
-      }
-      l += 1;
-    });
-
-    // Pick out nodes that are newly added.
-    const newadded: IGraphNode[] = [];
-    graph.nodes.forEach(node => {
-      if (node.level === l) {
-        newadded.push(node);
-      }
-    });
-
-    // Pick out nodes that were added in previous one step.
-    const prevadded: IGraphNode[] = [];
-    graph.nodes.forEach(node => {
-      if (node.level === l-1) {
-        prevadded.push(node);
-      }
-    });
-
-    // Copy graph.edges to links1
-    graph.edges.forEach(edge => {
-      const link = {
-        source: edge.source,
-        target: edge.target
-      };
-      links1.push(link);
-    });
-
-    // Link new nodes and push to links2
-    const n2: number = newadded.length;
-    for (let i = 0; i < n2; i++) {
-      for (let j = i + 1; j < n2; j++) {
-        const link = {
-          source: newadded[i],
-          target: newadded[j]
-        };
-        links2.push(link);
-      }
-    }
-
-    // Link new nodes and nodes added in previous step, push to links2
-    prevadded.forEach(node1 => {
-      newadded.forEach(node2 => {
-        const link = {
-          source: node1,
-          target: node2
-        };
-        links2.push(link);
-      });
-    });
-
+    const graphCopy: IGraph = JSON.parse(JSON.stringify(graph));
     const forceSimulation = d3
-      .forceSimulation(graph.nodes)
+      .forceSimulation(graphCopy.nodes)
       .force(
         "link",
         d3
-          .forceLink(links1)
+          .forceLink()
           .id(node => (node as any).id)
-          .links(links2)
+          .links(graphCopy.edges)
       )
       .force("charge", d3.forceManyBody().strength(-35))
       .force(
         "center",
         d3.forceCenter(layoutParams.width / 2, layoutParams.height / 2)
       )
-      .force("collision", d3.forceCollide(70))
+      .force("collision", d3.forceCollide(60))
       .stop();
 
     const edgePadding = 50;
-
-    // Fix nodes which have been redered previously at their original positinons,
-    // Make this uncommented if you want all nodes to be totally fixed,.
-    /*
-    graph.nodes.forEach(node => {
-      if (node.x && !node.fx) {
-        node.fx = node.x;
-      }
-      if (node.y && !node.fy) {
-        node.fy = node.y;
-      }
-    });
-    */
 
     return new Promise<void>((resolve, reject) => {
       // Run simulation synchronously the default number of times (300)
@@ -210,7 +120,7 @@ export function d3ForceLayout(): LayoutFunction {
         forceSimulation.tick();
 
         // Bound nodes to SVG
-        graph.nodes.forEach(node => {
+        graphCopy.nodes.forEach(node => {
           node.x = Math.max(
             edgePadding,
             Math.min(layoutParams.width - edgePadding, node.x!)
@@ -222,11 +132,9 @@ export function d3ForceLayout(): LayoutFunction {
         });
       }
 
-
       // scaleNodePositions(layoutParams, graph.nodes);
       // Copy over x and y positions onto original graph once simulation is finished
       // if the node did not already have an x, y position
-      /*
       graphCopy.nodes.forEach((node, i) => {
         if (!graph.nodes[i].x) {
           graph.nodes[i].x = node.x;
@@ -235,7 +143,6 @@ export function d3ForceLayout(): LayoutFunction {
           graph.nodes[i].y = node.y;
         }
       });
-      */
       resolve();
     });
   };
