@@ -79,7 +79,7 @@ export default class BayesViewer extends DOMWidgetView {
         this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
           variableNode.falseProb = undefined;
           variableNode.trueProb = undefined;
-		  variableNode.observed = undefined;
+		      variableNode.observed = undefined;
           this.vue.$set(variableNode.styles, "strokeWidth", 0);
         });
       });
