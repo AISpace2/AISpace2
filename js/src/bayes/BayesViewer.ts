@@ -79,6 +79,7 @@ export default class BayesViewer extends DOMWidgetView {
         this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
           variableNode.falseProb = undefined;
           variableNode.trueProb = undefined;
+		      variableNode.observed = undefined;
           this.vue.$set(variableNode.styles, "strokeWidth", 0);
         });
       });
@@ -131,8 +132,8 @@ export default class BayesViewer extends DOMWidgetView {
     let value: null | string | boolean = response;
 
     if (value !== null && !value.includes(', ')) {
-      if (value === "true") { value = true; }
-      else if (value === "false") { value = false; }
+      if (value === "true") { value = true; node.observed = true;}
+      else if (value === "false") { value = false; node.observed = false;}
       this.manager.add(node.name, value)
     };
   }

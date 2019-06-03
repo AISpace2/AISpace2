@@ -5,7 +5,7 @@
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
     >
       <template slot="node" slot-scope="props">
-        <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext="probText(props.node)"
+        <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext= "probText(props.node)"
                                    :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                                    :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel" @updateBounds="updateNodeBounds(props.node, $event)"
                                    :stroke-width="nodeStrokeWidth(props.node)">
@@ -129,11 +129,16 @@
 
     /** Returns a formatted string representing the probability of a variable node after query. */
     probText(node: IBayesGraphNode) {
-      if (node.trueProb === undefined || node.falseProb === undefined){ return undefined;}
-
-      return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace);
-    }
-
+      if (node.trueProb === undefined || node.falseProb === undefined){ 
+	    if (node.observed === undefined) return undefined;
+	    return "\n" + "Obs: " + node.observed;
+	  }
+      else {
+	      if (node.observed === undefined) return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace);
+        return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
+      }
+	}
+    	    
     addTextSize(){
       this.textSize ++;
     }
