@@ -242,8 +242,14 @@ export function d3TreeLayout(
        */
       const heightDivision = layoutParams.height / (maxDepth + 2);
 
+      const sameLeveNodesList: IGraphNode[][] = [];
+      for (let i = 0; i <= maxDepth; i++){
+        const list: IGraphNode[] = [];
+        sameLeveNodesList.push(list);
+      }
+
       root.each(n => {
-        n.data.node.level = n.depth;
+        sameLeveNodesList[n.depth].push(n.data.node);
         n.data.node.x = (n as any).x * layoutParams.width;
         n.data.node.y =
           (n as any).y *
@@ -251,14 +257,7 @@ export function d3TreeLayout(
           heightDivision;
       });
 
-      //  Find same level nodes
-      for (let i = 0; i < maxDepth + 1; i++) {
-        const sameLevelNodes: IGraphNode[] = [];
-        graph.nodes.forEach(node => {
-          if (node.level === i) {
-            sameLevelNodes.push(node);
-          }
-        });
+      sameLeveNodesList.forEach(sameLevelNodes => {
 
         const newradius: number = (layoutParams.width / sameLevelNodes.length) / 2 - 15;
 
@@ -268,16 +267,6 @@ export function d3TreeLayout(
             node.radius = 1;
           });
         } else {
-          // Sort same level nodes by x positions.
-          sameLevelNodes.sort((node1, node2) => {
-            if (node1.x! > node2.x!) {
-              return 1;
-            } else if (node1.x! < node2.x!) {
-              return -1;
-            } else {
-              return 0;
-            }
-          });
           // Caculate positions for same level nodes to be not overlapping.
           sameLevelNodes.forEach(node => {
             if (newradius < 100 && newradius > 0) {
@@ -286,7 +275,7 @@ export function d3TreeLayout(
             node.x = (2 * sameLevelNodes.indexOf(node) + 1) * (newradius + 15);
           });
         }
-      }
+      });
 
       resolve();
     });

@@ -152,7 +152,7 @@
 
     nodemaxWidth(node: ISearchGraphNode) {
       if (!node.radius) {
-        return 200;
+        return 100;
       }
       return node.radius * 2;
     }
