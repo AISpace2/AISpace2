@@ -267,9 +267,9 @@ export function d3TreeLayout(
           sameLevelNodes.forEach(node => {
             node.radius = 1;
           });
-        }
-        // Sort same level nodes by x positions.
-        sameLevelNodes.sort((node1, node2) => {
+        } else {
+          // Sort same level nodes by x positions.
+          sameLevelNodes.sort((node1, node2) => {
             if (node1.x! > node2.x!) {
               return 1;
             } else if (node1.x! < node2.x!) {
@@ -278,13 +278,14 @@ export function d3TreeLayout(
               return 0;
             }
           });
-        // Caculate positions for same level nodes to be not overlapping.
-        sameLevelNodes.forEach(node => {
-          if (newradius < 100 && newradius > 0) {
-            node.radius = newradius;
-          }
-          node.x = (2 * sameLevelNodes.indexOf(node) + 1) * (newradius + 15);
-        });
+          // Caculate positions for same level nodes to be not overlapping.
+          sameLevelNodes.forEach(node => {
+            if (newradius < 100 && newradius > 0) {
+              node.radius = newradius;
+            }
+            node.x = (2 * sameLevelNodes.indexOf(node) + 1) * (newradius + 15);
+          });
+        }
       }
 
       resolve();
