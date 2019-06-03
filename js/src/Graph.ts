@@ -9,6 +9,10 @@ export interface IGraphNode {
   x?: number;
   /** The y position of the node. */
   y?: number;
+  /** The radius of the node */
+  radius?: number;
+  /** The level (depth) of the node in tree layout */
+  level?: number;
   /** An object that can contain arbitrary properties to influence it's rendering. */
   styles: { [key: string]: any };
   /** Extra properties depending on the node's type. */
@@ -286,6 +290,8 @@ export class Graph<
         node.styles = prevNode.styles;
         node.x = prevNode.x;
         node.y = prevNode.y;
+        node.radius = prevNode.radius;
+        node.level = prevNode.level;
       }
     }
   }

@@ -132,7 +132,7 @@ export function d3ForceLayout(): LayoutFunction {
         });
       }
 
-      // scaleNodePositions(layoutParams, graph.nodes);
+      scaleNodePositions(layoutParams, graph.nodes);
       // Copy over x and y positions onto original graph once simulation is finished
       // if the node did not already have an x, y position
       graphCopy.nodes.forEach((node, i) => {
@@ -243,12 +243,49 @@ export function d3TreeLayout(
       const heightDivision = layoutParams.height / (maxDepth + 2);
 
       root.each(n => {
+        n.data.node.level = n.depth;
         n.data.node.x = (n as any).x * layoutParams.width;
         n.data.node.y =
           (n as any).y *
             (layoutParams.height - heightDivision - heightDivision) +
           heightDivision;
       });
+
+      //  Find same level nodes
+      for (let i = 0; i < maxDepth + 1; i++) {
+        const sameLevelNodes: IGraphNode[] = [];
+        graph.nodes.forEach(node => {
+          if (node.level === i) {
+            sameLevelNodes.push(node);
+          }
+        });
+
+        const newradius: number = (layoutParams.width / sameLevelNodes.length) / 2 - 15;
+
+        // If there are too many nodes in same level, just use minimum node radius.
+        if (newradius <= 0) {
+          sameLevelNodes.forEach(node => {
+            node.radius = 1;
+          });
+        }
+        // Sort same level nodes by x positions.
+        sameLevelNodes.sort((node1, node2) => {
+            if (node1.x! > node2.x!) {
+              return 1;
+            } else if (node1.x! < node2.x!) {
+              return -1;
+            } else {
+              return 0;
+            }
+          });
+        // Caculate positions for same level nodes to be not overlapping.
+        sameLevelNodes.forEach(node => {
+          if (newradius < 100 && newradius > 0) {
+            node.radius = newradius;
+          }
+          node.x = (2 * sameLevelNodes.indexOf(node) + 1) * (newradius + 15);
+        });
+      }
 
       resolve();
     });
