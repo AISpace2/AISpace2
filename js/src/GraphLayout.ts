@@ -269,7 +269,10 @@ export function d3TreeLayout(
         } else {
           // Caculate positions for same level nodes to be not overlapping.
           sameLevelNodes.forEach(node => {
-            if (newradius < 100 && newradius > 0) {
+            if (newradius >= 50) {
+              node.radius = 50;
+            }
+            if (newradius < 50 && newradius > 0) {
               node.radius = newradius;
             }
             node.x = (2 * sameLevelNodes.indexOf(node) + 1) * (newradius + 15);
