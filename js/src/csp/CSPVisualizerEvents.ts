@@ -35,10 +35,16 @@ export interface ICSPChooseDomainSplitEvent extends IEvent {
   var: string;
 }
 
+export interface ICSPChooseDomainSplitBeforeACEvent extends IEvent {
+  action: "chooseDomainSplitBeforeAC";
+  /** The domain to choose a split from. */
+}
+
 /** CSP Visualizer Events. */
 export type Events =
   | ICSPHighlightArcsEvent
   | ICSPSetDomainsEvent
   | ICSPHighlightNodesEvent
   | ICSPChooseDomainSplitEvent
+  | ICSPChooseDomainSplitBeforeACEvent
   | Events;

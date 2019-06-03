@@ -89,7 +89,7 @@ class Displayable(StepDOMWidget):
                 A tuple (var_name, constraint) that represents an arc from `to_do`.
         """
         # Running in Auto mode. Don't block!
-        if self.max_display_level == 1:
+        if self.max_display_level == 1 or self.max_display_level == 0:
             return to_do.pop()
 
         self._is_waiting_for_arc_selection = True
@@ -116,6 +116,10 @@ class Displayable(StepDOMWidget):
         Returns:
             (string): The variable to split on.
         """
+        # Running in Auto mode. Split in half!
+        if self.max_display_level == 1:
+            return list(iter_var)[0]
+
         self._is_waiting_for_var_selection = True
         self._block_for_user_input.wait()
         iter_var = list(iter_var)
@@ -141,6 +145,17 @@ class Displayable(StepDOMWidget):
         Returns:
             (set): A subset of the domain to be split on first.
         """
+        # Running in Auto Arc Consistency mode. Change to normal!
+        if self.max_display_level == 0:
+            self.max_display_level = 2
+            
+        # Running in Auto mode. Split in half!
+        if self.max_display_level == 1:
+            split = len(domain) // 2
+            dom1 = set(list(domain)[:split])
+            dom2 = domain - dom1
+            return dom1, dom2
+
         self.send({'action': 'chooseDomainSplit', 'domain': domain, 'var': var})
         self._block_for_user_input.wait()
 
@@ -195,6 +210,8 @@ class Displayable(StepDOMWidget):
                 self._block_for_user_input.set()
                 self._block_for_user_input.clear()
                 self._is_waiting_for_var_selection = False
+            elif content.get('varType') == 'csp:variable':
+                self.send({'action': 'chooseDomainSplitBeforeAC'})
 
         elif event == 'domain_split':
             """

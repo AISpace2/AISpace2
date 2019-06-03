@@ -37,6 +37,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           return this.highlightNodes(event);
         case "chooseDomainSplit":
           return this.chooseDomainSplit(event);
+        case "chooseDomainSplitBeforeAC":
+          return this.chooseDomainSplitBeforeAC(event);
         case "output":
           this.vue.output = event.text;
           return;
@@ -70,11 +72,16 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.STEP_CLICK });
       });
 
+      this.vue.$on(StepEvents.AUTO_ARC_CONSISTENCY_CLICK, () => {
+        Analytics.trackEvent("CSP Visualizer", "Auto Arc Consistency");
+        this.send({ event: StepEvents.AUTO_ARC_CONSISTENCY_CLICK });
+      });
+
       this.vue.$on(StepEvents.AUTO_SOLVE_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Auto Solve");
         this.send({ event: StepEvents.AUTO_SOLVE_CLICK });
       });
-
+        
       this.vue.$on(StepEvents.PAUSE_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Pause");
         this.send({ event: StepEvents.PAUSE_CLICK });
@@ -100,7 +107,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         Analytics.trackEvent("CSP Visualizer", "Node Clicked");
         this.send({
           event: CSPViewer.VAR_CLICK,
-          varName: node.name
+          varName: node.name,
+          varType: node.type
         });
       });
 
@@ -190,5 +198,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     const newDomain =
       domainString != null ? domainString.split(",").filter(d => d) : null;
     this.send({ event: "domain_split", domain: newDomain });
+  }
+    
+  /**
+   * Prompt the user that the AC needs to be finished before the domain can be split.
+   */
+  private chooseDomainSplitBeforeAC(event: CSPEvents.ICSPChooseDomainSplitEventBeforeAC) {
+    window.alert("Arc consistency needs to be finished before the domain can be split.");
   }
 }

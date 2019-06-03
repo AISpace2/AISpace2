@@ -134,6 +134,7 @@ class StepDOMWidget(DOMWidget):
         self._auto_solve = step_through_to_level(1)
         self._pause = pause
         self._print_positions = print_positions
+        self._auto_arc_consistency = step_through_to_level(0)
 
     def before_step(self):
         """Override this to provide custom logic before every (fine/auto) step.
@@ -163,6 +164,8 @@ class StepDOMWidget(DOMWidget):
             self._pause()
         elif event == 'click:print-positions':
             self._print_positions(content.get('nodes', ''))
+        elif event == 'click:auto-arc-consistency':
+            self._auto_arc_consistency()
 
     def display(self, level, *args, **kwargs):
         """Informs the widget about a new state to update the visualization in response to.
