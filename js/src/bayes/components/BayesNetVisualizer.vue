@@ -130,11 +130,11 @@
     /** Returns a formatted string representing the probability of a variable node after query. */
     probText(node: IBayesGraphNode) {
       if (node.trueProb === undefined || node.falseProb === undefined){ 
-	    if(node.observed === undefined) return undefined;
+	    if (node.observed === undefined) return undefined;
 	    return "\n" + "Obs: " + node.observed;
 	  }
       else {
-	    if(node.observed === undefined) return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace);
+	      if (node.observed === undefined) return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace);
         return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
       }
 	}
