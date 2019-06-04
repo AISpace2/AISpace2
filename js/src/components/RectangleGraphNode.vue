@@ -232,6 +232,11 @@
       this.updateText();
     }
 
+    @Watch("maxWidth")
+    onMaxWidthChanges() {
+      this.updateText();
+    }
+
     updateText() {
       this.truncatedText = this.text;
       this.fitText();
