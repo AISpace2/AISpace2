@@ -331,10 +331,6 @@
     @Watch("graph")
     onGraphChanged(newVal: Graph) {
       // Whenever nodes or edges are added, re-layout the graph
-      // Merge the styles of the previous graph to current graph
-      // Update previous graph
-      this.graph.mergeStylesFrom(this.prevgraph);
-      this.prevgraph = this.graph;
       this.layout.relayout(this.graph, {
         width: this.width,
         height: this.height

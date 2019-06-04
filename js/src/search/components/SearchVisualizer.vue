@@ -6,6 +6,7 @@
                                    :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :detailLevel="detailLevel"
                                    :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                                    :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
+                                   :maxWidth="nodemaxWidth(props.node)"
                                    @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize">
         </RoundedRectangleGraphNode>
       </template>
@@ -147,6 +148,13 @@
       }
 
       return text;
+    }
+
+    nodemaxWidth(node: ISearchGraphNode) {
+      if (!node.radius) {
+        return 100;
+      }
+      return node.radius * 2;
     }
 
     /**
