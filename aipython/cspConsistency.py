@@ -37,7 +37,7 @@ class Con_solver(Displayable):
         while to_do:
             var, const = self.select_arc(to_do)
             self.display(3, "Processing arc (", var, ",", const, ")")
-            other_vars = [ov for ov in const.scope if ov is not var]
+            other_vars = [ov for ov in const.scope if ov != var]
             new_domain = {val for val in domains[var]
                           if self.any_holds(domains, const, {var: val}, other_vars)}
             if new_domain != domains[var]:
