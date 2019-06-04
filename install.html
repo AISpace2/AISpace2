@@ -90,6 +90,29 @@ jupyter nbextension enable aispace2 --user --py</code></pre>
     <p>If you are unfamiliar with the Python ecosystem and want the simplest installation, use Anaconda <a href="#windows-anaconda">&rarr;</a>,
       a Python distribution with a lot of scientific computing tools already pre-installed. If you already have Python installed,
       or would prefer to install everything yourself, go here <a href="#windows-check-python">&rarr;</a>.</p>
+     <h3 id="windows-anaconda-one-click" class="linkify"><a href="#windows-anaconda-one-click">Using Anaconda and One Click Install (Experimental)</a></h3>
+    <ol>
+
+      <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a> for Windows, making sure you select
+        the Python 3+ version.</li>
+      
+     
+      <li>Run the downloaded installer. Make sure you enabled "add Anaconda to PATH".</li>
+      <li>
+              You will need to install nodejs and npm if you do not have them already installed. You can find installation instructions <a href="https://nodejs.org/en/download/">here</a>.
+               </li>
+      <li> Download and unzip <a href = "./assets/OneClickInstall/AISpace2.zip"> this</a> file and place it to the location where you want to store AISpace2.</li>
+      <li> Double click on file "InstallAISpace2.bat" and follow the instruction</li>
+      <li>If you want to open it after the installation, double click on the "StartJupyterLab.bat" file in the folder.</li>
+
+      <h4>Troubleshooting aispace2 labextension installation</h4>
+    <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
+    <p>You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
+      <pre><code>nvm install 8
+nvm use 8</code></pre> in the same terminal as where you will be installing the extension.
+    </ol>
+
+
     <h3 id="windows-anaconda" class="linkify"><a href="#windows-anaconda">Using Anaconda</a></h3>
     <ol>
       <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a> for Windows, making sure you select
@@ -161,7 +184,28 @@ pip3 install aispace2 --user</code></pre>
       <p>If you are unfamiliar with the Python ecosystem and want the simplest installation, use Anaconda <a href="#macos-anaconda">&rarr;</a>,
         a Python distribution with a lot of scientific computing tools already pre-installed. Otherwise, if you prefer installing
         all the dependencies yourself, go here <a href="#macos-without-anaconda">&rarr;</a>.</p>
+      <h3 id="macos-anaconda-one-click" class="linkify"> <a href="#macos-anaconda-one-click">With Anaconda and Script File (Experimental)</a></h3>
+      <ol>
+      <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a>, making sure to get the Python
+          3+ version. The Python 2 version is not supported.
+        </li>
+      <li>
+              You will need to install nodejs and npm if you do not have them already installed. You can find installation instructions <a href="https://nodejs.org/en/download/">here</a>.
+               </li>
+      <li>Save the <a href="./assets/OneClickInstall/InstallAISpace2.command">Command Line File</a> to the location you want to store AISpace2. <br>If you have a probelm downloading the file, right click and select "Downlad Linked File".</li>
+      <li>Open the terminal then type "sh " and drag the downloaded file in to the terminal.<br> The command will look like this:</li>
+      <pre><code>sh /PATH/TO/FILE/InstallAISpace2.command</code></pre>
+      <li>Execute the command.</li>
+      <li>Now the Jupyter Lab will now Running. </li>
+      <li> When ever you want to start the program again, Navigate to the new AISpace2 folder in your directory and run command:
+      <pre><code>jupyter lab</code></pre></li>
 
+      <h3>Troubleshooting aispace2 labextension installation</h3>
+    <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
+    <p>You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
+      <pre><code>nvm install 8
+nvm use 8</code></pre> in the same terminal as where you will be installing the extension.
+</ol>
       <h3 id="macos-anaconda" class="linkify"><a href="#macos-anaconda">With Anaconda</a></h3>
 
       <ol>
