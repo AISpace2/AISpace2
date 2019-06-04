@@ -16,9 +16,10 @@ class Con_solver(Displayable):
         * csp is the CSP to be solved
         * kwargs is the keyword arguments for Displayable superclass
         """
-        super().__init__(**kwargs)    # Or Displayable.__init__(self,**kwargs)
         self.csp = csp
-        
+        super().__init__(**kwargs)    # Or Displayable.__init__(self,**kwargs)
+    
+    @visualize
     def make_arc_consistent(self, orig_domains=None, to_do=None):
         """Makes this CSP arc-consistent using generalized arc consistency
         orig_domains is the original domains
@@ -85,6 +86,7 @@ class Con_solver(Displayable):
                     return True
             return False
 
+    @visualize
     def solve_one(self, domains=None, to_do=None):
         """return a solution to the current CSP or False if there are no solutions
         to_do is the list of arcs to check

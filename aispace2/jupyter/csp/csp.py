@@ -68,7 +68,7 @@ class Displayable(StepDOMWidget):
         # The domain the user has chosen as their first split for `_selected_var`.
         self._domain_split = None
 
-        #self.graph = self.csp
+        # self.graph = self.csp
         self.graph = CSP(self.csp.domains, self.csp.constraints, self.csp.positions)
         (self._domain_map,
          self._edge_map) = generate_csp_graph_mappings(self.csp)
