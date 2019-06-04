@@ -132,8 +132,9 @@ export default class BayesViewer extends DOMWidgetView {
     let value: null | string | boolean = response;
 
     if (value !== null && !value.includes(', ')) {
-      if (value === "true") { value = true; node.observed = true;}
-      else if (value === "false") { value = false; node.observed = false;}
+      if (value === "true") { value = true;}
+      else if (value === "false") { value = false;}
+	  node.observed = response;
       this.manager.add(node.name, value)
     };
   }
