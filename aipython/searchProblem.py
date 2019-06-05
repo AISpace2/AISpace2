@@ -148,6 +148,9 @@ class Path(object):
         else:
             return str(self.initial)+" --> "+str(self.arc.to_node)
 
+empty_problem = Search_problem_from_explicit_graph(
+    {}, [], start = None, goals = {})
+
 simple_problem1 = Search_problem_from_explicit_graph(
     {'a','b','c','d','g'},
     [Arc('a','b',1), Arc('a','c',3), Arc('b','c',1), Arc('b','d',3),

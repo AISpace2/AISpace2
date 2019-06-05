@@ -29,6 +29,9 @@ def is_(val):
     isv.__name__ = str(val)+"=="
     return isv
 
+
+empty_csp = CSP({},[])
+
 simple_csp1 = CSP({'A':{1,2,3},'B':{1,2,3}, 'C':{1,2,3}},
            [ Constraint(('A','B'),lt),
              Constraint(('B','C'),lt)])
