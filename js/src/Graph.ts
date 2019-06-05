@@ -39,7 +39,7 @@ export interface IBayesGraphNode extends IGraphNode {
   domain: string[] | boolean[];
   trueProb?: number;
   falseProb?: number;
-  observed?: string;
+  observed?: string | null;
 }
 
 export type CSPNodeTypes = "csp:variable" | "csp:constraint";
