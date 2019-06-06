@@ -48,7 +48,9 @@
       <li><a href="#reference-common">Common</a></li>
       <li><a href="#reference-search">Search</a></li>
       <li><a href="#reference-csp">CSP</a></li>
-      <li><a href="#difference-aispace2-aipython">Difference between AISpace2 and AIPython</a></li>
+      <li><a href="#reference-planning">Planning</a></li>
+      <li><a href="#reference-bayesian">Bayesian Network</a></li>
+      <li><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython</a></li>
     </ul>
   </section>
 
@@ -95,7 +97,7 @@
 
   <section id="reference-search" class="column inline">
     <h2 class="linkify"><a href="#reference-search">Search</a></h2>
-    <h3 id="reference-search-user-guide" class="linkify"><a href="#reference-search-user-guide">Nodes Legens</a></h3>
+    <h3 id="reference-search-legend" class="linkify"><a href="#reference-search-legend">Legend</a></h3>
     <p>
       <svg viewBox="0 0 42 32">
         <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
@@ -114,7 +116,8 @@
     <p>
       <svg viewBox="0 0 44 34">
         <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
-      </svg>&mdash; the nodes at the end of each path on the frontier are outlined in green.</p>
+      </svg>&mdash; the nodes at the end of each path on the frontier are outlined in green.
+    </p>
     <p>
       <svg viewBox="0 0 130 38">
         <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
@@ -188,22 +191,27 @@
 
   <section id="reference-csp" class="column inline">
     <h2 id="csp" class="linkify"><a href="#reference-csp">CSP</a></h2>
-    <h3 id="reference-csp-user-guide" class="linkify"><a href="#reference-csp-user-guide">User Guide</a></h3>
+    <h3 id="reference-csp-legend" class="linkify"><a href="#reference-csp-legend">Legend</a></h3>
     <p>
       <svg viewBox="0 0 30 20">
         <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
-      </svg> &mdash; the arc needs to be checked to see whether it is arc consistent.</p>
+      </svg> &mdash; the arc needs to be checked to see whether it is arc consistent.
+    </p>
     <p>
       <svg viewBox="0 0 30 20">
         <line x1="0" x2="30" y1="10" y2="10" stroke="green" stroke-width="5"></line>
-      </svg> &mdash; the arc is arc consistent.</p>
+      </svg> &mdash; the arc is arc consistent.
+    </p>
     <p>
       <svg viewBox="0 0 30 20">
         <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
-      </svg> &mdash; the arc is not arc consistent.</p>
-    <p>You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or
+      </svg> &mdash; the arc is not arc consistent.
+    </p>
+    <p>
+      You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or
       Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain
-      if it is not in auto solving mode.</p>
+      if it is not in auto solving mode.
+    </p>
     <h3 id="reference-csp-supported-classes" class="linkify"><a href="#reference-csp-supported-classes">Supported Classes</a></h3>
     <p><code>Con_solver</code>, <code>SLSearcher</code></p>
     <h3 id="reference-csp-included-problems" class="linkify"><a href="#reference-csp-included-problems">Included Problems</a></h3>
@@ -248,8 +256,168 @@
   </section>
 
 
+  <section id="reference-planning" class="column inline">
+    <h2 id="planning" class="linkify"><a href="#reference-planning">Planning</a></h2>
+    <h3 id="reference-planning-legend" class="linkify"><a href="#reference-csp-legend">Legend</a></h3>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
+      </svg> &mdash; the arc needs to be checked to see whether it is arc consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="green" stroke-width="5"></line>
+      </svg> &mdash; the arc is arc consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
+      </svg> &mdash; the arc is not arc consistent.
+    </p>
+    <p>
+      You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or
+      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain
+      if it is not in auto solving mode.
+    </p>
+    <h3 id="reference-planning-supported-classes" class="linkify"><a href="#reference-planning-supported-classes">Supported Classes</a></h3>
+    <p><code>Con_solver</code>, <code>SLSearcher</code></p>
+    <h3 id="reference-planning-included-problems" class="linkify"><a href="#reference-planning-included-problems">Included Problems</a></h3>
+    <p>
+      <figure>
+        <img src="assets/images/simple_csp1.png" alt="CSP 0" />
+        <figcaption>
+          <code>simple_csp1</code>: A simple CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/simple_csp2.png" alt="CSP 1" />
+        <figcaption>
+          <code>simple_csp2</code>: Another simple CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/extended_csp.png" alt="CSP 2" />
+        <figcaption>
+          <code>extended_csp</code>: A more complex CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/crossword1.png" alt="CSP Crossword 1" />
+        <figcaption>
+          <code>crossword1</code>: A crossword that represents word positions as variables.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/crossword2.png" alt="CSP Crossword 2" />
+        <figcaption>
+          <code>crossword2</code>: Another crossword that represents word positions as variables.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/crossword2d.png" alt="CSP Crossword 2d" />
+        <figcaption>
+          <code>crossword2d</code>: A crossword that represents squares as variables.
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="reference-bayesian-visualization-options" class="linkify"><a href="#reference-bayesian-visualization-options">Visualization Options</a></h3>
+    <ul>
+      <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.
+      </li>
+      <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
+        Defaults to <code>False</code>.
+      </li>
+      <li>
+        <code>layout_method</code>: Controls how the nodes in the graph are positioned. Either <code>"force"</code>, which
+        is a general graph layout algorithm that works on graphs of all types, or <code>"tree"</code>, if you know the resulting
+        graph is always tree-shaped. Defaults to
+        <code>"force"</code>.
+    </ul>
+  </section>
+
+
+  <section id="reference-bayesian" class="column inline">
+    <h2 id="bayesian" class="linkify"><a href="#reference-bayesian">Bayesian Network</a></h2>
+    <h3 id="reference-bayesian-legend" class="linkify"><a href="#reference-bayesian-legend">Legend</a></h3>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
+      </svg> &mdash; the arc needs to be checked to see whether it is arc consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="green" stroke-width="5"></line>
+      </svg> &mdash; the arc is arc consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
+      </svg> &mdash; the arc is not arc consistent.
+    </p>
+    <p>
+      You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or
+      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain
+      if it is not in auto solving mode.
+    </p>
+    <h3 id="reference-bayesian-supported-classes" class="linkify"><a href="#reference-bayesian-supported-classes">Supported Classes</a></h3>
+    <p><code>Con_solver</code>, <code>SLSearcher</code></p>
+    <h3 id="reference-bayesian-included-problems" class="linkify"><a href="#reference-bayesian-included-problems">Included Problems</a></h3>
+    <p>
+      <figure>
+        <img src="assets/images/simple_csp1.png" alt="CSP 0" />
+        <figcaption>
+          <code>simple_csp1</code>: A simple CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/simple_csp2.png" alt="CSP 1" />
+        <figcaption>
+          <code>simple_csp2</code>: Another simple CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/extended_csp.png" alt="CSP 2" />
+        <figcaption>
+          <code>extended_csp</code>: A more complex CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/crossword1.png" alt="CSP Crossword 1" />
+        <figcaption>
+          <code>crossword1</code>: A crossword that represents word positions as variables.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/crossword2.png" alt="CSP Crossword 2" />
+        <figcaption>
+          <code>crossword2</code>: Another crossword that represents word positions as variables.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/crossword2d.png" alt="CSP Crossword 2d" />
+        <figcaption>
+          <code>crossword2d</code>: A crossword that represents squares as variables.
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="reference-bayesian-visualization-options" class="linkify"><a href="#reference-bayesian-visualization-options">Visualization Options</a></h3>
+    <ul>
+      <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.
+      </li>
+      <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
+        Defaults to <code>False</code>.
+      </li>
+      <li>
+        <code>layout_method</code>: Controls how the nodes in the graph are positioned. Either <code>"force"</code>, which
+        is a general graph layout algorithm that works on graphs of all types, or <code>"tree"</code>, if you know the resulting
+        graph is always tree-shaped. Defaults to
+        <code>"force"</code>.
+    </ul>
+  </section>
+
+
   <section class="column inline">
-    <h2 id="difference-aispace2-aipython" class="linkify"><a href="#difference-aispace2-aipython">Relationship between AISpace2 and AIPython</a></h2>
+    <h2 id="relationship-aispace2-aipython" class="linkify"><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython</a></h2>
     <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/">accompanying textbook</a>;
       AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for rich visualizations to accompany
       code.
