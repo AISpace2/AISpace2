@@ -56,7 +56,8 @@ class Search_problem_from_explicit_graph(Search_problem):
     * a list or set of arcs
     * a start node
     * a list or set of goal nodes
-    * a dictionary that maps each node into its heuristic value.
+    * a dictionary that maps each node into its heuristic value
+    * a dictionary that maps each node into its (x,y)-position.
     """
 
     def __init__(self, nodes, arcs, start=None, goals=set(), hmap={}, positions={}):

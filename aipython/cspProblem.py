@@ -40,6 +40,7 @@ class CSP(Displayable):
     def __init__(self,domains,constraints, positions = {}):
         """domains is a variable:domain dictionary
         constraints is a list of constriants
+        positions is a variable:(x,y) dictionary
         """
         self.variables = set(domains)
         self.domains = domains
