@@ -54,15 +54,14 @@
 
   <section id="reference-common" class="column inline">
     <h2 id="common" class="linkify"><a href="#reference-common">Common</a></h2>
-    <h3 id="reference-common-user-guide" class="linkify"><a href="#reference-common-user-guide">User Guide</a></h3>
+    <h3 id="reference-common-buttons" class="linkify"><a href="#reference-common-buttons">Buttons</a></h3>
     <p>
       <img src="assets/images/reference-common-controls.png" alt="Main visualizations controls" </img></p>
     <ul>
-      <li><strong>Fine Step</strong>: Steps to the next <code>display()</code> statement.</li>
-      <li><strong>Step</strong>: Steps until it reaches a <code>display()</code> statement with <code>display_level</code> 2
-        or lower.</li>
-      <li><strong>Auto Solve</strong>: Run the algorithm step-by-step until completion.</li>
-      <li><strong>Pause</strong>: Pauses as soon as the next <code>display()</code> statement has executed. Useful to stop auto
+      <li><strong>Fine Step</strong>: Advance the procedure to next fine step.</li>
+      <li><strong>Step</strong>: Advance the procedure to next step</li>
+      <li><strong>Auto Solve</strong>: Run the algorithm step by step until completion.</li>
+      <li><strong>Pause</strong>: Pauses as soon as this fine step has finished. Useful to stop auto
         solving.
       </li>
     </ul>
@@ -71,14 +70,20 @@
       nodes will reposition themselves until they all fit on screen.</p>
     <h3 id="reference-common-visualization-options" class="linkify"><a href="#reference-common-visualization-options">Visualization Options</a></h3>
     <ul>
-      <li><code>sleep_time</code>: The time, in seconds, between each step when stepping or auto solving. Defaults to <code>0.2</code>.
+      <li><code>sleep_time</code>: The time, in seconds, between each step in auto solving. Defaults to <code>0.2</code>.
       </li>
       <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
+      <li><code>text_size</code>: The fontsize of the text, in pixels. Defaults to <code>15</code>.</li>
+      <li><code>detail_level</code>: The detail level of the information shown on a node. <code>0</code>=showing no text; 
+        <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text. 
+        Defaults to <code>1</code>.</li>
     </ul>
-    <h3 id="reference-common-notes" class="linkify"><a href="#reference-common-notes">Notes</a></h3>
+    <h3 id="reference-common-notes" class="linkify"><a href="#reference-common-notes">Notes about <code>display()</code></a></h3>
     <ul>
       <li>The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
-        step button, controls when execution pauses. You can safely change the <code>display_level</code> to adjust the amount
+        step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code> 
+        statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level 2</code>
+        or lower is encoutered; Auto Solve button makes the exectution not pause at all. You can safely change the <code>display_level</code> to adjust the amount
         of detail you receive.</li>
       <li>
         The visualization is entirely driven by the remaining parameters of the <code>display()</code> call, so modifying
@@ -90,26 +95,26 @@
 
   <section id="reference-search" class="column inline">
     <h2 class="linkify"><a href="#reference-search">Search</a></h2>
-    <h3 id="reference-search-user-guide" class="linkify"><a href="#reference-search-user-guide">User Guide</a></h3>
+    <h3 id="reference-search-user-guide" class="linkify"><a href="#reference-search-user-guide">Nodes Legens</a></h3>
     <p>
       <svg viewBox="0 0 42 32">
         <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-      </svg>&mdash; a start node.
+      </svg>&mdash; the start node is filled in pinks.
     </p>
     <p>
       <svg viewBox="0 0 42 32">
         <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-      </svg>&mdash; a regular node.
+      </svg>&mdash; the regular nodes are filled in white.
     </p>
     <p>
       <svg viewBox="0 0 42 32">
         <ellipse rx="20" ry="15" fill="gold" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-      </svg>&mdash; a goal node.
+      </svg>&mdash; the goal nodes are filled in yellow.
     </p>
     <p>
       <svg viewBox="0 0 44 34">
         <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
-      </svg>&mdash; the nodes at the end of each path on the frontier are highlighted in green.</p>
+      </svg>&mdash; the nodes at the end of each path on the frontier are outlined in green.</p>
     <p>
       <svg viewBox="0 0 130 38">
         <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
@@ -117,18 +122,18 @@
         <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="19"></ellipse>
         <ellipse rx="20" ry="15" fill="gold" stroke="blue" stroke-width="3" cx="105" cy="19"></ellipse>
       </svg>
-      &mdash; the neighbouring nodes of the current path are highlighted in blue.</p>
+      &mdash; the neighbouring nodes of the current path are outlined in blue.</p>
     <p>
       <svg viewBox="0 0 220 38">
         <path data-v-6814c63b="" d="M40,19L80,19" stroke="red" stroke-width="4"></path>
         <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
         <path data-v-6814c63b="" d="M125,19L165,19" stroke="red" stroke-width="4"></path>
         <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(158, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
-        <ellipse rx="20" ry="15" fill="orchid" stroke="gray" stroke-width="3" cx="22" cy="19"></ellipse>
-        <ellipse rx="20" ry="15" fill="white" stroke="gray" stroke-width="3" cx="105" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="orchid" stroke="red" stroke-width="3" cx="22" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="white" stroke="red" stroke-width="3" cx="105" cy="19"></ellipse>
         <ellipse rx="20" ry="15" fill="gold" stroke="red" stroke-width="3" cx="189" cy="19"></ellipse>
       </svg>
-      &mdash; the path being expanded is highlighted in red. The last node on this path is highlighted in red; the rest are highlighted
+      &mdash; the path being expanded is outlined in red.
       in gray.</p>
     <h3 id="reference-search-supported-classes" class="linkify"><a href="#reference-search-supported-classes">Supported Classes</a></h3>
     <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
@@ -189,14 +194,6 @@
         is a general graph layout algorithm that works on graphs of all types, or <code>"tree"</code>, if you know the resulting
         graph is always tree-shaped. Defaults to
         <code>"force"</code>.
-    </ul>
-    <h3 id="reference-search-notes" class="linkify"><a href="#reference-search-notes">Notes</a></h3>
-    <ul>
-      <li>
-        <code>search()</code> can only be run again
-        <emphasis>after</emphasis> the current search method has completed. You will know when this is the case when you see “…paths
-        remain in the frontier” or “Output: …”. Otherwise, the state of the frontier will be corrupted.
-      </li>
     </ul>
   </section>
 
