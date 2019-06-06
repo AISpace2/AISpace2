@@ -74,14 +74,14 @@
       </li>
       <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
       <li><code>text_size</code>: The fontsize of the text, in pixels. Defaults to <code>15</code>.</li>
-      <li><code>detail_level</code>: The detail level of the information shown on a node. <code>0</code>=showing no text; 
-        <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text. 
+      <li><code>detail_level</code>: The detail level of the information shown on a node. <code>0</code>=showing no text;
+        <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.
         Defaults to <code>1</code>.</li>
     </ul>
     <h3 id="reference-common-notes" class="linkify"><a href="#reference-common-notes">Notes about <code>display()</code></a></h3>
     <ul>
       <li>The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
-        step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code> 
+        step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
         statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level 2</code>
         or lower is encoutered; Auto Solve button makes the exectution not pause at all. You can safely change the <code>display_level</code> to adjust the amount
         of detail you receive.</li>
@@ -139,38 +139,36 @@
     <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
     <h3 id="reference-search-included-problems" class="linkify"><a href="#reference-search-included-problems">Included Problems</a></h3>
     <p>
-      <div>
-        <figure>
-          <img src="assets/images/simple_problem1.png" alt="Search Problem 1" />
-          <figcaption>
-            <code>simple_problem1</code>: A simple search problem.
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/simple_problem2.png" alt="Search Problem 2" />
-          <figcaption>
-            <code>simple_problem2</code>: Another simple search problem.
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/edgeless_problem.png" alt="Search Problem 3" />
-          <figcaption>
-            <code>edgeless_problem</code>: A search problem where there are no edges.
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/acyclic_delivery_problem.png" alt="Acyclic Search Problem" />
-          <figcaption>
-            <code>acyclic_delivery_problem</code>: A robot delivery problem that has no cycles.
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/cyclic_delivery_problem.png" alt="Cyclic Search Problem" />
-          <figcaption>
-            <code>cyclic_delivery_problem</code>: A robot delivery problem that has cycles.
-          </figcaption>
-        </figure>
-      </div>
+      <figure>
+        <img src="assets/images/simple_problem1.png" alt="Search Problem 1" />
+        <figcaption>
+          <code>simple_problem1</code>: A simple search problem.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/simple_problem2.png" alt="Search Problem 2" />
+        <figcaption>
+          <code>simple_problem2</code>: Another simple search problem.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/edgeless_problem.png" alt="Search Problem 3" />
+        <figcaption>
+          <code>edgeless_problem</code>: A search problem where there are no edges.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/acyclic_delivery_problem.png" alt="Acyclic Search Problem" />
+        <figcaption>
+          <code>acyclic_delivery_problem</code>: A robot delivery problem that has no cycles.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/cyclic_delivery_problem.png" alt="Cyclic Search Problem" />
+        <figcaption>
+          <code>cyclic_delivery_problem</code>: A robot delivery problem that has cycles.
+        </figcaption>
+      </figure>
     </p>
     <h3 id="reference-search-visualization-options" class="linkify"><a href="#reference-search-visualization-options">Visualization Options</a></h3>
     <ul>
@@ -203,13 +201,13 @@
       <svg viewBox="0 0 30 20">
         <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
       </svg> &mdash; the arc is not arc consistent.</p>
-    <p>You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or 
-      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain 
+    <p>You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or
+      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain
       if it is not in auto solving mode.</p>
     <h3 id="reference-csp-supported-classes" class="linkify"><a href="#reference-csp-supported-classes">Supported Classes</a></h3>
     <p><code>Con_solver</code>, <code>SLSearcher</code></p>
     <h3 id="reference-csp-included-problems" class="linkify"><a href="#reference-csp-included-problems">Included Problems</a></h3>
-    <div>
+    <p>
       <figure>
         <img src="assets/images/simple_csp1.png" alt="CSP 0" />
         <figcaption>
@@ -246,7 +244,7 @@
           <code>crossword2d</code>: A crossword that represents squares as variables.
         </figcaption>
       </figure>
-    </div>
+    </p>
   </section>
 
 
@@ -270,7 +268,7 @@
         <pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">class</span> <span style="color: #447fcf; text-decoration: underline">Example</span><span style="color: #d0d0d0">():</span>
   <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">bar</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
     <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;bar&#39;</span><span style="color: #d0d0d0">)</span>
-  
+
   <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
     <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
     <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
