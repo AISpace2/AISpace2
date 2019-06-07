@@ -12,11 +12,16 @@
   <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
   <link href="assets/styles/style.css" rel="stylesheet">
   <script>
-    (function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-      (i[r].q = i[r].q || []).push(arguments)
-}, i[r].l = 1 * new Date(); a = s.createElement(o),
-      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
     })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-105176225-2', 'auto');
@@ -43,8 +48,8 @@
 
   <section class="column">
     <h1 id="installationinstructions">Start Here!</h1>
-    <p>We’re happy to have you here. Follow the steps below and you’ll learn how to get setup with Jupyter and the AISpace2
-      extension. We highly recommend using a modern and up-to-date browser for the best experience, such as the latest versions of Edge, Firefox, Chrome or Safari.
+    <p>We’re happy to have you here. Follow the steps below and you’ll learn how to get setup with Jupyter and the AISpace2 extension. We highly recommend using a modern and up-to-date browser for the best experience, such as the latest versions of Edge,
+      Firefox, Chrome or Safari.
     </p>
     <ul>
       <!-- <li>Are you a <abbr title="University of British Columbia">UBC</abbr> student or have access to a JupyterHub instance (which
@@ -52,46 +57,58 @@
         anything on your computer <a href="#jupyterhub">&rarr;</a>.
       </li> -->
 
-      <li>You can install it locally if you have macOS <a href="#macos">&rarr;</a> or Windows <a href="#windows">&rarr;</a>.
-        If you are running Linux <a href="./Linux.html">&rarr;</a>, we have a general installation procedure.
+      <li>
+        Install locally: Choose your operation system to install the AISpace2 extension for Jupyter locally: <a href="#macos"> MacOS</a>, <a href="#windows">Windows</a>, or <a href="./installLinux.html">Linux</a>.
       </li>
-      <li>Do you already have AISpace2 installed, but just want to get the latest version? This way! <a href="#upgrading">&rarr;</a></li>
+      <li>
+        Install remotely: TO DO TO DO TO DO
+      </li>
+      <li>
+        Upgrade: Do you already have AISpace2 installed, but just want to get the latest version? <a href="#upgrade">This way!</a>
+      </li>
+      <li>
+        Uninstall: We are sad to see you go, but you can follow the procedure <a href="#uninstall">here</a> to uninstall the AISpace2 extension.
+      </li>
     </ul>
     <h2 id="windows" class="linkify"><a href="#windows">Windows</a></h2>
-    <p>If you are unfamiliar with the Python ecosystem and want the simplest installation, use Anaconda <a href="./WinConda.html">&rarr;</a>,
-      a Python distribution with a lot of scientific computing tools already pre-installed. If you already have Python installed,
-      or would prefer to install everything yourself, go here <a href="./WinScratch.html">&rarr;</a>.</p>
-      <h3>Installation Guides</h3>
-      <ol>
-        <li><a href="./WinConda.html">Installation Guide for Windows With Anaconda</a> </li>
-        <li><a href="./WinScratch.html">Installation Guide for Windows Without Anaconda</a> </li>
-      </ol>
-      <h2 id="macos" class="linkify"><a href="#macos">macOS</a></h2>
-
-      <p>If you are unfamiliar with the Python ecosystem and want the simplest installation, use Anaconda <a href="./MacOSConda.html">&rarr;</a>,
-        a Python distribution with a lot of scientific computing tools already pre-installed. Otherwise, if you prefer installing
-        all the dependencies yourself, go here <a href="./MacOSScratch.html">&rarr;</a>.</p>
-         <h3>Installation Guides</h3>
-      <ol>
-        <li><a href="./MacOSConda.html">Installation Guide for macOS With Anaconda</a> </li>
-        <li><a href="./MacOSScratch.html">Installation Guide for macOS Without Anaconda</a> </li>
-      </ol>
-      <h2 id="linux" class="linkify"><a href="#linux">Linux</a></h2>
-       <h3>Installation Guides</h3>
-       <ol>
-        <li> <a href="./Linux.html"> Install instruction for Linux </a></li>
-      </ol>
-      <h2 id="upgrading" class="linkify"><a href="#upgrading">Upgrading</a></h2>
-      <p>
-        Already have AISpace2? No matter which operating system you use, or what method you used to install it, updating AISpace2
-        is as simple as running one line in the command prompt or terminal:
-      </p>
-      <pre><code>pip3 install aispace2 --user --upgrade
-jupyter labextension update aispace2</code></pre>
-      <p>Make sure to restart Jupyter after doing this for the changes to take effect.</p>
-      <p>If the command to update the jupyter lab extension did not work, you can try uninstalling and reinstalling the extension:</p>
-      <pre><code>jupyter labextension uninstall aispace2
+    <p>
+      If you want the simplest installation, we recommend you to use Anaconda,
+      a Python distribution with a lot of scientific computing tools already pre-installed. <a href="./installWinConda.html"></a>
+    </p>
+    <p>
+      If you would prefer to install everything by yourself, <a href="./installWinScratch.html">Go here!</a>
+    </p>
+    <h2 id="macos" class="linkify"><a href="#macos">MacOS</a></h2>
+    <p>
+      If you want the simplest installation, we recommend you to use Anaconda,
+      a Python distribution with a lot of scientific computing tools already pre-installed. <a href="./installMacConda.html"></a>
+    </p>
+    <p>
+      If you would prefer to install everything by yourself, <a href="./installMacScratch.html">Go here!</a>
+    </p>
+    <h2 id="linux" class="linkify"><a href="#linux">Linux</a></h2>
+    <p>
+      <a href="./installLinux.html">Install instruction for Linux</a>
+    </p>
+    <h2 id="upgrade" class="linkify"><a href="#upgrade">Upgrade</a></h2>
+    <p>
+      Already have AISpace2? No matter which operating system you use, or what method you used to install it, updating AISpace2 is as simple as running the following lines in the command prompt or terminal:
+    </p>
+    <pre>
+        <code>
+        pip3 install aispace2 --user --upgrade
+        jupyter labextension update aispace2
+        </code>
+      </pre>
+    <p>Make sure to restart Jupyter after doing this for the changes to take effect.</p>
+    <p>If the command above did not work, you can try uninstalling and reinstalling the extension:</p>
+    <pre><code>jupyter labextension uninstall aispace2
 jupyter labextension install aispace2</code></pre>
+    <h2 id="uninstall" class="linkify"><a href="#uninstall">uninstall</a></h2>
+    <p>
+      Uninstalling is as simple as running the following one line in the command prompt or terminal:
+    </p>
+    <pre><code>jupyter labextension uninstall aispace2</code></pre>
   </section>
 </body>
 
