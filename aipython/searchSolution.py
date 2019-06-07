@@ -28,13 +28,13 @@ class Searcher_prunes(Searcher):
         if self.method=="best":
             value = self.problem.heuristic(path.end())
         if self.method=="least-cost":
-            value = path.cost        
+            value = path.cost
         self.frontier.add(path,value)
 
-        
+
     def search(self):
         """returns next path from the problem's start node
-        to a goal node. 
+        to a goal node.
         Returns None if no path exists.
         """
         if self.pruning == 'mpp':
@@ -83,7 +83,7 @@ class Searcher_prunes(Searcher):
                     for arc in neighs:
                         self.add_to_frontier(Path(path,arc))
                     self.display(3,"Frontier:",self.frontier)
-            
+
         self.display(1,"Total of", self.frontier.frontier_index,"paths expanded.")
 
 import searchProblem
@@ -101,5 +101,4 @@ def show_combinations(problem,name):
                 print(method,"with",pruning,"did not find a solution with",s.num_expanded,"paths expanded")
 
 if __name__ == "__main__":
-    show_combinations(searchProblem.cyclic_delivery_problem,"Cyclic Delivery Problem")
-
+    show_combinations(searchProblem.search_cyclic_delivery,"Cyclic Delivery Problem")

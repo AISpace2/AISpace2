@@ -33,7 +33,7 @@ def h2(state,goal):
         return dist(state['RLoc'],'cs')+3
     else:
         return 0
-        
+
 def dist(loc1, loc2):
     """returns the distance from location loc1 to loc2
     """
@@ -48,14 +48,14 @@ def dist(loc1, loc2):
 from aipython.searchGeneric import AStarSearcher
 from aipython.searchMPP import SearcherMPP
 from aipython.stripsForwardPlanner import Forward_STRIPS
-from aipython.stripsProblem import problem0, simple_problem1, simple_problem2
-thisproblem = simple_problem1
+from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
+thisproblem = strips_simple1
 
 print("\n***** FORWARD NO HEURISTIC")
 print(SearcherMPP(Forward_STRIPS(thisproblem)).search())
 
 print("\n***** FORWARD WITH HEURISTIC")
-print(SearcherMPP(Forward_STRIPS(thisproblem,heuristic_fun)).search()) 
+print(SearcherMPP(Forward_STRIPS(thisproblem,heuristic_fun)).search())
 
 #####  Regression Planner
 from aipython.stripsRegressionPlanner import Regression_STRIPS
@@ -65,4 +65,3 @@ print(SearcherMPP(Regression_STRIPS(thisproblem)).search())
 
 print("\n***** REGRESSION WITH HEURISTIC")
 print(SearcherMPP(Regression_STRIPS(thisproblem,heuristic_fun)).search())
-

@@ -64,15 +64,15 @@ class Planning_problem(object):
         self.goal = goal
         self.positions = positions
 
-problem0 = Planning_problem(delivery_domain,
+strips_simple1 = Planning_problem(delivery_domain,
                             {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
                              'RHM':False}, 
                             {'RLoc':'off'})
-simple_problem1 = Planning_problem(delivery_domain,
+strips_simple2 = Planning_problem(delivery_domain,
                             {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
                              'RHM':False}, 
                             {'SWC':False})
-simple_problem2 = Planning_problem(delivery_domain,
+strips_simple3 = Planning_problem(delivery_domain,
                             {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
                              'RHM':False}, 
                             {'SWC':False, 'MW':False, 'RHM':False})
@@ -105,7 +105,7 @@ def create_blocks_world(blocks = ['a','b','c','d']):
     return STRIPS_domain(feats_vals, stmap)
 
 blocks1dom = create_blocks_world(['a','b','c'])
-blocks1 = Planning_problem(blocks1dom,
+strips_blocks1 = Planning_problem(blocks1dom,
      {on('a','table'):True,clear('a'):True, clear('b'):True,on('b','c'):True, 
       on('c','table'):True,clear('c'):False}, # initial state
      {on('a','b'):True, on('c','a'):True})  #goal
@@ -114,10 +114,10 @@ blocks2dom = create_blocks_world(['a','b','c','d'])
 tower4 = {clear('a'):True, on('a','b'):True, clear('b'):False, 
       on('b','c'):True, clear('c'):False, on('c','d'):True,
       clear('b'):False, on('d','table'):True}
-blocks2 = Planning_problem(blocks2dom,
+strips_blocks2 = Planning_problem(blocks2dom,
      tower4, # initial state
      {on('d','c'):True,on('c','b'):True,on('b','a'):True})  #goal
 
-blocks3 = Planning_problem(blocks2dom,
+strips_blocks3 = Planning_problem(blocks2dom,
      tower4, # initial state
      {on('d','a'):True, on('a','b'):True, on('b','c'):True})  #goal
