@@ -12,11 +12,16 @@
   <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
   <link href="assets/styles/style.css" rel="stylesheet">
   <script>
-    (function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-      (i[r].q = i[r].q || []).push(arguments)
-}, i[r].l = 1 * new Date(); a = s.createElement(o),
-      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
     })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-105176225-2', 'auto');
@@ -39,34 +44,37 @@
       <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
     </svg>
   </header>
-   <section class="column">
-   	<br>
-   	<a href = "./install.html#macos">&larr; Go Back</a>
-<h2> For MacOS With Anaconda</h2>
-<h3 id="macos-anaconda-one-click" class="linkify"> <a href="#macos-anaconda-one-click">With Anaconda and Script File</a></h3>
-      <ol>
-      <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a>, making sure to get the Python
-          3+ version. The Python 2 version is not supported.
-        </li>
+  <section class="column">
+    <br>
+    <a href="./install.html#macos">&larr; Go Back</a>
+    <h2> For MacOS With Anaconda</h2>
+    <h3 id="macos-anaconda-one-click" class="linkify"> <a href="#macos-anaconda-one-click">With Anaconda and Script File</a></h3>
+    <ol>
+      <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a>, making sure to get the Python 3+ version. The Python 2 version is not supported.
+      </li>
       <li>
-              You will need to install nodejs and npm if you do not have them already installed. You can find installation instructions <a href="https://nodejs.org/en/download/">here</a>.
-               </li>
+        You will need to install nodejs and npm if you do not have them already installed. You can find installation instructions <a href="https://nodejs.org/en/download/">here</a>.
+      </li>
       <li>Save the <a href="./assets/OneClickInstall/InstallAISpace2.command">Command Line File</a> to the location you want to store AISpace2. <br>If you have a probelm downloading the file, right click and select "Downlad Linked File".</li>
       <li>Open the terminal then type "sh " and drag the downloaded file in to the terminal.<br> The command will look like this:</li>
       <pre><code>sh /PATH/TO/FILE/InstallAISpace2.command</code></pre>
       <li>Execute the command.</li>
       <li>Now the Jupyter Lab will now Running. </li>
       <li> When ever you want to start the program again, Navigate to the new AISpace2 folder in your directory and run command:
-      <pre><code>jupyter lab</code></pre></li>
-
-      <h3>Troubleshooting aispace2 labextension installation</h3>
-    <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
-    <p>You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
-      <pre><code>nvm install 8
-nvm use 8</code></pre> in the same terminal as where you will be installing the extension.
-</ol>
-</p>
-</ol>
-</section>
+        <pre><code>jupyter lab</code></pre></li>
+      </ol>
+  		<h3>Troubleshooting</h3>
+  		<p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
+  		<p>
+  			You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
+  			<pre>
+  					<code>
+  					nvm install 8
+  					nvm use 8
+  					</code>
+  			</pre> in the same folder as where you will be installing the extension.
+  		</p>
+  </section>
 </body>
+
 </html>

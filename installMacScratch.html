@@ -1,6 +1,4 @@
-<!--Linux-->
-<!DOCTYPE html>
-
+<!--MacOSScratch-->
 <html lang="en">
 
 <head>
@@ -45,16 +43,43 @@
 			<polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
 		</svg>
 	</header>
-
 	<section class="column">
 		<br>
-		<a href="./install.html#linux">&larr; Go Back</a>
-		<h2 id="linux" class="linkify"><a href="#linux">Linux</a></h2>
+		<a href="./install.html#macos">&larr; Go Back</a>
+		<h2> For MacOS Without Anaconda</h2>
+		<h3 id="macos-without-anaconda" class="linkify"><a href="#macos-without-anaconda">Without
+		Anaconda</a></h3>
 		<ol>
 			<li>
-				You will need to install <a href="https://www.python.org/" target="_blank">Python 3.3+</a>.
+				<p>By default, macOS contains Python 2.7 (at least on Sierra, 10.12). You will need Python 3.3+ for it to work. Try running
+					<code>python3 --version</code> in the terminal to see if you’ve already installed it. If it returns 3.3+, skip to the next step. If not, or it errors out, you will need to install Python 3:</p>
+
+				<ul>
+					<li>If you have <a href="https://brew.sh/" target="_blank">homebrew</a>:
+						<ul>
+							<li>Run <code>brew install python3</code> or, if you already have Python 3 installed but need the latest version,
+								<code>brew upgrade python3</code></li>
+						</ul>
+					</li>
+
+					<li>Otherwise:
+						<ul>
+							<li>Download the installer from the <a href="https://www.python.org/downloads/mac-osx/" target="_blank">Python website</a> and install it
+							</li>
+						</ul>
+					</li>
+				</ul>
 			</li>
-			<li>After that, you can install Jupyter and the <strong>AISpace2</strong> extension by running the following: <pre><code>pip3 install jupyter
+			<li>
+				<p>Then, confirm that <code>pip</code> (the Python package manager) is also installed (which it should be, as it is usually installed alongisde Python). Run <code>pip3 --version</code> and it should output something like:</p>
+				<pre><code>pip 9.0.1 from /usr/local/lib/python3.6/site-packages (python 3.6)</code></pre>
+				<p>You also want to make sure pip is updated: run <code>pip3 install --upgrade pip</code>. Your <code>pip3 --version</code> should be <code>>9.0.0</code>. If you encounter any problems with <code>pip</code>, refer to the guide
+					<a href="https://packaging.python.org/tutorials/installing-packages/#id10" target="_blank">here</a> for further instructions.
+				</p>
+			</li>
+			<li>
+				All that is left to do is to install Jupyter and enable our extension:
+				<pre><code>pip3 install jupyter
 pip3 install jupyterlab
 pip3 install aispace2 --user</code></pre>
 			</li>
