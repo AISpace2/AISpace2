@@ -1,0 +1,72 @@
+<!--Windows Anaconda-->
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>AISpace2 &mdash; Installation</title>
+	<link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
+	<link href="assets/styles/style.css" rel="stylesheet">
+	<script>
+		(function (i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+				(i[r].q = i[r].q || []).push(arguments)    
+			}, i[r].l = 1 * new Date(); a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-105176225-2', 'auto');
+		ga('send', 'pageview');
+	</script>
+</head>
+
+<body>
+	<div id="navbar">
+		<a href="index.html">Home</a>
+		<a href="install.html" class="selected">Install</a>
+		<a href="notebooks.html">Notebooks</a>
+		<a href="contribute.html">Contribute</a>
+		<a href="reference.html">Reference</a>
+	</div>
+
+	<header>
+		<h1>Installation</h1>
+		<h2>Interested in trying out AISpace2? Get started here.</h2>
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+			<polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
+		</svg>
+	</header>
+
+	<section class="column">
+		   	<br>
+   	<a href = "./install.html">&larr; Go Back</a>
+			<h2> For Windows With Anaconda </h2>
+		     <h3 id="windows-anaconda-one-click" class="linkify"><a href="#windows-anaconda-one-click">Using Anaconda and One Click Install</a></h3>
+    <ol>
+
+      <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a> for Windows, making sure you select
+        the Python 3+ version.</li>
+      
+     
+      <li>Run the downloaded installer. Make sure you enabled "add Anaconda to PATH".</li>
+      <li>
+              You will need to install nodejs and npm if you do not have them already installed. You can find installation instructions <a href="https://nodejs.org/en/download/">here</a>.
+               </li>
+      <li> Download and unzip <a href = "./assets/OneClickInstall/AISpace2.zip"> this</a> file and place it to the location where you want to store AISpace2.</li>
+      <li> Double click on file "InstallAISpace2.bat" and follow the instruction</li>
+      <li>If you want to open it after the installation, double click on the "StartJupyterLab.bat" file in the folder.</li>
+
+      <h4>Troubleshooting aispace2 labextension installation</h4>
+    <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
+    <p>You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
+      <pre><code>nvm install 8
+nvm use 8</code></pre> in the same terminal as where you will be installing the extension.
+    </ol>
+	</section>
+</body>
+</html>

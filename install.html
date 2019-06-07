@@ -47,290 +47,40 @@
       extension. We highly recommend using a modern and up-to-date browser for the best experience, such as the latest versions of Edge, Firefox, Chrome or Safari.
     </p>
     <ul>
-      <li>Are you a <abbr title="University of British Columbia">UBC</abbr> student or have access to a JupyterHub instance (which
+      <!-- <li>Are you a <abbr title="University of British Columbia">UBC</abbr> student or have access to a JupyterHub instance (which
         allows you to access Jupyter by going to a URL)? If so, you can use this extension with Jupyter online without installing
         anything on your computer <a href="#jupyterhub">&rarr;</a>.
-      </li>
+      </li> -->
 
-      <li>Otherwise, you can install it locally if you have macOS <a href="#macos">&rarr;</a> or Windows <a href="#windows">&rarr;</a>.
-        If you are running Linux <a href="#linux">&rarr;</a>, we have a general installation procedure.
+      <li>You can install it locally if you have macOS <a href="#macos">&rarr;</a> or Windows <a href="#windows">&rarr;</a>.
+        If you are running Linux <a href="./Linux.html">&rarr;</a>, we have a general installation procedure.
       </li>
       <li>Do you already have AISpace2 installed, but just want to get the latest version? This way! <a href="#upgrading">&rarr;</a></li>
     </ul>
-
-    <h2 id="jupyterhub" class="linkify"><a href="#jupyterhub">JupyterHub</a></h2>
-
-    <p>Using JupyterHub means you won’t have to install anything on your computer &mdash; everything takes place online.</p>
-
-    <ol>
-      <li>Go to <a href="https://ubc.syzygy.ca/" target="_blank">ubc.syzygy.ca</a> if you are a <abbr title="University of British Columbia">UBC</abbr>        student, and sign in with your <abbr title="Campus Wide Login">CWL</abbr>. Otherwise, go to wherever your JupyterHub
-        instance is located and sign in.
-      </li>
-
-      <li>Click <strong>Start My Server</strong> when prompted.</li>
-
-      <li>Launch a terminal instance. You can do this in the notebook dashboard by selecting
-        <strong>New > Terminal</strong>.
-        <br/>
-        <img src="assets/images/open-terminal.png" alt="New > Terminal">
-      </li>
-<li>
-        Run the following commands to setup the environment:
-        <pre><code>pip install aispace2 --user
-jupyter nbextension install aispace2 --user --py
-jupyter nbextension enable widgetsnbextension --py
-jupyter nbextension enable aispace2 --user --py</code></pre>
-      </li>
-      <li>
-       Move on to the <a href="#notebooks">Get the Notebooks</a> section.
-      </li>
-    </ol>
-
     <h2 id="windows" class="linkify"><a href="#windows">Windows</a></h2>
-    <p>If you are unfamiliar with the Python ecosystem and want the simplest installation, use Anaconda <a href="#windows-anaconda">&rarr;</a>,
+    <p>If you are unfamiliar with the Python ecosystem and want the simplest installation, use Anaconda <a href="./WinConda.html">&rarr;</a>,
       a Python distribution with a lot of scientific computing tools already pre-installed. If you already have Python installed,
-      or would prefer to install everything yourself, go here <a href="#windows-check-python">&rarr;</a>.</p>
-     <h3 id="windows-anaconda-one-click" class="linkify"><a href="#windows-anaconda-one-click">Using Anaconda and One Click Install (Experimental)</a></h3>
-    <ol>
-
-      <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a> for Windows, making sure you select
-        the Python 3+ version.</li>
-      
-     
-      <li>Run the downloaded installer. Make sure you enabled "add Anaconda to PATH".</li>
-      <li>
-              You will need to install nodejs and npm if you do not have them already installed. You can find installation instructions <a href="https://nodejs.org/en/download/">here</a>.
-               </li>
-      <li> Download and unzip <a href = "./assets/OneClickInstall/AISpace2.zip"> this</a> file and place it to the location where you want to store AISpace2.</li>
-      <li> Double click on file "InstallAISpace2.bat" and follow the instruction</li>
-      <li>If you want to open it after the installation, double click on the "StartJupyterLab.bat" file in the folder.</li>
-
-      <h4>Troubleshooting aispace2 labextension installation</h4>
-    <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
-    <p>You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
-      <pre><code>nvm install 8
-nvm use 8</code></pre> in the same terminal as where you will be installing the extension.
-    </ol>
-
-
-    <h3 id="windows-anaconda" class="linkify"><a href="#windows-anaconda">Using Anaconda</a></h3>
-    <ol>
-      <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a> for Windows, making sure you select
-        the Python 3+ version.</li>
-      <li>Run the downloaded installer. The default options are fine.</li>
-      <li>Open the Start menu and search for "Anaconda Prompt". Open it.</li>
-      <li>Inside the prompt, run
-        <pre><code>conda install -c conda-forge jupyterlab
-conda install -c conda-forge ipywidgets</code></pre> Enter ‘y’ when prompted to confirm the installation.
-      </li>
-      <li>Inside the prompt, run the following commands:
-        <pre><code>pip install aispace2 --user</code></pre>
-      </li>
-      <li>
-        Move on to the <a href="#jupyterlab">Running JupyterLab</a> section or the <a href="#jupyternb">Running JupyterNotebook</a> section. We recommend using JupyterLab.
-      </li>
-    </ol>
-
-    <h3 id="windows-check-python" class="linkify"><a href="#windows-check-python">From Scratch</a></h3>
-    <p>
-      <ul>
-        <li>If you know that you don't have Python 3.3+ installed, go here <a href="#windows-python">&rarr;</a>.</li>
-        <li>Otherwise, if you know you have Python 3.3+ installed already, you can confirm that it is installed correctly by
-          opening the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>) and running
-          <pre><code>python -V</code></pre> It should output a line similar to this:
-          <pre><code>Python 3.6.3</code></pre>
-          <p>If so, continue with the installation here <a href="#windows-aispace">&rarr;</a>. If it instead prints a line like
-            this,
-          </p>
-          <pre><code>'python' is not recognized as an internal or external command, operable program or batch file.</code></pre>
-          <p>then Python was not added correctly to the path. You can fix this by either following the instructions
-            <a href="https://superuser.com/questions/143119/how-to-add-python-to-the-windows-path">here</a>, re-running the
-            <a href="https://www.python.org/downloads/" target="_blank">Python installer</a> for the exact same Python version
-            you have (select <strong>Modify</strong>, make sure <strong>pip</strong> is selected on the next screen, tick
-            <strong>Add Python to environment variables</strong> on the screen after that, then click <strong>Install</strong>),
-            or installing Python again from scratch
-            <a href="#windows-python">&rarr;</a>.</p>
-        </li>
-      </ul>
-      <h4 id="windows-python" class="linkify"><a href="#windows-python">Installing Python</a></h4>
+      or would prefer to install everything yourself, go here <a href="./WinScratch.html">&rarr;</a>.</p>
+      <h3>Installation Guides</h3>
       <ol>
-        <li>Download the latest version of <a href="https://www.python.org/downloads/" target="_blank">Python 3</a>. It should
-          be version 3.3 or later.
-        </li>
-
-        <li>Install it, and make sure you select <strong>Add Python to Path</strong>. This is very important!
-          <img src="assets/images/windows-python-install.png" alt="Installing Python on Windows">
-        </li>
+        <li><a href="./WinConda.html">Installation Guide for Windows With Anaconda</a> </li>
+        <li><a href="./WinScratch.html">Installation Guide for Windows Without Anaconda</a> </li>
       </ol>
-
-      <h4 id="windows-aispace" class="linkify"><a href="#windows-aispace">Installing AISpace2</a></h4>
-      <ol>
-      <li>Once Python is installed, you should make sure your version of pip is up-to-date:
-      <pre><code>python -m pip install --upgrade pip</code></pre>
-      </li>
-      <li>Then install Jupyter and AISpace2:
-        Open the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>) and run:
-          <pre><code>pip3 install jupyter
-pip3 install jupyterlab
-pip3 install aispace2 --user</code></pre>
-        </li>
-        <li>
-            Move on to the <a href="#jupyterlab">Running JupyterLab</a> section or the <a href="#jupyternb">Running JupyterNotebook</a> section. We recommend using JupyterLab.
-        </li>
-      </ol>
-
       <h2 id="macos" class="linkify"><a href="#macos">macOS</a></h2>
 
-      <p>If you are unfamiliar with the Python ecosystem and want the simplest installation, use Anaconda <a href="#macos-anaconda">&rarr;</a>,
+      <p>If you are unfamiliar with the Python ecosystem and want the simplest installation, use Anaconda <a href="./MacOSConda.html">&rarr;</a>,
         a Python distribution with a lot of scientific computing tools already pre-installed. Otherwise, if you prefer installing
-        all the dependencies yourself, go here <a href="#macos-without-anaconda">&rarr;</a>.</p>
-      <h3 id="macos-anaconda-one-click" class="linkify"> <a href="#macos-anaconda-one-click">With Anaconda and Script File (Experimental)</a></h3>
+        all the dependencies yourself, go here <a href="./MacOSScratch.html">&rarr;</a>.</p>
+         <h3>Installation Guides</h3>
       <ol>
-      <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a>, making sure to get the Python
-          3+ version. The Python 2 version is not supported.
-        </li>
-      <li>
-              You will need to install nodejs and npm if you do not have them already installed. You can find installation instructions <a href="https://nodejs.org/en/download/">here</a>.
-               </li>
-      <li>Save the <a href="./assets/OneClickInstall/InstallAISpace2.command">Command Line File</a> to the location you want to store AISpace2. <br>If you have a probelm downloading the file, right click and select "Downlad Linked File".</li>
-      <li>Open the terminal then type "sh " and drag the downloaded file in to the terminal.<br> The command will look like this:</li>
-      <pre><code>sh /PATH/TO/FILE/InstallAISpace2.command</code></pre>
-      <li>Execute the command.</li>
-      <li>Now the Jupyter Lab will now Running. </li>
-      <li> When ever you want to start the program again, Navigate to the new AISpace2 folder in your directory and run command:
-      <pre><code>jupyter lab</code></pre></li>
-
-      <h3>Troubleshooting aispace2 labextension installation</h3>
-    <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
-    <p>You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
-      <pre><code>nvm install 8
-nvm use 8</code></pre> in the same terminal as where you will be installing the extension.
-</ol>
-      <h3 id="macos-anaconda" class="linkify"><a href="#macos-anaconda">With Anaconda</a></h3>
-
-      <ol>
-        <li>Download <a href="https://www.continuum.io/downloads" target="_blank">Anaconda</a>, making sure to get the Python
-          3+ version. The Python 2 version is not supported.
-        </li>
-          <li>Open a terminal, then execute:
-
-          <pre><code>conda install -c conda-forge jupyterlab
-conda install -c conda-forge ipywidgets # Enter 'y' when prompted to install
-pip install aispace2 --user</code></pre>
-      </li>
-      <li>
-          Move on to the <a href="#jupyterlab">Running JupyterLab</a> section or the <a href="#jupyternb">Running JupyterNotebook</a> section. We recommend using JupyterLab.
-      </li>
+        <li><a href="./MacOSConda.html">Installation Guide for macOS With Anaconda</a> </li>
+        <li><a href="./MacOSScratch.html">Installation Guide for macOS Without Anaconda</a> </li>
       </ol>
-      <h3 id="macos-without-anaconda" class="linkify"><a href="#macos-without-anaconda">Without
-        Anaconda</a></h3>
-        <ol>
-            <li>
-      <p>By default, macOS contains Python 2.7 (at least on Sierra, 10.12). You will need Python 3.3+ for it to work. Try running
-        <code>python3 --version</code> in the terminal to see if you’ve already installed it. If it returns 3.3+, skip to
-        the next step. If not, or it errors out, you will need to install Python 3:</p>
-
-      <ul>
-        <li>If you have <a href="https://brew.sh/" target="_blank">homebrew</a>:
-          <ul>
-            <li>Run <code>brew install python3</code> or, if you already have Python 3 installed but need the latest version,
-              <code>brew upgrade python3</code></li>
-          </ul>
-        </li>
-
-        <li>Otherwise:
-          <ul>
-            <li>Download the installer from the <a href="https://www.python.org/downloads/mac-osx/" target="_blank">Python website</a>              and install it
-            </li>
-          </ul>
-        </li>
-      </ul></li>
-            <li>
-      <p>Then, confirm that <code>pip</code> (the Python package manager) is also installed (which it should be, as it is usually
-        installed alongisde Python). Run <code>pip3 --version</code> and it should output something like:</p>
-      <pre><code>pip 9.0.1 from /usr/local/lib/python3.6/site-packages (python 3.6)</code></pre>
-      <p>You also want to make sure pip is updated: run <code>pip3 install --upgrade pip</code>. Your <code>pip3 --version</code>        should be <code>>9.0.0</code>. If you encounter any problems with <code>pip</code>, refer to the guide
-        <a href="https://packaging.python.org/tutorials/installing-packages/#id10" target="_blank">here</a> for further instructions.
-      </p></li>
-            <li>
-      All that is left to do is to install Jupyter and enable our extension:
-      <pre><code>pip3 install jupyter
-pip3 install jupyterlab
-pip3 install aispace2 --user</code></pre>
-            </li>
-            <li>
-      Move on to the <a href="#jupyterlab">Running JupyterLab</a> section or the <a href="#jupyternb">Running JupyterNotebook</a> section. We recommend using JupyterLab.
-            </li>
-        </ol>
       <h2 id="linux" class="linkify"><a href="#linux">Linux</a></h2>
-      <ol>
-          <li>
-              You will need to install <a href="https://www.python.org/" target="_blank">Python 3.3+</a>.
-              </li>
-          <li>After that, you can install Jupyter and the <strong>AISpace2</strong> extension by running the following: <pre><code>pip3 install jupyter
-pip3 install jupyterlab
-pip3 install aispace2 --user</code></pre>
-          </li>
-          <li>
-              Move on to the <a href="#jupyterlab">Running JupyterLab</a> section or the <a href="#jupyternb">Running JupyterNotebook</a> section. We recommend using JupyterLab.
-          </li>
+       <h3>Installation Guides</h3>
+       <ol>
+        <li> <a href="./Linux.html"> Install instruction for Linux </a></li>
       </ol>
-    <h2 id="jupyterlab" class="linkify"><a href="#jupyterlab">Running JupyterLab</a></h2>
-      <ol>
-          <li>
-              You will need to install nodejs and npm if you do not have them already installed. You can find installation instructions <a href="https://nodejs.org/en/download/">here</a>.
-          </li>
-          <li>
-             After that, you can install the lab extension by running the following: <pre><code>jupyter labextension install aispace2
-jupyter labextension install @jupyter-widgets/jupyterlab-manager</code></pre>
-          </li>
-          <li>
-             You should now move on to the <a href="#notebooks">Get the notebooks</a> section.
-          </li>
-      </ol>
-    <h3>Troubleshooting aispace2 labextension installation</h3>
-    <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
-    <p>You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
-      <pre><code>nvm install 8
-nvm use 8</code></pre> in the same terminal as where you will be installing the extension.
-      <h2 id="jupyternb" class="linkify"><a href="#jupyternb">Running JupyterNotebook</a></h2>
-      <ol>
-          <li>
-      Run the following:
-      <pre><code>jupyter nbextension install aispace2 --user --py
-jupyter nbextension enable widgetsnbextension --py
-jupyter nbextension enable aispace2 --user --py</code></pre>
-      <p>If everything is successful, you should see the following output:</p>
-      <pre><code>Enabling notebook extension aispace2/extension...
-    - Validating: OK</code></pre>
-          </li>
-          <li>
-              You should now move on to the <a href="#notebooks">Get the notebooks</a> section.
-          </li>
-      </ol>
-      <h2 id="notebooks" class="linkify"><a href="#notebooks">Get the notebooks</a></h2>
-          <p>
-              In the folder where you would like to save the notebooks, run <pre><code>git clone https://github.com/AISpace2/AISpace2.git</code></pre></p>
-      <h3>
-        Using JupyterHub
-      </h3>
-      <p>1. Close the Terminal and go back to "Files" view. <br>2. Open the notebooks in "AISpace2/notebooks" folder.</p>
-      <h3>
-        Running JupyterLab
-      </h3>
-        Run the following: <pre><code>cd AISpace2
-jupyter lab</code></pre>
-<p>
-      This will launch Jupyter Lab in your default browser. We recommend that you view the widgets using Chrome. After you run <code>jupyter lab</code>, the url at which the jupyter notebooks are running will be printed out in the terminal. You can copy paste this url into Chrome.
-          </p>
-      <h3>
-        Running JupyterNotebook
-      </h3>
-        Run the following: <pre><code>cd AISpace2
-jupyter notebook</code></pre>
-<p>
-  Thiw will launch Jupyter Notebook in your default browser.
-</p>
       <h2 id="upgrading" class="linkify"><a href="#upgrading">Upgrading</a></h2>
       <p>
         Already have AISpace2? No matter which operating system you use, or what method you used to install it, updating AISpace2
