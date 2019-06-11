@@ -31,7 +31,7 @@ class Regression_STRIPS(Search_problem):
 
     def __init__(self, planning_problem, heur=lambda s,g:0):
         """creates a regression seach space from a planning problem.
-        heur(state,goal) is a heuristic function; 
+        heur(state,goal) is a heuristic function;
            an underestimate of the cost from state to goal, where
            both state and goals are feature:value dictionaries
         """
@@ -68,7 +68,7 @@ class Regression_STRIPS(Search_problem):
         effects = self.prob_domain.strips_map[act].effects
         preconds = self.prob_domain.strips_map[act].preconditions
         return ( any(goal_asst[prop]==effects[prop]
-                    for prop in effects if prop in goal_asst) 
+                    for prop in effects if prop in goal_asst)
                 and all(goal_asst[prop]==effects[prop]
                         for prop in effects if prop in goal_asst)
                 and all(goal_asst[prop]==preconds[prop]
@@ -91,10 +91,9 @@ class Regression_STRIPS(Search_problem):
 
 from aipython.searchBranchAndBound import DF_branch_and_bound
 from aipython.searchGeneric import AStarSearcher
-from aipython.searchMPP import SearcherMPP 
-from aipython.stripsProblem import problem0, simple_problem1, simple_problem2 
+from aipython.searchMPP import SearcherMPP
+from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
 
-# AStarSearcher(Regression_STRIPS(simple_problem1)).search()  #A*
-# SearcherMPP(Regression_STRIPS(simple_problem1)).search()   #A* with MPP
-# DF_branch_and_bound(Regression_STRIPS(simple_problem1),10).search() #B&B
-
+# AStarSearcher(Regression_STRIPS(strips_simple2)).search()  #A*
+# SearcherMPP(Regression_STRIPS(strips_simple2)).search()   #A* with MPP
+# DF_branch_and_bound(Regression_STRIPS(strips_simple2),10).search() #B&B

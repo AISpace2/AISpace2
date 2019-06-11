@@ -56,7 +56,8 @@ class Search_problem_from_explicit_graph(Search_problem):
     * a list or set of arcs
     * a start node
     * a list or set of goal nodes
-    * a dictionary that maps each node into its heuristic value.
+    * a dictionary that maps each node into its heuristic value
+    * a dictionary that maps each node into its (x,y)-position.
     """
 
     def __init__(self, nodes, arcs, start=None, goals=set(), hmap={}, positions={}):
@@ -148,30 +149,30 @@ class Path(object):
         else:
             return str(self.initial)+" --> "+str(self.arc.to_node)
 
-empty_problem = Search_problem_from_explicit_graph(
+search_empty = Search_problem_from_explicit_graph(
     {}, [], start = None, goals = {})
 
-simple_problem1 = Search_problem_from_explicit_graph(
+search_simple1 = Search_problem_from_explicit_graph(
     {'a','b','c','d','g'},
     [Arc('a','b',1), Arc('a','c',3), Arc('b','c',1), Arc('b','d',3),
         Arc('c','d',1), Arc('c','g',3), Arc('d','g',1)],
     start = 'a',
     goals = {'g'})
 
-simple_problem2 = Search_problem_from_explicit_graph(
+search_simple2 = Search_problem_from_explicit_graph(
     {'a','b','c','d','e','g','h','j'},
     [Arc('a','b',1), Arc('b','c',3), Arc('b','d',1), Arc('d','e',3),
         Arc('d','g',1), Arc('a','h',3), Arc('h','j',1)],
     start = 'a',
     goals = {'g'})
 
-edgeless_problem = Search_problem_from_explicit_graph(
+search_edgeless = Search_problem_from_explicit_graph(
     {'a','b','c','d','e','g','h','j'},
     [],
     start = 'g',
     goals = {'k','g'})
 
-acyclic_delivery_problem = Search_problem_from_explicit_graph(
+search_acyclic_delivery = Search_problem_from_explicit_graph(
     {'mail','ts','o103','o109','o111','b1','b2','b3','b4','c1','c2','c3',
      'o125','o123','o119','r123','storage'},
      [Arc('ts','mail',6),
@@ -216,7 +217,7 @@ acyclic_delivery_problem = Search_problem_from_explicit_graph(
         }
     )
 
-cyclic_delivery_problem = Search_problem_from_explicit_graph(
+search_cyclic_delivery = Search_problem_from_explicit_graph(
     {'mail','ts','o103','o109','o111','b1','b2','b3','b4','c1','c2','c3',
      'o125','o123','o119','r123','storage'},
      [  Arc('ts','mail',6), Arc('mail','ts',6),

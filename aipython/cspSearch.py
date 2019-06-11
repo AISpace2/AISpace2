@@ -27,10 +27,10 @@ class Search_from_CSP(Search_problem):
 
     def is_goal(self, node):
         return len(node)==len(self.csp.variables)
-    
+
     def start_node(self):
         return {}
-    
+
     def neighbors(self, node):
         """iterator over the neighboring nodes of node"""
         var = self.variables[len(node)] # the next variable
@@ -41,7 +41,7 @@ class Search_from_CSP(Search_problem):
                 res.append(Arc(node,new_env))
         return res
 
-from aipython.cspExamples import simple_csp2,extended_csp,test
+from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
 from aipython.searchGeneric import Searcher
 
 def dfs_solver(csp):
@@ -60,4 +60,3 @@ searcher1 = Searcher(Search_from_CSP(simple_csp2))
 #print(searcher1.search())  # get next solution
 searcher2 = Searcher(Search_from_CSP(extended_csp))
 #print(searcher2.search())  # get next solution
-

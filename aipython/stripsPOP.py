@@ -62,9 +62,9 @@ class POP_node(object):
             a = random.choice([a for a in other_acts if
                      all(((a1,a) not in self.constraints) for a1 in other_acts)])
             sorted_acts.append(a)
-            other_acts.remove(a) 
+            other_acts.remove(a)
         return sorted_acts
-                 
+
 from utilities import Displayable
 
 class POP_search_from_STRIPS(Search_problem, Displayable):
@@ -76,7 +76,7 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
 
     def is_goal(self, node):
         return node.agenda == []
-    
+
     def start_node(self):
         constraints = {(self.start, self.finish)}
         agenda = [(g, self.finish) for g in self.planning_problem.goal.items()]
@@ -90,15 +90,15 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
             self.display(2,"selecting",subgoal,"for",act1)
             new_agenda = node.agenda[1:]
             for act0 in node.actions:
-                if (self.achieves(act0, subgoal) and 
+                if (self.achieves(act0, subgoal) and
                    self.possible((act0,act1),node.constraints)):
                     self.display(2,"  reusing",act0)
                     consts1 = self.add_constraint((act0,act1),node.constraints)
                     new_clink = (act0,subgoal,act1)
                     new_cls = node.causal_links + [new_clink]
                     for consts2 in self.protect_cl_for_actions(node.actions,consts1,new_clink):
-                        yield Arc(node, 
-                                  POP_node(node.actions,consts2,new_agenda,new_cls), 
+                        yield Arc(node,
+                                  POP_node(node.actions,consts2,new_agenda,new_cls),
                                   cost=0)
             for a0 in self.planning_problem.prob_domain.strips_map:  #a0 is an action
                 if self.achieves(a0, subgoal):
@@ -138,7 +138,7 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
                 for e in self.protect_cl_for_actions(rem_actions,constrs,clink): yield e
         else:
             yield constrs
-               
+
     def protect_all_cls(self, clinks, act, constrs):
         """yields constraints that protect all causal links from act"""
         if clinks:
@@ -163,7 +163,7 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
     def deletes(self,action,subgoal):
         var,val = subgoal
         return var in self.effects(action) and self.effects(action)[var] != val
-    
+
     def effects(self,action):
         """returns the variable:value dictionary of the effects of action.
         works for both actions and action instances"""
@@ -175,7 +175,7 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
             return {}
         else:
             return self.planning_problem.prob_domain.strips_map[action].effects
-        
+
     def add_constraint(self, pair, const):
         if pair in const:
             return const
@@ -197,27 +197,26 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
 
 from searchBranchAndBound import DF_branch_and_bound
 from searchGeneric import AStarSearcher
-from searchMPP import SearcherMPP 
-from stripsProblem import problem0, simple_problem1, simple_problem2 
+from searchMPP import SearcherMPP
+from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
 
-rplanning0 = POP_search_from_STRIPS(problem0)
-rplanning1 = POP_search_from_STRIPS(simple_problem1)
-rplanning2 = POP_search_from_STRIPS(simple_problem2)
-searcher0 = DF_branch_and_bound(rplanning0,5)
-searcher0a = AStarSearcher(rplanning0)
-searcher1 = DF_branch_and_bound(rplanning1,10)
+rplanning1 = POP_search_from_STRIPS(strips_simple1)
+rplanning2 = POP_search_from_STRIPS(strips_simple2)
+rplanning3 = POP_search_from_STRIPS(strips_simple3)
+searcher1 = DF_branch_and_bound(rplanning1,5)
 searcher1a = AStarSearcher(rplanning1)
 searcher2 = DF_branch_and_bound(rplanning2,10)
 searcher2a = AStarSearcher(rplanning2)
+searcher3 = DF_branch_and_bound(rplanning3,10)
+searcher3a = AStarSearcher(rplanning4)
 # Try one of the following searchers
-# a = searcher0.search()
-# a = searcher0a.search()
+# a = searcher1.search()
+# a = searcher1a.search()
 # a.end().extract_plan()  # print a plan found
 # a.end().constraints     # print the constraints
 # AStarSearcher.max_display_level = 0  # less detailed display
 # DF_branch_and_bound.max_display_level = 0  # less detailed display
-# a = searcher1.search()
-# a = searcher1a.search()
 # a = searcher2.search()
 # a = searcher2a.search()
-
+# a = searcher3.search()
+# a = searcher3a.search()

@@ -13,7 +13,7 @@ from utilities import Displayable
 
 class Depth_first_search(Displayable):
     """returns a depth-first searcher for a problem.
-   
+
     This uses a list of iterators of nodes. "top" is the top-level iterator.
     The frontier contains iterators that may be needed to solve the problem.
     """
@@ -55,11 +55,10 @@ class Depth_first_search(Displayable):
 
 # example queries:
 # from searchDepthFirst import Depth_first_search
-# import searchProblem 
-# searcher1 = Depth_first_search(searchProblem.acyclic_delivery_problem)
+# import searchProblem
+# searcher1 = Depth_first_search(searchProblem.search_acyclic_delivery)
 # print(searcher1.search())        # find next path
-# searcher2 = Depth_first_search(searchProblem.simple_problem2)
+# searcher2 = Depth_first_search(searchProblem.search_simple2)
 # print(searcher2.search())        # find next path
-# searcher3 = Depth_first_search(searchProblem.cyclic_delivery_problem)
+# searcher3 = Depth_first_search(searchProblem.search_cyclic_delivery)
 # s3=searcher3.search()       # find next path - will go forever(?)
-

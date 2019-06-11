@@ -23,7 +23,7 @@ class SearcherMPP(AStarSearcher):
     @visualize
     def search(self):
         """returns next path from an element of problem's start nodes
-        to a goal node. 
+        to a goal node.
         Returns None if no path exists.
         """
         while not self.empty_frontier():
@@ -50,7 +50,6 @@ from aipython.searchGeneric import test
 if __name__ == "__main__":
     test(SearcherMPP)
 
-import aipython.searchProblem 
-# searcherMPPcdp = SearcherMPP(searchProblem.cyclic_delivery_problem)
+import aipython.searchProblem
+# searcherMPPcdp = SearcherMPP(searchProblem.search_cyclic_delivery)
 # print(searcherMPPcdp.search())  # find first path
-

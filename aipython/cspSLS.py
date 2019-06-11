@@ -20,7 +20,7 @@ class SLSearcher(Displayable):
     A node is a variable:value dictionary"""
     def __init__(self, csp):
         self.csp = csp
-        self.variables_to_select = {var for var in self.csp.variables 
+        self.variables_to_select = {var for var in self.csp.variables
                                     if len(self.csp.domains[var]) > 1}
         # Create assignment and conflicts set
         self.current_assignment = None # this will trigger a random restart
@@ -29,7 +29,7 @@ class SLSearcher(Displayable):
     def restart(self):
         """creates a new total assignment and the conflict set
         """
-        self.current_assignment = {var:random_sample(dom) for 
+        self.current_assignment = {var:random_sample(dom) for
                                    (var,dom) in self.csp.domains.items()}
         self.display(2,"Initial assignment",self.current_assignment)
         self.conflicts = set()
@@ -56,7 +56,7 @@ class SLSearcher(Displayable):
 
     def search_with_any_conflict(self, max_steps, prob_anycon=1.0):
         """Searches with the any_conflict heuristic.
-        This relies on just maintaining the set of conflicts; 
+        This relies on just maintaining the set of conflicts;
         it does not maintain a priority queue
         """
         self.variable_pq = None   # we are not maintaining the priority queue.
@@ -154,7 +154,7 @@ class SLSearcher(Displayable):
     def create_pq(self):
         """Create the variable to number-of-conflicts priority queue.
         This is needed to select the variable in the most conflicts.
-        
+
         The value of a variable in the priority queue is the negative of the
         number of conflicts the variable appears in.
         """
@@ -166,7 +166,7 @@ class SLSearcher(Displayable):
         for var,num in var_to_number_conflicts.items():
             if num>0:
                 self.variable_pq.add(var,-num)
-        
+
 def random_sample(st):
     """selects a random element from set st"""
     return random.sample(st,1)[0]
@@ -174,8 +174,8 @@ def random_sample(st):
 class Updatable_priority_queue(object):
     """A priority queue where the values can be updated.
     Elements with the same value are ordered randomly.
-    
-    This code is based on the ideas described in 
+
+    This code is based on the ideas described in
     http://docs.python.org/3.3/library/heapq.html
     It could probably be done more efficiently by
     shuffling the modified element in the heap.
@@ -212,7 +212,7 @@ class Updatable_priority_queue(object):
                 self.remove(elt)
                 if newval != 0:
                     self.add(elt,newval)
-                
+
     def pop(self):
         """Removes and returns the (elt,value) pair with minimal value.
         If the priority queue is empty, IndexError is raised.
@@ -271,7 +271,7 @@ class Runtime_distribution(object):
         #plt.draw()
         SLSearcher.max_display_level= temp_mdl  #restore display
 
-from aipython.cspExamples import test
+from aipython.cspProblem import test
 def sls_solver(csp,prob_best=0.7):
     """stochastic local searcher"""
     se0 = SLSearcher(csp)
@@ -282,10 +282,10 @@ def any_conflict_solver(csp):
     return sls_solver(csp,0)
 
 if __name__ == "__main__":
-    test(sls_solver) 
+    test(sls_solver)
     test(any_conflict_solver)
-    
-from aipython.cspExamples import simple_csp2, extended_csp, crossword1
+
+from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
 
 ## Test Solving CSPs with Search:
 #se1 = SLSearcher(simple_csp2); print(se1.search(100))
@@ -298,4 +298,3 @@ from aipython.cspExamples import simple_csp2, extended_csp, crossword1
 #p.plot_run(100,1000,0)
 #p.plot_run(100,1000,1.0)
 #p.plot_run(100,1000,0.7)
-

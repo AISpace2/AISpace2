@@ -18,8 +18,7 @@ class Con_solver(Displayable):
         """
         self.csp = csp
         super().__init__(**kwargs)    # Or Displayable.__init__(self,**kwargs)
-    
-    @visualize
+
     def make_arc_consistent(self, orig_domains=None, to_do=None):
         """Makes this CSP arc-consistent using generalized arc consistency
         orig_domains is the original domains
@@ -67,7 +66,7 @@ class Con_solver(Displayable):
         * to_do is a set of arcs, where an arc is a (variable,constraint) pair
         the element selected must be removed from to_do.
         """
-        return to_do.pop() 
+        return to_do.pop()
 
     def any_holds(self, domains, const, env, other_vars, ind=0):
         """returns True if Constraint const holds for an assignment
@@ -86,7 +85,6 @@ class Con_solver(Displayable):
                     return True
             return False
 
-    @visualize
     def solve_one(self, domains=None, to_do=None):
         """return a solution to the current CSP or False if there are no solutions
         to_do is the list of arcs to check
@@ -105,7 +103,7 @@ class Con_solver(Displayable):
             if var:
                 dom1, dom2 = partition_domain(new_domains[var])
                 self.display(3, "...splitting", var, "into", dom1, "and", dom2)
-                new_doms1 = copy_with_assign(new_domains, var, dom1)                
+                new_doms1 = copy_with_assign(new_domains, var, dom1)
                 new_doms2 = copy_with_assign(new_domains, var, dom2)
                 to_do = self.new_to_do(var, None)
                 return self.solve_one(new_doms1, to_do) or self.solve_one(new_doms2, to_do)
@@ -120,7 +118,7 @@ def partition_domain(dom):
     dom1 = set(list(dom)[:split])
     dom2 = dom - dom1
     return dom1, dom2
-    
+
 def copy_with_assign(domains, var=None, new_domain={True, False}):
     """create a copy of the domains with an assignment var=new_domain
     if var==None then it is just a copy.
@@ -134,13 +132,13 @@ def select(iterable):
     """select an element of iterable. Returns None if there is no such element.
 
     This implementation just picks the first element.
-    For many of the uses, which element is selected does not affect correctness, 
+    For many of the uses, which element is selected does not affect correctness,
     but may affect efficiency.
     """
     for e in iterable:
         return e  # returns first element found
 
-from aipython.cspExamples import test
+from aipython.cspProblem import test
 def ac_solver(csp):
     "arc consistency (solve_one)"
     return Con_solver(csp).solve_one()
@@ -160,10 +158,10 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
     def is_goal(self, node):
         """node is a goal if all domains have 1 element"""
         return all(len(node[var])==1 for var in node)
-    
+
     def start_node(self):
         return self.domains
-    
+
     def neighbors(self,node):
         """returns the neighboring nodes of node.
         """
@@ -183,7 +181,7 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
                     self.display(2,"...",var,"in",dom,"has no solution")
         return neighs
 
-from aipython.cspExamples import test
+from aipython.cspProblem import test
 from aipython.searchGeneric import Searcher
 
 def ac_search_solver(csp):
@@ -191,11 +189,11 @@ def ac_search_solver(csp):
     sol = Searcher(Search_with_AC_from_CSP(csp)).search()
     if sol:
         return {v:select(d) for (v,d) in sol.end().items()}
-    
+
 if __name__ == "__main__":
     test(ac_search_solver)
 
-from aipython.cspExamples import simple_csp2, extended_csp, crossword1, crossword2, crossword2d
+from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
 
 ## Test Solving CSPs with Arc consistency and domain splitting:
 #Con_solver(simple_csp2).solve_one()
@@ -210,4 +208,3 @@ from aipython.cspExamples import simple_csp2, extended_csp, crossword1, crosswor
 #print(searcher4c.search())
 #searcher5c = Searcher(Search_with_AC_from_CSP(crossword2d))
 #print(searcher5c.search())
-

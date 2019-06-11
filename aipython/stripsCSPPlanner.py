@@ -54,7 +54,7 @@ class CSP_from_STRIPS(CSP):
 
     def extract_plan(self,soln):
         return [soln[a] for a in self.act_vars]
-        
+
 def st(var,stage):
     """returns a string for the var-stage pair that can be used as a variable"""
     return str(var)+"_"+str(stage)
@@ -67,7 +67,7 @@ def is_(val):
 def if_(v1,v2):
     """if the second argument is v2, the first argument must be v1"""
     #return lambda x1,x2: x1==v1 if x2==v2 else True
-    def if_fun(x1,x2): 
+    def if_fun(x1,x2):
         return x1==v1 if x2==v2 else True
     if_fun.__doc__ = "if x2 is "+str(v2)+" then x1 is "+str(v1)
     return if_fun
@@ -82,44 +82,43 @@ def con_plan(prob,horizon):
     csp = CSP_from_STRIPS(prob, horizon)
     sol = Con_solver(csp).solve_one()
     return csp.extract_plan(sol) if sol else sol
-    
+
 from aipython.searchGeneric import Searcher
 from aipython.stripsProblem import delivery_domain
 from aipython.cspConsistency import Search_with_AC_from_CSP, Con_solver
-from aipython.stripsProblem import Planning_problem, problem0, simple_problem1, simple_problem2 
+from aipython.stripsProblem import Planning_problem, strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
 
-# Problem 0
-# con_plan(problem0,1) # should it succeed?
-# con_plan(problem0,2) # should it succeed?
-# con_plan(problem0,3) # should it succeed?
+# Problem 1
+# con_plan(strips_simple1,1) # should it succeed?
+# con_plan(strips_simple1,2) # should it succeed?
+# con_plan(strips_simple1,3) # should it succeed?
 # To use search to enumerate solutions
-#searcher0a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(problem0, 1)))
+#searcher0a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(strips_simple1, 1)))
 #print(searcher0a.search())
 
-## Problem 1
-# con_plan(simple_problem1,5) # should it succeed?
-# con_plan(simple_problem1,4) # should it succeed?
+## Problem 2
+# con_plan(strips_simple2,5) # should it succeed?
+# con_plan(strips_simple2,4) # should it succeed?
 ## To use search to enumerate solutions:
-#searcher15a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(simple_problem1, 5)))
+#searcher15a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(strips_simple2,5)))
 #print(searcher15a.search())
 
-## Problem 2
-#con_plan(simple_problem2, 6)  # should fail??
-#con_plan(simple_problem2, 7)  # should succeed???
+## Problem 3
+#con_plan(strips_simple3,6)  # should fail??
+#con_plan(strips_simple3,7)  # should succeed???
 
 ## Example 6.13
-edgeless_problem = Planning_problem(delivery_domain, 
+strips_edgeless = Planning_problem(delivery_domain,
                             {'SWC':True, 'RHC':False}, {'SWC':False})
-#con_plan(edgeless_problem,2)  # Horizon of 2
-#con_plan(edgeless_problem,3)  # Horizon of 3
+#con_plan(strips_edgeless,2)  # Horizon of 2
+#con_plan(strips_edgeless,3)  # Horizon of 3
 
-problem4 = Planning_problem(delivery_domain,{'SWC':True},
+strips_simple4 = Planning_problem(delivery_domain,{'SWC':True},
                                {'SWC':False, 'MW':False, 'RHM':False})
 
 # For the stochastic local search:
 #from cspSLS import SLSearcher, Runtime_distribution
-# cspplanning15 = CSP_from_STRIPS(simple_problem1, 5) # should succeed
+# cspplanning15 = CSP_from_STRIPS(strips_simple2,5) # should succeed
 #se0 = SLSearcher(cspplanning15); print(se0.search(100000,0.5))
 #p = Runtime_distribution(cspplanning15)
 #p.plot_run(1000,1000,0.7)  # warning will take a few minutes
-

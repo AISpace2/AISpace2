@@ -14,7 +14,7 @@ from aipython.utilities import Displayable
 from aispace2.jupyter.search import visualize
 
 class DF_branch_and_bound(Searcher):
-    """returns a branch and bound searcher for a problem.    
+    """returns a branch and bound searcher for a problem.
     An optimal path with cost less than bound can be found by calling search()
     """
     def __init__(self, problem, bound=float("inf")):
@@ -50,15 +50,14 @@ class DF_branch_and_bound(Searcher):
         self.display(1,"Number of paths expanded:",self.num_expanded)
         self.solution = self.best_path
         return self.best_path
-        
+
 from aipython.searchGeneric import test
 if __name__ == "__main__":
     test(DF_branch_and_bound)
 
 # Example queries:
-# import searchProblem 
-# searcherb1 = DF_branch_and_bound(searchProblem.acyclic_delivery_problem)
+# import searchProblem
+# searcherb1 = DF_branch_and_bound(searchProblem.search_acyclic_delivery)
 # print(searcherb1.search())        # find optimal path
-# searcherb2 = DF_branch_and_bound(searchProblem.cyclic_delivery_problem, bound=100)
+# searcherb2 = DF_branch_and_bound(searchProblem.search_cyclic_delivery, bound=100)
 # print(searcherb2.search())        # find optimal path
-

@@ -36,8 +36,7 @@ def run(problem,name):
 import searchProblem
 from searchTest import run
 if __name__ == "__main__":
-    run(searchProblem.simple_problem1,"Problem 1")
-#   run(searchProblem.acyclic_delivery_problem,"Acyclic Delivery")
-#   run(searchProblem.cyclic_delivery_problem,"Cyclic Delivery")
+    run(searchProblem.search_simple1,"Problem 1")
+#   run(searchProblem.search_acyclic_delivery,"Acyclic Delivery")
+#   run(searchProblem.search_cyclic_delivery,"Cyclic Delivery")
 # also test some graphs with cycles, and some with multiple least-cost paths
-

@@ -26,17 +26,17 @@ class Searcher(Displayable):
 
     def initialize_frontier(self):
         self.frontier = []
-        
+
     def empty_frontier(self):
         return self.frontier == []
-        
+
     def add_to_frontier(self,path):
         self.frontier.append(path)
-        
+
     @visualize
     def search(self):
         """returns (next) path from the problem's start node
-        to a goal node. 
+        to a goal node.
         Returns None if no path exists.
         """
         while not self.empty_frontier():
@@ -70,7 +70,7 @@ class Frontier(object):
     """
 
     def __init__(self):
-        """constructs the frontier, initially an empty priority queue 
+        """constructs the frontier, initially an empty priority queue
         """
         self.frontier_index = 0  # the number of items ever added to the frontier
         self.frontierpq = []  # the frontier priority queue
@@ -89,7 +89,7 @@ class Frontier(object):
         """returns and removes the path of the frontier with minimum value.
         Note that [2] extracts the path from the triple on the queue.
         """
-        return heapq.heappop(self.frontierpq)[2] 
+        return heapq.heappop(self.frontierpq)[2]
 
     def count(self,val):
         """returns the number of elements of the frontier with value=val"""
@@ -104,7 +104,7 @@ class Frontier(object):
     def __iter__(self):
         for (_, _, p) in self.frontierpq:
             yield p
-    
+
 class AStarSearcher(Searcher):
     """returns a searcher for a problem.
     Paths can be found by repeatedly calling search().
@@ -126,26 +126,25 @@ class AStarSearcher(Searcher):
 from aipython import searchProblem
 def test(SearchClass):
     print("Testing problem 1:")
-    schr1 = SearchClass(searchProblem.simple_problem1)
+    schr1 = SearchClass(searchProblem.search_simple1)
     path1 = schr1.search()
     print("Path found: ",path1)
-    assert list(path1.nodes()) == ['g','d','c','b','a'], "Shortest path not found in simple_problem1"
+    assert list(path1.nodes()) == ['g','d','c','b','a'], "Shortest path not found in search_simple1"
     print("Passed unit test")
 
 if __name__ == "__main__":
     #test(Searcher)
     test(AStarSearcher)
-    
+
 # example queries:
-# searcher1 = Searcher(searchProblem.acyclic_delivery_problem)
+# searcher1 = Searcher(searchProblem.search_acyclic_delivery)
 # searcher1.search()  # find first path
 # searcher1.search()  # find next path
-# searcher2 = AStarSearcher(searchProblem.acyclic_delivery_problem)
+# searcher2 = AStarSearcher(searchProblem.search_acyclic_delivery)
 # searcher2.search()  # find first path
 # searcher2.search()  # find next path
-# searcher3 = Searcher(searchProblem.cyclic_delivery_problem)
+# searcher3 = Searcher(searchProblem.search_cyclic_delivery)
 # searcher3.search()  # find first path.  What do you expect to happen?
-# searcher4 = AStarSearcher(searchProblem.cyclic_delivery_problem)
-# searcher4 = AStarSearcher(searchProblem.cyclic_delivery_problem)
+# searcher4 = AStarSearcher(searchProblem.search_cyclic_delivery)
+# searcher4 = AStarSearcher(searchProblem.search_cyclic_delivery)
 # searcher4.search()  # find first path
-
