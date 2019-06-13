@@ -50,7 +50,6 @@
       <li><a href="#reference-csp">CSP</a></li>
       <li><a href="#reference-planning">Planning</a></li>
       <li><a href="#reference-bayesian">Bayesian Network</a></li>
-      <li><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython</a></li>
     </ul>
   </section>
 
@@ -91,17 +90,73 @@
         Defaults to <code>1</code>.</li>
     </ul>
     <h3 id="reference-common-notes" class="linkify"><a href="#reference-common-notes">Notes about <code>display()</code></a></h3>
-    <ul>
-      <li>The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
-        step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
-        statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level</code> <code>2</code>
-        or lower is encoutered; Auto Solve button makes the exectution not pause at all. You can safely change the <code>display_level</code> to adjust the amount
-        of detail you receive.</li>
+    The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
+    step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
+    statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level</code> <code>2</code> or lower is encoutered;
+    Auto Solve button makes the exectution not pause at all. You can safely change the <code>display_level</code> to adjust the amount
+    of detail you receive. However, the visualization is entirely driven by the remaining parameters of the <code>display()</code> call, so modifying
+    them may break the visualization.
+    <h3 id="relationship-aispace2-aipython" class="linkify"><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython</a></h2>
+    <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/">accompanying textbook</a>;
+      it can run independently without AISpace2 and Jupyter. AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for a more
+      easily understandable and friendly uderface interface and rich visualizations to accompany code.
+    </p>
+    <p>
+      In order to make this possible, 2 major modifications have to be made in AIPython, which make the source code you find in AISpace2 not exactly the same as AIPython.
+      To avoid possible confusion, we will refer to the modified code as AIPythonV (V for visualization).
+      The 2 changes are summarized below. Apart from these 2 modifications, other things are almost identical with the original AIPython.
+    </p>
+    <ol>
       <li>
-        The visualization is entirely driven by the remaining parameters of the <code>display()</code> call, so modifying
-        them may break the visualization.
+        <p>
+          The addition of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
+          to be visualized in Jupyter Notebook must have their definitions annotated with <code>@visualize</code>. For example,
+          if we had the following class:
+        </p>
+
+        <!-- HTML generated using hilite.me -->
+        <pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">class</span> <span style="color: #447fcf; text-decoration: underline">Example</span><span style="color: #d0d0d0">():</span>
+  <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">bar</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
+    <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;bar&#39;</span><span style="color: #d0d0d0">)</span>
+
+  <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
+    <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
+    <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
+</pre>
+
+        <p>and there was a cell inside Jupyter Notebook like this:</p>
+
+        <!-- HTML generated using hilite.me -->
+        <pre><span style="color: #d0d0d0">e</span> <span style="color: #d0d0d0">=</span> <span style="color: #447fcf; text-decoration: underline">Example()</span>
+<span style="color: #d0d0d0">e.foo()</span>
+</pre>
+
+        <p>Then <code>foo()</code> would have to be annotated with <code>@visualize</code>, because it is called directly on the instance inside a cell; but
+          <code>bar()</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo()</code>. Annotating
+          <code>foo()</code> is as simple as adding a single line right above the declaration:</p>
+
+        <!-- HTML generated using hilite.me -->
+        <pre style="margin: 0; line-height: 125%"><span style="color: #ffa500">@visualize</span>
+<span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
+  <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
+  <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
+</pre>
+
+        <p>On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
+          you would have to also add <code>@visualize</code> to <code>bar</code> as well.</p>
+
+        <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
+          will drive the visualization, so that it can set things up correctly.</p>
       </li>
-    </ul>
+      <li>
+        <p>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
+          AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AIPythonV, where <code>*</code> depends on the
+          algorithm being visualized (e.g. <code>search</code> or <code>csp</code>). The <code>@visualize</code> decorator is also imported from <code>aispace2.jupyter.*</code>.</p>
+
+        <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
+          allow it to be displayed inside Jupyter.</p>
+      </li>
+    </ol>
   </section>
 
 
@@ -311,68 +366,6 @@
     <ul>
       <li><code>decimal_place</code>: Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
     </ul>
-  </section>
-
-
-  <section class="column inline">
-    <h2 id="relationship-aispace2-aipython" class="linkify"><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython</a></h2>
-    <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/">accompanying textbook</a>;
-      AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for rich visualizations to accompany
-      code.
-    </p>
-
-    <p>In order to make this possible, two things were changed from the code in AIPython to the code you see inside AISpace2.
-      Everything else is identical.</p>
-
-    <ol>
-      <li>
-        <p>The additional of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
-          to be visualized within a cell must have their definitions annotated with <code>@visualize</code>. For example,
-          if we had the following class:</p>
-
-        <!-- HTML generated using hilite.me -->
-        <pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">class</span> <span style="color: #447fcf; text-decoration: underline">Example</span><span style="color: #d0d0d0">():</span>
-  <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">bar</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
-    <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;bar&#39;</span><span style="color: #d0d0d0">)</span>
-
-  <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
-    <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
-    <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
-</pre>
-
-        <p>and there was a cell inside Jupyter like this:</p>
-
-        <!-- HTML generated using hilite.me -->
-        <pre><span style="color: #d0d0d0">e</span> <span style="color: #d0d0d0">=</span> <span style="color: #447fcf; text-decoration: underline">Example()</span>
-<span style="color: #d0d0d0">e.foo()</span>
-</pre>
-
-        <p>Then <code>foo</code> would have to be annotated, because it is called directly on the instance inside a cell; but
-          <code>bar</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo</code>. Annotating
-          <code>foo</code> is as simple as adding a single line right above the declaration:</p>
-
-        <!-- HTML generated using hilite.me -->
-        <pre style="margin: 0; line-height: 125%"><span style="color: #ffa500">@visualize</span>
-<span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
-  <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
-  <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
-</pre>
-
-        <p>On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
-          you would have to also add <code>@visualize</code> to <code>bar</code> as well.</p>
-
-        <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
-          will drive the visualization, so that it can set things up correctly.</p>
-      </li>
-      <li>
-        <p>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
-          AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2 (where <code>*</code> depends on the
-          algorithm being visualized). The <code>@visualize</code> decorator can also be imported from the same package.</p>
-
-        <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
-          allow it to be displayed inside Jupyter.</p>
-      </li>
-    </ol>
   </section>
 </body>
 
