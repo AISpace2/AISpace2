@@ -8,7 +8,7 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from aipython.utilities import Displayable
+from aispace2.jupyter.csp import Displayable, visualize
 
 class Con_solver(Displayable):
     def __init__(self, csp, **kwargs):
@@ -19,6 +19,7 @@ class Con_solver(Displayable):
         self.csp = csp
         super().__init__(**kwargs)    # Or Displayable.__init__(self,**kwargs)
 
+    @visualize
     def make_arc_consistent(self, orig_domains=None, to_do=None):
         """Makes this CSP arc-consistent using generalized arc consistency
         orig_domains is the original domains
@@ -28,26 +29,23 @@ class Con_solver(Displayable):
         if orig_domains is None:
             orig_domains = self.csp.domains
         if to_do is None:
-            to_do = {(var, const) for const in self.csp.constraints
-                     for var in const.scope}
+            to_do = {(var, const) for const in self.csp.constraints for var in const.scope}
         else:
             to_do = to_do.copy()  # use a copy of to_do
         domains = orig_domains.copy()
-        self.display(2,"Performing AC with domains", domains)
+        self.display(2, "Performing AC with domains", domains)
         while to_do:
             var, const = self.select_arc(to_do)
             self.display(3, "Processing arc (", var, ",", const, ")")
             other_vars = [ov for ov in const.scope if ov != var]
-            new_domain = {val for val in domains[var]
-                          if self.any_holds(domains, const, {var: val}, other_vars)}
+            new_domain = {val for val in domains[var] if self.any_holds(domains, const, {var: val}, other_vars)}
             if new_domain != domains[var]:
                 self.display(4, "Arc: (", var, ",", const, ") is inconsistent")
-                self.display(3, "Domain pruned", "dom(", var, ") =", new_domain,
-                                 " due to ", const)
+                self.display(3, "Domain pruned", "dom(", var, ") =", new_domain, " due to ", const)
                 domains[var] = new_domain
                 add_to_do = self.new_to_do(var, const) - to_do
                 to_do |= add_to_do      # set union
-                self.display(3, "  adding", add_to_do if add_to_do else "nothing", "to to_do.")
+                self.display(3, "Adding", add_to_do if add_to_do else "nothing", "to to_do.")
             self.display(4, "Arc: (", var, ",", const, ") now consistent")
         self.display(2, "AC done. Reduced domains", domains)
         return domains
@@ -56,17 +54,15 @@ class Con_solver(Displayable):
         """returns new elements to be added to to_do after assigning
         variable var in constraint const.
         """
-        return {(nvar, nconst) for nconst in self.csp.var_to_const[var]
-                if nconst != const
-                for nvar in nconst.scope
-                if nvar != var}
+        return {(nvar, nconst) for nconst in self.csp.var_to_const[var] if nconst != const
+                for nvar in nconst.scope if nvar != var}
 
     def select_arc(self, to_do):
-        """Selects the arc to be taken from to_do .
+        """Selects the arc to be taken from to_do.
         * to_do is a set of arcs, where an arc is a (variable,constraint) pair
         the element selected must be removed from to_do.
         """
-        return to_do.pop()
+        return self.visualizer.wait_for_arc_selection(to_do)
 
     def any_holds(self, domains, const, env, other_vars, ind=0):
         """returns True if Constraint const holds for an assignment
@@ -85,6 +81,7 @@ class Con_solver(Displayable):
                     return True
             return False
 
+    @visualize
     def solve_one(self, domains=None, to_do=None):
         """return a solution to the current CSP or False if there are no solutions
         to_do is the list of arcs to check
@@ -95,29 +92,26 @@ class Con_solver(Displayable):
         if any(len(new_domains[var]) == 0 for var in domains):
             return False
         elif all(len(new_domains[var]) == 1 for var in domains):
-            self.display(2, "solution:", {var: select(
-                new_domains[var]) for var in new_domains})
+            self.display(2, "solution:", {var: select(new_domains[var]) for var in new_domains})
             return {var: select(new_domains[var]) for var in domains}
         else:
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
             if var:
-                dom1, dom2 = partition_domain(new_domains[var])
+                dom1, dom2 = self.partition_domain(new_domains[var], var)
                 self.display(3, "...splitting", var, "into", dom1, "and", dom2)
                 new_doms1 = copy_with_assign(new_domains, var, dom1)
                 new_doms2 = copy_with_assign(new_domains, var, dom2)
                 to_do = self.new_to_do(var, None)
+                self.display(3, "  adding", to_do if to_do else "nothing", "to to_do.")
                 return self.solve_one(new_doms1, to_do) or self.solve_one(new_doms2, to_do)
 
     def split_var(self, iter_vars):
-        return select(iter_vars)
+        return self.visualizer.wait_for_var_selection(iter_vars)
 
-def partition_domain(dom):
-    """partitions domain dom into two.
-    """
-    split = len(dom) // 2
-    dom1 = set(list(dom)[:split])
-    dom2 = dom - dom1
-    return dom1, dom2
+    def partition_domain(self, dom, var):
+        """partitions domain dom into two.
+        """
+        return self.visualizer.choose_domain_partition(dom, var)
 
 def copy_with_assign(domains, var=None, new_domain={True, False}):
     """create a copy of the domains with an assignment var=new_domain

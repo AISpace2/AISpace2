@@ -30,7 +30,7 @@ class Searcher(Displayable):
     def empty_frontier(self):
         return self.frontier == []
 
-    def add_to_frontier(self,path):
+    def add_to_frontier(self, path):
         self.frontier.append(path)
 
     @visualize
@@ -44,18 +44,16 @@ class Searcher(Displayable):
             self.display(2, "Expanding:",path,"(cost:",path.cost,")")
             self.num_expanded += 1
             if self.problem.is_goal(path.end()):    # solution found
-                self.display(1, self.num_expanded, "paths have been expanded and",
-                            len(self.frontier), "paths remain in the frontier")
+                self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier")
                 self.solution = path   # store the solution found
                 return path
             else:
                 neighs = self.problem.neighbors(path.end())
-                self.display(3,"Neighbors are", neighs)
+                self.display(3, "Neighbors are", neighs)
                 for arc in reversed(neighs):
                     self.add_to_frontier(Path(path,arc))
-                self.display(3,"Frontier:",self.frontier)
-        self.display(1,"No (more) solutions. Total of",
-                     self.num_expanded,"paths expanded.")
+                self.display(3, "Frontier:", self.frontier)
+        self.display(1, "No (more) solutions. Total of", self.num_expanded, "paths expanded.")
 
 import heapq        # part of the Python standard library
 from aipython.searchProblem import Path
@@ -115,12 +113,13 @@ class AStarSearcher(Searcher):
 
     def initialize_frontier(self):
         self.frontier = Frontier()
+
     def empty_frontier(self):
         return self.frontier.empty()
 
-    def add_to_frontier(self,path):
+    def add_to_frontier(self, path):
         """add path to the frontier with the appropriate cost"""
-        value = path.cost+self.problem.heuristic(path.end())
+        value = path.cost + self.problem.heuristic(path.end())
         self.frontier.add(path, value)
 
 from aipython import searchProblem

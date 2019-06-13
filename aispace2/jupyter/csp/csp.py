@@ -148,7 +148,7 @@ class Displayable(StepDOMWidget):
         # Running in Auto Arc Consistency mode. Change to normal!
         if self.max_display_level == 0:
             self.max_display_level = 2
-            
+
         # Running in Auto mode. Split in half!
         if self.max_display_level == 1:
             split = len(domain) // 2
