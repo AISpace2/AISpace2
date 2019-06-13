@@ -50,47 +50,46 @@ class Forward_STRIPS(Search_problem):
 
         Every goal feature has the same value in the state and the goal."""
         state_asst = state.assignment
-        return all(prop in state_asst and state_asst[prop]==self.goal[prop]
-                   for prop in self.goal)
+        return all(prop in state_asst and state_asst[prop] == self.goal[prop] for prop in self.goal)
 
     def start_node(self):
         """returns start node"""
         return self.initial_state
 
-    def neighbors(self,state):
+    def neighbors(self, state):
         """returns neighbors of state in this problem"""
-        cost=1
+        cost = 1
         state_asst = state.assignment
-        return [ Arc(state,self.effect(act,state_asst),cost,act)
-                 for act in self.prob_domain.actions
-                 if self.possible(act,state_asst)]
+        return [Arc(state, self.effect(act, state_asst), cost, act)
+                for act in self.prob_domain.actions
+                if self.possible(act, state_asst)]
 
-    def possible(self,act,state_asst):
+    def possible(self, act, state_asst):
         """True if act is possible in state.
         act is possible if all of its preconditions have the same value in the state"""
         preconds = self.prob_domain.strips_map[act].preconditions
-        return all(pre in state_asst and state_asst[pre]==preconds[pre]
-                   for pre in preconds)
+        return all(pre in state_asst and state_asst[pre] == preconds[pre] for pre in preconds)
 
-    def effect(self,act,state_asst):
+    def effect(self, act, state_asst):
         """returns the state that is the effect of doing act given state_asst"""
         new_state_asst = self.prob_domain.strips_map[act].effects.copy()
         for prop in state_asst:
             if prop not in new_state_asst:
-                new_state_asst[prop]=state_asst[prop]
+                new_state_asst[prop] = state_asst[prop]
         return State(new_state_asst)
 
-    def heuristic(self,state):
+    def heuristic(self, state):
         """in the forward planner a node is a state.
         the heuristic is an (under)estimate of the cost
         of going from the state to the top-level goal.
         """
         return self.heur(state.assignment, self.goal)
 
-from aipython.searchBranchAndBound import DF_branch_and_bound
-from aipython.searchGeneric import AStarSearcher
-from aipython.searchMPP import SearcherMPP
-from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
+## Test
+#from aipython.searchBranchAndBound import DF_branch_and_bound
+#from aipython.searchGeneric import AStarSearcher
+#from aipython.searchMPP import SearcherMPP
+#from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
 
 # AStarSearcher(Forward_STRIPS(strips_simple2)).search()  #A*
 # SearcherMPP(Forward_STRIPS(strips_simple2)).search()  #A* with MPP

@@ -13,7 +13,7 @@ from aipython.searchGeneric import Searcher
 from aispace2.jupyter.search import Displayable, visualize
 
 class DF_branch_and_bound(Searcher):
-    """returns a branch-and-bound searcher for a problem.    
+    """returns a branch-and-bound searcher for a problem.
     An optimal path with cost less than bound can be found by calling search()
     """
     def __init__(self, problem, bound=float("inf")):

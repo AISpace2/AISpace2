@@ -8,29 +8,28 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-def heuristic_fun(state,goal):
+def heuristic_fun(state, goal):
     """An (under)estimate of the cost of solving goal from state.
     Both state and goal are variable:value dictionaries.
     This heuristic is the maximum of
     - the distance to the goal location, if there is one
     - the distance to the coffee shop if the goal has SWC=False, node has SWC=True and RHC=False
     """
-    return max(h1(state,goal),
-               h2(state,goal))
+    return max(h1(state, goal), h2(state, goal))
 
-def h1(state,goal):
+def h1(state, goal):
     """ the distance to the goal location, if there is one"""
     if 'RLoc' in goal:
         return dist(state['RLoc'], goal['RLoc'])
     else:
         return 0
 
-def h2(state,goal):
+def h2(state, goal):
     """ the distance to the coffee shop plus getting coffee and delivering it
     if the goal has SWC=False, node has SWC=True and RHC=False
     """
-    if 'SWC' in goal and goal['SWC']==False and state['SWC']==True and state['RHC']==False:
-        return dist(state['RLoc'],'cs')+3
+    if 'SWC' in goal and goal['SWC'] == False and state['SWC'] == True and state['RHC'] == False:
+        return dist(state['RLoc'], 'cs')+3
     else:
         return 0
 
@@ -45,23 +44,23 @@ def dist(loc1, loc2):
         return 1
 
 #####  Forward Planner #####
-from aipython.searchGeneric import AStarSearcher
-from aipython.searchMPP import SearcherMPP
-from aipython.stripsForwardPlanner import Forward_STRIPS
-from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
-thisproblem = strips_simple1
+#from aipython.searchGeneric import AStarSearcher
+#from aipython.searchMPP import SearcherMPP
+#from aipython.stripsForwardPlanner import Forward_STRIPS
+#from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
+#thisproblem = strips_simple1
 
-print("\n***** FORWARD NO HEURISTIC")
-print(SearcherMPP(Forward_STRIPS(thisproblem)).search())
+#print("\n***** FORWARD NO HEURISTIC")
+#print(SearcherMPP(Forward_STRIPS(thisproblem)).search())
 
-print("\n***** FORWARD WITH HEURISTIC")
-print(SearcherMPP(Forward_STRIPS(thisproblem,heuristic_fun)).search())
+#print("\n***** FORWARD WITH HEURISTIC")
+#print(SearcherMPP(Forward_STRIPS(thisproblem, heuristic_fun)).search())
 
 #####  Regression Planner
-from aipython.stripsRegressionPlanner import Regression_STRIPS
+#from aipython.stripsRegressionPlanner import Regression_STRIPS
 
-print("\n***** REGRESSION NO HEURISTIC")
-print(SearcherMPP(Regression_STRIPS(thisproblem)).search())
+#print("\n***** REGRESSION NO HEURISTIC")
+#print(SearcherMPP(Regression_STRIPS(thisproblem)).search())
 
-print("\n***** REGRESSION WITH HEURISTIC")
-print(SearcherMPP(Regression_STRIPS(thisproblem,heuristic_fun)).search())
+#print("\n***** REGRESSION WITH HEURISTIC")
+#print(SearcherMPP(Regression_STRIPS(thisproblem, heuristic_fun)).search())

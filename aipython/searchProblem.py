@@ -19,7 +19,7 @@ class Search_problem(object):
     def start_node(self):
         """returns start node"""
         raise NotImplementedError("start_node")   # abstract method
-    
+
     def is_goal(self,node):
         """is True if node is a goal"""
         raise NotImplementedError("is_goal")   # abstract method
@@ -76,7 +76,7 @@ class Search_problem_from_explicit_graph(Search_problem):
     def start_node(self):
         """returns start node"""
         return self.start
-    
+
     def is_goal(self,node):
         """is True if node is a goal"""
         return node in self.goals
@@ -92,7 +92,7 @@ class Search_problem_from_explicit_graph(Search_problem):
             return self.hmap[node]
         else:
             return 0
-        
+
     def __repr__(self):
         """returns a string representation of the search problem"""
         res=""
@@ -106,7 +106,7 @@ class Search_problem_from_explicit_graph(Search_problem):
 
 class Path(object):
     """A path is either a node or a path followed by an arc"""
-    
+
     def __init__(self,initial,arc=None):
         """initial is either a node (in which case arc is None) or
         a path (in which case arc is an object of type Arc)"""
@@ -138,7 +138,7 @@ class Path(object):
         This starts at the end and enumerates nodes in the path backwards."""
         if self.arc is not None:
             for nd in self.initial.nodes(): yield nd     # could be "yield from"
-        
+
     def __repr__(self):
         """returns a string representation of a path"""
         if self.arc is None:
@@ -222,7 +222,7 @@ search_cyclic_delivery = Search_problem_from_explicit_graph(
      'o125','o123','o119','r123','storage'},
      [  Arc('ts','mail',6), Arc('mail','ts',6),
         Arc('o103','ts',8), Arc('ts','o103',8),
-        Arc('o103','b3',4), 
+        Arc('o103','b3',4),
         Arc('o103','o109',12), Arc('o109','o103',12),
         Arc('o109','o119',16), Arc('o119','o109',16),
         Arc('o109','o111',4), Arc('o111','o109',4),
@@ -231,7 +231,7 @@ search_cyclic_delivery = Search_problem_from_explicit_graph(
         Arc('b2','b4',3), Arc('b4','b2',3),
         Arc('b3','b1',4), Arc('b1','b3',4),
         Arc('b3','b4',7), Arc('b4','b3',7),
-        Arc('b4','o109',7), 
+        Arc('b4','o109',7),
         Arc('c1','c3',8), Arc('c3','c1',8),
         Arc('c2','c3',6), Arc('c3','c2',6),
         Arc('c2','c1',4), Arc('c1','c2',4),
@@ -261,4 +261,3 @@ search_cyclic_delivery = Search_problem_from_explicit_graph(
         'storage' : 12
         }
     )
-

@@ -16,65 +16,65 @@ class CSP_from_STRIPS(CSP):
     * the dynamics are specified by the STRIPS representation of actions
     """
 
-    def __init__(self,  planning_problem, number_stages=2):
+    def __init__(self, planning_problem, horizon=2):
         prob_domain = planning_problem.prob_domain
         initial_state = planning_problem.initial_state
         goal = planning_problem.goal
-        self.act_vars = [st('action',stage)  for stage in range(number_stages)]
+        self.act_vars = [st('action', stage) for stage in range(horizon)]
         domains = {av:prob_domain.actions for av in self.act_vars}
-        domains.update({ st(var,stage):dom
+        domains.update({st(var,stage):dom
                          for (var,dom) in prob_domain.feats_vals.items()
-                         for stage in range(number_stages+1)})
+                         for stage in range(horizon+1)})
         # intial state constraints:
-        constraints = [Constraint((st(var,0),), is_(val))
-                            for (var,val) in initial_state.items()]
+        constraints = [Constraint((st(var, 0),), is_(val))
+                            for (var, val) in initial_state.items()]
         # goal constraints on the final state:
-        constraints += [Constraint((st(var,number_stages),),
+        constraints += [Constraint((st(var, horizon),),
                                         is_(val))
-                            for (var,val) in goal.items()]
+                            for (var, val) in goal.items()]
         # precondition constraints:
-        constraints += [Constraint((st(var,stage), st('action',stage)),
-                                   if_(val,act))  # st(var,stage)==val if st('action',stage)=act
-                            for act,strps in prob_domain.strips_map.items()
-                            for var,val in strps.preconditions.items()
-                            for stage in range(number_stages)]
+        constraints += [Constraint((st(var, stage), st('action', stage)),
+                                   if_(val, act))  # st(var,stage)==val if st('action',stage)=act
+                            for act, strps in prob_domain.strips_map.items()
+                            for var, val in strps.preconditions.items()
+                            for stage in range(horizon)]
         # effect constraints:
-        constraints += [Constraint((st(var,stage+1), st('action',stage)),
-                                   if_(val,act))  # st(var,stage+1)==val if st('action',stage)==act
-                            for act,strps in prob_domain.strips_map.items()
-                            for var,val in strps.effects.items()
-                            for stage in range(number_stages)]
+        constraints += [Constraint((st(var, stage+1), st('action', stage)),
+                                   if_(val, act))  # st(var,stage+1)==val if st('action',stage)==act
+                            for act, strps in prob_domain.strips_map.items()
+                            for var, val in strps.effects.items()
+                            for stage in range(horizon)]
         # frame constraints:
-        constraints += [Constraint((st(var,stage), st('action',stage), st(var,stage+1)),
+        constraints += [Constraint((st(var, stage), st('action', stage), st(var, stage+1)),
                                    eq_if_not_in_({act for act in prob_domain.actions
                                                   if var in prob_domain.strips_map[act].effects}))
                             for var in prob_domain.feats_vals
-                            for stage in range(number_stages) ]
+                            for stage in range(horizon) ]
         CSP.__init__(self, domains, constraints)
 
     def extract_plan(self,soln):
         return [soln[a] for a in self.act_vars]
 
-def st(var,stage):
+def st(var, stage):
     """returns a string for the var-stage pair that can be used as a variable"""
-    return str(var)+"_"+str(stage)
+    return str(var) + "_" + str(stage)
 
 def is_(val):
     """returns a function that is true when it is it applied to val.
     """
     return lambda x: x == val
 
-def if_(v1,v2):
+def if_(v1, v2):
     """if the second argument is v2, the first argument must be v1"""
     #return lambda x1,x2: x1==v1 if x2==v2 else True
-    def if_fun(x1,x2):
-        return x1==v1 if x2==v2 else True
-    if_fun.__doc__ = "if x2 is "+str(v2)+" then x1 is "+str(v1)
+    def if_fun(x1, x2):
+        return x1 == v1 if x2 == v2 else True
+    if_fun.__doc__ = "if x2 is " + str(v2) + " then x1 is " + str(v1)
     return if_fun
 
 def eq_if_not_in_(actset):
     """first and third arguments are equal if action is not in actset"""
-    return lambda x1, a, x2: x1==x2 if a not in actset else True
+    return lambda x1, a, x2: x1 == x2 if a not in actset else True
 
 def con_plan(prob,horizon):
     """finds a plan for problem prob given horizon.
@@ -83,9 +83,9 @@ def con_plan(prob,horizon):
     sol = Con_solver(csp).solve_one()
     return csp.extract_plan(sol) if sol else sol
 
-from aipython.searchGeneric import Searcher
+#from aipython.searchGeneric import Searcher
 from aipython.stripsProblem import delivery_domain
-from aipython.cspConsistency import Search_with_AC_from_CSP, Con_solver
+#from aipython.cspConsistency import Search_with_AC_from_CSP, Con_solver
 from aipython.stripsProblem import Planning_problem, strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
 
 # Problem 1
