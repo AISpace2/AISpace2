@@ -15,12 +15,11 @@ const label = {
   },
 
   search: {
-    "nodes along path": COLOR.GREY,
     "current path": COLOR.RED,
     "neighbor nodes": COLOR.BLUE,
     "frontier nodes": COLOR.GREEN,
     "start node": COLOR.PURPLE,
-    "goal node": COLOR.YELLOW
+    "goal nodes": COLOR.YELLOW
   },
 };
 

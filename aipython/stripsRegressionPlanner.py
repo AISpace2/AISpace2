@@ -29,7 +29,7 @@ class Regression_STRIPS(Search_problem):
     * the dynamics are specified by the STRIPS representation of actions
     """
 
-    def __init__(self, planning_problem, heur=lambda s,g:0):
+    def __init__(self, planning_problem, heur=lambda s, g: 0):
         """creates a regression seach space from a planning problem.
         heur(state,goal) is a heuristic function;
            an underestimate of the cost from state to goal, where
@@ -43,22 +43,20 @@ class Regression_STRIPS(Search_problem):
     def is_goal(self, subgoal):
         """if subgoal is true in the initial state, a path has been found"""
         goal_asst = subgoal.assignment
-        return all((g in self.initial_state) and (self.initial_state[g]==goal_asst[g])
-                   for g in goal_asst)
+        return all((g in self.initial_state) and (self.initial_state[g] == goal_asst[g]) for g in goal_asst)
 
     def start_node(self):
         """the start node is the top-level goal"""
         return self.top_goal
 
-    def neighbors(self,subgoal):
+    def neighbors(self, subgoal):
         """returns a list of the arcs for the neighbors of subgoal in this problem"""
         cost = 1
         goal_asst = subgoal.assignment
-        return [ Arc(subgoal,self.weakest_precond(act,goal_asst),cost,act)
-                 for act in self.prob_domain.actions
-                 if self.possible(act,goal_asst)]
+        return [Arc(subgoal, self.weakest_precond(act, goal_asst), cost, act)
+                for act in self.prob_domain.actions if self.possible(act, goal_asst)]
 
-    def possible(self,act,goal_asst):
+    def possible(self, act, goal_asst):
         """True if act is possible to achieve goal_asst.
 
         the action achieves an element of the effects and
@@ -67,32 +65,28 @@ class Regression_STRIPS(Search_problem):
         """
         effects = self.prob_domain.strips_map[act].effects
         preconds = self.prob_domain.strips_map[act].preconditions
-        return ( any(goal_asst[prop]==effects[prop]
-                    for prop in effects if prop in goal_asst)
-                and all(goal_asst[prop]==effects[prop]
-                        for prop in effects if prop in goal_asst)
-                and all(goal_asst[prop]==preconds[prop]
-                        for prop in preconds if prop not in effects and prop in goal_asst)
-                )
+        return (any(goal_asst[prop] == effects[prop] for prop in effects if prop in goal_asst)
+                and all(goal_asst[prop] == effects[prop] for prop in effects if prop in goal_asst)
+                and all(goal_asst[prop] == preconds[prop] for prop in preconds if prop not in effects and prop in goal_asst))
 
-    def weakest_precond(self,act,goal_asst):
+    def weakest_precond(self, act, goal_asst):
         """returns the subgoal that must be true so goal_asst holds after act"""
         new_asst = self.prob_domain.strips_map[act].preconditions.copy()
         for g in goal_asst:
-            if g not in self.prob_domain.strips_map[act].effects:
-                new_asst[g] = goal_asst[g]
+            if g not in self.prob_domain.strips_map[act].effects: new_asst[g] = goal_asst[g]
         return Subgoal(new_asst)
 
-    def heuristic(self,subgoal):
+    def heuristic(self, subgoal):
         """in the regression planner a node is a subgoal.
         the heuristic is an (under)estimate of the cost of going from the initial state to subgoal.
         """
         return self.heur(self.initial_state, subgoal.assignment)
 
-from aipython.searchBranchAndBound import DF_branch_and_bound
-from aipython.searchGeneric import AStarSearcher
-from aipython.searchMPP import SearcherMPP
-from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
+## Test
+#from aipython.searchBranchAndBound import DF_branch_and_bound
+#from aipython.searchGeneric import AStarSearcher
+#from aipython.searchMPP import SearcherMPP
+#from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
 
 # AStarSearcher(Regression_STRIPS(strips_simple2)).search()  #A*
 # SearcherMPP(Regression_STRIPS(strips_simple2)).search()   #A* with MPP

@@ -56,7 +56,7 @@ if __name__ == "__main__":
     test(dfs_solver)
 
 ## Test Solving CSPs with Search:
-searcher1 = Searcher(Search_from_CSP(simple_csp2))
+searcher1 = Searcher(Search_from_CSP(csp_simple2))
 #print(searcher1.search())  # get next solution
-searcher2 = Searcher(Search_from_CSP(extended_csp))
+searcher2 = Searcher(Search_from_CSP(csp_extended))
 #print(searcher2.search())  # get next solution

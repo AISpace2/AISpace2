@@ -19,7 +19,7 @@ class Displayable(StepDOMWidget):
     """A Jupyter widget for visualizing search problems.
 
     Handles events from DFS, A*, B&B, and more. Works with implicit or explicit search problems.
-    
+
     See the accompanying frontend file: `js/src/search/SearchVisualizer.ts`
     """
     _view_name = Unicode('SearchViewer').tag(sync=True)
@@ -116,7 +116,7 @@ class Displayable(StepDOMWidget):
                     current = current.initial
 
                 # Highlight the path and end node red, and nodes along the path gray
-                self._send_highlight_nodes_action(nodes_along_path, 'gray')
+                self._send_highlight_nodes_action(nodes_along_path, 'red')
                 self._send_highlight_path_action(arcs_of_path, 'red')
                 self._send_highlight_nodes_action(path.arc.to_node, 'red')
             else:
@@ -182,7 +182,7 @@ class Displayable(StepDOMWidget):
 
     def _send_frontier_updated_action(self):
         """Sends a message to the front-end visualization that the frontier has been updated.
-        
+
         This is a convenience function that uses the value of `self._frontier` to select which nodes to highlight.
         It also sends a message to the frontend asking it to persist the frontier between output calls.
         """
@@ -256,7 +256,7 @@ def visualize(func_bg):
     Args:
         func_bg (function): The function to run in the background.
 
-    Returns: 
+    Returns:
         The original function, wrapped such that it will automatically run
         when the Jupyter widget is rendered.
     """

@@ -10,11 +10,10 @@
 
 from aipython.searchProblem import Path
 from aipython.searchGeneric import Searcher
-from aipython.utilities import Displayable
-from aispace2.jupyter.search import visualize
+from aispace2.jupyter.search import Displayable, visualize
 
 class DF_branch_and_bound(Searcher):
-    """returns a branch and bound searcher for a problem.
+    """returns a branch-and-bound searcher for a problem.
     An optimal path with cost less than bound can be found by calling search()
     """
     def __init__(self, problem, bound=float("inf")):
@@ -35,19 +34,19 @@ class DF_branch_and_bound(Searcher):
         while self.frontier:
             path = self.frontier.pop()
             if path.cost+self.problem.heuristic(path.end()) < self.bound:
-                self.display(2,"Expanding:",path,"cost:",path.cost)
+                self.display(2, "Expanding:", path, "cost:", path.cost)
                 self.num_expanded += 1
                 if self.problem.is_goal(path.end()):
                     self.best_path = path
                     self.bound = path.cost
-                    self.display(2,"New best path:",path," cost:",path.cost)
-                else:
-                    neighs = self.problem.neighbors(path.end())
-                    self.display(3,"Neighbors are", neighs)
-                    for arc in reversed(list(neighs)):
-                        self.add_to_frontier(Path(path, arc))
-                    self.display(3,"Frontier:",self.frontier)
-        self.display(1,"Number of paths expanded:",self.num_expanded)
+                    self.display(2, "New best path:", path, " cost:", path.cost)
+                    return
+                neighs = self.problem.neighbors(path.end())
+                self.display(3, "Neighbors are", neighs)
+                for arc in reversed(list(neighs)):
+                    self.add_to_frontier(Path(path, arc))
+                self.display(3, "Frontier:", self.frontier)
+        self.display(1, "Number of paths expanded:", self.num_expanded)
         self.solution = self.best_path
         return self.best_path
 

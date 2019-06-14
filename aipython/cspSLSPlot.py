@@ -10,7 +10,7 @@
 
 from aipython.cspProblem import CSP, Constraint
 from aipython.searchProblem import Arc, Search_problem
-from aispace2.jupyter.csp import Displayable, visualize
+from aipython.utilities import Displayable
 import random
 import heapq
 
@@ -38,7 +38,6 @@ class SLSearcher(Displayable):
         self.display(2, "Conflicts:", self.conflicts)
         self.variable_pq = None
 
-    @visualize
     def search(self, max_steps=500, prob_best=1.0, prob_anycon=1.0):
         """
         returns the number of steps or None if these is no solution
@@ -234,6 +233,39 @@ class Updatable_priority_queue(object):
         """returns True iff the priority queue is empty"""
         return all(triple[2] == self.REMOVED for triple in self.pq)
 
+import matplotlib.pyplot as plt
+
+class Runtime_distribution(object):
+    def __init__(self, csp, xscale='log'):
+        """Sets up plotting for csp
+        xscale is either 'linear' or 'log'
+        """
+        self.csp = csp
+        plt.ion()
+        plt.xlabel("Number of Steps")
+        plt.ylabel("Cumulative Number of Runs")
+        plt.xscale(xscale)  # Makes a 'log' or 'linear' scale
+
+    def plot_run(self, num_runs=100, max_steps=1000, prob_best=1.0, prob_anycon=1.0):
+        stats = []
+        SLSearcher.max_display_level, temp_mdl = 0, SLSearcher.max_display_level # no display
+        for i in range(num_runs):
+            searcher = SLSearcher(self.csp)
+            num_steps = searcher.search(max_steps, prob_best, prob_anycon) 
+            if num_steps:
+                stats.append(num_steps)
+            searcher.max_display_level= temp_mdl  #restore display
+        stats.sort()
+        if prob_best >= 1.0:
+            label = "P(best)=1.0"
+        else:
+            p_ac =  min(prob_anycon, 1-prob_best)
+            label = "P(best)=%.2f, P(ac)=%.2f" % (prob_best, p_ac)
+        plt.plot(stats, range(len(stats)), label=label)
+        plt.legend(loc="upper left")
+        #plt.draw()
+        SLSearcher.max_display_level= temp_mdl  #restore display
+
 from aipython.cspProblem import test
 def sls_solver(csp,prob_best=0.7):
     """stochastic local searcher"""
@@ -248,11 +280,8 @@ if __name__ == "__main__":
     test(sls_solver)
     test(any_conflict_solver)
 
-## Test Solving CSPs with Search:
-#from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
-#se1 = SLSearcher(simple_csp2); print(se1.search(100))
-#se2 = SLSearcher(extended_csp); print(se2.search(1000,1.0)) # greedy
-#se2 = SLSearcher(extended_csp); print(se2.search(1000,0))  # any_conflict
-#se2 = SLSearcher(extended_csp); print(se2.search(1000,0.7)) # 70% greedy; 30% any_conflict
-#SLSearcher.max_display_level=2  #more detailed display
-#se3 = SLSearcher(crossword1); print(se3.search(100),0.7)
+## Test
+#p = Runtime_distribution(extended_csp)
+#p.plot_run(100,1000,0)
+#p.plot_run(100,1000,1.0)
+#p.plot_run(100,1000,0.7)
