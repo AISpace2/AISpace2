@@ -134,8 +134,8 @@
 	    return "\n" + "Obs: " + node.observed;
 	  }
       else {
-	      if (node.observed === undefined) return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace);
-        return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
+	      if (node.observed === undefined) return node.domain[1] + ": "+ node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace);
+        return node.domain[1] + ": "+ node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
       }
 	}
     	    
