@@ -99,12 +99,11 @@
     <h3 id="relationship-aispace2-aipython" class="linkify"><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython</a></h2>
     <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/">accompanying textbook</a>;
       it can run independently without AISpace2 and Jupyter. AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for a more
-      easily understandable and friendly uderface interface and rich visualizations to accompany code.
+      easily understandable and friendly user interface and rich visualizations to accompany code.
     </p>
     <p>
       In order to make this possible, 2 major modifications have to be made in AIPython, which make the source code you find in AISpace2 not exactly the same as AIPython.
-      To avoid possible confusion, we will refer to the modified code as AIPythonV (V for visualization).
-      The 2 changes are summarized below. Apart from these 2 modifications, other things are almost identical with the original AIPython.
+      The 2 changes are summarized below. Apart from these 2 modifications, other things are almost identical.
     </p>
     <ol>
       <li>
@@ -150,8 +149,9 @@
       </li>
       <li>
         <p>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
-          AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AIPythonV, where <code>*</code> depends on the
-          algorithm being visualized (e.g. <code>search</code> or <code>csp</code>). The <code>@visualize</code> decorator is also imported from <code>aispace2.jupyter.*</code>.</p>
+          AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2, where <code>*</code> depends on the
+          algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
+          The <code>@visualize</code> decorator is also imported from <code>aispace2.jupyter.*</code>.</p>
 
         <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
           allow it to be displayed inside Jupyter.</p>
