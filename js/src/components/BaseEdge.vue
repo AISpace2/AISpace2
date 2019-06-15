@@ -9,10 +9,11 @@
         </polygon>
 
         <!-- The white background for the text. There is no way to colour the background of text in SVG. -->
-        <rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect>
-        <g :transform="`translate(${centerX}, ${centerY})`">
+        <!-- rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect -->
+        <g :transform="`translate(${textX}, ${textY})
+            rotate(${angleText})`">
             <!-- Text x/y are not animated, so we wrap it in a group. -->
-            <text v-if="text" ref="text" text-anchor="middle" dominant-baseline="central">{{text}}</text>
+            <text class = "textstroke" v-if="text" ref="text" text-anchor="middle" fill="white" dominant-baseline="central">{{text}}</text>
         </g>
     </g>
 </template>
@@ -94,14 +95,42 @@
       return deg;
     }
 
+    /** The angle of the text aligning with the edge */
+    get angleText() {
+      let angle = 0;
+      var dx = this.adjustedX2 - this.adjustedX1;
+      var dy = this.adjustedY2 - this.adjustedY1;
+      if (dx > 0 && dy > 0) {
+        angle = this.angle;
+      }
+      if (dx < 0 && dy < 0) {
+        angle = this.angle -180;
+      }
+      if (dx < 0 && dy > 0) {
+        angle = this.angle - 180;
+      }
+      if (dx > 0 && dy < 0) {
+        angle = this.angle;
+      }
+      return angle;
+    }
+
     /** The x-coordinate that is the midpoint between the source and target of the adjusted path. */
     get centerX() {
       return this.adjustedX1 + (this.adjustedX2 - this.adjustedX1) / 2;
     }
 
+    get textX() {
+      return this.centerX;
+    }
+
     /** The y-coordinate that is the midpoint between the source and target of the adjusted path. */
     get centerY() {
       return this.adjustedY1 + (this.adjustedY2 - this.adjustedY1) / 2;
+    }
+
+    get textY() {
+      return this.centerY;
     }
 
     /** The difference between the source and target on the x-axis. */
@@ -169,5 +198,16 @@
         user-select: none;
         background: none;
         cursor: default;
+    }
+    .textstroke{
+      text-shadow: -1px -1px 0 black,
+                    0   -1px 0 black,
+                    1px -1px 0 black,
+                   1px  0   0 black,
+                   1px  1px 0 black,
+                   0    1px 0 black,
+                    -1px  1px 0 black,
+                    -1px  0   0 black;
+     
     }
 </style>
