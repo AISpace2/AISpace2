@@ -107,6 +107,7 @@ export default class CSPGraphBuilder extends Vue {
   first: ICSPGraphNode | null = null;
   textSize: number;
   detailLevel: number;
+  cspId: string;
 
   /** Switches to a new mode. */
   setMode(mode: Mode) {

@@ -36,7 +36,7 @@
       <div id="controls" class="btn-group">
         <button id="fine-step" class="btn btn-default" @click="$emit('click:fine-step')">Fine Step</button>
         <button id="step" class="btn btn-default" @click="$emit('click:step')">Step</button>
-        <button id="auto-arc-consistency" class="btn btn-default" @click="$emit('click:auto-arc-consistency')">Auto Arc Consistency</button>
+        <button v-if="cspId==='con'" id="auto-arc-consistency" class="btn btn-default" @click="$emit('click:auto-arc-consistency')">Auto Arc Consistency</button>
         <button id="auto-solve" class="btn btn-default" @click="$emit('click:auto-solve')">Auto Solve</button>
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
@@ -91,6 +91,7 @@ export default class CSPGraphInteractor extends Vue {
   detailLevel: number;
   legendText: string[];
   legendColor: string[];
+  cspId: string;
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);

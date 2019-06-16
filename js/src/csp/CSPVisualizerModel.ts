@@ -29,7 +29,8 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
       _view_module_version: EXTENSION_SPEC_VERSION,
       _view_name: "CSPViewer",
       _previously_rendered: false,
-      wait_for_render: true
+      wait_for_render: true,
+      csp_id: "con"
     };
   }
 
@@ -80,5 +81,10 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
   /** The Graph representing the CSP problem. */
   get graph(): Graph {
     return this.get("graph");
+  }
+
+  /** The id represents whether a csp probelem is about arc consistency or sls */
+  get cspId(): string {
+    return this.get("csp_id");
   }
 }
