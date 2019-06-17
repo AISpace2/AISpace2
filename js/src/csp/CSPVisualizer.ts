@@ -58,7 +58,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,
           legendText: labelDict.cspLabelText,
-          legendColor: labelDict.cspLabelColor
+          legendColor: labelDict.cspLabelColor,
+          cspId: this.model.cspId
         }
       }).$mount(this.el);
 
