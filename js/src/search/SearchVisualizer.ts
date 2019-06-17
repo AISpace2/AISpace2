@@ -191,7 +191,6 @@ export default class SearchViewer extends widgets.DOMWidgetView {
 
   /** Returns the layout based on current settings. */
   private getLayout() {
-    /*
     switch (this.model.layoutMethod) {
       case "tree":
         return new GraphLayout(
@@ -201,23 +200,6 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       default:
         return new GraphLayout(d3ForceLayout());
     }
-    */
-   let layout_method = this.model.layoutMethod;
-   // for Jupyter Lab
-   var currnotebook = document.getElementsByClassName("p-TabBar-tab           jp-mod-current  p-mod-closable p-mod-current");
-   // for Jupyter Notebook
-   var currnotebook_name_jl = currnotebook[0].innerHTML;
-   var currnotebook_name_jn = `${window.location.href.split("/").pop()}`;
-   if (currnotebook_name_jl.includes("forward_planning.ipynb") ||
-       currnotebook_name_jn.includes("forward_planning.ipynb") ||
-       currnotebook_name_jl.includes("solving_csp_with_search.ipynb") ||
-       currnotebook_name_jn.includes("solving_csp_with_search.ipynb") ||
-       currnotebook_name_jl.includes("regression_planning.ipynb") ||
-       currnotebook_name_jn.includes("regression_planning.ipynb")) {
-     return new GraphLayout(d3TreeLayout({ rootId: this.model.layoutRootId }));
-   } else {
-     return new GraphLayout(d3ForceLayout());
-   }
   }
 
   private trimGraph() {
