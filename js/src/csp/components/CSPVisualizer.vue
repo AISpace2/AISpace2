@@ -36,7 +36,7 @@
       <div id="controls" class="btn-group">
         <button id="fine-step" class="btn btn-default" @click="$emit('click:fine-step')">Fine Step</button>
         <button id="step" class="btn btn-default" @click="$emit('click:step')">Step</button>
-        <button v-if="detectCSPid()==='con'" id="auto-arc-consistency" class="btn btn-default" @click="$emit('click:auto-arc-consistency')">Auto Arc Consistency</button>
+        <button id="auto-arc-consistency" class="btn btn-default" @click="$emit('click:auto-arc-consistency')">Auto Arc Consistency</button>
         <button id="auto-solve" class="btn btn-default" @click="$emit('click:auto-solve')">Auto Solve</button>
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
@@ -91,7 +91,6 @@ export default class CSPGraphInteractor extends Vue {
   detailLevel: number;
   legendText: string[];
   legendColor: string[];
-  cspId: string;
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
@@ -158,21 +157,4 @@ export default class CSPGraphInteractor extends Vue {
   minusTextSize(){
     if(this.textSize > 0) this.textSize --;
   }
-
-  /** To check whether the current csp notebook is arc consistency or stochastic local search */
-  detectCSPid() {
-    let id = this.cspId;
-    // for Jupyter Lab
-    var currnotebook = document.getElementsByClassName("p-TabBar-tab           jp-mod-current  p-mod-closable p-mod-current");
-    var currnotebook_name_jl = currnotebook[0].innerHTML;
-    // for Jupyter Notebook
-    var currnotebook_name_jn = `${window.location.href.split("/").pop()}`;
-    if (currnotebook_name_jl.includes("stochastic_local_search.ipynb") ||
-        currnotebook_name_jn.includes("stochastic_local_search.ipynb")) {
-      id = 'sls';
-    }
-    return id;
-  }
-}
-
 </script>
