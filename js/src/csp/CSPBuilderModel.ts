@@ -66,8 +66,4 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
   get textSize(): number {
     return this.get("text_size");
   }
-
-  get cspId(): string {
-    return this.get("csp_id");
-  }
 }
