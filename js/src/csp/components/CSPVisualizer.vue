@@ -157,4 +157,6 @@ export default class CSPGraphInteractor extends Vue {
   minusTextSize(){
     if(this.textSize > 0) this.textSize --;
   }
+}
+
 </script>
