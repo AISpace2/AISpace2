@@ -183,7 +183,6 @@
           return edge;
     }
 
-
     /**
      * Whenever a node reports it has resized, update it's style so that it redraws.
      */
