@@ -81,9 +81,4 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
   get graph(): Graph {
     return this.get("graph");
   }
-
-  /** The id represents whether a csp probelem is about arc consistency or sls */
-  get cspId(): string {
-    return this.get("csp_id");
-  }
 }
