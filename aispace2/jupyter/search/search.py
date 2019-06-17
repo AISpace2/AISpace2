@@ -172,7 +172,7 @@ class Displayable(StepDOMWidget):
             self._send_frontier_updated_action()
 
         elif args[1] == "paths have been expanded and":
-            args += ('- Click Auto Solve or Step to find more solutions.', )
+            args += ('\n- Click Auto Solve or Step to find more solutions.', )
             
         super().display(level, *args, **kwargs)
 

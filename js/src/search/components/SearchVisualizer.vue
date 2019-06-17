@@ -38,7 +38,7 @@
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
-      <div class="frontier">Frontier: {{frontier}}</div>
+      <div class="frontier" style="white-space: pre;">Frontier: {{frontier}}</div>
     </div>
   </div>
 </template>

@@ -44,9 +44,9 @@ class Searcher(Displayable):
             self.display(2, "Expanding:",path,"(cost:",path.cost,")")
             self.num_expanded += 1
             if self.problem.is_goal(path.end()):    # solution found
-                self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier")
+                self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier", '\nPath found: ', path)
                 self.solution = path   # store the solution found
-                return path
+
             else:
                 neighs = self.problem.neighbors(path.end())
                 self.display(3, "Neighbors are", neighs)
@@ -95,7 +95,7 @@ class Frontier(object):
 
     def __repr__(self):
         """string representation of the frontier"""
-        return str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])
+        return '\n'.join(''.join(str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])).split('\\n'))
     def __len__(self):
         return len(self.frontierpq)
 

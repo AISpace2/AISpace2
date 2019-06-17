@@ -36,7 +36,7 @@
         <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output">{{output}}</div>
+      <div class="output" style="white-space: pre;">{{output}}</div>
     </div>
   </div>
 </template>

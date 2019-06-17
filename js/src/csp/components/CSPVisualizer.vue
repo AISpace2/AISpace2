@@ -41,7 +41,7 @@
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output">{{output}}</div>
+      <div class="output" style="white-space: pre;">{{output}}</div>
     </div>
   </div>
 </template>

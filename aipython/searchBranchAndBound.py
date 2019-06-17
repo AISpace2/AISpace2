@@ -40,15 +40,18 @@ class DF_branch_and_bound(Searcher):
                     self.best_path = path
                     self.bound = path.cost
                     self.display(2, "New best path:", path, " cost:", path.cost)
-                    return
+                    continue
+                    
                 neighs = self.problem.neighbors(path.end())
                 self.display(3, "Neighbors are", neighs)
                 for arc in reversed(list(neighs)):
                     self.add_to_frontier(Path(path, arc))
                 self.display(3, "Frontier:", self.frontier)
-        self.display(1, "Number of paths expanded:", self.num_expanded)
+        
         self.solution = self.best_path
+        self.display(1, "Number of paths expanded:", self.num_expanded, "\nBest path so far:", self.solution)
         return self.best_path
+        
 
 from aipython.searchGeneric import test
 if __name__ == "__main__":
