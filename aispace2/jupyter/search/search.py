@@ -173,7 +173,7 @@ class Displayable(StepDOMWidget):
 
         elif args[1] == "paths have been expanded and":
             args += ('\n- Click Auto Solve or Step to find more solutions.', )
-            
+
         super().display(level, *args, **kwargs)
 
     def _send_clear_action(self):

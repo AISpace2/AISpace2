@@ -95,7 +95,8 @@ class Frontier(object):
 
     def __repr__(self):
         """string representation of the frontier"""
-        return '\n'.join(''.join(str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])).split('\\n'))
+        return "\n".join("".join(str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])).split("\\n"))
+
     def __len__(self):
         return len(self.frontierpq)
 
