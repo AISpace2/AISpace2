@@ -51,7 +51,7 @@ class DF_branch_and_bound(Searcher):
         self.solution = self.best_path
         self.display(1, "Number of paths expanded:", self.num_expanded, "\nBest path so far:", self.solution)
         return self.best_path
-        
+
 from aipython.searchGeneric import test
 if __name__ == "__main__":
     test(DF_branch_and_bound)
