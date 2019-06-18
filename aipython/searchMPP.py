@@ -41,7 +41,7 @@ class SearcherMPP(AStarSearcher):
                     for arc in neighs:
                         self.add_to_frontier(Path(path,arc))
                     self.display(3, "Frontier:", self.frontier)
-        self.display(1, "No (more) solutions. Total of", self.num_expanded,"paths expanded.")
+        self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded,"paths expanded.")
 
 from aipython.searchGeneric import test
 if __name__ == "__main__":

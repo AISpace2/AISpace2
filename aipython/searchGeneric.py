@@ -53,7 +53,7 @@ class Searcher(Displayable):
                 for arc in reversed(neighs):
                     self.add_to_frontier(Path(path,arc))
                 self.display(3, "Frontier:", self.frontier)
-        self.display(1, "No (more) solutions. Total of", self.num_expanded, "paths expanded.")
+        self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded, "paths expanded.")
 
 import heapq        # part of the Python standard library
 from aipython.searchProblem import Path
