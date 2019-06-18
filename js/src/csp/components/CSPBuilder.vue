@@ -129,7 +129,7 @@ export default class CSPGraphBuilder extends Vue {
     } else if (this.mode === "constraint") {
       this.graph.addNode({
         id: shortid.generate(),
-        name: "constraint",
+        name: "Constraint",
         x,
         y,
         type: "csp:constraint",
