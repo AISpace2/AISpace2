@@ -58,7 +58,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,
           legendText: labelDict.cspLabelText,
-          legendColor: labelDict.cspLabelColor
+          legendColor: labelDict.cspLabelColor,
+          needACButton: this.model.needACButton
         }
       }).$mount(this.el);
 
@@ -81,7 +82,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         Analytics.trackEvent("CSP Visualizer", "Auto Solve");
         this.send({ event: StepEvents.AUTO_SOLVE_CLICK });
       });
-        
+
       this.vue.$on(StepEvents.PAUSE_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Pause");
         this.send({ event: StepEvents.PAUSE_CLICK });
@@ -199,7 +200,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       domainString != null ? domainString.split(",").filter(d => d) : null;
     this.send({ event: "domain_split", domain: newDomain });
   }
-    
+
   /**
    * Prompt the user that the AC needs to be finished before the domain can be split.
    */

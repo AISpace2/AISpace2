@@ -48,6 +48,6 @@ from aipython.searchGeneric import test
 if __name__ == "__main__":
     test(SearcherMPP)
 
-import aipython.searchProblem
+# import aipython.searchProblem
 # searcherMPPcdp = SearcherMPP(searchProblem.search_cyclic_delivery)
 # print(searcherMPPcdp.search())  # find first path
