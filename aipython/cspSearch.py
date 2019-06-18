@@ -57,6 +57,6 @@ if __name__ == "__main__":
 
 ## Test Solving CSPs with Search:
 searcher1 = Searcher(Search_from_CSP(csp_simple2))
-#print(searcher1.search())  # get next solution
+# print(searcher1.search())  # get next solution
 searcher2 = Searcher(Search_from_CSP(csp_extended))
-#print(searcher2.search())  # get next solution
+# print(searcher2.search())  # get next solution
