@@ -166,7 +166,7 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
         var = select(x for x in node if len(node[x])>1)
         if var:
             dom1, dom2 = partition_domain(node[var])
-            self.display(2,"Splitting", var, "into", dom1, "and", dom2)
+            self.display(2, "Splitting", var, "into", dom1, "and", dom2)
             to_do = self.cons.new_to_do(var,None)
             for dom in [dom1,dom2]:
                 newdoms = copy_with_assign(node,var,dom)
@@ -175,7 +175,7 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
                     # all domains are non-empty
                     neighs.append(Arc(node,cons_doms))
                 else:
-                    self.display(2,"...",var,"in",dom,"has no solution")
+                    self.display(2, "...",var,"in",dom,"has no solution")
         return neighs
 
 from aipython.cspProblem import test
@@ -189,7 +189,6 @@ def ac_search_solver(csp):
 
 if __name__ == "__main__":
     test(ac_search_solver)
-
 
 ## Test Solving CSPs with Arc consistency and domain splitting:
 # from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d

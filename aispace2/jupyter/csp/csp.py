@@ -6,8 +6,7 @@ from ipywidgets import register
 from traitlets import Bool, Dict, Float, Instance, Unicode
 
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
-from .cspjsonbridge import (csp_from_json, csp_to_json,
-                            generate_csp_graph_mappings)
+from .cspjsonbridge import (csp_from_json, csp_to_json, generate_csp_graph_mappings)
 
 from ... import __version__
 
@@ -333,8 +332,7 @@ class Displayable(StepDOMWidget):
                 arcs_to_highlight.append((var, const))
 
             self._send_highlight_nodes_action(nodes_to_highlight, "green")
-            self._send_highlight_arcs_action(arcs_to_highlight, "bold",
-                                             "green")
+            self._send_highlight_arcs_action(arcs_to_highlight, "bold", "green")
 
         elif args[0] == "Became consistent":
             const = args[1]
@@ -346,8 +344,7 @@ class Displayable(StepDOMWidget):
                 arcs_to_highlight.append((var, const))
 
             self._send_highlight_nodes_action(nodes_to_highlight, "green")
-            self._send_highlight_arcs_action(arcs_to_highlight, "bold",
-                                             "green")
+            self._send_highlight_arcs_action(arcs_to_highlight, "bold", "green")
 
         elif args[0] == "Became inconsistent":
             const = args[1]
@@ -381,8 +378,7 @@ class Displayable(StepDOMWidget):
 
                     for node in not_conflict.scope:
                         non_conflict_nodes_to_highlight.add(node)
-                        non_conflict_arcs_to_highlight.append((node,
-                                                               not_conflict))
+                        non_conflict_arcs_to_highlight.append((node, not_conflict))
 
                 self._send_highlight_nodes_action(non_conflict_nodes_to_highlight, "green")
                 self._send_highlight_arcs_action(non_conflict_arcs_to_highlight, "bold", "green")
