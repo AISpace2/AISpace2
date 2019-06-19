@@ -293,15 +293,10 @@ class Displayable(StepDOMWidget):
 
                 self._send_highlight_arcs_action(
                     arcs_to_highlight, style='normal', colour='blue')
-                
+
         elif args[0] == "Solution found: ":
             self.send({'action': 'setSolution', 'solution': str(args[1])})
-            args += ("\nClick Step or Auto Solve to find more solutions.", )
-        
-        elif args[0] == "New best path:":
-            self.send({'action': 'setSolution', 'solution': str(args[1])})     
-            args += ('\nClick Step or Auto Solve to find more solutions.', )
-                    
+            args += ("\nClick Step, Auto Arc Consistency or Auto Solve to find more solutions.", )               
 
         #############################
         ### SLS-specific displays ###
@@ -481,7 +476,6 @@ class Displayable(StepDOMWidget):
             'domains': [list(domain) for domain in domains]
             if not is_single_var else [domains]
         })
-
 
 def visualize(func_to_delay):
     """Enqueues a function that does not run until the Jupyter widget has rendered.

@@ -174,11 +174,10 @@ class Displayable(StepDOMWidget):
         elif args[0] == "Solution found: ":
             self.send({'action': 'setSolution', 'solution': str(args[1])})
             args += ('\nClick Step or Auto Solve to find more solutions.', )
-        
-        elif args[0] == "New best path:":
-            self.send({'action': 'setSolution', 'solution': str(args[1])})   
-            args += ('\nClick Step or Auto Solve to find more solutions.', )
-                    
+
+        elif args[0] == "New best path: ":
+            self.send({'action': 'setSolution', 'solution': str(args[1])})
+            args += ('\nClick Step or Auto Solve to a potential solution with less cost.', )
 
         super().display(level, *args, **kwargs)
 
