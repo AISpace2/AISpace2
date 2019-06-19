@@ -9,24 +9,29 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 class Graphical_model(object):
-    """The class of graphical models. 
+    """The class of graphical models.
     A graphical model consists of a set of variables and a set of factors.
 
-    List vars is a list of variables
-    List factors is a list of factors
+    vars - a list of variables
+    factors - a list of factors
+    positions - a dictionary that maps each var into its (x,y)-position
     """
-    def __init__(self,vars=None,factors=None):
+    def __init__(self, vars=None, factors=None, positions={}):
         self.variables = vars
         self.factors = factors
+        self.positions = positions
 
 class Belief_network(Graphical_model):
     """The class of belief networks."""
 
-    def __init__(self,vars=None,factors=None):
-        """vars is a list of variables
-        factors is a list of factors. Here we assume that all of the factors are instances of Prob.
+    def __init__(self, vars=None, factors=None, positions={}):
         """
-        Graphical_model.__init__(self,vars,factors)
+        vars - a list of variables
+        factors - a list of factors
+        positions - a dictionary that maps each var into its (x,y)-position
+        """
+        Graphical_model.__init__(self, vars, factors, positions)
+
         assert all(isinstance(f,Prob) for f in factors) if factors else True
 
 from .utilities import Displayable
@@ -50,7 +55,7 @@ f_c = Prob(C,[B],[0.5,0.5,0.3,0.7])
 
 bn1 = Belief_network([A,B,C],[f_a,f_b,f_c])
 
-# Bayesian network report of leaving example from 
+# Bayesian network report of leaving example from
 # Poole and Mackworth, Artificial Intelligence, 2010 http://artint.info
 # This is Example 6.10 (page 236) shown in Figure 6.1
 

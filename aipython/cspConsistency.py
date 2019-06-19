@@ -102,7 +102,7 @@ class Con_solver(Displayable):
                 new_doms1 = copy_with_assign(new_domains, var, dom1)
                 new_doms2 = copy_with_assign(new_domains, var, dom2)
                 to_do = self.new_to_do(var, None)
-                self.display(3, "  adding", to_do if to_do else "nothing", "to to_do.")
+                self.display(3, "Adding", to_do if to_do else "nothing", "to to_do.")
                 return self.solve_one(new_doms1, to_do) or self.solve_one(new_doms2, to_do)
 
     def split_var(self, iter_vars):
@@ -163,7 +163,7 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
         var = select(x for x in node if len(node[x])>1)
         if var:
             dom1, dom2 = partition_domain(node[var])
-            self.display(2,"Splitting", var, "into", dom1, "and", dom2)
+            self.display(2, "Splitting", var, "into", dom1, "and", dom2)
             to_do = self.cons.new_to_do(var,None)
             for dom in [dom1,dom2]:
                 newdoms = copy_with_assign(node,var,dom)
@@ -172,7 +172,7 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
                     # all domains are non-empty
                     neighs.append(Arc(node,cons_doms))
                 else:
-                    self.display(2,"...",var,"in",dom,"has no solution")
+                    self.display(2, "...",var,"in",dom,"has no solution")
         return neighs
 
 from aipython.cspProblem import test
@@ -187,18 +187,17 @@ def ac_search_solver(csp):
 if __name__ == "__main__":
     test(ac_search_solver)
 
-from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
-
 ## Test Solving CSPs with Arc consistency and domain splitting:
-#Con_solver(simple_csp2).solve_one()
-#searcher1d = Searcher(Search_with_AC_from_CSP(simple_csp2))
-#print(searcher1d.search())
-#Searcher.max_display_level = 2  # display search trace (0 turns off)
-#searcher2c = Searcher(Search_with_AC_from_CSP(extended_csp))
-#print(searcher2c.search())
-#searcher3c = Searcher(Search_with_AC_from_CSP(crossword1))
-#print(searcher3c.search())
-#searcher4c = Searcher(Search_with_AC_from_CSP(crossword2))
-#print(searcher4c.search())
-#searcher5c = Searcher(Search_with_AC_from_CSP(crossword2d))
-#print(searcher5c.search())
+# from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
+# Con_solver(simple_csp2).solve_one()
+# searcher1d = Searcher(Search_with_AC_from_CSP(simple_csp2))
+# print(searcher1d.search())
+# Searcher.max_display_level = 2  # display search trace (0 turns off)
+# searcher2c = Searcher(Search_with_AC_from_CSP(extended_csp))
+# print(searcher2c.search())
+# searcher3c = Searcher(Search_with_AC_from_CSP(crossword1))
+# print(searcher3c.search())
+# searcher4c = Searcher(Search_with_AC_from_CSP(crossword2))
+# print(searcher4c.search())
+# searcher5c = Searcher(Search_with_AC_from_CSP(crossword2d))
+# print(searcher5c.search())

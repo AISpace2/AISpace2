@@ -37,6 +37,7 @@ class Displayable(StepDOMWidget):
         return min(1, line_width)
 
     def handle_custom_msgs(self, _, content, buffers=None):
+        super().handle_custom_msgs(None, content, buffers)
         event = content.get('event', '')
 
         # Receive msg from frontend
