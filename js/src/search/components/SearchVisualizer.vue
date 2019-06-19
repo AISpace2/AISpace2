@@ -77,7 +77,7 @@
     /** The text representing the frontier. Persistent until frontier changes. */
     frontier: string;
     /** The text representing the solutions found so far. Persistent until new solution found. */
-    pre_solution: string = '';
+    pre_solution: string;
     /** True if edge costs should be shown on the edges. */
     showEdgeCosts: boolean;
     /** True if node heuristics should be shown on the nodes. */
