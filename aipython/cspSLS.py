@@ -11,12 +11,17 @@
 from aipython.cspProblem import CSP, Constraint
 from aipython.searchProblem import Arc, Search_problem
 from aispace2.jupyter.csp import Displayable, visualize
+from traitlets import Bool
 import random
 import heapq
 
 class SLSearcher(Displayable):
     """A search problem directly from the CSP..
     A node is a variable:value dictionary"""
+
+    # Constrols whether the auto arc consistency button will show up in the widget (will not in SLS)
+    need_AC_button = Bool(False).tag(sync=True) # don't need auto arc consistency button for SLS
+
     def __init__(self, csp):
         self.csp = csp
         self.variables_to_select = {var for var in self.csp.variables
@@ -34,7 +39,7 @@ class SLSearcher(Displayable):
         self.conflicts = set()
         for con in self.csp.constraints:
             if not con.holds(self.current_assignment):
-                self.conflicts.add(con)        
+                self.conflicts.add(con)
         self.display(2, "Conflicts:", self.conflicts)
         self.variable_pq = None
 

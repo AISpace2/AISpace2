@@ -9,6 +9,7 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 from aispace2.jupyter.search import Displayable, visualize
+from aipython.searchProblem import Search_problem_from_explicit_graph
 
 class Searcher(Displayable):
     """returns a searcher for a problem.
@@ -22,6 +23,7 @@ class Searcher(Displayable):
         self.initialize_frontier()
         self.num_expanded = 0
         self.add_to_frontier(Path(problem.start_node()))
+        self.layout_method = "force"  if isinstance(problem, Search_problem_from_explicit_graph) else "tree"
         super().__init__()
 
     def initialize_frontier(self):

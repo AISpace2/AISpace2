@@ -27,9 +27,10 @@ class Displayable(StepDOMWidget):
     _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The CSP that is synced as a graph to the frontend.
-    graph = Instance(
-        klass=CSP, allow_none=True).tag(
-            sync=True, to_json=csp_to_json, from_json=csp_from_json)
+    graph = Instance(klass=CSP, allow_none=True).tag(sync=True, to_json=csp_to_json, from_json=csp_from_json)
+
+    # Constrols whether the auto arc consistency button will show up in the widget (will not in SLS)
+    need_AC_button = Bool(True).tag(sync=True)
 
     # Tracks if the visualization has been rendered at least once in the front-end. See the @visualize decorator.
     _previously_rendered = Bool(False).tag(sync=True)
@@ -70,8 +71,7 @@ class Displayable(StepDOMWidget):
 
         # self.graph = self.csp
         self.graph = CSP(self.csp.domains, self.csp.constraints, self.csp.positions)
-        (self._domain_map,
-         self._edge_map) = generate_csp_graph_mappings(self.csp)
+        (self._domain_map, self._edge_map) = generate_csp_graph_mappings(self.csp)
 
         self._initialize_controls()
 
@@ -234,8 +234,7 @@ class Displayable(StepDOMWidget):
                 args = queued_func['args']
                 kwargs = queued_func['kwargs']
                 self._previously_rendered = True
-                self._thread = ReturnableThread(
-                    target=func, args=args, kwargs=kwargs)
+                self._thread = ReturnableThread(target=func, args=args, kwargs=kwargs)
                 self._thread.start()
 
     def display(self, level, *args, **kwargs):
@@ -261,26 +260,22 @@ class Displayable(StepDOMWidget):
             domain = args[4]
             constraint = args[6]
             self._send_set_domains_action(variable, [domain])
-            self._send_highlight_arcs_action(
-                (variable, constraint), style='bold', colour='green')
+            self._send_highlight_arcs_action((variable, constraint), style='bold', colour='green')
 
         elif args[0] == "Processing arc (":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_arcs_action(
-                (variable, constraint), style='bold', colour=None)
+            self._send_highlight_arcs_action((variable, constraint), style='bold', colour=None)
 
         elif args[0] == "Arc: (" and args[4] == ") is inconsistent":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_arcs_action(
-                (variable, constraint), style='bold', colour='red')
+            self._send_highlight_arcs_action((variable, constraint), style='bold', colour='red')
 
         elif args[0] == "Arc: (" and args[4] == ") now consistent":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_arcs_action(
-                (variable, constraint), style='normal', colour='green')
+            self._send_highlight_arcs_action((variable, constraint), style='normal', colour='green')
             should_wait = False
 
         elif args[0] == "Adding" and args[2] == "to to_do.":
@@ -291,8 +286,7 @@ class Displayable(StepDOMWidget):
                 for arc in arcs:
                     arcs_to_highlight.append((arc[0], arc[1]))
 
-                self._send_highlight_arcs_action(
-                    arcs_to_highlight, style='normal', colour='blue')
+                self._send_highlight_arcs_action(arcs_to_highlight, style='normal', colour='blue')
 
         elif args[0] == "Solution found: ":
             self.send({'action': 'setSolution', 'solution': str(args[1])})

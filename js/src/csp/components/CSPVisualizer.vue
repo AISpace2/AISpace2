@@ -36,7 +36,7 @@
       <div id="controls" class="btn-group">
         <button id="fine-step" class="btn btn-default" @click="$emit('click:fine-step')">Fine Step</button>
         <button id="step" class="btn btn-default" @click="$emit('click:step')">Step</button>
-        <button id="auto-arc-consistency" class="btn btn-default" @click="$emit('click:auto-arc-consistency')">Auto Arc Consistency</button>
+        <button v-if="needACButton" id="auto-arc-consistency" class="btn btn-default" @click="$emit('click:auto-arc-consistency')">Auto Arc Consistency</button>
         <button id="auto-solve" class="btn btn-default" @click="$emit('click:auto-solve')">Auto Solve</button>
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
@@ -80,20 +80,22 @@ import * as CSPUtils from "../CSPUtils";
   }
 })
 export default class CSPGraphInteractor extends Vue {
-  /** The graph being displayed. */
+  // The graph being displayed
   graph: Graph<ICSPGraphNode>;
-  /** Text describing what is currently happening. */
+  // Text describing what is currently happening
   output: string;
-  /** The text representing the solutions found so far. Persistent until new solution found. */
+  // The text representing the solutions found so far
   pre_solution: string = "";
-  /** Layout object that controls where nodes are drawn. */
+  // Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
   // The size of the text inside the node
   textSize: number;
-  // detail of the domain
+  // Detail of the domain
   detailLevel: number;
   legendText: string[];
   legendColor: string[];
+  // Whether the auto arc consistency button will show up
+  needACButton: boolean;
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);

@@ -11,7 +11,7 @@
         </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
-        <DirectedRectEdge :id="props.edge.id" :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
+        <DirectedRectEdge :id="props.edge.id" :x1="updateOverlappedEdege(props.edge).styles.x1" :x2="updateOverlappedEdege(props.edge).styles.x2" :y1="updateOverlappedEdege(props.edge).styles.y1" :y2="updateOverlappedEdege(props.edge).styles.y2" :stroke="props.edge.styles.stroke"
                           :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name"
                           :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
@@ -154,10 +154,36 @@
     }
 
     nodemaxWidth(node: ISearchGraphNode) {
-      if (!node.radius) {
+      if (!node.styles.radius) {
         return 100;
       }
-      return node.radius * 2;
+      return node.styles.radius * 2;
+    }
+
+    /**
+     * Whenever a node involved in two overlapped edges is moved, update the fake node position
+     * to make sure the two overlapped edges are splitted and move with node.
+     */
+    updateOverlappedEdege(edge: ISearchGraphEdge) {
+      if (edge.styles.overlapped === true) {
+            const xa = edge.source.x;
+            const ya = edge.source.y;
+            const xb = edge.target.x;
+            const yb = edge.target.y;
+            const radius = 5;
+            const cos: number = (yb! - ya!) / Math.sqrt(Math.pow((yb! - ya!), 2) + Math.pow((xb! - xa!), 2));
+            const sin: number = (xb! - xa!) / Math.sqrt(Math.pow((yb! - ya!), 2) + Math.pow((xb! - xa!), 2));
+            edge.styles.x1 = xa! - cos * radius;
+            edge.styles.x2 = xb! - cos * radius;
+            edge.styles.y1 = sin * radius + ya!;
+            edge.styles.y2 = sin * radius + yb!;
+          } else {
+            edge.styles.x1 = edge.source.x;
+            edge.styles.x2 = edge.target.x;
+            edge.styles.y1 = edge.source.y;
+            edge.styles.y2 = edge.target.y;
+          }
+          return edge;
     }
 
     /**
