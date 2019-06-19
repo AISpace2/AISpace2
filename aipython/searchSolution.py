@@ -52,7 +52,7 @@ class Searcher_prunes(Searcher):
                         neighs = self.problem.neighbors(path.end())
                         for arc in neighs:
                             self.add_to_frontier(Path(path,arc))
-                        self.display(3,"Frontier:",self.frontier)
+                        self.display(3, "Frontier: ", self.frontier)
         elif self.pruning == 'cycle':
             while not self.frontier.empty():
                 path = self.frontier.pop()
@@ -67,7 +67,7 @@ class Searcher_prunes(Searcher):
                         neighs = self.problem.neighbors(path.end())
                         for arc in neighs:
                             self.add_to_frontier(Path(path,arc))
-                        self.display(3,"Frontier:",self.frontier)
+                        self.display(3, "Frontier: ", elf.frontier)
 
         else:  # no pruning
             while not self.frontier.empty() and self.num_expanded < self.max_expanded:
@@ -82,7 +82,7 @@ class Searcher_prunes(Searcher):
                     neighs = self.problem.neighbors(path.end())
                     for arc in neighs:
                         self.add_to_frontier(Path(path,arc))
-                    self.display(3,"Frontier:",self.frontier)
+                    self.display(3, "Frontier: ", self.frontier)
 
         self.display(1,"Total of", self.frontier.frontier_index,"paths expanded.")
 

@@ -24,14 +24,16 @@ export interface IClearEvent extends IEvent {
 
 export interface IUpdateFrontierEvent extends IEvent {
   action: "setFrontier";
-  /** The string representing the new frontier. */
+  // The string representing the new frontier
   frontier: string;
 }
 
 export interface IUpdateSolutionEvent extends IEvent {
   action: "setSolution";
-  /** The string representing the new frontier. */
+  // The string representing the new frontier
   solution: string;
+  // The cost of the path
+  cost: number;
 }
 
 /** Search Visualizer Events. */

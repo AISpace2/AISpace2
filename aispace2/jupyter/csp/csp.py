@@ -277,7 +277,7 @@ class Displayable(StepDOMWidget):
             self._send_highlight_arcs_action((variable, constraint), style='normal', colour='green')
             should_wait = False
 
-        elif args[0] == "Adding" and args[2] == "to to_do.":
+        elif (args[0] == "Adding" or args[0] == "New domain. Adding") and args[2] == "to to_do.":
             if args[1] != "nothing":
                 arcs = list(args[1])
                 arcs_to_highlight = []
@@ -289,7 +289,7 @@ class Displayable(StepDOMWidget):
 
         elif args[0] == "Solution found: ":
             self.send({'action': 'setSolution', 'solution': str(args[1])})
-            args += ("\nClick Step, Auto Arc Consistency or Auto Solve to find more solutions.", )               
+            args += ("\nClick Step, Auto Arc Consistency or Auto Solve to find more solutions.", )
 
         #############################
         ### SLS-specific displays ###
