@@ -283,7 +283,7 @@ class Displayable(StepDOMWidget):
                 (variable, constraint), style='normal', colour='green')
             should_wait = False
 
-        elif args[0] == "  adding" and args[2] == "to to_do.":
+        elif args[0] == "Adding" and args[2] == "to to_do.":
             if args[1] != "nothing":
                 arcs = list(args[1])
                 arcs_to_highlight = []
@@ -365,10 +365,10 @@ class Displayable(StepDOMWidget):
 
         elif args[0] == "AC done. Reduced domains":
             should_wait = False
-        
+
         elif args[0] == "solution:":
             self.send({'action': 'setSolution', 'solution': str(args[1])})
-            args += ('\n- Click Auto Solve or Step to find more solutions.', )
+            args += ("Click Auto Solve or Step to find more solutions.", )
 
         elif args[0] == "Conflicts:":
             conflicts = args[1]
