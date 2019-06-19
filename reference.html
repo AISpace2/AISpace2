@@ -35,7 +35,7 @@
   </div>
 
   <header>
-    <h1>Reference</h1>
+    <h1>Reference (In Construction)</h1>
     <h2>The details of AISpace2.</h2>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
@@ -50,19 +50,21 @@
       <li><a href="#reference-csp">CSP</a></li>
       <li><a href="#reference-planning">Planning</a></li>
       <li><a href="#reference-bayesian">Bayesian Network</a></li>
+      <li><a href="#reference-faq">FAQ</a></li>
     </ul>
   </section>
 
   <section id="reference-common" class="column inline">
     <h2 id="common" class="linkify"><a href="#reference-common">Common</a></h2>
-    <h3 id="reference-common-jupyter" class="linkify"><a href="#reference-common-jupyter">Jupyter</a></h3>
-    <p>If this is your first time using Jupyter, we recommend taking a look at the following links first to quickly get up to speed:</p>
+    <h3 id="reference-common-jupyter" class="linkify"><a href="#reference-common-jupyter">JupyterLab</a></h3>
+    <p>We recommend to use <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html#">JupyterLab</a> for AISpace2.
+      JupyterLab is based on and very similar to <a href="https://jupyter-notebook.readthedocs.io/en/latest/notebook.html#">Jupyter Notebook</a>,
+      a web-based and interactive computing notebook environment. If this is your first time using JupyterLab and you have not used Jupyter Notebook before,
+      we particularly recommend taking a look at the following links first to quickly get up to speed:</p>
     <ul>
-      <li><a href="http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Notebook%20Basics.html" target="_blank">Notebook
+      <li><a href="https://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Notebook%20Basics.html" target="_blank">Jupyter Notebook
             Basics </a></li>
-      <li><a href="http://jupyter-notebook.readthedocs.io/en/latest/ui_components.html" target="_blank" >UI Overview</a></li>
-      <li><a href="http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Running%20Code.html" target="_blank" >Running
-            Code</a></li>
+      <li><a href="https://jupyterlab.readthedocs.io/en/stable/user/interface.html" target="_blank" >JupyterLab Interface</a></li>
     </ul>
     <h3 id="reference-common-buttons" class="linkify"><a href="#reference-common-buttons">Buttons</a></h3>
     <p>
@@ -72,7 +74,8 @@
       <li><strong>Fine Step</strong>: Advance the procedure to next fine step.</li>
       <li><strong>Step</strong>: Advance the procedure to next step.</li>
       <li><strong>Auto Solve</strong>: Run the algorithm step by step until a solution is found.</li>
-      <li><strong>Pause</strong>: Pauses as soon as this fine step has finished. Useful to stop auto solving.
+      <li><strong>Pause</strong>: Pause as soon as the current fine step has finished. Useful to stop auto solving.
+      <li><strong>Print Positions</strong>: TODO.
       </li>
     </ul>
     <p>You can resize the height of the visualization by dragging the resize handle (<span style="display: inline-block; width: 10px; height: 10px; background: #727272"></span>)
@@ -88,14 +91,235 @@
         <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.
         Defaults to <code>1</code>.</li>
     </ul>
-    <h3 id="reference-common-notes" class="linkify"><a href="#reference-common-notes">Notes about <code>display()</code></a></h3>
+    <h3 id="reference-common-notes-display" class="linkify"><a href="#reference-common-notes-display">Notes about <code>display()</code> (TO IMPROVE) </a></h3>
     The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
     step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
     statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level</code> <code>2</code> or lower is encoutered;
     Auto Solve button makes the exectution not pause at all. You can safely change the <code>display_level</code> to adjust the amount
     of detail you receive. However, the visualization is entirely driven by the remaining parameters of the <code>display()</code> call, so modifying
     them may break the visualization.
-    <h3 id="relationship-aispace2-aipython" class="linkify"><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython</a></h2>
+  </section>
+
+
+  <section id="reference-search" class="column inline">
+    <h2 class="linkify"><a href="#reference-search">Search</a></h2>
+    You can explore and investigate famous search algorithms, including depth-first search (DFS), A* search and branch-and-bound search.
+    <h3 id="reference-search-legend" class="linkify"><a href="#reference-search-legend">Legend</a></h3>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; the start node is filled in pinks.
+    </p>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; the regular nodes are filled in white.
+    </p>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="gold" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; the goal nodes are filled in yellow.
+    </p>
+    <p>
+      <svg viewBox="0 0 44 34">
+        <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
+      </svg>&mdash; the nodes at the end of each path on the frontier are outlined in green.
+    </p>
+    <p>
+      <svg viewBox="0 0 130 38">
+        <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="blue" fill="blue" stroke-width="7"></polygon>
+        <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="gold" stroke="blue" stroke-width="3" cx="105" cy="19"></ellipse>
+      </svg>
+      &mdash; the neighbouring nodes of the current path are outlined in blue.</p>
+    <p>
+      <svg viewBox="0 0 220 38">
+        <path data-v-6814c63b="" d="M40,19L80,19" stroke="red" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
+        <path data-v-6814c63b="" d="M125,19L165,19" stroke="red" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(158, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
+        <ellipse rx="20" ry="15" fill="orchid" stroke="red" stroke-width="3" cx="22" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="white" stroke="red" stroke-width="3" cx="105" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="gold" stroke="red" stroke-width="3" cx="189" cy="19"></ellipse>
+      </svg>
+      &mdash; the path being expanded is outlined in red.
+      in gray.</p>
+    <h3 id="reference-search-supported-classes" class="linkify"><a href="#reference-search-supported-classes">Supported Classes</a></h3>
+    <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
+    <h3 id="reference-search-included-problems" class="linkify"><a href="#reference-search-included-problems">Included Problems</a></h3>
+    <p>
+      <figure>
+        <img src="assets/images/problems/search_simple1.png" alt="Simple Search Problem 1" />
+        <figcaption>
+          <code>search_simple1</code>: A simple search problem.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/search_simple2.png" alt="Simple Search Problem 2" />
+        <figcaption>
+          <code>search_simple2</code>: Another simple search problem.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/search_edgeless.png" alt="Edgeless Search Problem" />
+        <figcaption>
+          <code>search_edgeless</code>: A search problem where there are no edges.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
+        <figcaption>
+          <code>search_acyclic_delivery</code>: A robot delivery problem that has no cycles.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/search_cyclic_delivery.png" alt="Cyclic Search Problem" />
+        <figcaption>
+          <code>search_cyclic_delivery</code>: A robot delivery problem that has cycles.
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="reference-search-visualization-options" class="linkify"><a href="#reference-search-visualization-options">Visualization Options</a></h3>
+    <ul>
+      <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.</li>
+      <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
+        Defaults to <code>False</code>.</li>
+      <li>
+        <code>layout_method</code>: Controls how the nodes in the graph are positioned. Either <code>"force"</code>, which
+        is a general graph layout algorithm that works on graphs of all types, or <code>"tree"</code>, if you know the resulting
+        graph is always tree-shaped. Defaults to
+        <code>"force"</code>.
+      </li>
+    </ul>
+  </section>
+
+
+  <section id="reference-csp" class="column inline">
+    <h2 id="csp" class="linkify"><a href="#reference-csp">CSP</a></h2>
+    Three tools are provided for solving constraint satisfaction problems (CSPs): arc consistency algorithm, converting CSP to a search problem, and stochastic local search (SLS).
+    <h3 id="reference-csp-legend" class="linkify"><a href="#reference-csp-legend">Legend</a></h3>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
+      </svg> &mdash; the arc needs to be checked to see whether it is arc consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="green" stroke-width="5"></line>
+      </svg> &mdash; the arc is arc consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
+      </svg> &mdash; the arc is not arc consistent.
+    </p>
+    <p>
+      You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or
+      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain
+      if it is not in auto solving mode.
+    </p>
+    <h3 id="reference-csp-supported-classes" class="linkify"><a href="#reference-csp-supported-classes">Supported Classes</a></h3>
+    <p><code>Con_solver</code>, <code>SLSearcher</code></p>
+    <h3 id="reference-csp-included-problems" class="linkify"><a href="#reference-csp-included-problems">Included Problems</a></h3>
+    <p>
+      <figure>
+        <img src="assets/images/problems/csp_simple1.png" alt="Simple CSP 1" />
+        <figcaption>
+          <code>csp_simple1</code>: A simple CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_simple2.png" alt="Simple CSP 2" />
+        <figcaption>
+          <code>csp_simple2</code>: Another simple CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_extended.png" alt="Extended CSP" />
+        <figcaption>
+          <code>csp_extended</code>: A more complex CSP.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_crossword1.png" alt="CSP Crossword 1" />
+        <figcaption>
+          <code>csp_crossword1</code>: A crossword that represents word positions as variables.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_crossword2.png" alt="CSP Crossword 2" />
+        <figcaption>
+          <code>csp_crossword2</code>: Another crossword that represents word positions as variables.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_crossword2d.png" alt="CSP Crossword 2d" />
+        <figcaption>
+          <code>csp_crossword2d</code>: A crossword that represents squares as variables.
+        </figcaption>
+      </figure>
+    </p>
+  </section>
+
+
+  <section id="reference-planning" class="column inline">
+    <h2 id="planning" class="linkify"><a href="#reference-planning">Planning</a></h2>
+    Planning problems can be represented in STRIPS form and can be solved either by converting to a search problem or converting to a CSP problem.
+    <h3 id="reference-planning-supported-classes" class="linkify"><a href="#reference-planning-supported-classes">Supported Classes</a></h3>
+    <p><code>Forward_STRIPS</code>, <code>Regression_STRIPS</code></p>
+    <h3 id="reference-planning-included-problems" class="linkify"><a href="#reference-planning-included-problems">Included Problems</a></h3>
+    <p>
+      We have included 6 planning problems in STRIPS representation. 3 of them model a robot delivery system: <code>strips_simple1</code>, <code>strips_simple2</code>
+      and <code>strips_simple3</code>; the other 3 model a block world: <code>strips_block1</code>, <code>strips_block2</code>
+      and <code>strips_block3</code>. Since it is hard to present the problems as graphs, you may view the detail of them in <code>AISpace2/aipython/stripsProblem.py</code>.
+    </p>
+  </section>
+
+
+  <section id="reference-bayesian" class="column inline">
+    <h2 id="bayesian" class="linkify"><a href="#reference-bayesian">Bayesian Network</a></h2>
+    A Bayesian Network (BN) provides a model of conditional dependence among a set of random variables. You can make observations and query for the probabilities in our BN.
+    <h3 id="reference-bayesian-supported-classes" class="linkify"><a href="#reference-bayesian-supported-classes">Supported Classes</a></h3>
+    <p><code>Belief_network</code></p>
+    <h3 id="reference-bayesian-included-problems" class="linkify"><a href="#reference-bayesian-included-problems">Included Problems</a></h3>
+    <p>
+      <figure>
+        <img src="assets/images/problems/bn1.png" alt="BN 1" />
+        <figcaption>
+          <code>bn1</code>: A simple Bayesian Network problem.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/bn2.png" alt="BN 2" />
+        <figcaption>
+          <code>bn2</code>: A Bayesian Network modeling the fire alarm system.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/bn3.png" alt="BN 3" />
+        <figcaption>
+          <code>bn3</code>: A Bayesian Network modeling the sprinkler system.
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="reference-bayesian-visualization-options" class="linkify"><a href="#reference-bayesian-visualization-options">Visualization Options</a></h3>
+    <ul>
+      <li><code>decimal_place</code>: Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
+    </ul>
+  </section>
+
+
+  <section id="reference-faq" class="column inline">
+    <h2 id="faq" class="linkify"><a href="#reference-faq">FAQ</a></h2>
+    <ul>
+      <li><a href="#relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></li>
+      <li><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></li>
+      <li><a href="#relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></li>
+    </ul>
+    <h3 id="relationship-aispace-aispace2" class="linkify"><a href="#relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></h3>
+    TODO
+    <h3 id="relationship-aispace2-aipython" class="linkify"><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></h3>
     <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/">accompanying textbook</a>;
       it can run independently without AISpace2 and Jupyter. AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for a more
       easily understandable and friendly user interface and rich visualizations to accompany code.
@@ -156,215 +380,8 @@
           allow it to be displayed inside Jupyter.</p>
       </li>
     </ol>
-  </section>
-
-
-  <section id="reference-search" class="column inline">
-    <h2 class="linkify"><a href="#reference-search">Search</a></h2>
-    You can explore and investigate famous search algorithms, including depth-first search (DFS), A* search and branch-and-bound search.
-    <h3 id="reference-search-legend" class="linkify"><a href="#reference-search-legend">Legend</a></h3>
-    <p>
-      <svg viewBox="0 0 42 32">
-        <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-      </svg>&mdash; the start node is filled in pinks.
-    </p>
-    <p>
-      <svg viewBox="0 0 42 32">
-        <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-      </svg>&mdash; the regular nodes are filled in white.
-    </p>
-    <p>
-      <svg viewBox="0 0 42 32">
-        <ellipse rx="20" ry="15" fill="gold" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-      </svg>&mdash; the goal nodes are filled in yellow.
-    </p>
-    <p>
-      <svg viewBox="0 0 44 34">
-        <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
-      </svg>&mdash; the nodes at the end of each path on the frontier are outlined in green.
-    </p>
-    <p>
-      <svg viewBox="0 0 130 38">
-        <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
-        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="blue" fill="blue" stroke-width="7"></polygon>
-        <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="19"></ellipse>
-        <ellipse rx="20" ry="15" fill="gold" stroke="blue" stroke-width="3" cx="105" cy="19"></ellipse>
-      </svg>
-      &mdash; the neighbouring nodes of the current path are outlined in blue.</p>
-    <p>
-      <svg viewBox="0 0 220 38">
-        <path data-v-6814c63b="" d="M40,19L80,19" stroke="red" stroke-width="4"></path>
-        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
-        <path data-v-6814c63b="" d="M125,19L165,19" stroke="red" stroke-width="4"></path>
-        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(158, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
-        <ellipse rx="20" ry="15" fill="orchid" stroke="red" stroke-width="3" cx="22" cy="19"></ellipse>
-        <ellipse rx="20" ry="15" fill="white" stroke="red" stroke-width="3" cx="105" cy="19"></ellipse>
-        <ellipse rx="20" ry="15" fill="gold" stroke="red" stroke-width="3" cx="189" cy="19"></ellipse>
-      </svg>
-      &mdash; the path being expanded is outlined in red.
-      in gray.</p>
-    <h3 id="reference-search-supported-classes" class="linkify"><a href="#reference-search-supported-classes">Supported Classes</a></h3>
-    <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
-    <h3 id="reference-search-included-problems" class="linkify"><a href="#reference-search-included-problems">Included Problems</a></h3>
-    <p>
-      <figure>
-        <img src="assets/images/search_simple1.png" alt="Simple Search Problem 1" />
-        <figcaption>
-          <code>search_simple1</code>: A simple search problem.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/search_simple2.png" alt="Simple Search Problem 2" />
-        <figcaption>
-          <code>search_simple2</code>: Another simple search problem.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/search_edgeless.png" alt="Edgeless Search Problem" />
-        <figcaption>
-          <code>search_edgeless</code>: A search problem where there are no edges.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
-        <figcaption>
-          <code>search_acyclic_delivery</code>: A robot delivery problem that has no cycles.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/search_cyclic_delivery.png" alt="Cyclic Search Problem" />
-        <figcaption>
-          <code>search_cyclic_delivery</code>: A robot delivery problem that has cycles.
-        </figcaption>
-      </figure>
-    </p>
-    <h3 id="reference-search-visualization-options" class="linkify"><a href="#reference-search-visualization-options">Visualization Options</a></h3>
-    <ul>
-      <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.</li>
-      <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
-        Defaults to <code>False</code>.</li>
-      <li>
-        <code>layout_method</code>: Controls how the nodes in the graph are positioned. Either <code>"force"</code>, which
-        is a general graph layout algorithm that works on graphs of all types, or <code>"tree"</code>, if you know the resulting
-        graph is always tree-shaped. Defaults to
-        <code>"force"</code>.
-      </li>
-    </ul>
-  </section>
-
-
-  <section id="reference-csp" class="column inline">
-    <h2 id="csp" class="linkify"><a href="#reference-csp">CSP</a></h2>
-    Three tools are provided for solving constraint satisfaction problems (CSPs): arc consistency algorithm, converting CSP to a search problem, and stochastic local search (SLS).
-    <h3 id="reference-csp-legend" class="linkify"><a href="#reference-csp-legend">Legend</a></h3>
-    <p>
-      <svg viewBox="0 0 30 20">
-        <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
-      </svg> &mdash; the arc needs to be checked to see whether it is arc consistent.
-    </p>
-    <p>
-      <svg viewBox="0 0 30 20">
-        <line x1="0" x2="30" y1="10" y2="10" stroke="green" stroke-width="5"></line>
-      </svg> &mdash; the arc is arc consistent.
-    </p>
-    <p>
-      <svg viewBox="0 0 30 20">
-        <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
-      </svg> &mdash; the arc is not arc consistent.
-    </p>
-    <p>
-      You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or
-      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain
-      if it is not in auto solving mode.
-    </p>
-    <h3 id="reference-csp-supported-classes" class="linkify"><a href="#reference-csp-supported-classes">Supported Classes</a></h3>
-    <p><code>Con_solver</code>, <code>SLSearcher</code></p>
-    <h3 id="reference-csp-included-problems" class="linkify"><a href="#reference-csp-included-problems">Included Problems</a></h3>
-    <p>
-      <figure>
-        <img src="assets/images/csp_simple1.png" alt="Simple CSP 1" />
-        <figcaption>
-          <code>csp_simple1</code>: A simple CSP.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/csp_simple2.png" alt="Simple CSP 2" />
-        <figcaption>
-          <code>csp_simple2</code>: Another simple CSP.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/csp_extended.png" alt="Extended CSP" />
-        <figcaption>
-          <code>csp_extended</code>: A more complex CSP.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/csp_crossword1.png" alt="CSP Crossword 1" />
-        <figcaption>
-          <code>csp_crossword1</code>: A crossword that represents word positions as variables.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/csp_crossword2.png" alt="CSP Crossword 2" />
-        <figcaption>
-          <code>csp_crossword2</code>: Another crossword that represents word positions as variables.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/csp_crossword2d.png" alt="CSP Crossword 2d" />
-        <figcaption>
-          <code>csp_crossword2d</code>: A crossword that represents squares as variables.
-        </figcaption>
-      </figure>
-    </p>
-  </section>
-
-
-  <section id="reference-planning" class="column inline">
-    <h2 id="planning" class="linkify"><a href="#reference-planning">Planning</a></h2>
-    Planning problems can be represented in STRIPS form and can be solved either by converting to a search problem or converting to a CSP problem.
-    <h3 id="reference-planning-supported-classes" class="linkify"><a href="#reference-planning-supported-classes">Supported Classes</a></h3>
-    <p><code>Forward_STRIPS</code>, <code>Regression_STRIPS</code></p>
-    <h3 id="reference-planning-included-problems" class="linkify"><a href="#reference-planning-included-problems">Included Problems</a></h3>
-    <p>
-      We have included 6 planning problems in STRIPS representation. 3 of them model a robot delivery system: <code>strips_simple1</code>, <code>strips_simple2</code>
-      and <code>strips_simple3</code>; the other 3 model a block world: <code>strips_block1</code>, <code>strips_block2</code>
-      and <code>strips_block3</code>. Since it is hard to present the problems as graphs, you may view the detail of them in <code>AISpace2/aipython/stripsProblem.py</code>.
-    </p>
-  </section>
-
-
-  <section id="reference-bayesian" class="column inline">
-    <h2 id="bayesian" class="linkify"><a href="#reference-bayesian">Bayesian Network</a></h2>
-    A Bayesian Network (BN) provides a model of conditional dependence among a set of random variables. You can make observations and query for the probabilities in our BN.
-    <h3 id="reference-bayesian-supported-classes" class="linkify"><a href="#reference-bayesian-supported-classes">Supported Classes</a></h3>
-    <p><code>Belief_network</code></p>
-    <h3 id="reference-bayesian-included-problems" class="linkify"><a href="#reference-bayesian-included-problems">Included Problems</a></h3>
-    <p>
-      <figure>
-        <img src="assets/images/bn1.png" alt="BN 1" />
-        <figcaption>
-          <code>bn1</code>: A simple Bayesian Network problem.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/bn2.png" alt="BN 2" />
-        <figcaption>
-          <code>bn2</code>: A Bayesian Network modeling the fire alarm system.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/bn3.png" alt="BN 3" />
-        <figcaption>
-          <code>bn3</code>: A Bayesian Network modeling the sprinkler system.
-        </figcaption>
-      </figure>
-    </p>
-    <h3 id="reference-bayesian-visualization-options" class="linkify"><a href="#reference-bayesian-visualization-options">Visualization Options</a></h3>
-    <ul>
-      <li><code>decimal_place</code>: Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
-    </ul>
+    <h3 id="relationship-notebook-lab" class="linkify"><a href="#relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></h3>
+    TODO
   </section>
 </body>
 
