@@ -33,16 +33,16 @@ class SearcherMPP(AStarSearcher):
                 self.explored.add(path.end())
                 self.num_expanded += 1
                 if self.problem.is_goal(path.end()):
-                    self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier")
+                    # self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier", "\nPath found: ", path)
+                    self.display(1, "Solution found: ", path)
                     self.solution = path   # store the solution found
-                    return path
                 else:
                     neighs = self.problem.neighbors(path.end())
                     self.display(3, "Neighbors are", neighs)
                     for arc in neighs:
                         self.add_to_frontier(Path(path,arc))
                     self.display(3, "Frontier:", self.frontier)
-        self.display(1, "No (more) solutions. Total of", self.num_expanded,"paths expanded.")
+        self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded,"paths expanded.")
 
 from aipython.searchGeneric import test
 if __name__ == "__main__":

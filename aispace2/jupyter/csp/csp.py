@@ -287,6 +287,10 @@ class Displayable(StepDOMWidget):
 
                 self._send_highlight_arcs_action(arcs_to_highlight, style='normal', colour='blue')
 
+        elif args[0] == "Solution found: ":
+            self.send({'action': 'setSolution', 'solution': str(args[1])})
+            args += ("\nClick Step, Auto Arc Consistency or Auto Solve to find more solutions.", )               
+
         #############################
         ### SLS-specific displays ###
         #############################
@@ -387,10 +391,8 @@ class Displayable(StepDOMWidget):
                     conflict_nodes_to_highlight.add(node)
                     conflict_arcs_to_highlight.append((node, conflict))
 
-            self._send_highlight_nodes_action(conflict_nodes_to_highlight,
-                                              "red")
-            self._send_highlight_arcs_action(conflict_arcs_to_highlight,
-                                             "bold", "red")
+            self._send_highlight_nodes_action(conflict_nodes_to_highlight, "red")
+            self._send_highlight_arcs_action(conflict_arcs_to_highlight, "bold", "red")
 
         super().display(level, *args, **dict(kwargs, should_wait=should_wait))
 
@@ -464,7 +466,6 @@ class Displayable(StepDOMWidget):
             'domains': [list(domain) for domain in domains]
             if not is_single_var else [domains]
         })
-
 
 def visualize(func_to_delay):
     """Enqueues a function that does not run until the Jupyter widget has rendered.

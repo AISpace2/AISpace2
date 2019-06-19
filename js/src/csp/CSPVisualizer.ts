@@ -39,6 +39,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           return this.chooseDomainSplit(event);
         case "chooseDomainSplitBeforeAC":
           return this.chooseDomainSplitBeforeAC(event);
+        case "setSolution":
+          this.vue.pre_solution += "\n        " + event.solution;
+          return;                      
         case "output":
           this.vue.output = event.text;
           return;

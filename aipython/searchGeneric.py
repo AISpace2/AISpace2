@@ -46,16 +46,17 @@ class Searcher(Displayable):
             self.display(2, "Expanding:",path,"(cost:",path.cost,")")
             self.num_expanded += 1
             if self.problem.is_goal(path.end()):    # solution found
-                self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier")
+                # self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier", "\nPath found: ", path)
+                self.display(1, "Solution found: ", path)
                 self.solution = path   # store the solution found
-                return path
+
             else:
                 neighs = self.problem.neighbors(path.end())
                 self.display(3, "Neighbors are", neighs)
                 for arc in reversed(neighs):
                     self.add_to_frontier(Path(path,arc))
                 self.display(3, "Frontier:", self.frontier)
-        self.display(1, "No (more) solutions. Total of", self.num_expanded, "paths expanded.")
+        self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded, "paths expanded.")
 
 import heapq        # part of the Python standard library
 from aipython.searchProblem import Path
@@ -97,7 +98,8 @@ class Frontier(object):
 
     def __repr__(self):
         """string representation of the frontier"""
-        return str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])
+        return "\n".join("".join(str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])).split("\\n"))
+
     def __len__(self):
         return len(self.frontierpq)
 

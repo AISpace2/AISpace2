@@ -41,7 +41,8 @@
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output">{{output}}</div>
+      <div class="output" style="white-space: pre;">{{output}}</div>
+      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
     </div>
   </div>
 </template>
@@ -83,7 +84,9 @@ export default class CSPGraphInteractor extends Vue {
   graph: Graph<ICSPGraphNode>;
   // Text describing what is currently happening
   output: string;
-  // Layout object that controls where nodes are drawn
+  // The text representing the solutions found so far
+  pre_solution: string = "";
+  // Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
   // The size of the text inside the node
   textSize: number;

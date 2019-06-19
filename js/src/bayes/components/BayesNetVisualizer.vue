@@ -36,7 +36,7 @@
         <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output">{{output}}</div>
+      <div class="output" style="white-space: pre;">{{output}}</div>
     </div>
   </div>
 </template>
@@ -129,16 +129,16 @@
 
     /** Returns a formatted string representing the probability of a variable node after query. */
     probText(node: IBayesGraphNode) {
-      if (node.trueProb === undefined || node.falseProb === undefined){ 
+      if (node.trueProb === undefined || node.falseProb === undefined){
 	    if (node.observed === undefined) return undefined;
 	    return "\n" + "Obs: " + node.observed;
 	  }
       else {
-	      if (node.observed === undefined) return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace);
-        return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
+	      if (node.observed === undefined) return node.domain[1] + ": " + node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace);
+        return node.domain[1] + ": " + node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
       }
 	}
-    	    
+
     addTextSize(){
       this.textSize ++;
     }

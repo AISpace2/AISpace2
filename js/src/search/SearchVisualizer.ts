@@ -34,6 +34,9 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         case "setFrontier":
           this.vue.frontier = event.frontier;
           return;
+        case "setSolution":
+          this.vue.pre_solution += "\n        " + event.solution;
+          return;        
         case "output":
           this.vue.output = event.text;
           return;

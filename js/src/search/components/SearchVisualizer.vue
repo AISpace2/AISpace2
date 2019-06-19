@@ -37,8 +37,9 @@
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output">{{output}}</div>
-      <div class="frontier">Frontier: {{frontier}}</div>
+      <div class="frontier" style="white-space: pre;">Frontier: {{frontier}}</div>
+      <div class="output" style="white-space: pre;">{{output}}</div>
+      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
     </div>
   </div>
 </template>
@@ -75,6 +76,8 @@
     output: string;
     /** The text representing the frontier. Persistent until frontier changes. */
     frontier: string;
+    /** The text representing the solutions found so far. Persistent until new solution found. */
+    pre_solution: string = "";
     /** True if edge costs should be shown on the edges. */
     showEdgeCosts: boolean;
     /** True if node heuristics should be shown on the nodes. */

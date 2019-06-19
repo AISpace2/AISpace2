@@ -28,10 +28,17 @@ export interface IUpdateFrontierEvent extends IEvent {
   frontier: string;
 }
 
+export interface IUpdateSolutionEvent extends IEvent {
+  action: "setSolution";
+  /** The string representing the new frontier. */
+  solution: string;
+}
+
 /** Search Visualizer Events. */
 export type Events =
   | IHighlightNodeEvent
   | IHighlightPathEvent
   | IClearEvent
   | IUpdateFrontierEvent
+  | IUpdateSolutionEvent
   | Events;
