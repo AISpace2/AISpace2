@@ -42,7 +42,7 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
-      <div class="pre_solution" style="white-space: pre;">Solutions found previously: {{pre_solution}}</div>  
+      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solutions found: {{pre_solution}}</div>  
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@ import * as CSPUtils from "../CSPUtils";
 
 /**
  * A CSP visualization that can be driven by backend code.
- * 
+ *
  * Events Emitted
  * - 'click:edge': An edge has been clicked. The first argument is the edge.
  * - 'click:fine-step': The "fine step" button has been clicked.

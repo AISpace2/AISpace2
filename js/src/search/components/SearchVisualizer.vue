@@ -39,7 +39,7 @@
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
       <div class="frontier" style="white-space: pre;">Frontier: {{frontier}}</div>
-      <div class="pre_solution" style="white-space: pre;">Solutions found previously: {{pre_solution}}</div>
+      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solutions found: {{pre_solution}}</div>
     </div>
   </div>
 </template>
