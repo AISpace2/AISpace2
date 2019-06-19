@@ -129,16 +129,16 @@
 
     /** Returns a formatted string representing the probability of a variable node after query. */
     probText(node: IBayesGraphNode) {
-      if (node.trueProb === undefined || node.falseProb === undefined){ 
+      if (node.trueProb === undefined || node.falseProb === undefined){
 	    if (node.observed === undefined) return undefined;
 	    return "\n" + "Obs: " + node.observed;
 	  }
       else {
-	      if (node.observed === undefined) return node.domain[1] + ": "+ node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace);
-        return node.domain[1] + ": "+ node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
+	      if (node.observed === undefined) return node.domain[1] + ": " + node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace);
+        return node.domain[1] + ": " + node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
       }
 	}
-    	    
+
     addTextSize(){
       this.textSize ++;
     }
