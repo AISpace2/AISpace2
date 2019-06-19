@@ -40,6 +40,7 @@
       <div class="frontier" style="white-space: pre;">Frontier: {{frontier}}</div>
       <div class="output" style="white-space: pre;">{{output}}</div>
       <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
+      <div class="positions" style="white-space: pre;">{{positions}}</div>
     </div>
   </div>
 </template>
@@ -70,23 +71,25 @@
     }
   })
   export default class SearchVisualizer extends Vue {
-    /** The graph being visualized. */
+    // The graph being visualized
     graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
-    /** Text describing what is currently happening. */
+    // Text describing what is currently happening
     output: string;
-    /** The text representing the frontier. Persistent until frontier changes. */
+    // The text representing the frontier
     frontier: string;
-    /** The text representing the solutions found so far. Persistent until new solution found. */
-    pre_solution: string = "";
-    /** True if edge costs should be shown on the edges. */
+    // The text representing the solutions found so far. Persistent until new solution found
+    pre_solution: string;
+    // The text representing the positions for nodes
+    positions: string;
+    // True if edge costs should be shown on the edges
     showEdgeCosts: boolean;
-    /** True if node heuristics should be shown on the nodes. */
+    // True if node heuristics should be shown on the nodes
     showNodeHeuristics: boolean;
-    // /** The width, in pixels, of the visualizer. */
+    // /** The width, in pixels, of the visualizer
     // width: number;
-    // /** The width, in pixels, of the visualizer. */
+    // /** The width, in pixels, of the visualizer
     // height: number;
-    /** Layout object that controls where nodes are drawn. */
+    // Layout object that controls where nodes are drawn
     layout: GraphLayout;
     // The size of the text inside the node
     textSize: number;

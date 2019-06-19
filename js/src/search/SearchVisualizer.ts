@@ -40,6 +40,9 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         case "output":
           this.vue.output = event.text;
           return;
+        case "showPositions":
+          this.vue.positions = this.vue.positions ? "" : event.positions
+          return;
       }
     });
 
@@ -61,6 +64,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
           output: null,
+          pre_solution: "",
+          positions: null,
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,
           legendText: labelDict.searchLabelText,

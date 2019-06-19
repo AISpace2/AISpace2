@@ -43,6 +43,7 @@
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
       <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
+      <div class="positions" style="white-space: pre;">{{positions}}</div>
     </div>
   </div>
 </template>
@@ -85,7 +86,9 @@ export default class CSPGraphInteractor extends Vue {
   // Text describing what is currently happening
   output: string;
   // The text representing the solutions found so far
-  pre_solution: string = "";
+  pre_solution: string;
+  // The text representing the positions for nodes
+  positions: string;
   // Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
   // The size of the text inside the node
