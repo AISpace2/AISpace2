@@ -293,6 +293,15 @@ class Displayable(StepDOMWidget):
 
                 self._send_highlight_arcs_action(
                     arcs_to_highlight, style='normal', colour='blue')
+                
+        elif args[0] == "Solution found: ":
+            self.send({'action': 'setSolution', 'solution': str(args[1])})
+            args += ("\nClick Step or Auto Solve to find more solutions.", )
+        
+        elif args[0] == "New best path:":
+            self.send({'action': 'setSolution', 'solution': str(args[1])})     
+            args += ('\nClick Step or Auto Solve to find more solutions.', )
+                    
 
         #############################
         ### SLS-specific displays ###
@@ -365,10 +374,6 @@ class Displayable(StepDOMWidget):
 
         elif args[0] == "AC done. Reduced domains":
             should_wait = False
-
-        elif args[0] == "Solution found: ":
-            self.send({'action': 'setSolution', 'solution': str(args[1])})
-            args += ("\nClick Step or Auto Solve to find more solutions.", )
 
         elif args[0] == "Conflicts:":
             conflicts = args[1]
