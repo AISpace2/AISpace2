@@ -40,6 +40,13 @@ export interface ICSPChooseDomainSplitBeforeACEvent extends IEvent {
   /** The domain to choose a split from. */
 }
 
+export interface ICSPUpdateSolutionEvent extends IEvent {
+  action: "setSolution";
+  /** The string representing the new frontier. */
+  solution: string;
+}
+
+
 /** CSP Visualizer Events. */
 export type Events =
   | ICSPHighlightArcsEvent
@@ -47,4 +54,5 @@ export type Events =
   | ICSPHighlightNodesEvent
   | ICSPChooseDomainSplitEvent
   | ICSPChooseDomainSplitBeforeACEvent
+  | ICSPUpdateSolutionEvent
   | Events;

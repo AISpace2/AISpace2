@@ -365,6 +365,10 @@ class Displayable(StepDOMWidget):
 
         elif args[0] == "AC done. Reduced domains":
             should_wait = False
+        
+        elif args[0] == "solution:":
+            self.send({'action': 'setSolution', 'solution': str(args[1])})
+            args += ('\n- Click Auto Solve or Step to find more solutions.', )
 
         elif args[0] == "Conflicts:":
             conflicts = args[1]
