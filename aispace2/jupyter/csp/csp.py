@@ -366,9 +366,9 @@ class Displayable(StepDOMWidget):
         elif args[0] == "AC done. Reduced domains":
             should_wait = False
 
-        elif args[0] == "solution:":
+        elif args[0] == "Solution found: ":
             self.send({'action': 'setSolution', 'solution': str(args[1])})
-            args += ("Click Auto Solve or Step to find more solutions.", )
+            args += ("\nClick Step or Auto Solve to find more solutions.", )
 
         elif args[0] == "Conflicts:":
             conflicts = args[1]
@@ -390,10 +390,8 @@ class Displayable(StepDOMWidget):
                         non_conflict_arcs_to_highlight.append((node,
                                                                not_conflict))
 
-                self._send_highlight_nodes_action(
-                    non_conflict_nodes_to_highlight, "green")
-                self._send_highlight_arcs_action(
-                    non_conflict_arcs_to_highlight, "bold", "green")
+                self._send_highlight_nodes_action(non_conflict_nodes_to_highlight, "green")
+                self._send_highlight_arcs_action(non_conflict_arcs_to_highlight, "bold", "green")
 
             # Highlight all conflicts red
             for conflict in conflicts:
@@ -403,10 +401,8 @@ class Displayable(StepDOMWidget):
                     conflict_nodes_to_highlight.add(node)
                     conflict_arcs_to_highlight.append((node, conflict))
 
-            self._send_highlight_nodes_action(conflict_nodes_to_highlight,
-                                              "red")
-            self._send_highlight_arcs_action(conflict_arcs_to_highlight,
-                                             "bold", "red")
+            self._send_highlight_nodes_action(conflict_nodes_to_highlight, "red")
+            self._send_highlight_arcs_action(conflict_arcs_to_highlight, "bold", "red")
 
         super().display(level, *args, **dict(kwargs, should_wait=should_wait))
 
