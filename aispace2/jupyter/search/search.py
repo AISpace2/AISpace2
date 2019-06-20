@@ -100,7 +100,7 @@ class Displayable(StepDOMWidget):
                 self._thread.start()
 
     def display(self, level, *args, **kwargs):
-        if args[0] == 'Expanding:':
+        if args[0] == "Expanding: ":
             path = args[1]
             self._send_clear_action()
             self._send_frontier_updated_action()
@@ -122,7 +122,7 @@ class Displayable(StepDOMWidget):
             else:
                 self._send_highlight_nodes_action(path, 'red')
 
-        elif args[0] == 'Neighbors are':
+        elif args[0] == "Neighbors are":
             neighbours = args[1]
             if not neighbours:
                 return
@@ -136,25 +136,18 @@ class Displayable(StepDOMWidget):
                     if self.problem.is_goal(arc.to_node):
                         self.graph.goals.add(str(arc.to_node))
 
-                    if (str(arc.from_node), str(arc.to_node)
-                        ) not in self._implicit_neighbours_added:
+                    if (str(arc.from_node), str(arc.to_node)) not in self._implicit_neighbours_added:
                         # Found a new neighbour!
                         self.graph.arcs.append(arc)
-                        self._implicit_neighbours_added.add(
-                            (str(arc.from_node), str(arc.to_node)))
-                        self.graph.hmap[str(
-                            arc.to_node)] = self.problem.heuristic(
-                                arc.to_node)
+                        self._implicit_neighbours_added.add((str(arc.from_node), str(arc.to_node)))
+                        self.graph.hmap[str(arc.to_node)] = self.problem.heuristic(arc.to_node)
                         has_graph_changed = True
 
                 if has_graph_changed:
                     # Sync updated explicit representation with the front-end
-                    (self.node_map, self.edge_map
-                     ) = generate_search_graph_mappings(self.graph)
+                    (self.node_map, self.edge_map) = generate_search_graph_mappings(self.graph)
                     self._layout_root_id = self.node_map[str(self.graph.start)]
-                    self.graph = copy.copy(
-                        self.graph
-                    )  # Copy necessary to trigger resynchronization
+                    self.graph = copy.copy(self.graph)  # Copy necessary to trigger resynchronization
 
             neighbour_nodes = []
             arcs_of_path = []
@@ -166,18 +159,18 @@ class Displayable(StepDOMWidget):
             self._send_highlight_nodes_action(neighbour_nodes, 'blue')
             self._send_highlight_path_action(arcs_of_path, 'blue')
 
-        elif args[0] == "Frontier:":
+        elif args[0] == "Frontier: ":
             self._frontier = args[1]
             self._send_clear_action()
             self._send_frontier_updated_action()
 
         elif args[0] == "Solution found: ":
-            self.send({'action': 'setSolution', 'solution': str(args[1])})
-            args += ('\nClick Step or Auto Solve to find more solutions.', )
+            self.send({'action': 'setSolution', 'solution': str(args[1]), 'cost': args[3]})
+            args += ("\nClick Step or Auto Solve to find more solutions.", )
 
         elif args[0] == "New best path: ":
-            self.send({'action': 'setSolution', 'solution': str(args[1])})
-            args += ('\nClick Step or Auto Solve to a potential solution with less cost.', )
+            self.send({'action': 'setSolution', 'solution': str(args[1]), 'cost': args[3]})
+            args += ('\nClick Step or Auto Solve to try to find a solution with less cost.', )
 
         super().display(level, *args, **kwargs)
 
