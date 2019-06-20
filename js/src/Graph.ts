@@ -35,8 +35,7 @@ export interface IBayesGraphNode extends IGraphNode {
   parents: string[];
   evidences: number[];
   domain: string[] | boolean[];
-  trueProb?: number;
-  falseProb?: number;
+  prob?: any;
   observed?: string | null;
 }
 

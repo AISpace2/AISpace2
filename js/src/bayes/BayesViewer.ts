@@ -96,8 +96,7 @@ export default class BayesViewer extends DOMWidgetView {
       return;
     } else {
       const variableNode = nodes[0] as IBayesGraphNode;
-      variableNode.falseProb = event.falseProb;
-      variableNode.trueProb = event.trueProb;
+      variableNode.prob = event.prob;
       this.vue.$set(variableNode.styles, "strokeWidth", 2);
     }
   }
