@@ -1,7 +1,7 @@
 <template>
   <div class="csp_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
-      @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
+      @click:graph="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"
                                    :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover"
@@ -51,8 +51,10 @@
         <label>Constraint Type</label>
         <select v-model="selection.constraint" :disabled="selection.constraint == null">
           <option value="lt">Less than (&#60;)</option>
+          <option value="lte">Less than or Equal to (&#60;&#61;)</option>
           <option value="gt">Greater than (&#62;)</option>
-          <option value="eq">Equal to (=)</option>
+          <option value ="gte">Greater than or Equal to (&#62;&#61;)</option>
+          <option value="eq">Equal to (&#61;)</option>
           <option value="undefined" v-if="selection.constraint == null">Python Constraint</option>
         </select>
       </div>
@@ -120,7 +122,7 @@ export default class CSPGraphBuilder extends Vue {
     if (this.mode === "variable") {
       this.graph.addNode({
         id: shortid.generate(),
-        name: "asdf",
+        name: "Variable",
         x,
         y,
         type: "csp:variable",
@@ -129,7 +131,7 @@ export default class CSPGraphBuilder extends Vue {
     } else if (this.mode === "constraint") {
       this.graph.addNode({
         id: shortid.generate(),
-        name: "asdf",
+        name: "Constraint",
         x,
         y,
         type: "csp:constraint",
