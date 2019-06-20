@@ -57,8 +57,8 @@
   <section id="tutorial-common" class="column inline">
     <h2 id="common" class="linkify"><a href="#tutorial-common">Common</a></h2>
     <h3 id="tutorial-common-jupyter" class="linkify"><a href="#tutorial-common-jupyter">JupyterLab</a></h3>
-    <p>We recommend to use <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html#">JupyterLab</a> for AISpace2.
-      JupyterLab is based on and very similar to <a href="https://jupyter-notebook.readthedocs.io/en/latest/notebook.html#">Jupyter Notebook</a>,
+    <p>We recommend to use <a href="https://jupyter-notebook.readthedocs.io/en/stable/">JupyterLab</a> for AISpace2.
+      JupyterLab is based on and very similar to <a href="https://jupyterlab.readthedocs.io/en/stable/">Jupyter Notebook</a>,
       a web-based and interactive computing notebook environment. If this is your first time using JupyterLab and you have not used Jupyter Notebook before,
       we particularly recommend taking a look at the following links first to quickly get up to speed:</p>
     <ul>
@@ -318,7 +318,14 @@
       <li><a href="#relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></li>
     </ul>
     <h3 id="relationship-aispace-aispace2" class="linkify"><a href="#relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></h3>
-    TODO
+    <p>
+      <a href="http://aispace.org">AISpace</a> is a set of Jave applets for learning and exploring concepts in artificial intelligence. They can be downloaded and
+      run locally. AISpace2, an open source projecte and the next generation of AISpace, is an extension for <a href="http://jupyter.org/">Jupyter</a> and contains a set of Jupyter notebooks,
+      which can be run in the website. Both AISpace and AISpace2 use similar visualizations, but in AISpace the user was not able see the code and may have hard time understanding
+      what is going on in the background. AISpace2 aims to integrate the code with interactive visualizations that are easy for students to extend and allow the students to modify the AI algorithms.
+      In order to make this process more smoothly, in AISpace2 we separate the algorithms (inside <code>./aipython/</code>) from visualizations  (inside <code>./aispace2/ and ./js/) and
+      the user can refer to and change the algorithms when they want to.
+    </p>
     <h3 id="relationship-aispace2-aipython" class="linkify"><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></h3>
     <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/">accompanying textbook</a>;
       it can run independently without AISpace2 and Jupyter. AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for a more
@@ -381,7 +388,15 @@
       </li>
     </ol>
     <h3 id="relationship-notebook-lab" class="linkify"><a href="#relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></h3>
-    TODO
+    <p>
+      <a href="https://jupyter-notebook.readthedocs.io/en/stable/">Jupyter Notebook</a> is a web application for interactive <a href"https://nbformat.readthedocs.io/en/latest/">notebook document format</a>
+      which combine explanatory text, mathematics, computations and their rich media output. <a href="https://jupyterlab.readthedocs.io/en/stable/">JupyterLab</a>
+      is the next generation of Jupyter Notebook, and it is served from the same server and uses the same notebook document format as the classic Jupyter Notebook.
+      JupyterLab enables you to work with documents and activities such as Jupyter notebooks, text editors, terminals, and custom components in a more flexible, integrated, and extensible manner.
+      Moreover, JupyterLab has a side file explorer and you can arrange multiple documents and activities side by side in the work area using tabs and splitters.
+      According to the documentation, JupyterLab will eventually replace the classic Jupyter Notebook (see <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html#releases">here</a>).
+      For more information, please refer to the official documentations.
+    </p>
   </section>
 </body>
 
