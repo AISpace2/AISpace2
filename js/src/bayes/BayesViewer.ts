@@ -92,7 +92,6 @@ export default class BayesViewer extends DOMWidgetView {
 
   private parseQueryResult(event: Events.IBayesQueryEvent) {
     const nodes =  this.model.graph.nodes.filter(node => node.name === event.name);
-
     if (nodes.length === 0) {
       return;
     } else {
