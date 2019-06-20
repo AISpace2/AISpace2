@@ -92,3 +92,20 @@ f_shoes = Prob(Shoes_wet, [Grass_wet], [0.92,0.08,0.35,0.65])
 
 bn3 = Belief_network([Season, Sprinkler, Rained, Grass_wet, Grass_shiny, Shoes_wet],
                [f_season, f_sprinkler, f_rained, f_wet, f_shiny, f_shoes])
+
+
+C100 = Variable("C100",["c103","c110","c121"])
+M200 = Variable("M200",["m200","m221"])
+C200 = Variable("C200",["c210","c221"])
+C300 = Variable("C300",["c310","c313","c314","c320"])
+
+
+f_c100 = Prob(C100,[],[0.2,0.4,0.4])
+f_m200 = Prob(M200,[],[0.5,0.5])
+f_c200 = Prob(C200,[C100],[0.5,0.5,0.8,0.2,0.2,0.8])
+f_c300 = Prob(C300,[C200,M200],[0.25,0.25,0.25,0.25,0.30,0.30,0.10,0.30,0.20,0.20,0.40,0.20,0.10,0.10,0.70,0.10])
+
+
+
+bn4 = Belief_network([C100, M200, C200, C300],
+               [f_c100, f_m200, f_c200, f_c300])

@@ -97,6 +97,7 @@
         this.$emit("click:query-node", node);
       } else {
         this.$emit("click:observe-node", node);
+        this.$emit("click:query-node", node);          
       }
     }
 
@@ -129,13 +130,15 @@
 
     /** Returns a formatted string representing the probability of a variable node after query. */
     probText(node: IBayesGraphNode) {
-      if (node.trueProb === undefined || node.falseProb === undefined){
+      if (node.prob === undefined){
 	    if (node.observed === undefined) return undefined;
 	    return "\n" + "Obs: " + node.observed;
 	  }
       else {
-	      if (node.observed === undefined) return node.domain[1] + ": " + node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace);
-        return node.domain[1] + ": " + node.trueProb.toFixed(this.decimalPlace) + " " + node.domain[0] + ": " + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
+          let text = "";
+          for (var key in node.prob){text += key + ": " + node.prob[key].toFixed(this.decimalPlace) + " ";}
+	      if (node.observed === undefined) return text;
+        return  "Obs: " + node.observed + "\n" + text;
       }
 	}
 

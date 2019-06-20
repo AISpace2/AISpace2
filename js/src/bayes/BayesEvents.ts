@@ -13,8 +13,7 @@ export interface IBayesObserveEvent extends IEvent {
 export interface IBayesQueryEvent extends IEvent {
   action: "query";
   name: string;
-  trueProb: number;
-  falseProb: number;
+  prob: any;
 }
 
 /** CSP Visualizer Events. */

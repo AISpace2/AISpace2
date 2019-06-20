@@ -66,6 +66,5 @@ class Displayable(StepDOMWidget):
         self.send({
             "action": "query",
             "name": name,
-            "trueProb": reply[True],
-            "falseProb": reply[False]
+            "prob": reply
         })
