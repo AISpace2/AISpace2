@@ -338,10 +338,10 @@ figcaption {
   text-align: center;
 }
 
-#reference-search svg,
-#reference-csp svg,
-#reference-planning svg,
-#reference-bayesian svg {
+#tutorial-search svg,
+#tutorial-csp svg,
+#tutorial-planning svg,
+#tutorial-bayesian svg {
   display: inline-block;
   vertical-align: text-top;
   margin-right: 8px;
@@ -349,10 +349,10 @@ figcaption {
 }
 
 @media screen and (max-width: 480px) {
-  #reference-search svg,
-  #reference-csp svg,
-  #reference-planning svg,
-  #reference-bayesian svg {
+  #tutorial-search svg,
+  #tutorial-csp svg,
+  #tutorial-planning svg,
+  #tutorial-bayesian svg {
     height: 1.2em;
   }
 }

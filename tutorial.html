@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AISpace2 &mdash; Reference</title>
+  <title>AISpace2 &mdash; Tutorial</title>
   <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
   <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
@@ -31,11 +31,11 @@
     <a href="install.html">Install</a>
     <!-- <a href="notebooks.html">Notebooks</a> -->
     <a href="contribute.html">Contribute</a>
-    <a href="reference.html" class="selected">Reference</a>
+    <a href="tutorial.html" class="selected">Tutorial</a>
   </div>
 
   <header>
-    <h1>Reference (In Construction)</h1>
+    <h1>Tutorial (In Construction)</h1>
     <h2>The details of AISpace2.</h2>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
@@ -45,18 +45,18 @@
   <section class="column inline">
     <h1>Table of Contents</h1>
     <ul>
-      <li><a href="#reference-common">Common</a></li>
-      <li><a href="#reference-search">Search</a></li>
-      <li><a href="#reference-csp">CSP</a></li>
-      <li><a href="#reference-planning">Planning</a></li>
-      <li><a href="#reference-bayesian">Bayesian Network</a></li>
-      <li><a href="#reference-faq">FAQ</a></li>
+      <li><a href="#tutorial-common">Common</a></li>
+      <li><a href="#tutorial-search">Search</a></li>
+      <li><a href="#tutorial-csp">CSP</a></li>
+      <li><a href="#tutorial-planning">Planning</a></li>
+      <li><a href="#tutorial-bayesian">Bayesian Network</a></li>
+      <li><a href="#tutorial-faq">FAQ</a></li>
     </ul>
   </section>
 
-  <section id="reference-common" class="column inline">
-    <h2 id="common" class="linkify"><a href="#reference-common">Common</a></h2>
-    <h3 id="reference-common-jupyter" class="linkify"><a href="#reference-common-jupyter">JupyterLab</a></h3>
+  <section id="tutorial-common" class="column inline">
+    <h2 id="common" class="linkify"><a href="#tutorial-common">Common</a></h2>
+    <h3 id="tutorial-common-jupyter" class="linkify"><a href="#tutorial-common-jupyter">JupyterLab</a></h3>
     <p>We recommend to use <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html#">JupyterLab</a> for AISpace2.
       JupyterLab is based on and very similar to <a href="https://jupyter-notebook.readthedocs.io/en/latest/notebook.html#">Jupyter Notebook</a>,
       a web-based and interactive computing notebook environment. If this is your first time using JupyterLab and you have not used Jupyter Notebook before,
@@ -66,9 +66,9 @@
             Basics </a></li>
       <li><a href="https://jupyterlab.readthedocs.io/en/stable/user/interface.html" target="_blank" >JupyterLab Interface</a></li>
     </ul>
-    <h3 id="reference-common-buttons" class="linkify"><a href="#reference-common-buttons">Buttons</a></h3>
+    <h3 id="tutorial-common-buttons" class="linkify"><a href="#tutorial-common-buttons">Buttons</a></h3>
     <p>
-      <img src="assets/images/reference-common-controls.png" alt="Main visualizations controls" />
+      <img src="assets/images/tutorial-common-controls.png" alt="Main visualizations controls" />
     </p>
     <ul>
       <li><strong>Fine Step</strong>: Advance the procedure to next fine step.</li>
@@ -81,7 +81,7 @@
     <p>You can resize the height of the visualization by dragging the resize handle (<span style="display: inline-block; width: 10px; height: 10px; background: #727272"></span>)
       in the bottom right corner. The width of the visualization can be changed by resizing the window. In either case, the
       nodes will reposition themselves until they all fit on screen.</p>
-    <h3 id="reference-common-visualization-options" class="linkify"><a href="#reference-common-visualization-options">Visualization Options</a></h3>
+    <h3 id="tutorial-common-visualization-options" class="linkify"><a href="#tutorial-common-visualization-options">Visualization Options</a></h3>
     <ul>
       <li><code>sleep_time</code>: The time, in seconds, between each step in auto solving. Defaults to <code>0.2</code>.
       </li>
@@ -91,7 +91,7 @@
         <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.
         Defaults to <code>1</code>.</li>
     </ul>
-    <h3 id="reference-common-notes-display" class="linkify"><a href="#reference-common-notes-display">Notes about <code>display()</code> (TO IMPROVE) </a></h3>
+    <h3 id="tutorial-common-notes-display" class="linkify"><a href="#tutorial-common-notes-display">Notes about <code>display()</code> (TO IMPROVE) </a></h3>
     The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
     step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
     statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level</code> <code>2</code> or lower is encoutered;
@@ -101,10 +101,10 @@
   </section>
 
 
-  <section id="reference-search" class="column inline">
-    <h2 class="linkify"><a href="#reference-search">Search</a></h2>
+  <section id="tutorial-search" class="column inline">
+    <h2 class="linkify"><a href="#tutorial-search">Search</a></h2>
     You can explore and investigate famous search algorithms, including depth-first search (DFS), A* search and branch-and-bound search.
-    <h3 id="reference-search-legend" class="linkify"><a href="#reference-search-legend">Legend</a></h3>
+    <h3 id="tutorial-search-legend" class="linkify"><a href="#tutorial-search-legend">Legend</a></h3>
     <p>
       <svg viewBox="0 0 42 32">
         <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
@@ -145,9 +145,9 @@
       </svg>
       &mdash; the path being expanded is outlined in red.
       in gray.</p>
-    <h3 id="reference-search-supported-classes" class="linkify"><a href="#reference-search-supported-classes">Supported Classes</a></h3>
+    <h3 id="tutorial-search-supported-classes" class="linkify"><a href="#tutorial-search-supported-classes">Supported Classes</a></h3>
     <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
-    <h3 id="reference-search-included-problems" class="linkify"><a href="#reference-search-included-problems">Included Problems</a></h3>
+    <h3 id="tutorial-search-included-problems" class="linkify"><a href="#tutorial-search-included-problems">Included Problems</a></h3>
     <p>
       <figure>
         <img src="assets/images/problems/search_simple1.png" alt="Simple Search Problem 1" />
@@ -180,7 +180,7 @@
         </figcaption>
       </figure>
     </p>
-    <h3 id="reference-search-visualization-options" class="linkify"><a href="#reference-search-visualization-options">Visualization Options</a></h3>
+    <h3 id="tutorial-search-visualization-options" class="linkify"><a href="#tutorial-search-visualization-options">Visualization Options</a></h3>
     <ul>
       <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.</li>
       <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
@@ -195,10 +195,10 @@
   </section>
 
 
-  <section id="reference-csp" class="column inline">
-    <h2 id="csp" class="linkify"><a href="#reference-csp">CSP</a></h2>
+  <section id="tutorial-csp" class="column inline">
+    <h2 id="csp" class="linkify"><a href="#tutorial-csp">CSP</a></h2>
     Three tools are provided for solving constraint satisfaction problems (CSPs): arc consistency algorithm, converting CSP to a search problem, and stochastic local search (SLS).
-    <h3 id="reference-csp-legend" class="linkify"><a href="#reference-csp-legend">Legend</a></h3>
+    <h3 id="tutorial-csp-legend" class="linkify"><a href="#tutorial-csp-legend">Legend</a></h3>
     <p>
       <svg viewBox="0 0 30 20">
         <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
@@ -219,9 +219,9 @@
       Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain
       if it is not in auto solving mode.
     </p>
-    <h3 id="reference-csp-supported-classes" class="linkify"><a href="#reference-csp-supported-classes">Supported Classes</a></h3>
+    <h3 id="tutorial-csp-supported-classes" class="linkify"><a href="#tutorial-csp-supported-classes">Supported Classes</a></h3>
     <p><code>Con_solver</code>, <code>SLSearcher</code></p>
-    <h3 id="reference-csp-included-problems" class="linkify"><a href="#reference-csp-included-problems">Included Problems</a></h3>
+    <h3 id="tutorial-csp-included-problems" class="linkify"><a href="#tutorial-csp-included-problems">Included Problems</a></h3>
     <p>
       <figure>
         <img src="assets/images/problems/csp_simple1.png" alt="Simple CSP 1" />
@@ -263,12 +263,12 @@
   </section>
 
 
-  <section id="reference-planning" class="column inline">
-    <h2 id="planning" class="linkify"><a href="#reference-planning">Planning</a></h2>
+  <section id="tutorial-planning" class="column inline">
+    <h2 id="planning" class="linkify"><a href="#tutorial-planning">Planning</a></h2>
     Planning problems can be represented in STRIPS form and can be solved either by converting to a search problem or converting to a CSP problem.
-    <h3 id="reference-planning-supported-classes" class="linkify"><a href="#reference-planning-supported-classes">Supported Classes</a></h3>
+    <h3 id="tutorial-planning-supported-classes" class="linkify"><a href="#tutorial-planning-supported-classes">Supported Classes</a></h3>
     <p><code>Forward_STRIPS</code>, <code>Regression_STRIPS</code></p>
-    <h3 id="reference-planning-included-problems" class="linkify"><a href="#reference-planning-included-problems">Included Problems</a></h3>
+    <h3 id="tutorial-planning-included-problems" class="linkify"><a href="#tutorial-planning-included-problems">Included Problems</a></h3>
     <p>
       We have included 6 planning problems in STRIPS representation. 3 of them model a robot delivery system: <code>strips_simple1</code>, <code>strips_simple2</code>
       and <code>strips_simple3</code>; the other 3 model a block world: <code>strips_block1</code>, <code>strips_block2</code>
@@ -277,12 +277,12 @@
   </section>
 
 
-  <section id="reference-bayesian" class="column inline">
-    <h2 id="bayesian" class="linkify"><a href="#reference-bayesian">Bayesian Network</a></h2>
+  <section id="tutorial-bayesian" class="column inline">
+    <h2 id="bayesian" class="linkify"><a href="#tutorial-bayesian">Bayesian Network</a></h2>
     A Bayesian Network (BN) provides a model of conditional dependence among a set of random variables. You can make observations and query for the probabilities in our BN.
-    <h3 id="reference-bayesian-supported-classes" class="linkify"><a href="#reference-bayesian-supported-classes">Supported Classes</a></h3>
+    <h3 id="tutorial-bayesian-supported-classes" class="linkify"><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></h3>
     <p><code>Belief_network</code></p>
-    <h3 id="reference-bayesian-included-problems" class="linkify"><a href="#reference-bayesian-included-problems">Included Problems</a></h3>
+    <h3 id="tutorial-bayesian-included-problems" class="linkify"><a href="#tutorial-bayesian-included-problems">Included Problems</a></h3>
     <p>
       <figure>
         <img src="assets/images/problems/bn1.png" alt="BN 1" />
@@ -303,15 +303,15 @@
         </figcaption>
       </figure>
     </p>
-    <h3 id="reference-bayesian-visualization-options" class="linkify"><a href="#reference-bayesian-visualization-options">Visualization Options</a></h3>
+    <h3 id="tutorial-bayesian-visualization-options" class="linkify"><a href="#tutorial-bayesian-visualization-options">Visualization Options</a></h3>
     <ul>
       <li><code>decimal_place</code>: Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
     </ul>
   </section>
 
 
-  <section id="reference-faq" class="column inline">
-    <h2 id="faq" class="linkify"><a href="#reference-faq">FAQ</a></h2>
+  <section id="tutorial-faq" class="column inline">
+    <h2 id="faq" class="linkify"><a href="#tutorial-faq">FAQ</a></h2>
     <ul>
       <li><a href="#relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></li>
       <li><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></li>
