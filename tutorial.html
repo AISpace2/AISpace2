@@ -75,7 +75,7 @@
       <li><strong>Step</strong>: Advance the procedure to next step.</li>
       <li><strong>Auto Solve</strong>: Run the algorithm step by step until a solution is found.</li>
       <li><strong>Pause</strong>: Pause as soon as the current fine step has finished. Useful to stop auto solving.
-      <li><strong>Print Positions</strong>: TODO.
+      <li><strong>Print Positions</strong>: Print the positions of nodes, can be passed as parameter into problem construction when you want nodes to be at certain place.
       </li>
     </ul>
     <p>You can resize the height of the visualization by dragging the resize handle (<span style="display: inline-block; width: 10px; height: 10px; background: #727272"></span>)
@@ -180,6 +180,32 @@
         </figcaption>
       </figure>
     </p>
+    <h3 id="tutorial-search-construct-yourself" class="linkify"><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></h3>
+    <p>
+      Apart from the included problems, you can also construct various search problems by yourself. You can use the <code>Search_problem_from_explicit_graph</code>
+      class defined in <code>./aipython/searchProblem.py</code> to construct a search problem, which includes
+      <ul>
+        <li><code>nodes</code>, a list of nodes,</li>
+        <li><code>arcs</code>, a list of arcs,</li>
+        <li><code>start</code>, the start node,</li>
+        <li><code>goals</code>, a list of goals,</li>
+        <li><code>hmap</code> (optional), a dictionary of node heuristic values, and</li>
+        <li><code>positions</code> (optional), a dictionary of node positions.</li>
+      </ul>
+      The <code>positions</code> is useful when you want nodes to be in a certain place. You can get the positions of nodes in the notebook canvas by using Print Positions button.
+      You can refer to the file for a more precide definition and some examples of problem construction.
+      One example of defining <code>search_simple1</code> is illustrated below.
+    </p>
+
+    <!-- HTML generated using hilite.me -->
+    <pre style="margin: 0; line-height: 125%"><span style="color: #d0d0d0">search_simple1</span> <span style="color: #d0d0d0">=</span> <span style="color: #447fcf;">Search_problem_from_explicit_graph</span><span style="color: #d0d0d0">(</span>
+    <span style="color: #d0d0d0">nodes</span><span style="color: #d0d0d0">=</span>{<span style="color: #ed9d13">&#39;a&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;b&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;d&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;g&#39;</span>}<span style="color: #d0d0d0">,</span>
+    <span style="color: #d0d0d0">arcs</span><span style="color: #d0d0d0">=[</span><span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;a&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;b&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">1</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;a&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">3</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;b&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">1</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;b&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;d&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">3</span><span style="color: #d0d0d0">),</span>
+        <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;d&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">1</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;g&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">3</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;d&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;g&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">1</span><span style="color: #d0d0d0">)],</span>
+    <span style="color: #d0d0d0">start</span> <span style="color: #d0d0d0">=</span> <span style="color: #ed9d13">&#39;a&#39;</span><span style="color: #d0d0d0">,</span>
+    <span style="color: #d0d0d0">goals</span> <span style="color: #d0d0d0">=</span> {<span style="color: #ed9d13">&#39;g&#39;</span>}<span style="color: #d0d0d0">)</span>
+</pre>
+
     <h3 id="tutorial-search-visualization-options" class="linkify"><a href="#tutorial-search-visualization-options">Visualization Options</a></h3>
     <ul>
       <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.</li>
@@ -367,7 +393,7 @@
         </p>
 
         <!-- HTML generated using hilite.me -->
-        <pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">class</span> <span style="color: #447fcf; text-decoration: underline">Example</span><span style="color: #d0d0d0">():</span>
+        <pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">class</span> <span style="color: #447fcf;">Example</span><span style="color: #d0d0d0">():</span>
   <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">bar</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
     <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;bar&#39;</span><span style="color: #d0d0d0">)</span>
 
@@ -379,7 +405,7 @@
         <p>and there was a cell inside Jupyter Notebook like this:</p>
 
         <!-- HTML generated using hilite.me -->
-        <pre><span style="color: #d0d0d0">e</span> <span style="color: #d0d0d0">=</span> <span style="color: #447fcf; text-decoration: underline">Example()</span>
+        <pre><span style="color: #d0d0d0">e</span> <span style="color: #d0d0d0">=</span> <span style="color: #447fcf;">Example()</span>
 <span style="color: #d0d0d0">e.foo()</span>
 </pre>
 
@@ -395,7 +421,7 @@
 </pre>
 
         <p>On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
-          you would have to also add <code>@visualize</code> to <code>bar</code> as well.</p>
+          you would have to also add <code>@visualize</code> to <code>bar()</code> as well.</p>
 
         <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
           will drive the visualization, so that it can set things up correctly.</p>
