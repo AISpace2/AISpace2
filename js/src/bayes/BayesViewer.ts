@@ -30,6 +30,9 @@ export default class BayesViewer extends DOMWidgetView {
         case "query":
           this.parseQueryResult(event);
           break;
+        case "showPositions":
+          this.vue.positions = this.vue.positions ? "" : event.positions
+          break;
       }
     });
   }
@@ -40,7 +43,8 @@ export default class BayesViewer extends DOMWidgetView {
         data: {
           graph: this.model.graph,
           output: null,
-          /** Layout object that controls where nodes are drawn. */
+          positions: null,
+          // Layout object that controls where nodes are drawn
           layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,

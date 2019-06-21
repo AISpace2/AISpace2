@@ -16,8 +16,15 @@ export interface IBayesQueryEvent extends IEvent {
   prob: any;
 }
 
+export interface IBayesShowPositionsEvent extends IEvent {
+  action: "showPositions";
+  // The string representing the node positions
+  positions: string;
+}
+
 /** CSP Visualizer Events. */
 export type Events =
   | IBayesObserveEvent
   | IBayesQueryEvent
+  | IBayesShowPositionsEvent
   | Events;

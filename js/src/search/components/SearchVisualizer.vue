@@ -85,9 +85,9 @@
     showEdgeCosts: boolean;
     // True if node heuristics should be shown on the nodes
     showNodeHeuristics: boolean;
-    // /** The width, in pixels, of the visualizer
+    // The width, in pixels, of the visualizer
     // width: number;
-    // /** The width, in pixels, of the visualizer
+    // The width, in pixels, of the visualizer
     // height: number;
     // Layout object that controls where nodes are drawn
     layout: GraphLayout;

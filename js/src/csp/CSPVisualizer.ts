@@ -41,13 +41,13 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           return this.chooseDomainSplitBeforeAC(event);
         case "setSolution":
           this.vue.pre_solution += "\n        " + event.solution;
-          return;
+          break;
         case "output":
           this.vue.output = event.text;
-          return;
+          break;
         case "showPositions":
           this.vue.positions = this.vue.positions ? "" : event.positions
-          return;
+          break;
       }
     });
   }

@@ -37,6 +37,7 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
+      <div class="positions" style="white-space: pre;">{{positions}}</div>
     </div>
   </div>
 </template>
@@ -72,11 +73,13 @@
   })
   export default class BayesNetInteractor extends Vue {
 
-    /** The graph being displayed. */
+    // The graph being displayed
     graph: Graph;
-    /** Text describing what is currently happening. */
+    // Text describing what is currently happening
     output: string;
-    /** Layout object that controls where nodes are drawn. */
+    // The text representing the positions for nodes
+    positions: string;
+    // Layout object that controls where nodes are drawn
     layout: GraphLayout;
     // The size of the text inside the node
     textSize: number;
