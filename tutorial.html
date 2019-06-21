@@ -192,18 +192,18 @@
         <li><code>hmap</code> (optional), a dictionary of node heuristic values, and</li>
         <li><code>positions</code> (optional), a dictionary of node positions.</li>
       </ul>
-      The <code>positions</code> is useful when you want nodes to be in a certain place. You can get the positions of nodes in the notebook canvas by using Print Positions button.
-      You can refer to the file for a more precide definition and some examples of problem construction.
+      The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
+      You can refer to the file for a more precise definition and some examples of problem construction.
       One example of defining <code>search_simple1</code> is illustrated below.
     </p>
 
     <!-- HTML generated using hilite.me -->
-    <pre style="margin: 0; line-height: 125%"><span style="color: #d0d0d0">search_simple1</span> <span style="color: #d0d0d0">=</span> <span style="color: #447fcf;">Search_problem_from_explicit_graph</span><span style="color: #d0d0d0">(</span>
-    <span style="color: #d0d0d0">nodes</span><span style="color: #d0d0d0">=</span>{<span style="color: #ed9d13">&#39;a&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;b&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;d&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;g&#39;</span>}<span style="color: #d0d0d0">,</span>
-    <span style="color: #d0d0d0">arcs</span><span style="color: #d0d0d0">=[</span><span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;a&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;b&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">1</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;a&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">3</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;b&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">1</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;b&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;d&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">3</span><span style="color: #d0d0d0">),</span>
-        <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;d&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">1</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;c&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;g&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">3</span><span style="color: #d0d0d0">),</span> <span style="color: #447fcf;">Arc</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;d&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #ed9d13">&#39;g&#39;</span><span style="color: #d0d0d0">,</span><span style="color: #008000; font-weight: bold">1</span><span style="color: #d0d0d0">)],</span>
-    <span style="color: #d0d0d0">start</span> <span style="color: #d0d0d0">=</span> <span style="color: #ed9d13">&#39;a&#39;</span><span style="color: #d0d0d0">,</span>
-    <span style="color: #d0d0d0">goals</span> <span style="color: #d0d0d0">=</span> {<span style="color: #ed9d13">&#39;g&#39;</span>}<span style="color: #d0d0d0">)</span>
+    <<!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">search_simple1 <span style="color: #666666">=</span> Search_problem_from_explicit_graph(
+    nodes<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>},
+    arcs<span style="color: #666666">=</span>[Arc(<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #666666">3</span>), Arc(<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #666666">3</span>),
+        Arc(<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>,<span style="color: #666666">3</span>), Arc(<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>,<span style="color: #666666">1</span>)],
+    start <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;a&#39;</span>,
+    goals <span style="color: #666666">=</span> {<span style="color: #BA2121">&#39;g&#39;</span>})
 </pre>
 
     <h3 id="tutorial-search-visualization-options" class="linkify"><a href="#tutorial-search-visualization-options">Visualization Options</a></h3>
@@ -286,6 +286,24 @@
         </figcaption>
       </figure>
     </p>
+    <h3 id="tutorial-csp-construct-yourself" class="linkify"><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></h3>
+    <p>
+      Apart from the included problems, you can also construct various CSP problems by yourself. You can use the <code>CSP</code>
+      class defined in <code>./aipython/cspProblem.py</code> to construct a CSP problem, which includes
+      <ul>
+        <li><code>domains</code>, a dictionary that maps each variable to its domain,</li>
+        <li><code>constraints</code>, a list of <code>Constraint</code>s, and</li>
+        <li><code>positions</code> (optional), a dictionary of variable positions.</li>
+      </ul>
+      The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
+      You can refer to the file for a more precise definition and some examples of problem construction.
+      One example of defining <code>csp_simple2</code> is illustrated below.
+    </p>
+
+    <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">csp_simple2 <span style="color: #666666">=</span> CSP(
+        domains<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;A&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>},<span style="color: #BA2121">&#39;B&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>}, <span style="color: #BA2121">&#39;C&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>}},
+        constraints<span style="color: #666666">=</span>[Constraint((<span style="color: #BA2121">&#39;A&#39;</span>,<span style="color: #BA2121">&#39;B&#39;</span>),lt), Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,),ne_(<span style="color: #666666">2</span>)), Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,<span style="color: #BA2121">&#39;C&#39;</span>),lt)])
+    </pre>
   </section>
 
 
@@ -300,6 +318,48 @@
       and <code>strips_simple3</code>; the other 3 model a block world: <code>strips_block1</code>, <code>strips_block2</code>
       and <code>strips_block3</code>. Since it is hard to present the problems as graphs, you may view the detail of them in <code>AISpace2/aipython/stripsProblem.py</code>.
     </p>
+    <h3 id="tutorial-planning-construct-yourself" class="linkify"><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></h3>
+    <p>
+      Apart from the included problems, you can also construct various planning problems by yourself. You can use the <code>Planning_problem</code>
+      class defined in <code>./aipython/stripsProblem.py</code> to construct a planning problem, which includes
+      <ul>
+        <li><code>prob_domain</code>, a <code>STRIPS_domain</code>, which represents a planning domain,</li>
+        <li><code>initial_state</code>, the initial state,</li>
+        <li><code>goal</code>, the goal state, and</li>
+        <li><code>positions</code> (optional), a dictionary of variable positions.</li>
+      </ul>
+      A <code>STRIPS_domain</code> furthur includes
+      <ul>
+        <li><code>feats_vals</code>, a dictionary that maps each feature to its domain,</li>
+        <li><code>strips_map</code>, a dictionary that maps each action to its <code>Strips</code> representation.</li>
+      </ul>
+      The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
+      You can refer to the file for a more precise definition and some examples of problem construction.
+      One example of defining <code>strips_simple2</code> is illustrated below.
+    </p>
+
+    <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">delivery_domain <span style="color: #666666">=</span> STRIPS_domain(
+        feats_vals<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:{<span style="color: #BA2121">&#39;cs&#39;</span>, <span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;lab&#39;</span>, <span style="color: #BA2121">&#39;mr&#39;</span>}, <span style="color: #BA2121">&#39;RHC&#39;</span>:boolean, <span style="color: #BA2121">&#39;SWC&#39;</span>:boolean,
+         <span style="color: #BA2121">&#39;MW&#39;</span>:boolean, <span style="color: #BA2121">&#39;RHM&#39;</span>:boolean},
+        strips_map<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;mc_cs&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}),
+         <span style="color: #BA2121">&#39;mc_off&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}),
+         <span style="color: #BA2121">&#39;mc_lab&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}),
+         <span style="color: #BA2121">&#39;mc_mr&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}),
+         <span style="color: #BA2121">&#39;mcc_cs&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}),
+         <span style="color: #BA2121">&#39;mcc_off&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}),
+         <span style="color: #BA2121">&#39;mcc_lab&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}),
+         <span style="color: #BA2121">&#39;mcc_mr&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}),
+         <span style="color: #BA2121">&#39;puc&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>, <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>}, {<span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">True</span>}),
+         <span style="color: #BA2121">&#39;dc&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">True</span>}, {<span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>, <span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">False</span>}),
+         <span style="color: #BA2121">&#39;pum&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>,<span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">True</span>}, {<span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">True</span>,<span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">False</span>}),
+         <span style="color: #BA2121">&#39;dm&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">True</span>}, {<span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>})
+        })
+
+    strips_simple2 <span style="color: #666666">=</span> Planning_problem(delivery_domain,
+                                initial_state<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>, <span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">True</span>, <span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">True</span>, <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>,
+                                 <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>},
+                                goal<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">False</span>})
+    </pre>
   </section>
 
 
@@ -335,6 +395,37 @@
         </figcaption>
       </figure>
     </p>
+    <h3 id="tutorial-bayes-construct-yourself" class="linkify"><a href="#tutorial-bayes-construct-yourself">Construct Problems Yourself</a></h3>
+    <p>
+      Apart from the included problems, you can also construct various belief network problems by yourself. You can use the <code>Belief_network</code>
+      class defined in <code>./aipython/probGraphicalModels.py</code> to construct a belief network problem, which includes
+      <ul>
+        <li><code>vars</code>, a list of variables,</li>
+        <li><code>factors</code>, a list of factors, and</li>
+        <li><code>positions</code> (optional), a dictionary of variable positions.</li>
+      </ul>
+      The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
+      You can refer to the file for a more precise definition and some examples of problem construction.
+      One example of defining <code>bn2</code> is illustrated below.
+    </p>
+
+    <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">Al <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Alarm&quot;</span>, boolean)
+Fi <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Fire&quot;</span>, boolean)
+Le <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Leaving&quot;</span>, boolean)
+Re <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Report&quot;</span>, boolean)
+Sm <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Smoke&quot;</span>, boolean)
+Ta <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Tamper&quot;</span>, boolean)
+
+f_ta <span style="color: #666666">=</span> Prob(Ta, [], [<span style="color: #666666">0.98</span>,<span style="color: #666666">0.02</span>])
+f_fi <span style="color: #666666">=</span> Prob(Fi, [], [<span style="color: #666666">0.99</span>,<span style="color: #666666">0.01</span>])
+f_sm <span style="color: #666666">=</span> Prob(Sm, [Fi], [<span style="color: #666666">0.99</span>,<span style="color: #666666">0.01</span>,<span style="color: #666666">0.1</span>,<span style="color: #666666">0.9</span>])
+f_al <span style="color: #666666">=</span> Prob(Al, [Fi,Ta], [<span style="color: #666666">0.9999</span>, <span style="color: #666666">0.0001</span>, <span style="color: #666666">0.15</span>, <span style="color: #666666">0.85</span>, <span style="color: #666666">0.01</span>, <span style="color: #666666">0.99</span>, <span style="color: #666666">0.5</span>, <span style="color: #666666">0.5</span>])
+f_lv <span style="color: #666666">=</span> Prob(Le, [Al], [<span style="color: #666666">0.999</span>, <span style="color: #666666">0.001</span>, <span style="color: #666666">0.12</span>, <span style="color: #666666">0.88</span>])
+f_re <span style="color: #666666">=</span> Prob(Re, [Le], [<span style="color: #666666">0.99</span>, <span style="color: #666666">0.01</span>, <span style="color: #666666">0.25</span>, <span style="color: #666666">0.75</span>])
+
+bn2 <span style="color: #666666">=</span> Belief_network(vars<span style="color: #666666">=</span>[Al,Fi,Le,Re,Sm,Ta], factors<span style="color: #666666">=</span>[f_ta,f_fi,f_sm,f_al,f_lv,f_re])
+</pre>
+
     <h3 id="tutorial-bayesian-visualization-options" class="linkify"><a href="#tutorial-bayesian-visualization-options">Visualization Options</a></h3>
     <ul>
       <li><code>decimal_place</code>: Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
@@ -392,33 +483,30 @@
           if we had the following class:
         </p>
 
-        <!-- HTML generated using hilite.me -->
-        <pre style="margin: 0; line-height: 125%"><span style="color: #6ab825; font-weight: bold">class</span> <span style="color: #447fcf;">Example</span><span style="color: #d0d0d0">():</span>
-  <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">bar</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
-    <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;bar&#39;</span><span style="color: #d0d0d0">)</span>
+        <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">class</span> <span style="color: #0000FF; font-weight: bold">Example</span>():
+  <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">bar</span>(<span style="color: #008000">self</span>):
+    <span style="color: #008000; font-weight: bold">print</span>(<span style="color: #BA2121">&#39;bar&#39;</span>)
 
-  <span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
-    <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
-    <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
+  <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">foo</span>(<span style="color: #008000">self</span>):
+    <span style="color: #008000">self</span><span style="color: #666666">.</span>bar()
+    <span style="color: #008000; font-weight: bold">print</span>(<span style="color: #BA2121">&#39;foo&#39;</span>)
 </pre>
 
         <p>and there was a cell inside Jupyter Notebook like this:</p>
 
-        <!-- HTML generated using hilite.me -->
-        <pre><span style="color: #d0d0d0">e</span> <span style="color: #d0d0d0">=</span> <span style="color: #447fcf;">Example()</span>
-<span style="color: #d0d0d0">e.foo()</span>
+        <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">e <span style="color: #666666">=</span> Example()
+e<span style="color: #666666">.</span>foo()
 </pre>
 
         <p>Then <code>foo()</code> would have to be annotated with <code>@visualize</code>, because it is called directly on the instance inside a cell; but
           <code>bar()</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo()</code>. Annotating
           <code>foo()</code> is as simple as adding a single line right above the declaration:</p>
 
-        <!-- HTML generated using hilite.me -->
-        <pre style="margin: 0; line-height: 125%"><span style="color: #ffa500">@visualize</span>
-<span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">foo</span><span style="color: #d0d0d0">(</span><span style="color: #24909d">self</span><span style="color: #d0d0d0">):</span>
-  <span style="color: #24909d">self</span><span style="color: #d0d0d0">.bar()</span>
-  <span style="color: #6ab825; font-weight: bold">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">&#39;foo&#39;</span><span style="color: #d0d0d0">)</span>
-</pre>
+          <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF">@visualize</span>
+  <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">foo</span>(<span style="color: #008000">self</span>):
+    <span style="color: #008000">self</span><span style="color: #666666">.</span>bar()
+    <span style="color: #008000; font-weight: bold">print</span>(<span style="color: #BA2121">&#39;foo&#39;</span>)
+  </pre>
 
         <p>On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
           you would have to also add <code>@visualize</code> to <code>bar()</code> as well.</p>
