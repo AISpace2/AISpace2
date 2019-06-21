@@ -128,7 +128,7 @@
       return undefined;
     }
 
-    /** Returns a formatted string representing the probability of a variable node after query. */
+    // Returns a formatted string representing the probability of a variable node after query
     probText(node: IBayesGraphNode) {
       if (node.prob === undefined) {
 	    if (node.observed === undefined) return undefined;
@@ -139,7 +139,7 @@
         for (var key in node.prob) {
           text += key + ": " + node.prob[key].toFixed(this.decimalPlace) + ", ";
         }
-        text = text.slice(0, -1)  // delete last comma
+        text = text.slice(0, -2)  // delete last comma and space
 	      if (node.observed === undefined) return text;
         return  "Obs: " + node.observed + "\n" + text;
       }
@@ -153,9 +153,7 @@
       if(this.textSize > 0) this.textSize --;
     }
 
-    /**
-     * Whenever a node reports it has resized, update it's style so that it redraws.
-     */
+    // Whenever a node reports it has resized, update it's style so that it redraws.
     updateNodeBounds(node: IBayesGraphNode, bounds: { width: number; height: number }) {
       node.styles.width = bounds.width;
       node.styles.height = bounds.height;
