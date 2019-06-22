@@ -45,17 +45,17 @@
   <section class="column inline">
     <h1>TL; DR</h1>
     <p>
-      Don't be scared by tons of information here! Basically AISpace2 is designed to be very easy and friendly to use -- you can skip this page and go play with it first.
-      You can go back here when you encounter any troubles or questions. If your question is not resolved here, please contact ____ at ____.
+      Don't be scared by tons of information here! Basically AISpace2 is designed to be very easy and friendly to use &mdash; you can skip this page and go play with it first
+      and then go back here when you encounter any troubles or questions. If your question is not resolved here, please contact ____ at ____.
     </p>
-    <h2>Table of Contents</h2>
+    <h2 id="tutorial-table-contents" class="linkify"><a href="#tutorial-table-contents">Table of Contents</a></h2>
     <ul>
       <li>
         <a href="#tutorial-common">Common</a>
         <ul>
           <li><a href="#tutorial-common-jupyter">JupyterLab</a></li>
           <li><a href="#tutorial-common-buttons">Buttons</a></li>
-          <li><a href="#tutorial-common-visualization-options">Visualization Option</a></li>
+          <li><a href="#tutorial-common-visualization-options">Visualization Options</a></li>
         </ul>
       </li>
       <li>
@@ -98,7 +98,7 @@
           <li><a href="#tutorial-faq-relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></li>
           <li><a href="#tutorial-faq-relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></li>
           <li><a href="#tutorial-faq-relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></li>
-          <li><a href="#tutorial-faq-notes-display">Notes about <code>display()</code></a></li>
+          <li><a href="#tutorial-faq-what-how-display">What is and how to use <code>display()</code>?</a></li>
         </ul>
       </li>
     </ul>
@@ -106,22 +106,20 @@
 
   <section id="tutorial-common" class="column inline">
     <h2 id="common" class="linkify"><a href="#tutorial-common">Common</a></h2>
-    Here are some common instructions about AISpace2
+    Here are some common instructions about AISpace2.
     <ul>
       <li><a href="#tutorial-common-jupyter">JupyterLab</a></li>
       <li><a href="#tutorial-common-buttons">Buttons</a></li>
-      <li><a href="#tutorial-common-visualization-options">Visualization Option</a></li>
+      <li><a href="#tutorial-common-visualization-options">Visualization Options</a></li>
     </ul>
     <h3 id="tutorial-common-jupyter" class="linkify"><a href="#tutorial-common-jupyter">JupyterLab</a></h3>
-    <p>We recommend to use <a href="https://jupyter-notebook.readthedocs.io/en/stable/">JupyterLab</a> for AISpace2.
+    <p>
+      We recommend to use <a href="https://jupyter-notebook.readthedocs.io/en/stable/">JupyterLab</a> for AISpace2.
       JupyterLab is based on and very similar to <a href="https://jupyterlab.readthedocs.io/en/stable/">Jupyter Notebook</a>,
       a web-based and interactive computing notebook environment. If this is your first time using JupyterLab and you have not used Jupyter Notebook before,
-      we particularly recommend taking a look at the following links first to quickly get up to speed:</p>
-    <ul>
-      <li><a href="https://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Notebook%20Basics.html" target="_blank">Jupyter Notebook
-            Basics </a></li>
-      <li><a href="https://jupyterlab.readthedocs.io/en/stable/user/interface.html" target="_blank" >JupyterLab Interface</a></li>
-    </ul>
+      we particularly recommend getting yourself familiarize with <a href="https://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Notebook%20Basics.html" target="_blank">Jupyter Notebook
+        Basics</a> and <a href="https://jupyterlab.readthedocs.io/en/stable/user/interface.html" target="_blank" >JupyterLab Interface</a> to quickly get up to speed.
+    </p>
     <h3 id="tutorial-common-buttons" class="linkify"><a href="#tutorial-common-buttons">Buttons</a></h3>
     <p>
       <img src="assets/images/tutorial/common-buttons.png" alt="Main visualizations controls" />
@@ -131,7 +129,7 @@
       <li><strong>Step</strong>: Advance the procedure to next step.</li>
       <li><strong>Auto Solve</strong>: Run the algorithm step by step until a solution is found.</li>
       <li><strong>Pause</strong>: Pause as soon as the current fine step has finished. Useful to stop auto solving.
-      <li><strong>Print Positions</strong>: Print the positions of nodes, can be passed as parameter into problem construction when you want nodes to be at certain place.
+      <li><strong>Print Positions</strong>: Print the positions of nodes, which can be passed as parameter into problem construction when you want nodes to be at certain place.
       </li>
     </ul>
     <p>You can resize the height of the visualization by dragging the resize handle (<span style="display: inline-block; width: 10px; height: 10px; background: #727272"></span>)
@@ -144,11 +142,9 @@
       <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
       <li><code>text_size</code>: The fontsize of the text, in pixels. Defaults to <code>15</code>.</li>
       <li><code>detail_level</code>: The detail level of the information shown on a node. <code>0</code>=showing no text;
-        <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.
-        Defaults to <code>1</code>.</li>
-      <li><code>show_edge_costs</code> (only in search related problems): If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.</li>
-      <li><code>show_node_heuristics</code> (only in search related problems): If <code>True</code>, show the node's heuristic value (h-value) inside the node.
-          Defaults to <code>False</code>.</li>
+        <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.</li>
+      <li><code>show_edge_costs</code> (only in search related problems): If <code>True</code>, shows the cost of each edge along the line.</li>
+      <li><code>show_node_heuristics</code> (only in search related problems): If <code>True</code>, show the node's heuristic value (h-value) inside the node.</li>
       <li><code>decimal_place</code> (only in probability related problems): Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
     </ul>
   </section>
@@ -167,7 +163,7 @@
     <p>
       <svg viewBox="0 0 42 32">
         <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-      </svg>&mdash; the start node is filled in pinks.
+      </svg>&mdash; the start node is filled in pink.
     </p>
     <p>
       <svg viewBox="0 0 42 32">
@@ -282,22 +278,22 @@
     <p>
       <svg viewBox="0 0 30 20">
         <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
-      </svg> &mdash; the arc needs to be checked to see whether it is arc consistent.
+      </svg> &mdash; the arc needs to be checked to see whether it is consistent.
     </p>
     <p>
       <svg viewBox="0 0 30 20">
         <line x1="0" x2="30" y1="10" y2="10" stroke="green" stroke-width="5"></line>
-      </svg> &mdash; the arc is arc consistent.
+      </svg> &mdash; the arc is consistent.
     </p>
     <p>
       <svg viewBox="0 0 30 20">
         <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
-      </svg> &mdash; the arc is not arc consistent.
+      </svg> &mdash; the arc is not consistent.
     </p>
     <p>
-      You can click on any blue or red arc to perform arc consistency on that arc. When you use Fine Step, Step, Auto Arc Consistency or
-      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain will be slipt. You can click a node to split its domain
-      if it is not in auto solving mode.
+      You can click on any blue or red arc to perform arc consistency algorithm on that arc. When you use Fine Step, Step, Auto Arc Consistency or
+      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain can be slipt if needed. The domain will be automatically split into half if it is in auto solving mode.
+      If it is not in auto solving mode, you can click on a node to split its domain.
     </p>
     <h3 id="tutorial-csp-supported-classes" class="linkify"><a href="#tutorial-csp-supported-classes">Supported Classes</a></h3>
     <p><code>Con_solver</code>, <code>SLSearcher</code></p>
@@ -378,7 +374,7 @@
     <p>
       We have included 6 planning problems in STRIPS representation. 3 of them model a robot delivery system: <code>strips_simple1</code>, <code>strips_simple2</code>
       and <code>strips_simple3</code>; the other 3 model a block world: <code>strips_block1</code>, <code>strips_block2</code>
-      and <code>strips_block3</code>. Since it is hard to present the problems as graphs, you may view the detail of them in <code>AISpace2/aipython/stripsProblem.py</code>.
+      and <code>strips_block3</code>. Since it is hard to present the problems as graphs, you may view the details of them in <code>AISpace2/aipython/stripsProblem.py</code>.
     </p>
     <h3 id="tutorial-planning-construct-yourself" class="linkify"><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
@@ -392,12 +388,12 @@
       </ul>
       A <code>STRIPS_domain</code> furthur includes
       <ul>
-        <li><code>feats_vals</code>, a dictionary that maps each feature to its domain,</li>
+        <li><code>feats_vals</code>, a dictionary that maps each feature to its domain, and</li>
         <li><code>strips_map</code>, a dictionary that maps each action to its <code>Strips</code> representation.</li>
       </ul>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
-      One example of defining <code>strips_simple2</code> is illustrated below.
+      One example of defining <code>strips_simple1</code> is illustrated below.
     </p>
 
     <!-- HTML generated using hilite.me -->
@@ -469,12 +465,12 @@ strips_simple1 <span style="color: #666666">=</span> Planning_problem(prob_domai
         </figcaption>
       </figure>
     </p>
-    <h3 id="tutorial-bayes-construct-yourself" class="linkify"><a href="#tutorial-bayes-construct-yourself">Construct Problems Yourself</a></h3>
+    <h3 id="tutorial-bayesian-construct-yourself" class="linkify"><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
       Apart from the included problems, you can also construct various belief network problems by yourself. You can use the <code>Belief_network</code>
       class defined in <code>./aipython/probGraphicalModels.py</code> to construct a belief network problem, which includes
       <ul>
-        <li><code>vars</code>, a list of variables,</li>
+        <li><code></code>, a list of variables,</li>
         <li><code>factors</code>, a list of factors, and</li>
         <li><code>positions</code> (optional), a dictionary of variable positions.</li>
       </ul>
@@ -499,7 +495,7 @@ f_al <span style="color: #666666">=</span> Prob(Al, [Fi,Ta],
 f_lv <span style="color: #666666">=</span> Prob(Le, [Al], [<span style="color: #666666">0.999</span>, <span style="color: #666666">0.001</span>, <span style="color: #666666">0.12</span>, <span style="color: #666666">0.88</span>])
 f_re <span style="color: #666666">=</span> Prob(Re, [Le], [<span style="color: #666666">0.99</span>, <span style="color: #666666">0.01</span>, <span style="color: #666666">0.25</span>, <span style="color: #666666">0.75</span>])
 
-bn2 <span style="color: #666666">=</span> Belief_network(<span style="color: #008000">vars</span><span style="color: #666666">=</span>[Al,Fi,Le,Re,Sm,Ta],
+bn2 <span style="color: #666666">=</span> Belief_network(vars<span style="color: #666666">=</span>[Al,Fi,Le,Re,Sm,Ta],
                   factors<span style="color: #666666">=</span>[f_ta,f_fi,f_sm,f_al,f_lv,f_re])
 </pre>
 
@@ -513,12 +509,12 @@ bn2 <span style="color: #666666">=</span> Belief_network(<span style="color: #00
       <li><a href="#tutorial-faq-relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></li>
       <li><a href="#tutorial-faq-relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></li>
       <li><a href="#tutorial-faq-relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></li>
-      <li><a href="#tutorial-faq-notes-display">Notes about <code>display()</code> (TO IMPROVE) </a></li>
+      <li><a href="#tutorial-faq-what-how-display">What is and how to use <code>display()</code>? (TO IMPROVE) </a></li>
     </ul>
     <h3 id="tutorial-faq-relationship-aispace-aispace2" class="linkify"><a href="#tutorial-faq-relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></h3>
     <p>
       <a href="http://aispace.org">AISpace</a> is a set of Java applets for learning and exploring concepts in artificial intelligence. They can be downloaded and
-      run locally. AISpace2, an open source projecte and the next generation of AISpace, is an extension for <a href="http://jupyter.org/">Jupyter</a> and contains a set of Jupyter notebooks,
+      run locally. AISpace2, an open source project and the next generation of AISpace, is an extension for <a href="http://jupyter.org/">Jupyter</a> and contains a set of Jupyter notebooks,
       which can be run in the browser.
     </p>
     <p>
@@ -581,7 +577,7 @@ e<span style="color: #666666">.</span>foo()
   <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">foo</span>(<span style="color: #008000">self</span>):
     <span style="color: #008000">self</span><span style="color: #666666">.</span>bar()
     <span style="color: #008000; font-weight: bold">print</span>(<span style="color: #BA2121">&#39;foo&#39;</span>)
-  </pre>
+</pre>
 
         <p>On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
           you would have to also add <code>@visualize</code> to <code>bar()</code> as well.</p>
@@ -626,7 +622,7 @@ e<span style="color: #666666">.</span>foo()
         </figcaption>
       </figure>
     </p>
-    <h3 id="tutorial-faq-notes-display" class="linkify"><a href="#tutorial-faq-notes-display">Notes about <code>display()</code> (TO IMPROVE) </a></h3>
+    <h3 id="tutorial-faq-what-how-display" class="linkify"><a href="#tutorial-faq-what-how-display">What is and how to use <code>display()</code>? (TO IMPROVE) </a></h3>
     <p>
       The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
       step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
@@ -637,15 +633,12 @@ e<span style="color: #666666">.</span>foo()
     </p>
   </section>
 
-  [B]<script type="text/javascript">[/B]
-
-<!--
+<script>
 var m = "This page was last updated: " + document.lastModified;
 var p = m.length-8;
 document.writeln("<center>");
 document.write(m.substring(p, 0));
 document.writeln("</center>");
- -->
 </script>
 </body>
 
