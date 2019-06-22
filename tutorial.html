@@ -35,7 +35,7 @@
   </div>
 
   <header>
-    <h1>Tutorial (In Construction)</h1>
+    <h1>Tutorial</h1>
     <h2>The details of AISpace2.</h2>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
@@ -43,19 +43,75 @@
   </header>
 
   <section class="column inline">
-    <h1>Table of Contents</h1>
+    <h1>TL; DR</h1>
+    <p>
+      Don't be scared by tons of information here! Basically AISpace2 is designed to be very easy and friendly to use -- you can skip this page and go play with it first.
+      You can go back here when you encounter any troubles or questions. If your question is not resolved here, please contact ____ at ____.
+    </p>
+    <h2>Table of Contents</h2>
     <ul>
-      <li><a href="#tutorial-common">Common</a></li>
-      <li><a href="#tutorial-search">Search</a></li>
-      <li><a href="#tutorial-csp">CSP</a></li>
-      <li><a href="#tutorial-planning">Planning</a></li>
-      <li><a href="#tutorial-bayesian">Bayesian Network</a></li>
-      <li><a href="#tutorial-faq">FAQ</a></li>
+      <li>
+        <a href="#tutorial-common">Common</a>
+        <ul>
+          <li><a href="#tutorial-common-jupyter">JupyterLab</a></li>
+          <li><a href="#tutorial-common-buttons">Buttons</a></li>
+          <li><a href="#tutorial-common-visualization-options">Visualization Option</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-search">Search</a>
+        <ul>
+          <li><a href="#tutorial-search-legend">Legend</a></li>
+          <li><a href="#tutorial-search-supported-classes">Supported Classes</a></li>
+          <li><a href="#tutorial-search-included-problems">Included Problems</a></li>
+          <li><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-csp">CSP</a>
+        <ul>
+          <li><a href="#tutorial-csp-legend">Legend</a></li>
+          <li><a href="#tutorial-csp-supported-classes">Supported Classes</a></li>
+          <li><a href="#tutorial-csp-included-problems">Included Problems</a></li>
+          <li><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-planning">Planning</a>
+        <ul>
+          <li><a href="#tutorial-planning-supported-classes">Supported Classes</a></li>
+          <li><a href="#tutorial-planning-included-problems">Included Problems</a></li>
+          <li><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-bayesian">Bayesian Network</a>
+        <ul>
+          <li><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></li>
+          <li><a href="#tutorial-bayesian-included-problems">Included Problems</a></li>
+          <li><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-faq">FAQ</a>
+        <ul>
+          <li><a href="#tutorial-faq-relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></li>
+          <li><a href="#tutorial-faq-relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></li>
+          <li><a href="#tutorial-faq-relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></li>
+          <li><a href="#tutorial-faq-notes-display">Notes about <code>display()</code></a></li>
+        </ul>
+      </li>
     </ul>
   </section>
 
   <section id="tutorial-common" class="column inline">
     <h2 id="common" class="linkify"><a href="#tutorial-common">Common</a></h2>
+    Here are some common instructions about AISpace2
+    <ul>
+      <li><a href="#tutorial-common-jupyter">JupyterLab</a></li>
+      <li><a href="#tutorial-common-buttons">Buttons</a></li>
+      <li><a href="#tutorial-common-visualization-options">Visualization Option</a></li>
+    </ul>
     <h3 id="tutorial-common-jupyter" class="linkify"><a href="#tutorial-common-jupyter">JupyterLab</a></h3>
     <p>We recommend to use <a href="https://jupyter-notebook.readthedocs.io/en/stable/">JupyterLab</a> for AISpace2.
       JupyterLab is based on and very similar to <a href="https://jupyterlab.readthedocs.io/en/stable/">Jupyter Notebook</a>,
@@ -90,20 +146,23 @@
       <li><code>detail_level</code>: The detail level of the information shown on a node. <code>0</code>=showing no text;
         <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.
         Defaults to <code>1</code>.</li>
+      <li><code>show_edge_costs</code> (only in search related problems): If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.</li>
+      <li><code>show_node_heuristics</code> (only in search related problems): If <code>True</code>, show the node's heuristic value (h-value) inside the node.
+          Defaults to <code>False</code>.</li>
+      <li><code>decimal_place</code> (only in probability related problems): Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
     </ul>
-    <h3 id="tutorial-common-notes-display" class="linkify"><a href="#tutorial-common-notes-display">Notes about <code>display()</code> (TO IMPROVE) </a></h3>
-    The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
-    step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
-    statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level</code> <code>2</code> or lower is encoutered;
-    Auto Solve button makes the exectution not pause at all. You can safely change the <code>display_level</code> to adjust the amount
-    of detail you receive. However, the visualization is entirely driven by the remaining parameters of the <code>display()</code> call, so modifying
-    them may break the visualization.
   </section>
 
 
   <section id="tutorial-search" class="column inline">
     <h2 class="linkify"><a href="#tutorial-search">Search</a></h2>
-    You can explore and investigate famous search algorithms, including depth-first search (DFS), A* search and branch-and-bound search.
+    <p>You can explore and investigate famous search algorithms, including depth-first search (DFS), A* search and branch-and-bound search.</p>
+    <ul>
+      <li><a href="#tutorial-search-legend">Legend</a></li>
+      <li><a href="#tutorial-search-supported-classes">Supported Classes</a></li>
+      <li><a href="#tutorial-search-included-problems">Included Problems</a></li>
+      <li><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></li>
+    </ul>
     <h3 id="tutorial-search-legend" class="linkify"><a href="#tutorial-search-legend">Legend</a></h3>
     <p>
       <svg viewBox="0 0 42 32">
@@ -198,32 +257,27 @@
     </p>
 
     <!-- HTML generated using hilite.me -->
-    <<!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">search_simple1 <span style="color: #666666">=</span> Search_problem_from_explicit_graph(
+    <pre style="margin: 0; line-height: 125%">search_simple1 <span style="color: #666666">=</span> Search_problem_from_explicit_graph(
     nodes<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>},
-    arcs<span style="color: #666666">=</span>[Arc(<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #666666">3</span>), Arc(<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #666666">3</span>),
-        Arc(<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>,<span style="color: #666666">3</span>), Arc(<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>,<span style="color: #666666">1</span>)],
+    arcs<span style="color: #666666">=</span>[Arc(<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #666666">3</span>), Arc(<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #666666">1</span>),
+          Arc(<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #666666">3</span>), Arc(<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>,<span style="color: #666666">3</span>),
+          Arc(<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>,<span style="color: #666666">1</span>)],
     start <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;a&#39;</span>,
     goals <span style="color: #666666">=</span> {<span style="color: #BA2121">&#39;g&#39;</span>})
 </pre>
 
-    <h3 id="tutorial-search-visualization-options" class="linkify"><a href="#tutorial-search-visualization-options">Visualization Options</a></h3>
-    <ul>
-      <li><code>show_edge_costs</code>: If <code>True</code>, shows the cost of each edge along the line. Defaults to <code>True</code>.</li>
-      <li><code>show_node_heuristics</code>: If <code>True</code>, show the node's heuristic value (h-value) inside the node.
-        Defaults to <code>False</code>.</li>
-      <li>
-        <code>layout_method</code>: Controls how the nodes in the graph are positioned. Either <code>"force"</code>, which
-        is a general graph layout algorithm that works on graphs of all types, or <code>"tree"</code>, if you know the resulting
-        graph is always tree-shaped. Defaults to
-        <code>"force"</code>.
-      </li>
-    </ul>
   </section>
 
 
   <section id="tutorial-csp" class="column inline">
     <h2 id="csp" class="linkify"><a href="#tutorial-csp">CSP</a></h2>
-    Three tools are provided for solving constraint satisfaction problems (CSPs): arc consistency algorithm, converting CSP to a search problem, and stochastic local search (SLS).
+    <p>Three tools are provided for solving constraint satisfaction problems (CSPs): arc consistency algorithm, converting CSP to a search problem, and stochastic local search (SLS).</p>
+    <ul>
+      <li><a href="#tutorial-csp-legend">Legend</a></li>
+      <li><a href="#tutorial-csp-supported-classes">Supported Classes</a></li>
+      <li><a href="#tutorial-csp-included-problems">Included Problems</a></li>
+      <li><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></li>
+    </ul>
     <h3 id="tutorial-csp-legend" class="linkify"><a href="#tutorial-csp-legend">Legend</a></h3>
     <p>
       <svg viewBox="0 0 30 20">
@@ -300,16 +354,24 @@
       One example of defining <code>csp_simple2</code> is illustrated below.
     </p>
 
-    <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">csp_simple2 <span style="color: #666666">=</span> CSP(
+    <!-- HTML generated using hilite.me -->
+    <pre style="margin: 0; line-height: 125%">csp_simple2 <span style="color: #666666">=</span> CSP(
         domains<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;A&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>},<span style="color: #BA2121">&#39;B&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>}, <span style="color: #BA2121">&#39;C&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>}},
-        constraints<span style="color: #666666">=</span>[Constraint((<span style="color: #BA2121">&#39;A&#39;</span>,<span style="color: #BA2121">&#39;B&#39;</span>),lt), Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,),ne_(<span style="color: #666666">2</span>)), Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,<span style="color: #BA2121">&#39;C&#39;</span>),lt)])
-    </pre>
+        constraints<span style="color: #666666">=</span>[Constraint((<span style="color: #BA2121">&#39;A&#39;</span>,<span style="color: #BA2121">&#39;B&#39;</span>),lt),
+                     Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,),ne_(<span style="color: #666666">2</span>)),
+                     Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,<span style="color: #BA2121">&#39;C&#39;</span>),lt)])
+</pre>
   </section>
 
 
   <section id="tutorial-planning" class="column inline">
     <h2 id="planning" class="linkify"><a href="#tutorial-planning">Planning</a></h2>
-    Planning problems can be represented in STRIPS form and can be solved either by converting to a search problem or converting to a CSP problem.
+    <p>Planning problems can be represented in STRIPS form and can be solved either by converting to a search problem or converting to a CSP problem.</p>
+    <ul>
+      <li><a href="#tutorial-planning-supported-classes">Supported Classes</a></li>
+      <li><a href="#tutorial-planning-included-problems">Included Problems</a></li>
+      <li><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></li>
+    </ul>
     <h3 id="tutorial-planning-supported-classes" class="linkify"><a href="#tutorial-planning-supported-classes">Supported Classes</a></h3>
     <p><code>Forward_STRIPS</code>, <code>Regression_STRIPS</code></p>
     <h3 id="tutorial-planning-included-problems" class="linkify"><a href="#tutorial-planning-included-problems">Included Problems</a></h3>
@@ -338,34 +400,46 @@
       One example of defining <code>strips_simple2</code> is illustrated below.
     </p>
 
-    <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">delivery_domain <span style="color: #666666">=</span> STRIPS_domain(
-        feats_vals<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:{<span style="color: #BA2121">&#39;cs&#39;</span>, <span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;lab&#39;</span>, <span style="color: #BA2121">&#39;mr&#39;</span>}, <span style="color: #BA2121">&#39;RHC&#39;</span>:boolean, <span style="color: #BA2121">&#39;SWC&#39;</span>:boolean,
-         <span style="color: #BA2121">&#39;MW&#39;</span>:boolean, <span style="color: #BA2121">&#39;RHM&#39;</span>:boolean},
-        strips_map<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;mc_cs&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}),
-         <span style="color: #BA2121">&#39;mc_off&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}),
-         <span style="color: #BA2121">&#39;mc_lab&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}),
-         <span style="color: #BA2121">&#39;mc_mr&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}),
-         <span style="color: #BA2121">&#39;mcc_cs&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}),
-         <span style="color: #BA2121">&#39;mcc_off&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}),
-         <span style="color: #BA2121">&#39;mcc_lab&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}),
-         <span style="color: #BA2121">&#39;mcc_mr&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}),
-         <span style="color: #BA2121">&#39;puc&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>, <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>}, {<span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">True</span>}),
-         <span style="color: #BA2121">&#39;dc&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">True</span>}, {<span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>, <span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">False</span>}),
-         <span style="color: #BA2121">&#39;pum&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>,<span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">True</span>}, {<span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">True</span>,<span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">False</span>}),
-         <span style="color: #BA2121">&#39;dm&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">True</span>}, {<span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>})
-        })
+    <!-- HTML generated using hilite.me -->
+    <pre style="margin: 0; line-height: 125%">boolean <span style="color: #666666">=</span> {<span style="color: #008000">True</span>, <span style="color: #008000">False</span>}
 
-    strips_simple2 <span style="color: #666666">=</span> Planning_problem(delivery_domain,
-                                initial_state<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>, <span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">True</span>, <span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">True</span>, <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>,
-                                 <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>},
-                                goal<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">False</span>})
-    </pre>
+delivery_domain <span style="color: #666666">=</span> STRIPS_domain(
+    feats_vals<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:{<span style="color: #BA2121">&#39;cs&#39;</span>, <span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;lab&#39;</span>, <span style="color: #BA2121">&#39;mr&#39;</span>}, <span style="color: #BA2121">&#39;RHC&#39;</span>:boolean,
+                <span style="color: #BA2121">&#39;SWC&#39;</span>:boolean, <span style="color: #BA2121">&#39;MW&#39;</span>:boolean, <span style="color: #BA2121">&#39;RHM&#39;</span>:boolean},
+    strips_map<span style="color: #666666">=</span>{
+     <span style="color: #BA2121">&#39;mc_cs&#39;</span>:  Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}),
+     <span style="color: #BA2121">&#39;mc_off&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}),
+     <span style="color: #BA2121">&#39;mc_lab&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}),
+     <span style="color: #BA2121">&#39;mc_mr&#39;</span>:  Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}),
+     <span style="color: #BA2121">&#39;mcc_cs&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}),
+     <span style="color: #BA2121">&#39;mcc_off&#39;</span>:Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>}),
+     <span style="color: #BA2121">&#39;mcc_lab&#39;</span>:Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>}),
+     <span style="color: #BA2121">&#39;mcc_mr&#39;</span>: Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>}, {<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>}),
+     <span style="color: #BA2121">&#39;puc&#39;</span>:    Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;cs&#39;</span>, <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>},
+                      {<span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">True</span>}),
+     <span style="color: #BA2121">&#39;dc&#39;</span>:     Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">True</span>},
+                      {<span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>, <span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">False</span>}),
+     <span style="color: #BA2121">&#39;pum&#39;</span>:    Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;mr&#39;</span>,<span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">True</span>},
+                      {<span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">True</span>,<span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">False</span>}),
+     <span style="color: #BA2121">&#39;dm&#39;</span>:     Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">True</span>},
+                      {<span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>})})
+
+strips_simple1 <span style="color: #666666">=</span> Planning_problem(prob_domain<span style="color: #666666">=</span>delivery_domain,
+        initial_state<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>, <span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">True</span>, <span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">True</span>,
+                       <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>, <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>},
+        goal<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>})
+</pre>
   </section>
 
 
   <section id="tutorial-bayesian" class="column inline">
     <h2 id="bayesian" class="linkify"><a href="#tutorial-bayesian">Bayesian Network</a></h2>
-    A Bayesian Network (BN) provides a model of conditional dependence among a set of random variables. You can make observations and query for the probabilities in our BN.
+    <p>A Bayesian Network (BN) provides a model of conditional dependence among a set of random variables. You can make observations and query for the probabilities in our BN.</p>
+    <ul>
+      <li><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></li>
+      <li><a href="#tutorial-bayesian-included-problems">Included Problems</a></li>
+      <li><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></li>
+    </ul>
     <h3 id="tutorial-bayesian-supported-classes" class="linkify"><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></h3>
     <p><code>Belief_network</code></p>
     <h3 id="tutorial-bayesian-included-problems" class="linkify"><a href="#tutorial-bayesian-included-problems">Included Problems</a></h3>
@@ -409,7 +483,8 @@
       One example of defining <code>bn2</code> is illustrated below.
     </p>
 
-    <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">Al <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Alarm&quot;</span>, boolean)
+    <!-- HTML generated using hilite.me -->
+    <pre style="margin: 0; line-height: 125%">Al <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Alarm&quot;</span>, boolean)
 Fi <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Fire&quot;</span>, boolean)
 Le <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Leaving&quot;</span>, boolean)
 Re <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Report&quot;</span>, boolean)
@@ -419,28 +494,28 @@ Ta <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&
 f_ta <span style="color: #666666">=</span> Prob(Ta, [], [<span style="color: #666666">0.98</span>,<span style="color: #666666">0.02</span>])
 f_fi <span style="color: #666666">=</span> Prob(Fi, [], [<span style="color: #666666">0.99</span>,<span style="color: #666666">0.01</span>])
 f_sm <span style="color: #666666">=</span> Prob(Sm, [Fi], [<span style="color: #666666">0.99</span>,<span style="color: #666666">0.01</span>,<span style="color: #666666">0.1</span>,<span style="color: #666666">0.9</span>])
-f_al <span style="color: #666666">=</span> Prob(Al, [Fi,Ta], [<span style="color: #666666">0.9999</span>, <span style="color: #666666">0.0001</span>, <span style="color: #666666">0.15</span>, <span style="color: #666666">0.85</span>, <span style="color: #666666">0.01</span>, <span style="color: #666666">0.99</span>, <span style="color: #666666">0.5</span>, <span style="color: #666666">0.5</span>])
+f_al <span style="color: #666666">=</span> Prob(Al, [Fi,Ta],
+        [<span style="color: #666666">0.9999</span>, <span style="color: #666666">0.0001</span>, <span style="color: #666666">0.15</span>, <span style="color: #666666">0.85</span>, <span style="color: #666666">0.01</span>, <span style="color: #666666">0.99</span>, <span style="color: #666666">0.5</span>, <span style="color: #666666">0.5</span>])
 f_lv <span style="color: #666666">=</span> Prob(Le, [Al], [<span style="color: #666666">0.999</span>, <span style="color: #666666">0.001</span>, <span style="color: #666666">0.12</span>, <span style="color: #666666">0.88</span>])
 f_re <span style="color: #666666">=</span> Prob(Re, [Le], [<span style="color: #666666">0.99</span>, <span style="color: #666666">0.01</span>, <span style="color: #666666">0.25</span>, <span style="color: #666666">0.75</span>])
 
-bn2 <span style="color: #666666">=</span> Belief_network(vars<span style="color: #666666">=</span>[Al,Fi,Le,Re,Sm,Ta], factors<span style="color: #666666">=</span>[f_ta,f_fi,f_sm,f_al,f_lv,f_re])
+bn2 <span style="color: #666666">=</span> Belief_network(<span style="color: #008000">vars</span><span style="color: #666666">=</span>[Al,Fi,Le,Re,Sm,Ta],
+                  factors<span style="color: #666666">=</span>[f_ta,f_fi,f_sm,f_al,f_lv,f_re])
 </pre>
 
-    <h3 id="tutorial-bayesian-visualization-options" class="linkify"><a href="#tutorial-bayesian-visualization-options">Visualization Options</a></h3>
-    <ul>
-      <li><code>decimal_place</code>: Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
-    </ul>
   </section>
 
 
   <section id="tutorial-faq" class="column inline">
     <h2 id="faq" class="linkify"><a href="#tutorial-faq">FAQ</a></h2>
+    Here are some frequently asked questions that may help you.
     <ul>
-      <li><a href="#relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></li>
-      <li><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></li>
-      <li><a href="#relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></li>
+      <li><a href="#tutorial-faq-relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></li>
+      <li><a href="#tutorial-faq-relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></li>
+      <li><a href="#tutorial-faq-relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></li>
+      <li><a href="#tutorial-faq-notes-display">Notes about <code>display()</code> (TO IMPROVE) </a></li>
     </ul>
-    <h3 id="relationship-aispace-aispace2" class="linkify"><a href="#relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></h3>
+    <h3 id="tutorial-faq-relationship-aispace-aispace2" class="linkify"><a href="#tutorial-faq-relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></h3>
     <p>
       <a href="http://aispace.org">AISpace</a> is a set of Java applets for learning and exploring concepts in artificial intelligence. They can be downloaded and
       run locally. AISpace2, an open source projecte and the next generation of AISpace, is an extension for <a href="http://jupyter.org/">Jupyter</a> and contains a set of Jupyter notebooks,
@@ -466,7 +541,7 @@ bn2 <span style="color: #666666">=</span> Belief_network(vars<span style="color:
         </figcaption>
       </figure>
     </p>
-    <h3 id="relationship-aispace2-aipython" class="linkify"><a href="#relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></h3>
+    <h3 id="tutorial-faq-relationship-aispace2-aipython" class="linkify"><a href="#tutorial-faq-relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></h3>
     <p><a href="http://artint.info/AIPython/">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/">accompanying textbook</a>;
       it can run independently without AISpace2 and Jupyter. AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for a more
       easily understandable and friendly user interface and rich visualizations to accompany code.
@@ -524,7 +599,7 @@ e<span style="color: #666666">.</span>foo()
           allow it to be displayed inside Jupyter.</p>
       </li>
     </ol>
-    <h3 id="relationship-notebook-lab" class="linkify"><a href="#relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></h3>
+    <h3 id="tutorial-faq-relationship-notebook-lab" class="linkify"><a href="#tutorial-faq-relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></h3>
     <p>
       <a href="https://jupyter-notebook.readthedocs.io/en/stable/">Jupyter Notebook</a> is a web application for interactive <a href="https://nbformat.readthedocs.io/en/latest/">notebook document format</a>
       which combine explanatory text, mathematics, computations and their rich media output. <a href="https://jupyterlab.readthedocs.io/en/stable/">JupyterLab</a>
@@ -551,7 +626,27 @@ e<span style="color: #666666">.</span>foo()
         </figcaption>
       </figure>
     </p>
+    <h3 id="tutorial-faq-notes-display" class="linkify"><a href="#tutorial-faq-notes-display">Notes about <code>display()</code> (TO IMPROVE) </a></h3>
+    <p>
+      The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
+      step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
+      statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level</code> <code>2</code> or lower is encoutered;
+      Auto Solve button makes the exectution not pause at all. You can safely change the <code>display_level</code> to adjust the amount
+      of detail you receive. However, the visualization is entirely driven by the remaining parameters of the <code>display()</code> call, so modifying
+      them may break the visualization.
+    </p>
   </section>
+
+  [B]<script type="text/javascript">[/B]
+
+<!--
+var m = "This page was last updated: " + document.lastModified;
+var p = m.length-8;
+document.writeln("<center>");
+document.write(m.substring(p, 0));
+document.writeln("</center>");
+ -->
+</script>
 </body>
 
 </html>
