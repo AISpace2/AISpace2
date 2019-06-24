@@ -643,65 +643,71 @@ e<span style="color: #666666">.</span>foo()
       <p>
       You can safely change the <code>level</code> of pre-defined <code>display()</code> calls to adjust the amount of detail you receive.
       However, keep in mind that the visualization is entirely driven by the remaining parameters of the <code>display()</code> call (see corresponding <code>Displayable</code> classes), so modifying
-      them may break the visualization. For example, when running search algorithms usieng Step button, the execution will not pause they it is exporing a node's neighbours. This is because the corresponding <code>display()</code> call (line 17) in <code>search()</code> in the class <code>Searcher</code>
+      them may break the visualization. For example, when running search algorithms usieng Step button, the execution will not pause they it is exporing a node's neighbours. This is because the corresponding <code>display()</code> call (line 18) in <code>search()</code> in the class <code>Searcher</code>
       defined in <code>./aipython/searchGeneric.py</code> has <code>level</code>=<code>3</code>:
 
       <!-- HTML generated using hilite.me -->
       <table><tr><td><pre style="margin: 0; line-height: 125%"> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22</pre></td><td><pre style="margin: 0; line-height: 125%">    <span style="color: #AA22FF">@visualize</span>
-    <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">search</span>(<span style="color: #008000">self</span>):
-        <span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;returns (next) path from the problem&#39;s start node</span>
-<span style="color: #BA2121; font-style: italic">        to a goal node.</span>
-<span style="color: #BA2121; font-style: italic">        Returns None if no path exists.</span>
-<span style="color: #BA2121; font-style: italic">        &quot;&quot;&quot;</span>
-        <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;Ready&quot;</span>)
-        <span style="color: #008000; font-weight: bold">while</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666666">.</span>empty_frontier():
-            path <span style="color: #666666">=</span> <span style="color: #008000">self</span><span style="color: #666666">.</span>frontier<span style="color: #666666">.</span>pop()
-            <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;Expanding: &quot;</span>, path, <span style="color: #BA2121">&quot;(cost: &quot;</span>, path<span style="color: #666666">.</span>cost,<span style="color: #BA2121">&quot;)&quot;</span>)
-            <span style="color: #008000">self</span><span style="color: #666666">.</span>num_expanded <span style="color: #666666">+=</span> <span style="color: #666666">1</span>
-            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666666">.</span>problem<span style="color: #666666">.</span>is_goal(path<span style="color: #666666">.</span>end()):    <span style="color: #408080; font-style: italic"># solution found</span>
-                <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">1</span>, <span style="color: #BA2121">&quot;Solution found: &quot;</span>, path, <span style="color: #BA2121">&quot;(cost: &quot;</span>, path<span style="color: #666666">.</span>cost, <span style="color: #BA2121">&quot;)&quot;</span>)
-                <span style="color: #008000">self</span><span style="color: #666666">.</span>solution <span style="color: #666666">=</span> path   <span style="color: #408080; font-style: italic"># store the solution found</span>
-            <span style="color: #008000; font-weight: bold">else</span>:
-                neighs <span style="color: #666666">=</span> <span style="color: #008000">self</span><span style="color: #666666">.</span>problem<span style="color: #666666">.</span>neighbors(path<span style="color: #666666">.</span>end())
-                <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">3</span>, <span style="color: #BA2121">&quot;Neighbors are&quot;</span>, neighs)
-                <span style="color: #008000; font-weight: bold">for</span> arc <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">reversed</span>(neighs):
-                    <span style="color: #008000">self</span><span style="color: #666666">.</span>add_to_frontier(Path(path, arc))
-                <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">3</span>, <span style="color: #BA2121">&quot;Frontier: &quot;</span>, <span style="color: #008000">self</span><span style="color: #666666">.</span>frontier)
-        <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">1</span>, <span style="color: #BA2121">&quot;No more solutions since the frontier is empty. Total of&quot;</span>,
-                        <span style="color: #008000">self</span><span style="color: #666666">.</span>num_expanded, <span style="color: #BA2121">&quot;paths expanded.&quot;</span>)
-</pre></td></tr></table>
+       2
+       3
+       4
+       5
+       6
+       7
+       8
+       9
+      10
+      11
+      12
+      13
+      14
+      15
+      16
+      17
+      18
+      19
+      20
+      21
+      22
+      23</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF">@visualize</span>
+      <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">search</span>(<span style="color: #008000">self</span>):
+          <span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;returns (next) path from the problem&#39;s start node</span>
+      <span style="color: #BA2121; font-style: italic">    to a goal node.</span>
+      <span style="color: #BA2121; font-style: italic">    Returns None if no path exists.</span>
+      <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+          <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;Ready&quot;</span>)
+          <span style="color: #008000; font-weight: bold">while</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666666">.</span>empty_frontier():
+              path <span style="color: #666666">=</span> <span style="color: #008000">self</span><span style="color: #666666">.</span>frontier<span style="color: #666666">.</span>pop()
+              <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;Expanding: &quot;</span>, path, <span style="color: #BA2121">&quot;(cost: &quot;</span>, path<span style="color: #666666">.</span>cost,<span style="color: #BA2121">&quot;)&quot;</span>)
+              <span style="color: #008000">self</span><span style="color: #666666">.</span>num_expanded <span style="color: #666666">+=</span> <span style="color: #666666">1</span>
+              <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666666">.</span>problem<span style="color: #666666">.</span>is_goal(path<span style="color: #666666">.</span>end()):    <span style="color: #408080; font-style: italic"># solution found</span>
+                  <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">1</span>, <span style="color: #BA2121">&quot;Solution found: &quot;</span>,
+                                  path, <span style="color: #BA2121">&quot;(cost: &quot;</span>, path<span style="color: #666666">.</span>cost, <span style="color: #BA2121">&quot;)&quot;</span>)
+                  <span style="color: #008000">self</span><span style="color: #666666">.</span>solution <span style="color: #666666">=</span> path   <span style="color: #408080; font-style: italic"># store the solution found</span>
+              <span style="color: #008000; font-weight: bold">else</span>:
+                  neighs <span style="color: #666666">=</span> <span style="color: #008000">self</span><span style="color: #666666">.</span>problem<span style="color: #666666">.</span>neighbors(path<span style="color: #666666">.</span>end())
+                  <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">3</span>, <span style="color: #BA2121">&quot;Neighbors are&quot;</span>, neighs)
+                  <span style="color: #008000; font-weight: bold">for</span> arc <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">reversed</span>(neighs):
+                      <span style="color: #008000">self</span><span style="color: #666666">.</span>add_to_frontier(Path(path, arc))
+                  <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">3</span>, <span style="color: #BA2121">&quot;Frontier: &quot;</span>, <span style="color: #008000">self</span><span style="color: #666666">.</span>frontier)
+          <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">1</span>, <span style="color: #BA2121">&quot;No more solutions. Total of&quot;</span>,
+                          <span style="color: #008000">self</span><span style="color: #666666">.</span>num_expanded, <span style="color: #BA2121">&quot;paths expanded.&quot;</span>)
+      </pre></td></tr></table>
 
       You can change it to <code>2</code> and now you can see the execution pause, showing the neighbours, when you click the Step button. However, you should not change anything following the <code>level</code> parameter (<code>"Neighbors are", neighs</code> in this case).
     </p>
     <p>
       You can also add your <code>display()</code> calls to print out some information you want. If you are creating your own <code>display()</code> call, feel free to edit the rest parameters after <code>level</code>. You can pass in an object or a string, just like normal print statements.
-      The <code>display()</code> will prints out all the rest parameters connected by a whitespace. For example, lines 18 and 19 in <code>search()</code> add new paths to the frontier.
-      If you want to see which arcs are exactly iterated in the loop, you can add the following line after line 18:
+      The <code>display()</code> will prints out all the rest parameters connected by a whitespace. For example, lines 19 and 20 in <code>search()</code> add new paths to the frontier.
+      If you want to see which arcs are exactly iterated in the loop, you can add a <code>display()</code> call after line 19:
 
       <!-- HTML generated using hilite.me -->
-      <pre style="margin: 0; line-height: 125%">                    <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;This arc is explored: &quot;</span>, arc)
-</pre>
+      <table><tr><td><pre style="margin: 0; line-height: 125%">19
+20
+21</pre></td><td><pre style="margin: 0; line-height: 125%">            <span style="color: #008000; font-weight: bold">for</span> arc <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">reversed</span>(neighs):
+                <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;The arc being explored is: &quot;</span>, arc)
+                <span style="color: #008000">self</span><span style="color: #666666">.</span>add_to_frontier(Path(path, arc))
+</pre></td></tr></table>
 
     Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button.
     </p>
