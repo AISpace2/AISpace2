@@ -586,13 +586,16 @@ e<span style="color: #666666">.</span>foo()
           will drive the visualization, so that it can set things up correctly.</p>
       </li>
       <li>
-        <p>Change in imports: <code>Displayable</code> subclasses inherit from <code>aipython.utilities.Displayable</code> in
-          AIPython, but inherit from <code>aispace2.jupyter.*</code> inside AISpace2, where <code>*</code> depends on the
+        <p>
+          Change in imports: <code>Displayable</code> subclasses are imported from <code>aipython.utilities</code> in
+          AIPython, but are inherited from <code>aispace2.jupyter.*</code> inside AISpace2, where <code>*</code> depends on the
           algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
-          The <code>@visualize</code> decorator is also imported from <code>aispace2.jupyter.*</code>.</p>
-
-        <p>The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
-          allow it to be displayed inside Jupyter.</p>
+          The <code>@visualize</code> decorator is also imported from <code>aispace2.jupyter.*</code>.
+        </p>
+        <p>
+          The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
+          allow it to be displayed inside Jupyter.
+        </p>
       </li>
     </ol>
     <h3 id="tutorial-faq-relationship-notebook-lab" class="linkify"><a href="#tutorial-faq-relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></h3>
@@ -624,10 +627,19 @@ e<span style="color: #666666">.</span>foo()
     </p>
     <h3 id="tutorial-faq-what-how-display" class="linkify"><a href="#tutorial-faq-what-how-display">What is and how to use <code>display()</code>? (TO IMPROVE) </a></h3>
     <p>
-      The first parameter of each <code>display()</code> call is the <code>display_level</code>, which, depending on the
-      step button, controls when execution pauses. Fine Step button makes the execution pause each time a <code>display()</code>
-      statement is encountered; Step button makes the execution pause each time a <code>display()</code> with <code>display_level</code> <code>2</code> or lower is encoutered;
-      Auto Solve button makes the exectution not pause at all. You can safely change the <code>display_level</code> to adjust the amount
+      <code>display()</code> is a member function of the class <code>StepDOMWidget</code> defined in <code>./aispace2/jupyter/stepdomwidget.py</code>.
+      <code>StepDOMWidget</code> inherits from the class <code>DOMWidget</code> and controls the base Jupyter widget for visualizations that you can step through.
+      <code>display()</code> can be overwritten in its various subclasses <code>Displayable</code> defined in <code>./aispace2/jupyter/*.py</code>, where <code>*</code> depends on the
+      algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>). <code>display()</code> sends the message to the Jupyter widget and displays it, and pauses the
+      execution if needed.
+    </p>
+    <p>
+      The first parameter <code>level</code> of each <code>display()</code> call is <code>1</code>, <code>2</code>, <code>3</code> or <code>4</code>, specifying how "important" the message is.
+      It may also be interpreted as a level of "specificity": <code>1</code> means very general, such as the algorithm has finished, and
+      <code>4</code> means very specific, such as some very minor algorithmic detail. <code>level</code> controls whether the execution should pause at this message.
+      Fine Step button makes the execution pause each time a <code>display()</code> statement is encountered;
+      Step button makes the execution pause each time a <code>display()</code> with <code>level</code> <code>2</code> or lower is encoutered;
+      Auto Solve button makes the exectution not pause at all. You can safely change the <code>level</code> to adjust the amount
       of detail you receive. However, the visualization is entirely driven by the remaining parameters of the <code>display()</code> call, so modifying
       them may break the visualization.
     </p>
