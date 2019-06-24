@@ -509,7 +509,8 @@ bn2 <span style="color: #666666">=</span> Belief_network(vars<span style="color:
       <li><a href="#tutorial-faq-relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></li>
       <li><a href="#tutorial-faq-relationship-aispace2-aipython">Relationship between AISpace2 and AIPython?</a></li>
       <li><a href="#tutorial-faq-relationship-notebook-lab">Relationship between Jupyter Notebook and JupyterLab?</a></li>
-      <li><a href="#tutorial-faq-what-how-display">What is and how to use <code>display()</code>? (TO IMPROVE) </a></li>
+      <li><a href="#tutorial-faq-what-how-display">What is and how to use <code>display()</code>?</a></li>
+      <li><a href="#tutorial-faq-why-update-aipython-not-reflect">Why doesn't the update to codes in <code>./aipython/</code> take effect?</a></li>
     </ul>
     <h3 id="tutorial-faq-relationship-aispace-aispace2" class="linkify"><a href="#tutorial-faq-relationship-aispace-aispace2">Relationship between AISpace and AISpace2?</a></h3>
     <p>
@@ -525,13 +526,13 @@ bn2 <span style="color: #666666">=</span> Belief_network(vars<span style="color:
     </p>
     <p>
       <figure>
-        <img src="assets/images/tutorial/relationship-aispace.png" alt="AISpace" />
+        <img src="assets/images/tutorial/faq-relationship-aispace.png" alt="AISpace" />
         <figcaption>
           AISpace: Java applets
         </figcaption>
       </figure>
       <figure>
-        <img src="assets/images/tutorial/relationship-aispace2.png" alt="AISpace2" />
+        <img src="assets/images/tutorial/faq-relationship-aispace2.png" alt="AISpace2" />
         <figcaption>
           AISpace2: Jupyter notebooks
         </figcaption>
@@ -613,15 +614,25 @@ e<span style="color: #666666">.</span>foo()
     </p>
     <p>
       <figure>
-        <img src="assets/images/tutorial/relationship-notebook.png" alt="Jupyter Notebook Interface" />
+        <img src="assets/images/tutorial/faq-relationship-notebook.png" alt="Jupyter Notebook Interface" />
         <figcaption>
           Jupyter Notebook Interface
         </figcaption>
       </figure>
       <figure>
-        <img src="assets/images/tutorial/relationship-lab.png" alt="JupyterLab Interface" />
+        <img src="assets/images/tutorial/faq-relationship-lab.png" alt="JupyterLab Interface" />
         <figcaption>
           JupyterLab Interface
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="tutorial-faq-why-update-aipython-not-reflect" class="linkify"><a href="#tutorial-faq-why-update-aipython-not-reflect">Why doesn't the update to codes in <code>./aipython/</code> take effect?</a></h3>
+    <p>
+      Whennever you make any change to the Python files in <code>./aipython/</code>, you need to restart the kernel to let the change take effect.
+      <figure>
+        <img src="assets/images/tutorial/faq-why-update-aipython-not-reflect.png" alt="Location of Stop Kernel button" />
+        <figcaption>
+          Click the button to restart the kernel in JupyterLab
         </figcaption>
       </figure>
     </p>
@@ -694,6 +705,7 @@ e<span style="color: #666666">.</span>foo()
                     <span style="color: #008000">self</span><span style="color: #666666">.</span>num_expanded, <span style="color: #BA2121">&quot;paths expanded.&quot;</span>)
 </pre></td></tr></table>
 
+
       You can change it to <code>2</code> and now you can see the execution pause, showing the neighbours, when you click the Step button. However, you should not change anything following the <code>level</code> parameter (<code>"Neighbors are", neighs</code> in this case).
     </p>
     <p>
@@ -708,6 +720,7 @@ e<span style="color: #666666">.</span>foo()
     <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;The arc being explored is: &quot;</span>, arc)
     <span style="color: #008000">self</span><span style="color: #666666">.</span>add_to_frontier(Path(path, arc))
 </pre></td></tr></table>
+
 
     Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button.
     </p>
