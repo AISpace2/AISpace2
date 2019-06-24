@@ -692,22 +692,22 @@ e<span style="color: #666666">.</span>foo()
                   <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">3</span>, <span style="color: #BA2121">&quot;Frontier: &quot;</span>, <span style="color: #008000">self</span><span style="color: #666666">.</span>frontier)
           <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">1</span>, <span style="color: #BA2121">&quot;No more solutions. Total of&quot;</span>,
                           <span style="color: #008000">self</span><span style="color: #666666">.</span>num_expanded, <span style="color: #BA2121">&quot;paths expanded.&quot;</span>)
-      </pre></td></tr></table>
+</pre></td></tr></table>
 
       You can change it to <code>2</code> and now you can see the execution pause, showing the neighbours, when you click the Step button. However, you should not change anything following the <code>level</code> parameter (<code>"Neighbors are", neighs</code> in this case).
     </p>
     <p>
       You can also add your <code>display()</code> calls to print out some information you want. If you are creating your own <code>display()</code> call, feel free to edit the rest parameters after <code>level</code>. You can pass in an object or a string, just like normal print statements.
-      The <code>display()</code> will prints out all the rest parameters connected by a whitespace. For example, lines 19 and 20 in <code>search()</code> add new paths to the frontier.
+      The <code>display()</code> will print out all the rest parameters connected by a whitespace. For example, lines 19 and 20 in <code>search()</code> add new paths to the frontier.
       If you want to see which arcs are exactly iterated in the loop, you can add a <code>display()</code> call after line 19:
 
-      <!-- HTML generated using hilite.me -->
-      <table><tr><td><pre style="margin: 0; line-height: 125%">19
+      <!-- HTML generated using hilite.me --><table><tr><td><pre style="margin: 0; line-height: 125%">19
 20
-21</pre></td><td><pre style="margin: 0; line-height: 125%">            <span style="color: #008000; font-weight: bold">for</span> arc <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">reversed</span>(neighs):
-                <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;The arc being explored is: &quot;</span>, arc)
-                <span style="color: #008000">self</span><span style="color: #666666">.</span>add_to_frontier(Path(path, arc))
+21</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">for</span> arc <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">reversed</span>(neighs):
+    <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;This arc is explored: &quot;</span>, arc)
+    <span style="color: #008000">self</span><span style="color: #666666">.</span>add_to_frontier(Path(path, arc))
 </pre></td></tr></table>
+
 
     Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button.
     </p>
