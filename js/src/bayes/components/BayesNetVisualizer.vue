@@ -36,8 +36,7 @@
         <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output" style="white-space: pre;">{{output}}</div>
-      <div class="positions" style="white-space: pre;">{{positions}}</div>
+      <div class="output">{{output}}</div>
     </div>
   </div>
 </template>
@@ -73,13 +72,11 @@
   })
   export default class BayesNetInteractor extends Vue {
 
-    // The graph being displayed
+    /** The graph being displayed. */
     graph: Graph;
-    // Text describing what is currently happening
+    /** Text describing what is currently happening. */
     output: string;
-    // The text representing the positions for nodes
-    positions: string;
-    // Layout object that controls where nodes are drawn
+    /** Layout object that controls where nodes are drawn. */
     layout: GraphLayout;
     // The size of the text inside the node
     textSize: number;
@@ -100,7 +97,6 @@
         this.$emit("click:query-node", node);
       } else {
         this.$emit("click:observe-node", node);
-        this.$emit("click:query-node", node);
       }
     }
 
@@ -131,23 +127,18 @@
       return undefined;
     }
 
-    // Returns a formatted string representing the probability of a variable node after query
+    /** Returns a formatted string representing the probability of a variable node after query. */
     probText(node: IBayesGraphNode) {
-      if (node.prob === undefined) {
+      if (node.trueProb === undefined || node.falseProb === undefined){ 
 	    if (node.observed === undefined) return undefined;
 	    return "\n" + "Obs: " + node.observed;
 	  }
       else {
-        let text = "";
-        for (var key in node.prob) {
-          text += key + ": " + node.prob[key].toFixed(this.decimalPlace) + ", ";
-        }
-        text = text.slice(0, -2)  // delete last comma and space
-	      if (node.observed === undefined) return text;
-        return  "Obs: " + node.observed + "\n" + text;
+	      if (node.observed === undefined) return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace);
+        return "true:" + node.trueProb.toFixed(this.decimalPlace) + " false:" + node.falseProb.toFixed(this.decimalPlace) + "\n" + "Obs: " + node.observed;
       }
-	  }
-
+	}
+    	    
     addTextSize(){
       this.textSize ++;
     }
@@ -156,7 +147,9 @@
       if(this.textSize > 0) this.textSize --;
     }
 
-    // Whenever a node reports it has resized, update it's style so that it redraws.
+    /**
+     * Whenever a node reports it has resized, update it's style so that it redraws.
+     */
     updateNodeBounds(node: IBayesGraphNode, bounds: { width: number; height: number }) {
       node.styles.width = bounds.width;
       node.styles.height = bounds.height;

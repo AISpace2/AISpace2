@@ -82,6 +82,7 @@
     /** The graph to render. */
     @Prop({ type: Object })
     graph: Graph;
+    prevgraph: Graph;
     /** If true, animates positional changes and other properties of the nodes/edges in this graph. */
     @Prop({ default: false })
     transitions: boolean;
@@ -118,6 +119,7 @@
 
     created() {
       this.graph = this.graph;
+      this.prevgraph = this.graph;
       this.handleResize = debounce(this.handleResize, 300);
     }
 

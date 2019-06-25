@@ -47,7 +47,7 @@ class Con_solver(Displayable):
                 to_do |= add_to_do      # set union
                 self.display(3, "Adding", add_to_do if add_to_do else "nothing", "to to_do.")
             self.display(4, "Arc: (", var, ",", const, ") now consistent")
-        self.display(2, "AC done. Reduced domains: ", domains)
+        self.display(2, "AC done. Reduced domains", domains)
         return domains
 
     def new_to_do(self, var, const):
@@ -92,10 +92,9 @@ class Con_solver(Displayable):
         if any(len(new_domains[var]) == 0 for var in domains):
             return False
         elif all(len(new_domains[var]) == 1 for var in domains):
-            self.display(0, "Solution found: ", {var: select(new_domains[var]) for var in new_domains})
+            self.display(2, "solution:", {var: select(new_domains[var]) for var in new_domains})
             return {var: select(new_domains[var]) for var in domains}
         else:
-            self.display(2, "You can now click on a variable to split domain")
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
             if var:
                 dom1, dom2 = self.partition_domain(new_domains[var], var)
@@ -103,12 +102,8 @@ class Con_solver(Displayable):
                 new_doms1 = copy_with_assign(new_domains, var, dom1)
                 new_doms2 = copy_with_assign(new_domains, var, dom2)
                 to_do = self.new_to_do(var, None)
-                self.display(3, "New domain. Adding", to_do if to_do else "nothing", "to to_do.")
-                self.solve_one(new_doms1, to_do)
-                self.display(3, "New domain. Adding", to_do if to_do else "nothing", "to to_do.")
-                self.solve_one(new_doms2, to_do)
-                self.display(5, "No more solutions since no more domains")
-                return
+                self.display(3, "  adding", to_do if to_do else "nothing", "to to_do.")
+                return self.solve_one(new_doms1, to_do) or self.solve_one(new_doms2, to_do)
 
     def split_var(self, iter_vars):
         return self.visualizer.wait_for_var_selection(iter_vars)
@@ -168,7 +163,7 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
         var = select(x for x in node if len(node[x])>1)
         if var:
             dom1, dom2 = partition_domain(node[var])
-            self.display(2, "Splitting", var, "into", dom1, "and", dom2)
+            self.display(2,"Splitting", var, "into", dom1, "and", dom2)
             to_do = self.cons.new_to_do(var,None)
             for dom in [dom1,dom2]:
                 newdoms = copy_with_assign(node,var,dom)
@@ -177,7 +172,7 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
                     # all domains are non-empty
                     neighs.append(Arc(node,cons_doms))
                 else:
-                    self.display(2, "...",var,"in",dom,"has no solution")
+                    self.display(2,"...",var,"in",dom,"has no solution")
         return neighs
 
 from aipython.cspProblem import test
@@ -192,17 +187,18 @@ def ac_search_solver(csp):
 if __name__ == "__main__":
     test(ac_search_solver)
 
+from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
+
 ## Test Solving CSPs with Arc consistency and domain splitting:
-# from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
-# Con_solver(simple_csp2).solve_one()
-# searcher1d = Searcher(Search_with_AC_from_CSP(simple_csp2))
-# print(searcher1d.search())
-# Searcher.max_display_level = 2  # display search trace (0 turns off)
-# searcher2c = Searcher(Search_with_AC_from_CSP(extended_csp))
-# print(searcher2c.search())
-# searcher3c = Searcher(Search_with_AC_from_CSP(crossword1))
-# print(searcher3c.search())
-# searcher4c = Searcher(Search_with_AC_from_CSP(crossword2))
-# print(searcher4c.search())
-# searcher5c = Searcher(Search_with_AC_from_CSP(crossword2d))
-# print(searcher5c.search())
+#Con_solver(simple_csp2).solve_one()
+#searcher1d = Searcher(Search_with_AC_from_CSP(simple_csp2))
+#print(searcher1d.search())
+#Searcher.max_display_level = 2  # display search trace (0 turns off)
+#searcher2c = Searcher(Search_with_AC_from_CSP(extended_csp))
+#print(searcher2c.search())
+#searcher3c = Searcher(Search_with_AC_from_CSP(crossword1))
+#print(searcher3c.search())
+#searcher4c = Searcher(Search_with_AC_from_CSP(crossword2))
+#print(searcher4c.search())
+#searcher5c = Searcher(Search_with_AC_from_CSP(crossword2d))
+#print(searcher5c.search())

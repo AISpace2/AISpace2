@@ -58,6 +58,7 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("_previously_rendered");
   }
 
+
   get waitForRender(): boolean {
     return this.get("wait_for_render");
   }
@@ -66,7 +67,7 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("detail_level");
   }
 
-  // The base line width of the edges to draw. Bold arcs will be several pixels thicker than this.
+  /** The base line width of the edges to draw. Bold arcs will be several pixels thicker than this. */
   get lineWidth(): number {
     return this.get("line_width");
   }
@@ -76,13 +77,8 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("text_size");
   }
 
-  // The Graph representing the CSP problem
+  /** The Graph representing the CSP problem. */
   get graph(): Graph {
     return this.get("graph");
-  }
-
-  // Whether the auto arc consistency button will show up
-  get needACButton(): boolean {
-    return this.get("need_AC_button");
   }
 }

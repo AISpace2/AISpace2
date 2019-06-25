@@ -37,7 +37,6 @@ class Displayable(StepDOMWidget):
         return min(1, line_width)
 
     def handle_custom_msgs(self, _, content, buffers=None):
-        super().handle_custom_msgs(None, content, buffers)
         event = content.get('event', '')
 
         # Receive msg from frontend
@@ -66,5 +65,6 @@ class Displayable(StepDOMWidget):
         self.send({
             "action": "query",
             "name": name,
-            "prob": reply
+            "trueProb": reply[True],
+            "falseProb": reply[False]
         })

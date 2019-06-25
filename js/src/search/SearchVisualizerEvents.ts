@@ -2,52 +2,36 @@
 
 import { Events, IEvent } from "../Events";
 
-export interface ISearchHighlightNodeEvent extends IEvent {
+export interface IHighlightNodeEvent extends IEvent {
   action: "highlightNodes";
-  // The ID of the nodes to highlight
+  /** The ID of the nodes to highlight. */
   nodeIds: string[];
-  // A HTML colour string that will be used as the stroke of the node
+  /** A HTML colour string that will be used as the stroke of the node. */
   colour: string;
 }
 
-export interface ISearchHighlightPathEvent extends IEvent {
+export interface IHighlightPathEvent extends IEvent {
   action: "highlightPath";
-  // A list of edge IDs that make up the path
+  /** A list of edge IDs that make up the path. */
   path: string[];
-  // A HTML colour string that will be used as the stroke along the path
+  /** A HTML colour string that will be used as the stroke along the path. */
   colour: string;
 }
 
-export interface ISearchClearEvent extends IEvent {
+export interface IClearEvent extends IEvent {
   action: "clear";
 }
 
-export interface ISearchUpdateFrontierEvent extends IEvent {
+export interface IUpdateFrontierEvent extends IEvent {
   action: "setFrontier";
-  // The string representing the new frontier
+  /** The string representing the new frontier. */
   frontier: string;
 }
 
-export interface ISearchSetSolutionEvent extends IEvent {
-  action: "setSolution";
-  // The string representing the new solution
-  solution: string;
-  // The cost of the solution
-  cost: number;
-}
-
-export interface ISearchShowPositionsEvent extends IEvent {
-  action: "showPositions";
-  // The string representing the node positions
-  positions: string;
-}
-
-// Search Visualizer Events
+/** Search Visualizer Events. */
 export type Events =
-  | ISearchHighlightNodeEvent
-  | ISearchHighlightPathEvent
-  | ISearchClearEvent
-  | ISearchUpdateFrontierEvent
-  | ISearchSetSolutionEvent
-  | ISearchShowPositionsEvent
+  | IHighlightNodeEvent
+  | IHighlightPathEvent
+  | IClearEvent
+  | IUpdateFrontierEvent
   | Events;

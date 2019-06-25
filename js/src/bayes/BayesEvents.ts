@@ -13,18 +13,12 @@ export interface IBayesObserveEvent extends IEvent {
 export interface IBayesQueryEvent extends IEvent {
   action: "query";
   name: string;
-  prob: any;
-}
-
-export interface IBayesShowPositionsEvent extends IEvent {
-  action: "showPositions";
-  // The string representing the node positions
-  positions: string;
+  trueProb: number;
+  falseProb: number;
 }
 
 /** CSP Visualizer Events. */
 export type Events =
   | IBayesObserveEvent
   | IBayesQueryEvent
-  | IBayesShowPositionsEvent
   | Events;

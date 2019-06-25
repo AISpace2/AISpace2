@@ -11,7 +11,7 @@
         </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
-        <DirectedRectEdge :id="props.edge.id" :x1="updateOverlappedEdege(props.edge).styles.x1" :x2="updateOverlappedEdege(props.edge).styles.x2" :y1="updateOverlappedEdege(props.edge).styles.y1" :y2="updateOverlappedEdege(props.edge).styles.y2" :stroke="props.edge.styles.stroke"
+        <DirectedRectEdge :id="props.edge.id" :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
                           :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name"
                           :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
@@ -37,10 +37,8 @@
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="frontier" style="white-space: pre;">Frontier: {{frontier}}</div>
-      <div class="output" style="white-space: pre;">{{output}}</div>
-      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
-      <div class="positions" style="white-space: pre;">{{positions}}</div>
+      <div class="output">{{output}}</div>
+      <div class="frontier">Frontier: {{frontier}}</div>
     </div>
   </div>
 </template>
@@ -71,25 +69,21 @@
     }
   })
   export default class SearchVisualizer extends Vue {
-    // The graph being visualized
+    /** The graph being visualized. */
     graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
-    // Text describing what is currently happening
+    /** Text describing what is currently happening. */
     output: string;
-    // The text representing the frontier
+    /** The text representing the frontier. Persistent until frontier changes. */
     frontier: string;
-    // The text representing the solutions found so far. Persistent until new solution found
-    pre_solution: string;
-    // The text representing the positions for nodes
-    positions: string;
-    // True if edge costs should be shown on the edges
+    /** True if edge costs should be shown on the edges. */
     showEdgeCosts: boolean;
-    // True if node heuristics should be shown on the nodes
+    /** True if node heuristics should be shown on the nodes. */
     showNodeHeuristics: boolean;
-    // The width, in pixels, of the visualizer
+    // /** The width, in pixels, of the visualizer. */
     // width: number;
-    // The width, in pixels, of the visualizer
+    // /** The width, in pixels, of the visualizer. */
     // height: number;
-    // Layout object that controls where nodes are drawn
+    /** Layout object that controls where nodes are drawn. */
     layout: GraphLayout;
     // The size of the text inside the node
     textSize: number;
@@ -157,36 +151,10 @@
     }
 
     nodemaxWidth(node: ISearchGraphNode) {
-      if (!node.styles.radius) {
+      if (!node.radius) {
         return 100;
       }
-      return node.styles.radius * 2;
-    }
-
-    /**
-     * Whenever a node involved in two overlapped edges is moved, update the fake node position
-     * to make sure the two overlapped edges are splitted and move with node.
-     */
-    updateOverlappedEdege(edge: ISearchGraphEdge) {
-      if (edge.styles.overlapped === true) {
-            const xa = edge.source.x;
-            const ya = edge.source.y;
-            const xb = edge.target.x;
-            const yb = edge.target.y;
-            const radius = 5;
-            const cos: number = (yb! - ya!) / Math.sqrt(Math.pow((yb! - ya!), 2) + Math.pow((xb! - xa!), 2));
-            const sin: number = (xb! - xa!) / Math.sqrt(Math.pow((yb! - ya!), 2) + Math.pow((xb! - xa!), 2));
-            edge.styles.x1 = xa! - cos * radius;
-            edge.styles.x2 = xb! - cos * radius;
-            edge.styles.y1 = sin * radius + ya!;
-            edge.styles.y2 = sin * radius + yb!;
-          } else {
-            edge.styles.x1 = edge.source.x;
-            edge.styles.x2 = edge.target.x;
-            edge.styles.y1 = edge.source.y;
-            edge.styles.y2 = edge.target.y;
-          }
-          return edge;
+      return node.radius * 2;
     }
 
     /**

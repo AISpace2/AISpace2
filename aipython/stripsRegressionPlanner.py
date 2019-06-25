@@ -83,10 +83,10 @@ class Regression_STRIPS(Search_problem):
         return self.heur(self.initial_state, subgoal.assignment)
 
 ## Test
-# from aipython.searchBranchAndBound import DF_branch_and_bound
-# from aipython.searchGeneric import AStarSearcher
-# from aipython.searchMPP import SearcherMPP
-# from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
+#from aipython.searchBranchAndBound import DF_branch_and_bound
+#from aipython.searchGeneric import AStarSearcher
+#from aipython.searchMPP import SearcherMPP
+#from aipython.stripsProblem import strips_simple1, strips_simple2, strips_simple3, strips_blocks1, strips_blocks2, strips_blocks3
 
 # AStarSearcher(Regression_STRIPS(strips_simple2)).search()  #A*
 # SearcherMPP(Regression_STRIPS(strips_simple2)).search()   #A* with MPP
