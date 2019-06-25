@@ -11,7 +11,7 @@ class CSPBuilder(DOMWidget):
     """A Jupyter widget that allows for visual creation of a CSP.
 
     See the accompanying frontend file: `js/src/csp/CSPBuilder.ts`
-    
+
     Currently incomplete. We have not figured out how to handle how to serialize Python constraints,
     especially because they can be any arbitrary functions. The imagined scenario is if a user
     bases their CSP off of a CSP with custom constraints, modifies a few things, then tries to
@@ -29,9 +29,7 @@ class CSPBuilder(DOMWidget):
     _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The CSP that is synced as a graph to the frontend.
-    graph = Instance(
-        klass=CSP, allow_none=True).tag(
-            sync=True, from_json=csp_from_json, to_json=csp_to_json)
+    graph = Instance(klass=CSP, allow_none=True).tag(sync=True, from_json=csp_from_json, to_json=csp_to_json)
     text_size = Integer(12).tag(sync=True)
     detail_level = Integer(1).tag(sync=True)
 
