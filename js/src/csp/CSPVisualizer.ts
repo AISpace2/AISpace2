@@ -35,8 +35,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           return this.setDomains(event);
         case "highlightNodes":
           return this.highlightNodes(event);
-        case "chooseDomainSplit":
-          return this.chooseDomainSplit(event);
+        case "chooseDomainSplit":{
+          this.vue.needSplit = true;  
+          return ;}
         case "chooseDomainSplitBeforeAC":
           return this.chooseDomainSplitBeforeAC(event);
         case "setSolution":
@@ -67,7 +68,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           detailLevel: this.model.detailLevel,
           legendText: labelDict.cspLabelText,
           legendColor: labelDict.cspLabelColor,
-          needACButton: this.model.needACButton
+          needACButton: this.model.needACButton,
+          needSplit: false  
         }
       }).$mount(this.el);
 
@@ -120,6 +122,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           varType: node.type
         });
       });
+      
+      this.vue.$on("click:submit", () => {
+        Analytics.trackEvent("Bayes Visualizer", "Observe Node");   
+        this.chooseDomainSplit();               
+      });        
+
 
       // Functions called on the Python backend are queued until first render
       if (!this.model.previouslyRendered && this.model.waitForRender) {
@@ -195,13 +203,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /**
    * Requests the user choose a domain for one side of the split.
    */
-  private chooseDomainSplit(event: CSPEvents.ICSPChooseDomainSplitEvent) {
-    const domainString = window.prompt(
-      "Choose domain for first split for variable " + event.var + ". Cancel to choose a default split.",
-      event.domain.join()
-    );
+  private chooseDomainSplit() {
+    if(this.vue.FocusNode.checkedNames.length ===0){alert("Please choose domain to split before submiting"); return;}
+    const domainString = this.vue.FocusNode.checkedNames[0];  
     const newDomain = domainString != null ? domainString.split(",").filter(d => d) : null;
     this.send({ event: "domain_split", domain: newDomain });
+    this.vue.needSplit = false;
   }
 
   /**

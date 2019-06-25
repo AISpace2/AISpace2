@@ -1,14 +1,14 @@
 <template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
-    <button id="query-mode" :style="stateStyle('query')" class = "btn btn-default" @click="isQuerying = true">Query</button>
-    <button id="observe-mode" :style="stateStyle('observe')" class = "btn btn-default" @click="isQuerying = false">Observe</button>
+    <button id="query-mode" :style="stateStyle('query')" class = "btn btn-default" @click="changemode('query');">Query</button>
+    <button id="observe-mode" :style="stateStyle('observe')" class = "btn btn-default" @click="changemode('observe');">Observe</button>
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
     >
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext= "probText(props.node)"
                                    :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                                    :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel" @updateBounds="updateNodeBounds(props.node, $event)"
-                                   :stroke-width="nodeStrokeWidth(props.node)">
+                                   :stroke-width="nodeStrokeWidth(props.node)" style="white-space: pre;">
         </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
@@ -38,6 +38,15 @@
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
       <div class="positions" style="white-space: pre;">{{positions}}</div>
+      <div v-if="FocusNode.domain.length > 0 && !isQuerying">
+        <div>Choose domain to observe</div>
+        <div>Currently Observing Node: {{FocusNode.nodeName}}</div>
+        <div v-for="key in FocusNode.domain" :key = "key">    
+        <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames" @change="uniqueCheck">
+        <label :for = "key">{{key}}</label>     
+        </div>
+        <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
+      </div>  
     </div>
   </div>
 </template>
@@ -62,6 +71,7 @@
    * - 'click:fine-step': The "fine step" button has been clicked.
    * - 'click:step': The "step" button has been clicked.
    * - 'click:auto-solve': The "auto solve" button has been clicked.
+   * - 'click:submit': User chooses node domain to observe. 
    */
   @Component({
     components: {
@@ -90,6 +100,31 @@
     isQuerying: boolean;
     // the number of decimal places to show for the node's probability
     decimalPlace: number;
+    // the checkboxs of node
+    
+    data() {
+      return {
+        FocusNode:{
+        domain:[],
+        checkedNames: [],
+        nodeName: String
+        }
+     }
+    }
+    
+    uniqueCheck(e){
+      this.FocusNode.checkedNames = [];
+      if (e.target.checked) {
+          this.FocusNode.checkedNames.push(e.target.value);
+      }
+    }
+    
+    changemode(e:String){
+        if(e === "query"){this.isQuerying = true;}
+        else {this.isQuerying =false;}
+        this.FocusNode.domain = [];
+    }
+    
 
     edgeClicked(edge: IGraphEdge) {
       this.$emit("click:edge", edge);
@@ -98,9 +133,10 @@
     nodeClicked(node: IBayesGraphNode) {
       if (this.isQuerying) {
         this.$emit("click:query-node", node);
+         
       } else {
-        this.$emit("click:observe-node", node);
-        this.$emit("click:query-node", node);
+        this.FocusNode.domain = node.domain;   
+        this.FocusNode.nodeName = node.name;    
       }
     }
 

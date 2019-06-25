@@ -44,6 +44,15 @@
       <div class="output" style="white-space: pre;">{{output}}</div>
       <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
       <div class="positions" style="white-space: pre;">{{positions}}</div>
+      <div v-if="FocusNode.domain.length > 1 && needSplit">
+        <div>Choose domain to split</div>
+        <div>Currently spliting Node: {{FocusNode.nodeName}}</div>
+        <div v-for="key in FocusNode.domain" :key = "key">    
+        <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames" @change="uniqueCheck">
+        <label :for = "key">{{key}}</label>     
+        </div>
+        <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
+      </div>          
     </div>
   </div>
 </template>
@@ -99,6 +108,26 @@ export default class CSPGraphInteractor extends Vue {
   legendColor: string[];
   // Whether the auto arc consistency button will show up
   needACButton: boolean;
+  // Whether do we need domain spliting
+  needSplit: boolean;
+    
+  data() {
+      return {
+        FocusNode:{
+        domain:[],
+        checkedNames: [],
+        nodeName: String
+        }
+     }
+  }
+    
+  uniqueCheck(e){
+      this.FocusNode.checkedNames = [];
+      if (e.target.checked) {
+          this.FocusNode.checkedNames.push(e.target.value);
+      }
+  }    
+    
 
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
@@ -106,6 +135,10 @@ export default class CSPGraphInteractor extends Vue {
 
   nodeClicked(node: ICSPGraphNode) {
     this.$emit("click:node", node);
+    if(node.domain !== undefined){
+    this.FocusNode.domain = node.domain[0];    
+    this.FocusNode.nodeName = node.name;
+    }        
   }
 
   nodeStrokeColour(node: ICSPGraphNode, isHovering: boolean = false) {
