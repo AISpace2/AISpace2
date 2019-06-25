@@ -11,12 +11,17 @@
 from aipython.cspProblem import CSP, Constraint
 from aipython.searchProblem import Arc, Search_problem
 from aispace2.jupyter.csp import Displayable, visualize
+from traitlets import Bool
 import random
 import heapq
 
 class SLSearcher(Displayable):
     """A search problem directly from the CSP..
     A node is a variable:value dictionary"""
+
+    # Constrols whether the auto arc consistency button will show up in the widget (will not in SLS)
+    need_AC_button = Bool(False).tag(sync=True) # don't need auto arc consistency button for SLS
+
     def __init__(self, csp):
         self.csp = csp
         self.variables_to_select = {var for var in self.csp.variables
@@ -34,7 +39,7 @@ class SLSearcher(Displayable):
         self.conflicts = set()
         for con in self.csp.constraints:
             if not con.holds(self.current_assignment):
-                self.conflicts.add(con)        
+                self.conflicts.add(con)
         self.display(2, "Conflicts:", self.conflicts)
         self.variable_pq = None
 
@@ -249,10 +254,10 @@ if __name__ == "__main__":
     test(any_conflict_solver)
 
 ## Test Solving CSPs with Search:
-#from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
-#se1 = SLSearcher(simple_csp2); print(se1.search(100))
-#se2 = SLSearcher(extended_csp); print(se2.search(1000,1.0)) # greedy
-#se2 = SLSearcher(extended_csp); print(se2.search(1000,0))  # any_conflict
-#se2 = SLSearcher(extended_csp); print(se2.search(1000,0.7)) # 70% greedy; 30% any_conflict
-#SLSearcher.max_display_level=2  #more detailed display
-#se3 = SLSearcher(crossword1); print(se3.search(100),0.7)
+# from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
+# se1 = SLSearcher(simple_csp2); print(se1.search(100))
+# se2 = SLSearcher(extended_csp); print(se2.search(1000,1.0)) # greedy
+# se2 = SLSearcher(extended_csp); print(se2.search(1000,0))  # any_conflict
+# se2 = SLSearcher(extended_csp); print(se2.search(1000,0.7)) # 70% greedy; 30% any_conflict
+# SLSearcher.max_display_level=2  # more detailed display
+# se3 = SLSearcher(crossword1); print(se3.search(100),0.7)

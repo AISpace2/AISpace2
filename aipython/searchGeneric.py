@@ -9,6 +9,7 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 from aispace2.jupyter.search import Displayable, visualize
+from aipython.searchProblem import Search_problem_from_explicit_graph
 
 class Searcher(Displayable):
     """returns a searcher for a problem.
@@ -22,6 +23,7 @@ class Searcher(Displayable):
         self.initialize_frontier()
         self.num_expanded = 0
         self.add_to_frontier(Path(problem.start_node()))
+        self.layout_method = "force"  if isinstance(problem, Search_problem_from_explicit_graph) else "tree"
         super().__init__()
 
     def initialize_frontier(self):
@@ -39,21 +41,22 @@ class Searcher(Displayable):
         to a goal node.
         Returns None if no path exists.
         """
+        self.display(2, "Ready")
         while not self.empty_frontier():
             path = self.frontier.pop()
-            self.display(2, "Expanding:",path,"(cost:",path.cost,")")
+            self.display(2, "Expanding: ", path, "(cost: ", path.cost,")")
             self.num_expanded += 1
             if self.problem.is_goal(path.end()):    # solution found
-                self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier")
+                # self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier", "\nPath found: ", path)
+                self.display(1, "Solution found: ", path, "(cost: ", path.cost, ")")
                 self.solution = path   # store the solution found
-                return path
             else:
                 neighs = self.problem.neighbors(path.end())
                 self.display(3, "Neighbors are", neighs)
                 for arc in reversed(neighs):
-                    self.add_to_frontier(Path(path,arc))
-                self.display(3, "Frontier:", self.frontier)
-        self.display(1, "No (more) solutions. Total of", self.num_expanded, "paths expanded.")
+                    self.add_to_frontier(Path(path, arc))
+                self.display(3, "Frontier: ", self.frontier)
+        self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded, "paths expanded.")
 
 import heapq        # part of the Python standard library
 from aipython.searchProblem import Path
@@ -95,7 +98,8 @@ class Frontier(object):
 
     def __repr__(self):
         """string representation of the frontier"""
-        return str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])
+        return "\n".join("".join(str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])).split("\\n"))
+
     def __len__(self):
         return len(self.frontierpq)
 

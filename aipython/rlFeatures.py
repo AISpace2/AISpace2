@@ -96,14 +96,12 @@ def dot_product(l1,l2):
     return sum(e1*e2 for (e1,e2) in zip(l1,l2))
 
 
-from rlQTest import senv    # simple game environment
-from rlSimpleGameFeatures import get_features, simp_features
-from rlPlot import plot_rl
-
-fa1 = SARSA_LFA_learner(senv, get_features, 0.9, step_size=0.01)
-#fa1.max_display_level = 2
-#fa1.do(20)
-#plot_rl(fa1,steps_explore=10000,steps_exploit=10000,label="SARSA_LFA(0.01)")
-fas1 = SARSA_LFA_learner(senv, simp_features, 0.9, step_size=0.01)
-#plot_rl(fas1,steps_explore=10000,steps_exploit=10000,label="SARSA_LFA(simp)")
-
+# from rlQTest import senv    # simple game environment
+# from rlSimpleGameFeatures import get_features, simp_features
+# from rlPlot import plot_rl
+# fa1 = SARSA_LFA_learner(senv, get_features, 0.9, step_size=0.01)
+# fa1.max_display_level = 2
+# fa1.do(20)
+# plot_rl(fa1,steps_explore=10000,steps_exploit=10000,label="SARSA_LFA(0.01)")
+# fas1 = SARSA_LFA_learner(senv, simp_features, 0.9, step_size=0.01)
+# plot_rl(fas1,steps_explore=10000,steps_exploit=10000,label="SARSA_LFA(simp)")
