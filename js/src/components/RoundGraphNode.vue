@@ -29,7 +29,7 @@
    *       the edges to use this information. E.g. for DirectedEdge, update (source|dest)R(x|y) prop.
    */
   @Component
-  export default class RoundedRectangleGraphNode extends RectangleGraphNode {
+  export default class RoundGraphNode extends RectangleGraphNode {
     @Prop({ required: false})
     subtext: string;
     /** The final width, in pixels, of the text element containing the (truncated) text. */

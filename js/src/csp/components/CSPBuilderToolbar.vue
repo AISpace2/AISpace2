@@ -1,14 +1,20 @@
 <template>
-    <span>
-        <input type="radio" id="zero" value="select" v-model="picked">
-        <label for="zero">Select</label>
-        <input type="radio" id="one" value="variable" v-model="picked">
-        <label for="one">Variable</label>
-        <input type="radio" id="two" value="constraint" v-model="picked">
-        <label for="two">Constraint</label>
-        <input type="radio" id="three" value="edge" v-model="picked">
-        <label for="three">Edge</label>
-    </span>
+  <span>
+    <input type="radio" id="setRadio" value="select" name="set-radio" v-model="picked">
+    <label for="setRadio">Set Property</label>
+    <input type="radio" id="variableRadio" value="variable" name="variable-radio" v-model="picked">
+    <label for="variableRadio">Create Variable</label>
+    <input
+      type="radio"
+      id="constraintRadio"
+      value="constraint"
+      name="constraint-radio"
+      v-model="picked"
+    >
+    <label for="constraintRadio">Create Constraint</label>
+    <input type="radio" id="edgeRadio" value="edge" name="edge-radio" v-model="picked">
+    <label for="edgeRadio">Create Edge</label>
+  </span>
 </template>
 
 <script lang="ts">
@@ -30,7 +36,6 @@ export default class CSPToolbar extends Vue {
     this.$emit("modechanged", this.picked);
   }
 }
-
 </script>
 
 <style scoped>

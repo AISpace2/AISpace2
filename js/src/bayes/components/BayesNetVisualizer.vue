@@ -5,11 +5,11 @@
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
     >
       <template slot="node" slot-scope="props">
-        <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext= "probText(props.node)"
+        <RoundGraphNode :text="props.node.name" :textSize="textSize" :subtext= "probText(props.node)"
                                    :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                                    :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel" @updateBounds="updateNodeBounds(props.node, $event)"
                                    :stroke-width="nodeStrokeWidth(props.node)">
-        </RoundedRectangleGraphNode>
+        </RoundGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
         <DirectedRectEdge :id="props.edge.id" :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
@@ -45,7 +45,7 @@
   import Vue from "vue";
   import Component from "vue-class-component";
 
-  import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
+  import RoundGraphNode from "../../components/RoundGraphNode.vue";
   import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
   import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
   import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
@@ -64,7 +64,7 @@
    */
   @Component({
     components: {
-      RoundedRectangleGraphNode,
+      RoundGraphNode,
       GraphVisualizerBase,
       RectangleGraphNode,
       DirectedRectEdge

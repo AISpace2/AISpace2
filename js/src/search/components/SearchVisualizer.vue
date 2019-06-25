@@ -2,13 +2,13 @@
   <div class="search_visualizer">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText">
       <template slot="node" slot-scope="props">
-        <RoundedRectangleGraphNode :id="props.node.id" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
+        <RoundGraphNode :id="props.node.id" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                                    :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :detailLevel="detailLevel"
                                    :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                                    :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                                    :maxWidth="nodemaxWidth(props.node)"
                                    @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize">
-        </RoundedRectangleGraphNode>
+        </RoundGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
         <DirectedRectEdge :id="props.edge.id" :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="props.edge.styles.stroke"
@@ -48,7 +48,7 @@
   import Component from "vue-class-component";
   import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
   import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
-  import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
+  import RoundGraphNode from "../../components/RoundGraphNode.vue";
   import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
   import { GraphLayout } from "../../GraphLayout";
   import { nodeFillColour, nodeHText } from "../SearchUtils";
@@ -65,7 +65,7 @@
     components: {
       GraphVisualizerBase,
       DirectedRectEdge,
-      RoundedRectangleGraphNode,
+      RoundGraphNode,
     }
   })
   export default class SearchVisualizer extends Vue {

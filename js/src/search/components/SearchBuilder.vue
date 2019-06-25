@@ -3,13 +3,13 @@
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
                          @click:node="updateSelection" @click:edge="updateSelection">
       <template slot="node" slot-scope="props">
-        <RoundedRectangleGraphNode :text="props.node.name"
+        <RoundGraphNode :text="props.node.name"
                           :subtext="nodeHText(props.node)"
                           :fill="nodeFillColour(props.node)"
                           :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                           @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize" :hover="props.hover"
         :detailLevel="detailLevel">
-        </RoundedRectangleGraphNode>
+        </RoundGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
         <DirectedRectEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
@@ -57,7 +57,7 @@ import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
-import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode";
+import RoundGraphNode from "../../components/RoundGraphNode";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 
 import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
@@ -70,7 +70,7 @@ import { nodeFillColour, nodeHText } from "../SearchUtils";
  * Currently incomplete.
  */
 @Component({
-  components: {RoundedRectangleGraphNode, GraphVisualizerBase, DirectedRectEdge }
+  components: {RoundGraphNode, GraphVisualizerBase, DirectedRectEdge }
 })
 export default class SearchGraphBuilder extends Vue {
   /** The graph being built. */

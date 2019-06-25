@@ -4,7 +4,7 @@
          @mousemove="dragNode"
          @mouseleave="dragNodeEnd"
          @keydown.delete="$emit('delete')"
-         @dblclick="onDblClick">
+         @click="onClick">
       <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
                      :transitions="transitionsAllowed && transitions"
                      @mouseover="edgeMouseOver(edge)"
@@ -240,11 +240,11 @@
      * Handles the user double-clicking on the graph.
      * The x and y position within the SVG are calculated and passed to the event.
      */
-    onDblClick(e: MouseEvent) {
+    onClick(e: MouseEvent) {
       var svgBounds = this.$refs.svg.getBoundingClientRect();
       var x = e.pageX - svgBounds.left;
       var y = e.pageY - svgBounds.top;
-      this.$emit("dblclick", x, y, e);
+      this.$emit("click", x, y, e);
     }
 
     /**
