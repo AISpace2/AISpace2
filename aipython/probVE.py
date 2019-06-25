@@ -24,7 +24,7 @@ class VE(Inference_method):
         var is a variable
         obs is a variable:value dictionary"""
         if var in obs:
-            return [1 if val == obs[var] else 0 for val in var.domain]
+            return {val:1 if val == obs[var] else 0 for val in var.domain}
         else:
             if elim_order == None:
                 elim_order = self.gm.variables

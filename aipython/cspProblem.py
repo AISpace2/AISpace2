@@ -35,14 +35,9 @@ class CSP(Displayable):
     """A CSP consists of
     * domains, a dictionary that maps each variable to its domain
     * constraints, a list of constraints
-    * variables, a set of variables
-    * var_to_const, a variable to set of constraints dictionary
+    * positions, a dictionary that maps each node into its (x,y)-position.
     """
-    def __init__(self,domains,constraints, positions = {}):
-        """domains is a variable:domain dictionary
-        constraints is a list of constriants
-        positions is a variable:(x,y) dictionary
-        """
+    def __init__(self, domains, constraints, positions = {}):
         self.variables = set(domains)
         self.domains = domains
         self.constraints = constraints
@@ -75,7 +70,7 @@ def ne_(val):
     # nev = partial(neq,val)     # another alternative definition
     def nev(x):
         return val != x
-    nev.__name__ = str(val)+"!="      # name of the function 
+    nev.__name__ = str(val)+"!="      # name of the function
     return nev
 
 def is_(val):
@@ -98,7 +93,7 @@ csp_simple2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}},
              Constraint(('B',),ne_(2)),
              Constraint(('B','C'),lt)])
 
-csp_extended = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}, 
+csp_extended = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4},
             'D':{1,2,3,4}, 'E':{1,2,3,4}},
            [ Constraint(('B',),ne_(3)),
             Constraint(('C',),ne_(2)),
@@ -133,13 +128,13 @@ csp_crossword1 = CSP({'one_across':{'ant', 'big', 'bus', 'car', 'has'},
 
 words1 = {"add", "age", "aid", "aim", "air", "are", "arm", "art",
     "bad", "bat", "bee", "boa", "dim", "ear", "eel", "eft", "lee", "oaf"}
-    
+
 words2 = {"add", "ado", "age", "ago", "aid", "ail", "aim", "air",
     "and", "any", "ape", "apt", "arc", "are", "ark", "arm", "art", "ash",
     "ask", "auk", "awe", "awl", "aye", "bad", "bag", "ban", "bat", "bee",
     "boa", "dim", "ear", "eel", "eft", "far", "fat", "fit", "lee", "oaf",
     "rat", "tar", "tie"}
-    
+
 csp_crossword2 = CSP({'1_down':words1, '2_down':words1, '3_down':words1,
                   '1_across':words1, '4_across':words1, '5_across':words1},
                   [Constraint(('1_down','1_across'),meet_at(0,0)), # 1_down[0]=1_across[0]
@@ -159,7 +154,7 @@ def is_word(*letters, words=words1):
 
 letters = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
   "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y",
-  "z"} 
+  "z"}
 csp_crossword2d = CSP({"p00":letters, "p01":letters, "p02":letters,
                   "p10":letters, "p11":letters, "p12":letters,
                   "p20":letters, "p21":letters, "p22":letters},
@@ -169,11 +164,11 @@ csp_crossword2d = CSP({"p00":letters, "p01":letters, "p02":letters,
                    Constraint(("p00","p10","p20"), is_word),
                    Constraint(("p01","p11","p21"), is_word),
                    Constraint(("p02","p12","p22"), is_word)])
-                   
+
 def test(CSP_solver, csp=csp_simple2,
              solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
     """CSP_solver is a solver that finds a solution to a CSP.
-    CSP_solver takes a csp and returns a solution. 
+    CSP_solver takes a csp and returns a solution.
     csp has to be a CSP, where solutions is the list of all solutions.
     This tests whether the solution returned by CSP_solver is a solution.
     """
@@ -182,5 +177,3 @@ def test(CSP_solver, csp=csp_simple2,
     print("Solution found:",sol0)
     assert sol0 in solutions, "Solution not found for "+str(csp)
     print("Passed unit test")
-
-

@@ -9,8 +9,6 @@ export interface IGraphNode {
   x?: number;
   /** The y position of the node. */
   y?: number;
-  /** The radius of the node */
-  radius?: number;
   /** An object that can contain arbitrary properties to influence it's rendering. */
   styles: { [key: string]: any };
   /** Extra properties depending on the node's type. */
@@ -37,9 +35,8 @@ export interface IBayesGraphNode extends IGraphNode {
   parents: string[];
   evidences: number[];
   domain: string[] | boolean[];
-  trueProb?: number;
-  falseProb?: number;
-  observed?: string;
+  prob?: any;
+  observed?: string | null;
 }
 
 export type CSPNodeTypes = "csp:variable" | "csp:constraint";
