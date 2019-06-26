@@ -26,7 +26,8 @@
     "build:dev": "npm run build:dev-dll && webpack --env=development --progress",
     "build:dev-dll": "webpack --config webpack.dll.js",
     "build:prod": "webpack --env=production --progress",
-    "update-lab-extension": "webpack --config webpack.labExtension.js"
+    "update-lab-extension": "webpack --config webpack.labExtension.js",
+    "watch": "watch 'npm run update-lab-extension' ./src"
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.2.5",
