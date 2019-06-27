@@ -112,10 +112,12 @@ jupyter labextension install aispace2</code></pre>
     <pre><code>jupyter labextension uninstall aispace2</code></pre>
   </section>
   <script>
-  var m = "This page was last updated on " + document.lastModified;
-  var p = m.length-8;
+  date = new Date(document.lastModified)
+  month = date.getMonth() + 1
+  year = date.getFullYear()
+  day = date.getDate()
   document.writeln("<br><br><br><center>");
-  document.write(m.substring(p, 0));
+  document.write("This website was last updated on " + year + "-" + month + "-" + day);
   document.writeln("</center><br><br><br><br>");
   </script>
 </body>
