@@ -239,8 +239,10 @@
     </p>
     <h3 id="tutorial-search-construct-yourself" class="linkify"><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
-      Apart from the included problems, you can also construct various search problems by yourself. You can use the <code>Search_problem_from_explicit_graph</code>
+      Apart from the included problems, you can also construct various search problems by yourself. The simplest way is to use <code>./notebooks/search/search_builder.ipynb</code> to help you generate a search problem visually.
+      Alternatively, you can also use the <code>Search_problem_from_explicit_graph</code>
       class defined in <code>./aipython/searchProblem.py</code> to construct a search problem, which includes
+    </p>
       <ul>
         <li><code>nodes</code>, a list of nodes,</li>
         <li><code>arcs</code>, a list of arcs,</li>
@@ -249,6 +251,7 @@
         <li><code>hmap</code> (optional), a dictionary of node heuristic values, and</li>
         <li><code>positions</code> (optional), a dictionary of node positions.</li>
       </ul>
+    <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
       One example of defining <code>search_simple1</code> is illustrated below.
@@ -340,13 +343,15 @@
     </p>
     <h3 id="tutorial-csp-construct-yourself" class="linkify"><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
-      Apart from the included problems, you can also construct various CSP problems by yourself. You can use the <code>CSP</code>
-      class defined in <code>./aipython/cspProblem.py</code> to construct a CSP problem, which includes
+      Apart from the included problems, you can also construct various CSP problems by yourself. The simplest way is to use <code>./notebooks/csp/csp_builder.ipynb</code> to help you generate a CSP problem visually.
+      Alternatively, You can use the <code>CSP</code> class defined in <code>./aipython/cspProblem.py</code> to construct a CSP problem, which includes
+    </p>
       <ul>
         <li><code>domains</code>, a dictionary that maps each variable to its domain,</li>
         <li><code>constraints</code>, a list of <code>Constraint</code>s, and</li>
         <li><code>positions</code> (optional), a dictionary of variable positions.</li>
       </ul>
+    <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
       One example of defining <code>csp_simple2</code> is illustrated below.
@@ -382,6 +387,7 @@
     <p>
       Apart from the included problems, you can also construct various planning problems by yourself. You can use the <code>Planning_problem</code>
       class defined in <code>./aipython/stripsProblem.py</code> to construct a planning problem, which includes
+    </p>
       <ul>
         <li><code>prob_domain</code>, a <code>STRIPS_domain</code>, which represents a planning domain,</li>
         <li><code>initial_state</code>, the initial state,</li>
@@ -393,6 +399,7 @@
         <li><code>feats_vals</code>, a dictionary that maps each feature to its domain, and</li>
         <li><code>strips_map</code>, a dictionary that maps each action to its <code>Strips</code> representation.</li>
       </ul>
+    <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
       One example of defining <code>strips_simple1</code> is illustrated below. This example models a robot delivery system.
@@ -471,11 +478,13 @@ strips_simple1 <span style="color: #666666">=</span> Planning_problem(prob_domai
     <p>
       Apart from the included problems, you can also construct various belief network problems by yourself. You can use the <code>Belief_network</code>
       class defined in <code>./aipython/probGraphicalModels.py</code> to construct a belief network problem, which includes
+    </p>
       <ul>
         <li><code></code>, a list of variables,</li>
         <li><code>factors</code>, a list of factors, and</li>
         <li><code>positions</code> (optional), a dictionary of variable positions.</li>
       </ul>
+    <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
       One example of defining <code>bn2</code> is illustrated below. This example models a fire alarm system.
@@ -640,24 +649,24 @@ e<span style="color: #666666">.</span>foo()
     </p>
     <h3 id="tutorial-faq-what-how-display" class="linkify"><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></h3>
     <p>
-      <code>display()</code> is a member function of the class <code>StepDOMWidget</code> defined in <code>./aispace2/jupyter/stepdomwidget.py</code>.
-      <code>StepDOMWidget</code> inherits from the class <code>DOMWidget</code> and controls the Jupyter widget for visualizations that you can step through.
-      <code>display()</code> can be overwritten in its various subclasses <code>Displayable</code> defined in <code>./aispace2/jupyter/*.py</code>, where <code>*</code> depends on the
-      algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>). <code>display()</code> sends the message to the Jupyter widget and displays it, and pauses the
-      execution if needed. It functions like a print statement.
+      In short, <code>display()</code> is a function that works like a print statement but with the first argument, <code>level</code>, representing a display level.
+      <code>display()</code> sends the message, which consists of the rest parameters after <code>level</code>, to the Jupyter widget and displays it.
+      It will also pause the execution if needed.
     </p>
     <p>
-      The first parameter <code>level</code> of each <code>display()</code> call is <code>1</code>, <code>2</code>, <code>3</code> or <code>4</code>, specifying how "important" the message is.
+      The <code>level</code> of each <code>display()</code> call is either <code>1</code>, <code>2</code>, <code>3</code> or <code>4</code>, specifying how "important" the message is.
       It may also be interpreted as a level of "specificity": <code>1</code> means very general, such as the algorithm has finished, and
       <code>4</code> means very specific, such as some very minor algorithmic detail. <code>level</code>, together with the botton you clicked, controls whether the execution should pause at this <code>display()</code> call.
       Fine Step button makes the execution pause each time a <code>display()</code> call is encountered;
       Step button makes the execution pause each time a <code>display()</code> call with <code>level</code>=<code>2</code> or lower is encoutered;
       Auto Solve button makes the exectution not pause at all.
-      <p>
+    </p>
+    <p>
       You can safely change the <code>level</code> of pre-defined <code>display()</code> calls to adjust the amount of detail you receive.
       However, keep in mind that the visualization is entirely driven by the remaining parameters of the <code>display()</code> call (see corresponding <code>Displayable</code> classes), so modifying
       them may break the visualization. For example, when running search algorithms usieng Step button, the execution will not pause they it is exporing a node's neighbours. This is because the corresponding <code>display()</code> call (line 18) in <code>search()</code> in the class <code>Searcher</code>
       defined in <code>./aipython/searchGeneric.py</code> has <code>level</code>=<code>3</code>:
+    </p>
 
       <!-- HTML generated using hilite.me -->
       <table><tr><td><pre style="margin: 0; line-height: 125%"> 1
@@ -705,13 +714,13 @@ e<span style="color: #666666">.</span>foo()
             <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">3</span>, <span style="color: #BA2121">&quot;Frontier: &quot;</span>, <span style="color: #008000">self</span><span style="color: #666666">.</span>frontier)
     <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">1</span>, <span style="color: #BA2121">&quot;No more solutions. Total of&quot;</span>,
                     <span style="color: #008000">self</span><span style="color: #666666">.</span>num_expanded, <span style="color: #BA2121">&quot;paths expanded.&quot;</span>)
-</pre></td></tr></table>
+</pre></td></tr></table></p>
 
-
+    <p>
       You can change it to <code>2</code> and now you can see the execution pause, showing the neighbours, when you click the Step button. However, you should not change anything following the <code>level</code> parameter (<code>"Neighbors are", neighs</code> in this case).
     </p>
     <p>
-      You can also add your <code>display()</code> calls to print out some information you want. If you are creating your own <code>display()</code> call, feel free to edit the rest parameters after <code>level</code>. You can pass in an object or a string, just like normal print statements.
+      You can also add your own <code>display()</code> calls to print out some information you want. If you are creating your own <code>display()</code> call, feel free to edit the rest parameters after <code>level</code>. You can pass in an object or a string, just like normal print statements.
       The <code>display()</code> will print out all the rest parameters connected by a whitespace. For example, lines 19 and 20 in <code>search()</code> add new paths to the frontier.
       If you want to see which arcs are exactly iterated in the loop, you can add a <code>display()</code> call after line 19:
 
@@ -721,10 +730,22 @@ e<span style="color: #666666">.</span>foo()
 21</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">for</span> arc <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">reversed</span>(neighs):
     <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;The arc being explored is: &quot;</span>, arc)
     <span style="color: #008000">self</span><span style="color: #666666">.</span>add_to_frontier(Path(path, arc))
-</pre></td></tr></table>
+</pre></td></tr></table></p>
 
-
-    Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button.
+    <p>
+      Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button:
+    </p>
+    <figure>
+      <img src="assets/images/tutorial/faq-what-how-display.png" alt="display() prints new information" />
+      <figcaption>
+        The arc added is printed
+      </figcaption>
+    </figure>
+    <p>
+      If you want to modify <code>display()</code>, it is a member function of the class <code>StepDOMWidget</code> defined in <code>./aispace2/jupyter/stepdomwidget.py</code>.
+      <code>StepDOMWidget</code> inherits from the class <code>DOMWidget</code> and controls the Jupyter widget for visualizations that you can step through.
+      <code>display()</code> is overwritten in its various subclasses <code>Displayable</code> defined in <code>./aispace2/jupyter/*.py</code>, where <code>*</code> depends on the
+      algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
     </p>
   </section>
 
