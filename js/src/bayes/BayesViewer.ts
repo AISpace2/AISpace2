@@ -31,7 +31,7 @@ export default class BayesViewer extends DOMWidgetView {
           this.parseQueryResult(event);
           break;
         case "showPositions":
-          this.vue.positions = this.vue.positions ? "" : event.positions
+          this.vue.positions = this.vue.positions && event.positions == this.vue.positions ? "" : event.positions
           break;
       }
     });
