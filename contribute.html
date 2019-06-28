@@ -45,71 +45,55 @@
   </header>
   <section class="column">
     <h1>Ways to Help</h1>
-    <p>No matter if you are a student just learning AI, or an instructor that has decades of experience, you can help us make AISpace2 even better. You don’t even need to know how to code!</p>
-    <ul>
-      <li>Noticed a typo? Want to add more details to the explanations? Check out how to <a href="#updating-notebooks">update notebooks</a>.
-      </li>
-      <li>Want to add new visualizations, or fix bugs in them? If you have some coding chops, you can <a href="#code">help</a>!
-      </li>
-      <li>Bugs? Feature requests? Learn how you can get in contact with us and make your voice heard by <a href="#issues">submitting issues</a>.
-      </li>
-    </ul>
-    <p>Everything takes place on
-      <a href="https://github.com/aispace2/aispace2" target="_blank">
+    <p>
+      No matter if you are a student just learning AI, or an instructor that has decades of experience, you can help us make AISpace2 even better. You don’t even need to know how to code!
+    </p>
+    <p>
+      Everything takes place on <a href="https://github.com/aispace2/aispace2" target="_blank">
         <svg aria-labelledby="title" class="github" role="img" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <title>GitHub icon</title>
           <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path>
         </svg>
         GitHub</a>, so you’ll need an <a href="https://github.com/" target="_blank">account</a> to begin.
     </p>
-    <h2 class="linkify" id="updating-notebooks"><a href="#updating-notebooks">Updating
-        Notebooks</a></h2>
-    <p>All notebooks are editable in Jupyter after you download them, so if you would just like to change the notebooks for your own use, or for a small group of people, the easiest way is to just edit and save them directly<sup><a
-                class="footnote-link" href="#footnote1">1</a></sup>, then upload the changed notebook to your own website, through email, or to a hosting service like Dropbox. However, if you feel like the change would benefit everyone, and would like
-      the notebook links on this website to point to your updated version, the process is a bit more involved.
-    </p>
-
-    <p>First, make sure you have <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blanket">git</a> installed and that you have a GitHub account. If this is your first time using git, there are several good resources available,
-      such as <a href="https://try.github.io" target="_blanket">Try Git</a> and <a href="https://www.atlassian.com/git/tutorials" target="_blanket">Atlassian's Git Tutorials</a>. We'll be going over all the necessary commands, however, so feel free to
-      continue along.
-      <ul>
-        <li>If you have write access to our GitHub repo, open up a terminal and run the following:
-          <pre><code>git clone https://github.com/aispace2/aispace2
-cd aispace2
-</code></pre> Now edit the notebooks<sup><a class="footnote-link" href="#footnote1">1</a></sup> as you see fit. If you are editing your notebooks on JupyterHub and therefore not locally, you will need to download the notebook (<strong>Right click on the notebook in the left file panel > Download</strong>)
-          and replace the existing file of the same name in the <code>notebooks/</code> directory. Commit and push your changes by running the following in a terminal of your choice:
-          <pre><code>git add /path/to/updated/notebook
-git commit -m "Your commit message here"
-git push</code></pre> Your changes will now be available to anyone who downloads the linked notebooks on this website!
-
-          <li>Otherwise, first <a href="https://help.github.com/articles/fork-a-repo/" target="_blanket">fork</a> our <a href="https://github.com/aispace2/aispace2" target="_blanket">repo</a>,
-            <a href="https://help.github.com/articles/cloning-a-repository/" target="_blanket">clone</a> it locally, then edit the notebooks<sup><a
-            class="footnote-link" href="#footnote1">1</a></sup> as you see fit. If you are editing your notebooks on JupyterHub and therefore not locally, you will need to download the notebook (<strong>Right click on the notebook in the left file panel > Download</strong>)
-            and replace the existing file of the same name in the <code>notebooks/</code> directory. Commit and push your changes by running the following in a terminal of your choice:
-            <pre><code>git add /path/to/updated/notebook
-git commit -m "Your commit message here"
-git push</code></pre> Then, <a href="https://help.github.com/articles/creating-a-pull-request/" target="_blanket">open a pull request</a> so we can approve and merge your changes. Once they are, they’ll be available to everyone who uses the
-            linked notebooks on this website.</p>
-    </ul>
-    <p class="footnote" id="footnote1"><sup>1</sup> Before distributing any notebooks, you should always clear all the output first, so the notebooks downloaded by the user are clean. To do this, while inside the notebook, select
-      <strong>Kernel &gt; Restart Kernel and Clear All Outputs</strong>. You can see when this process is complete, all the cells show <code>[]:</code> beside them, with no numbers inside the brackets. Then save the file (<strong>File
-            &gt; Save Notebook)</strong> to complete the process.</p>
-    <h2 class="linkify" id="code"><a href="#code">Coding</a></h2>
-    <p>Everything you need to get started with development is hosted on our <a href="https://github.com/aispace2/aispace2" target="_blanket">GitHub page</a> and <a href="https://github.com/aispace2/aispace2/wiki" target="_blanket">wiki</a>, so head over
-      there if you’d like to contribute code! Even if you don't have write access to our GitHub repository, you can still submit your code via a pull request.
-    </p>
     <h2 class="linkify" id="issues"><a href="#issues">Submitting Issues</a></h2>
-    <p>If you’d like to submit a bug or feature request, or there’s just something you’d like to say, feel free to submit a ticket to our <a href="https://github.com/AISpace2/AISpace2/issues" target="_blanket">issue tracker</a>. Make sure you’ve signed up
-      for a GitHub account first. Give a quick search before submitting a new issue to make sure nobody has said the same thing, and try to give us as much detail as possible.</p>
+    <p>
+      If you’d like to submit a bug or feature request, or there’s just something you’d like to say, feel free to submit a ticket to our <a href="https://github.com/AISpace2/AISpace2/issues" target="_blank">issue tracker</a>. Make sure you’ve signed up
+      for a GitHub account first. Give a quick search before submitting a new issue to make sure nobody has said the same thing, and try to give us as much detail as possible.
+    </p>
+
+    <h2 class="linkify" id="updating-notebooks"><a href="#updating-notebooks">Submit Your Changes</a></h2>
+    <p>
+      If you want to help fix a typo, a bug, want to add new visulizations, or have anything cool to contribute to our AISpace2, you can submit a pull request in GitHub.
+      We'll be going over all the necessary commands to submit a pull request, but feel free to continue along if you already know how.
+    </p>
+    <p>
+      First, make sure you have <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">git</a> installed and that you have a GitHub account.
+      If this is your first time using git, there are several good resources available, such as <a href="https://try.github.io" target="_blank">Try Git</a> and <a href="https://www.atlassian.com/git/tutorials" target="_blank">Atlassian's Git Tutorials</a>.
+    </p>
+    <p>
+      Then, you need to <a href="https://help.github.com/articles/fork-a-repo/" target="_blank">fork</a> our <a href="https://github.com/aispace2/aispace2" target="_blank">repo</a>, <a href="https://help.github.com/articles/cloning-a-repository/" target="_blank">clone</a> it locally, then make your changes to the repository as you see fit.
+      You may find the <a href="https://github.com/aispace2/aispace2/wiki" target="_blank">wiki</a> at our GitHub website helpful when you edit the codes.
+      If you are editing any notebooks, before the distribution you should always clear all the output first, so the notebooks downloaded by other users are clean.
+      To do this, while inside the notebook, select <strong>Kernel &gt; Restart Kernel and Clear All Outputs</strong>.
+      When this process is complete, you can see all the cells show <code>[]:</code> beside them, with no numbers inside the brackets.
+      Then save the file (<strong>File &gt; Save Notebook)</strong> to complete the process.
+      After you finish with your changes, commit and push your changes by running the following in a terminal of your choice:
+      <pre><code>git add /PATH/TO/UPDATED/FILES
+git commit -m "Your commit message here"
+git push</code></pre>
+      Finally, <a href="https://help.github.com/articles/creating-a-pull-request/" target="_blank">open a pull request</a> so we can approve and merge your changes.
+      Once the changes are merged and we release the new version, they’ll be available to everyone.
+    </p>
   </section>
   <script>
-  date = new Date(document.lastModified)
-  month = date.getMonth() + 1
-  year = date.getFullYear()
-  day = date.getDate()
-  document.writeln("<br><br><br><center>");
-  document.write("This website was last updated on " + year + "-" + month + "-" + day);
-  document.writeln("</center><br><br><br><br>");
+    date = new Date(document.lastModified)
+    month = date.getMonth() + 1
+    year = date.getFullYear()
+    day = date.getDate()
+    document.writeln("<br><br><br><center>");
+    document.write("This website was last updated on " + year + "-" + month + "-" + day);
+    document.writeln("</center><br><br><br><br>");
   </script>
 </body>
 
