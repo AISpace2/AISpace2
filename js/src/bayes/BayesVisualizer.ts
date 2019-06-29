@@ -1,8 +1,8 @@
 import { DOMWidgetView } from "@jupyter-widgets/base";
 import { timeout } from "d3";
-import * as Events from "./BayesEvents";
-import BayesViewerModel from "./BayesViewerModel";
-import BayesNetInteractor from "./components/BayesNetVisualizer.vue";
+import * as Events from "./BayesVisualizerEvents";
+import BayesVisualizerModel from "./BayesVisualizerModel";
+import BayesNetInteractor from "./components/BayesVisualizer.vue";
 import { IObservation, ObservationManager} from "./Observation";
 
 import * as Analytics from "../Analytics";
@@ -11,8 +11,8 @@ import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 
-export default class BayesViewer extends DOMWidgetView {
-  public model: BayesViewerModel;
+export default class BayesVisualizer extends DOMWidgetView {
+  public model: BayesVisualizerModel;
   private vue: any;
   private manager: ObservationManager;
 

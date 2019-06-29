@@ -6,7 +6,7 @@ import { deserializeGraph, Graph, serializeGraph } from "../Graph";
 
 const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
 
-export default class BayesViewerModel extends widgets.DOMWidgetModel {
+export default class BayesVisualizerModel extends widgets.DOMWidgetModel {
   public static serializers = Object.assign(
     {
       graph: {
@@ -20,10 +20,10 @@ export default class BayesViewerModel extends widgets.DOMWidgetModel {
   public defaults() {
     return {
       ...super.defaults(),
-      _model_name: "BayesViewerModel",
+      _model_name: "BayesVisualizerModel",
       _model_module: "aispace2",
       _model_module_version: EXTENSION_SPEC_VERSION,
-      _view_name: "BayesViewer",
+      _view_name: "BayesVisualizer",
       _view_module: "aispace2",
       _view_module_version: EXTENSION_SPEC_VERSION
     };

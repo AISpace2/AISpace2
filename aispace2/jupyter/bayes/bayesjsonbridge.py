@@ -2,21 +2,21 @@ from aipython.probGraphicalModels import Belief_network
 from aipython.probFactors import Prob
 from aipython.probVariables import Variable
 
-def bayes_to_json(bayesNet, widget_model=None):
-    # Converts a Python Belief_network instance to a dictionary representable as JSON.
-    #
-    # Args:
-    #     bayesNet (aipython.probGraphicalModels): The Belief_network instance to convert to a dictionary.
-    #     widget_model: Instance of widget model passed by ipywidgets during conversion. Never used; you can ignore it.
-    #
-    # Returns:
-    #     (dict or None):
-    #         A Belief_network that is representable in JSON. None if no bayesNet was provided.
-    #         This means the dictionary has no references to object instances.
-    # Args:
-    #     variables: list of Variable (Variable from probVariables.py)
-    # Returns:
-    #     List of variable dictionary
+def bayes_problem_to_json(bayesNet, widget_model=None):
+    """Converts a Python Belief_network instance to a dictionary representable as JSON.
+
+    Args:
+       bayesNet (aipython.probGraphicalModels): The Belief_network instance to convert to a dictionary.
+        widget_model: Instance of widget model passed by ipywidgets during conversion. Never used; you can ignore it.
+
+    Returns:
+        (dict or None):
+            A Belief_network that is representable in JSON. None if no bayesNet was provided.
+            This means the dictionary has no references to object instances.
+    Args:
+        variables: list of Variable (Variable from probVariables.py)
+    Returns:
+        List of variable dictionary"""
     def parseNode(variables, factors):
         nodes = [{'id': str(hash(var.name)),
                   'name': var.name,
@@ -34,15 +34,14 @@ def bayes_to_json(bayesNet, widget_model=None):
 
         return nodes
 
-    # Args:
-    #     factors: list of Prob (Prob from probFactors.py)
-    # Example Constructor: Prob(Re,[Le],[0.99, 0.01, 0.25, 0.75])
-    # Returns:
-    #     List of probability dictionary
     def parseProbability(factors):
+    """ Args:
+        factors: list of Prob (Prob from probFactors.py)
+        Example Constructor: Prob(Re,[Le],[0.99, 0.01, 0.25, 0.75])
+        Returns: List of probability dictionary"""
+
         # returns evidences array of tuples
         edges = []
-
 
         for prob in factors:
             for parent in prob.parents:
@@ -80,3 +79,7 @@ def json_to_bayes_problem(json, widget_model=None):
         listOfProb.append(Prob(primaryObj, parentsObj, node["evidences"]))
 
     return Belief_network(listOfVars, listOfProb)
+
+def bayes_problem_to_python_code(problem):
+    # TODO-issue-84
+    return

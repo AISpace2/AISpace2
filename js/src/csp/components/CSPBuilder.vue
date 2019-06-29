@@ -81,7 +81,7 @@ type Mode = "select" | "variable" | "constraint" | "edge";
 
 /**
  * Component to visually construct a CSP graph.
- * 
+ *
  * Currently incomplete.
  */
 @Component({
