@@ -30,7 +30,6 @@
     "watch": "watch 'npm run update-lab-extension' ./src",
     "launch-lab": "cd .. && jupyter lab --watch",
     "lab-watch" : "concurrently --kill-others \"npm run watch\" \"npm run launch-lab\""
-    
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.2.5",
