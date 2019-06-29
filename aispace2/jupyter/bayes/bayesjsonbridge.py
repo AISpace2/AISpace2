@@ -35,10 +35,10 @@ def bayes_problem_to_json(bayesNet, widget_model=None):
         return nodes
 
     def parseProbability(factors):
-    """ Args:
-        factors: list of Prob (Prob from probFactors.py)
-        Example Constructor: Prob(Re,[Le],[0.99, 0.01, 0.25, 0.75])
-        Returns: List of probability dictionary"""
+        """Args:
+           factors: list of Prob (Prob from probFactors.py)
+           Example Constructor: Prob(Re,[Le],[0.99, 0.01, 0.25, 0.75])
+           Returns: List of probability dictionary"""
 
         # returns evidences array of tuples
         edges = []
