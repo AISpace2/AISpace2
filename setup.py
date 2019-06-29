@@ -99,7 +99,7 @@ class NPM(Command):
         if self.should_run_npm_install():
             log.info("Installing build dependencies with npm.  This may take a while...")
             check_call(['npm', 'install'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
-            check_call(['npm', 'run', 'build:prod'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)            
+            check_call(['npm', 'run', 'build:dev'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)            
             os.utime(self.node_modules, None)
 
         for t in self.targets:
