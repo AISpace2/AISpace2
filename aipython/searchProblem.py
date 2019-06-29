@@ -156,7 +156,8 @@ search_simple1 = Search_problem_from_explicit_graph(
     {'a','b','c','d','g'},
     [Arc('a','b',1), Arc('a','c',3), Arc('b','c',1), Arc('b','d',3), Arc('c','d',1), Arc('c','g',3), Arc('d','g',1)],
     start = 'a',
-    goals = {'g'})
+    goals = {'g'},
+    positions={'g': (60,483), 'd': (229,110), 'a': (919,385), 'b': (659,60), 'c': (489,436)})
 
 search_simple2 = Search_problem_from_explicit_graph(
     {'a','b','c','d','e','g','h','j'},

@@ -58,6 +58,7 @@ class Planning_problem(object):
         * a planning domain
         * the initial state
         * a goal
+        * positions
         """
         self.prob_domain = prob_domain
         self.initial_state = initial_state

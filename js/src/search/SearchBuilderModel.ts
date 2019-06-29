@@ -35,7 +35,7 @@ export default class SearchBuilderModel extends widgets.DOMWidgetModel {
       _model_name: "SearchBuilderModel",
       _view_module: "aispace2",
       _view_module_version: EXTENSION_SPEC_VERSION,
-      _view_name: "SearchBuilderModel",
+      _view_name: "SearchBuilder",
       show_edge_costs: true,
       show_node_heuristics: false
     };
@@ -44,12 +44,16 @@ export default class SearchBuilderModel extends widgets.DOMWidgetModel {
   public initialize(attrs: any, opts: any) {
     super.initialize(attrs, opts);
 
+    // Forward message to views
     this.listenTo(this, "msg:custom", (event: IEvent) => {
+      // We don't register a listener for Python messages (which go to the model) in the view,
+      // because each new view would attach a new listener.
+      // Instead, we register it once here, and broadcast it to views.
       this.trigger("view:msg", event);
     });
   }
 
-  /** The Graph representing the search problem. */
+  // The Graph representing the search problem
   get graph(): Graph<ISearchGraphNode, ISearchGraphEdge> {
     return this.get("graph");
   }
@@ -66,12 +70,12 @@ export default class SearchBuilderModel extends widgets.DOMWidgetModel {
     return this.get("detail_level");
   }
 
-  /** True if the visualization should show edge costs. */
+  // True if the visualization should show edge costs
   get showEdgeCosts(): boolean {
     return this.get("show_edge_costs");
   }
 
-  /** True if a node's heuristic value should be shown. */
+  // True if a node's heuristic value should be shown
   get showNodeHeuristics(): boolean {
     return this.get("show_node_heuristics");
   }

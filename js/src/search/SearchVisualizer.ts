@@ -41,7 +41,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           this.vue.output = event.text;
           break;
         case "showPositions":
-          this.vue.positions = this.vue.positions ? "" : event.positions
+          this.vue.positions = this.vue.positions && event.positions == this.vue.positions ? "" : event.positions
           break;
       }
     });

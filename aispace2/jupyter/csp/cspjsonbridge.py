@@ -113,7 +113,7 @@ def generate_csp_graph_mappings(csp):
     return (node_map, edge_map)
 
 
-def csp_from_json(graph_json, widget_model=None):
+def json_to_csp(graph_json, widget_model=None):
     """Converts a CSP represented by a JSON dictionary into a Python CSP instance.
 
     Note that because a CSP doesn't use the concept of IDs, unlike the JSON graph representation,

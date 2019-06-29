@@ -81,7 +81,7 @@ type Mode = "select" | "variable" | "constraint" | "edge";
 
 /**
  * Component to visually construct a CSP graph.
- * 
+ *
  * Currently incomplete.
  */
 @Component({
@@ -120,7 +120,7 @@ export default class CSPGraphBuilder extends Vue {
     if (this.mode === "variable") {
       this.graph.addNode({
         id: shortid.generate(),
-        name: "asdf",
+        name: "Variable",
         x,
         y,
         type: "csp:variable",
@@ -129,7 +129,7 @@ export default class CSPGraphBuilder extends Vue {
     } else if (this.mode === "constraint") {
       this.graph.addNode({
         id: shortid.generate(),
-        name: "asdf",
+        name: "Constraint",
         x,
         y,
         type: "csp:constraint",

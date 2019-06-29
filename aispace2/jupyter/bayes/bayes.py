@@ -2,21 +2,21 @@ from aipython.probGraphicalModels import Belief_network
 from aipython.probVE import VE
 from ipywidgets import register
 from traitlets import Instance, Unicode, Float, Integer, Bool
-from .bayesjsonbridge import bayes_to_json, json_to_bayes_problem
+from .bayesjsonbridge import bayes_problem_to_json, json_to_bayes_problem
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
 from ... import __version__
 
 @register
 class Displayable(StepDOMWidget):
-    _view_name = Unicode('BayesViewer').tag(sync=True)
-    _model_name = Unicode('BayesViewerModel').tag(sync=True)
+    _view_name = Unicode('BayesVisualizer').tag(sync=True)
+    _model_name = Unicode('BayesVisualizerModel').tag(sync=True)
     _view_module = Unicode('aispace2').tag(sync=True)
     _model_module = Unicode('aispace2').tag(sync=True)
     _view_module_version = Unicode(__version__).tag(sync=True)
     _model_module_version = Unicode(__version__).tag(sync=True)
 
     graph = Instance(klass=Belief_network, allow_none=True)\
-        .tag(sync=True, from_json=json_to_bayes_problem, to_json=bayes_to_json)
+        .tag(sync=True, from_json=json_to_bayes_problem, to_json=bayes_problem_to_json)
 
     line_width = Float(4.0).tag(sync=True)
     text_size = Integer(12).tag(sync=True)
