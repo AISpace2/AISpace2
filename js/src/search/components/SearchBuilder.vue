@@ -1,12 +1,12 @@
 <template>
-  <div tabindex="0" @keydown.stop class="search_builder">
+  <div tabindex="0" @keydown.stop class="search_builder" @keydown.delete="deleteSelection">
     <GraphVisualizerBase
       :graph="graph"
       :transitions="true"
       :layout="layout"
+      @click="createNode"
       @click:node="updateSelection"
       @click:edge="updateSelection"
-      @delete="deleteSelection"
     >
       <template slot="node" slot-scope="props">
         <RoundGraphNode
@@ -53,42 +53,41 @@
         <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
       </template>
     </GraphVisualizerBase>
-    <div>
+    <span>
+      <b>Mode:</b>
       <span>
-        <b>Mode:</b>
-        <template>
-          <span>
-            <input type="radio" id="setRadio" value="select" name="set-radio" v-model="mode">
-            <label for="setRadio">Set Property</label>
-            <input type="radio" id="edgeRadio" value="edge" name="edge-radio" v-model="mode">
-            <label for="edgeRadio">Create Variable</label>
-          </span>
-        </template>
+        <input type="radio" id="selectRadio" value="select" name="select-radio" v-model="mode" />
+        <label for="selectRadio">Set Property</label>
+        <input type="radio" id="nodeRadio" value="node" name="node-radio" v-model="mode" />
+        <label for="nodeRadio">Create Node</label>
+        <input type="radio" id="edgeRadio" value="edge" name="edge-radio" v-model="mode" />
+        <label for="edgeRadio">Create Edge</label>
       </span>
-      <template>
-        <span></span>
-      </template>
+    </span>
+    <div v-if="selection && selection.type !== 'edge'">
+      <label for="node-name">Name</label>
+      <input type="text" v-model="selection.name" />
+      <label for="node-h">Heuristic Value</label>
+      <input type="number" step="0.1" min="0" v-model="selection.h" />
+      <label for="node-type">Type</label>
+      <select id="node-type" v-model="selection.type">
+        <option value="search:start">Start</option>
+        <option value="search:regular">Regular</option>
+        <option value="search:goal">Goal</option>
+      </select>
     </div>
-    <div>
-      <div v-if="selection && selection.type !== 'edge'">
-        <label for="node-name">Name</label>
-        <input type="text" v-model="selection.name">
-        <label for="node-h">Heuristic Value</label>
-        <input type="number" step="0.1" min="0" v-model="selection.h">
-        <label for="node-type">Type</label>
-        <select id="node-type" v-model="selection.type">
-          <option value="search:start">Start</option>
-          <option value="search:regular">Regular</option>
-          <option value="search:goal">Goal</option>
-        </select>
-      </div>
-      <div v-if="selection && selection.type === 'edge'">
-        <label for="edge-cost">Edge Cost</label>
-        <input type="number" v-model.number="selection.cost">
-      </div>
-      <div>
-        <span>Push "Del" to delete selected node or edge</span>
-      </div>
+    <div v-if="selection && selection.type === 'edge'">
+      <label for="edge-cost">Edge Cost</label>
+      <input type="number" v-model.number="selection.cost" />
+    </div>
+    <div v-if="mode ==='select'">
+      <span>Push "Del" to delete selected node or edge</span>
+    </div>
+    <div v-if="mode === 'node'">
+      <span>Click anywhere on graph to create a new node</span>
+    </div>
+    <div v-if="mode === 'edge'">
+      <span>Select starting node of edge then ending node of edge</span>
     </div>
   </div>
 </template>
@@ -112,7 +111,7 @@ import { nodeFillColour, nodeHText } from "../SearchUtils";
  * Currently incomplete.
  */
 
-type Mode = "select" | "edge";
+type Mode = "select" | "edge" | "node";
 
 @Component({
   components: { RoundGraphNode, GraphVisualizerBase, DirectedRectEdge }
@@ -129,7 +128,7 @@ export default class SearchGraphBuilder extends Vue {
   textSize: number;
   detailLevel: number;
 
-  /** The mode of the editor. Initial should be select because the initially selected node in CSPBuilderToolbar is select*/
+  /** The mode of the editor*/
   mode: Mode = "select";
   /** The current node or edge being selected. */
   selection: ISearchGraphNode | ISearchGraphEdge | null = null;
@@ -164,6 +163,20 @@ export default class SearchGraphBuilder extends Vue {
     return nodeHText(node);
   }
 
+  /** Adds a node to the graph at position (x, y). */
+  createNode(x: number, y: number) {
+    if (this.mode === "node") {
+      this.graph.addNode({
+        id: shortid.generate(),
+        name: "Variable",
+        x,
+        y,
+        type: "csp:variable",
+        domain: []
+      });
+    }
+  }
+
   updateSelection(selection: ISearchGraphNode | ISearchGraphEdge) {
     if (this.selection === selection) {
       this.selection = null;
@@ -173,7 +186,7 @@ export default class SearchGraphBuilder extends Vue {
   }
 
   // Deletes selected node or edge when "Del" is pressed
-  deleteSelection(selection: ISearchGraphNode | ISearchGraphEdge) {
+  deleteSelection() {
     if (this.selection.type === "edge") {
       this.graph.removeEdge(this.selection);
     } else {
@@ -221,6 +234,13 @@ export default class SearchGraphBuilder extends Vue {
     } else if (this.mode !== "select") {
       this.selection = null;
     }
+  }
+
+  /** Switches to a new mode. */
+  @Watch("mode")
+  setMode() {
+    this.selection = null;
+    this.sourceNode = null;
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="csp_builder">
+  <div class="csp_builder" @keydown.delete="deleteSelection">
     <GraphVisualizerBase
       :graph="graph"
       :transitions="true"
@@ -7,7 +7,6 @@
       @click="createNode"
       @click:edge="updateSelection"
       @click:node="updateSelection"
-      @delete="deleteSelection"
     >
       <template slot="node" slot-scope="props">
         <RoundGraphNode
@@ -58,7 +57,28 @@
       <span>
         <b>Mode:</b>
       </span>
-      <CSPToolbar @modechanged="setMode"></CSPToolbar>
+      <span>
+        <input type="radio" id="setRadio" value="select" name="set-radio" v-model="mode" />
+        <label for="setRadio">Set Property</label>
+        <input
+          type="radio"
+          id="variableRadio"
+          value="variable"
+          name="variable-radio"
+          v-model="mode"
+        />
+        <label for="variableRadio">Create Variable</label>
+        <input
+          type="radio"
+          id="constraintRadio"
+          value="constraint"
+          name="constraint-radio"
+          v-model="mode"
+        />
+        <label for="constraintRadio">Create Constraint</label>
+        <input type="radio" id="edgeRadio" value="edge" name="edge-radio" v-model="mode" />
+        <label for="edgeRadio">Create Edge</label>
+      </span>
       <div v-if="mode == 'select'">
         <span>Press "Del" after selecting a node or edge to delete it</span>
       </div>
@@ -78,13 +98,13 @@
           type="text"
           :value="selection ? selection.name : null"
           @input="selection ? selection.name = $event.target.value : null"
-        >
+        />
         <label>Domain</label>
         <input
           type="text"
           :value="selection ? selection.domain : null"
           @change="selection ? selection.domain = $event.target.value.split(',').map(a => +a) : null"
-        >
+        />
       </div>
       <div v-else-if="selection && selection.type === 'csp:constraint'">
         <label>Constraint Type</label>
@@ -108,7 +128,6 @@ import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 import * as shortid from "shortid";
 
-import CSPToolbar from "./CSPBuilderToolbar.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
@@ -128,7 +147,6 @@ type Mode = "select" | "variable" | "constraint" | "edge";
 @Component({
   components: {
     RoundGraphNode,
-    CSPToolbar,
     GraphVisualizerBase,
     RectangleGraphNode,
     UndirectedEdge
@@ -140,7 +158,7 @@ export default class CSPGraphBuilder extends Vue {
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
 
-  /** The mode of the editor. Initial should be select because the initially selected node in CSPBuilderToolbar is select*/
+  /** The mode of the editor */
   mode: Mode = "select";
   /** The currently selected node or edge. Actions are preformed on the selection. */
   selection: ICSPGraphNode | IGraphEdge | null = null;
@@ -148,13 +166,6 @@ export default class CSPGraphBuilder extends Vue {
   sourceNode: ICSPGraphNode | null = null;
   textSize: number;
   detailLevel: number;
-
-  /** Switches to a new mode. */
-  setMode(mode: Mode) {
-    this.mode = mode;
-    this.selection = null;
-    this.sourceNode = null;
-  }
 
   /** Adds a node to the graph at position (x, y). */
   createNode(x: number, y: number) {
@@ -245,6 +256,7 @@ export default class CSPGraphBuilder extends Vue {
     }
   }
 
+  /** Watch for selecting edge */
   @Watch("selection")
   onSelectionChanged() {
     if (this.mode === "edge") {
@@ -256,6 +268,13 @@ export default class CSPGraphBuilder extends Vue {
     } else if (this.mode !== "select") {
       this.selection = null;
     }
+  }
+
+  /** Switches to a new mode. */
+  @Watch("mode")
+  setMode() {
+    this.selection = null;
+    this.sourceNode = null;
   }
 }
 </script>
