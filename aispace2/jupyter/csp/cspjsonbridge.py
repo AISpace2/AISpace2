@@ -5,9 +5,7 @@ and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 
 from operator import lt, le, ge, gt, eq, ne
 from string import Template
-
 from aipython.cspProblem import CSP, Constraint
-
 
 def csp_to_json(csp, widget_model=None):
     """Converts a Python CSP instance to a dictionary representable as JSON.

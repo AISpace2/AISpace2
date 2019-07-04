@@ -127,7 +127,6 @@ export default class SearchGraphBuilder extends Vue {
   layout: GraphLayout;
   textSize: number;
   detailLevel: number;
-
   /** The mode of the editor*/
   mode: Mode = "select";
   /** The current node or edge being selected. */

@@ -157,7 +157,6 @@ export default class CSPGraphBuilder extends Vue {
   graph: Graph<ICSPGraphNode>;
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
-
   /** The mode of the editor */
   mode: Mode = "select";
   /** The currently selected node or edge. Actions are preformed on the selection. */
