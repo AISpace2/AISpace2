@@ -3,7 +3,7 @@ Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP)
 and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 """
 
-from operator import lt
+from operator import lt, le, ge, gt, eq, ne
 from string import Template
 
 from aipython.cspProblem import CSP, Constraint
@@ -150,9 +150,9 @@ def json_to_csp(graph_json, widget_model=None):
                     source_node = next(n for n in graph_json['nodes']
                                        if n['id'] == link['target'])
                     scope.append(source_node['name'])
-
             if scope:
-                constraints.append(Constraint(tuple(scope), lt))
+                # TODO!!! Need to create a switch that turns the constraint to operator class
+                constraints.append(Constraint(tuple(scope), eq))
 
     return CSP(domains, constraints)
 

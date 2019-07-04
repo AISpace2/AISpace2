@@ -44,4 +44,4 @@ class SearchBuilder(DOMWidget):
         The code is added to a new cell in the notebook.
         """
         code = search_problem_to_python_code(self.search_problem())
-        self.send({'action': 'python-code', 'code': code})
+        return code
