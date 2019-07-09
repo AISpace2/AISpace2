@@ -1,4 +1,4 @@
-<!--Windows No Anaconda-->
+﻿<!--Windows No Anaconda-->
 <!DOCTYPE html>
 
 <html lang="en">
@@ -46,71 +46,79 @@
 		</svg>
 	</header>
 
-	<section class="column">
-		<br>
-		<a href="./install.html#windows">&larr; Go Back</a>
-		<h2>For Windows without Anaconda</h2>
-		<h3 id="windows-check-python" class="linkify"><a href="#windows-check-python">From Scratch</a></h3>
-		<p>
-			<ul>
-				<li>If you know that you don't have Python 3.3+ installed, go here <a href="#windows-python">&rarr;</a>.</li>
-				<li>Otherwise, if you know you have Python 3.3+ installed already, you can confirm that it is installed correctly by opening the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>) and running
-					<pre><code>python -V</code></pre> It should output a line similar to this:
-					<pre><code>Python 3.6.3</code></pre>
-					<p>If so, continue with the installation here <a href="#windows-aispace">&rarr;</a>. If it instead prints a line like this,
-					</p>
-					<pre><code>'python' is not recognized as an internal or external command, operable program or batch file.</code></pre>
-					<p>then Python was not added correctly to the path. You can fix this by either following the instructions
-						<a href="https://superuser.com/questions/143119/how-to-add-python-to-the-windows-path" target="_blank">here</a>, re-running the
-						<a href="https://www.python.org/downloads/" target="_blank">Python installer</a> for the exact same Python version you have (select <strong>Modify</strong>, make sure <strong>pip</strong> is selected on the next screen, tick
-						<strong>Add Python to environment variables</strong> on the screen after that, then click <strong>Install</strong>), or installing Python again from scratch
-						<a href="#windows-python">&rarr;</a>.</p>
-				</li>
-			</ul>
-			<h4 id="windows-python" class="linkify"><a href="#windows-python">Installing Python</a></h4>
-			<ol>
-				<li>Download the latest version of <a href="https://www.python.org/downloads/" target="_blank">Python 3</a>. It should be version 3.3 or later.
-				</li>
+    <section class="column">
+        <br>
+        <a href="./install.html#windows">&larr; Go Back</a>
+        <h2>For Windows without Anaconda</h2>
+        <h3 id="windows-check-python" class="linkify"><a href="#windows-check-python">From Scratch</a></h3>
+        <p>
+            <ul>
+                <li>If you know that you don't have Python 3.3+ installed, go here <a href="#windows-python">&rarr;</a>.</li>
+                <li>
+                    Otherwise, if you know you have Python 3.3+ installed already, you can confirm that it is installed correctly by opening the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>) and running
+                    <pre><code>python -V</code></pre> It should output a line similar to this:
+                    <pre><code>Python 3.6.3</code></pre>
+        <p>
+            If so, continue with the installation here <a href="#windows-aispace">&rarr;</a>. If it instead prints a line like this,
+        </p>
+        <pre><code>'python' is not recognized as an internal or external command, operable program or batch file.</code></pre>
+        <p>
+            then Python was not added correctly to the path. You can fix this by either following the instructions
+            <a href="https://superuser.com/questions/143119/how-to-add-python-to-the-windows-path" target="_blank">here</a>, re-running the
+            <a href="https://www.python.org/downloads/" target="_blank">Python installer</a> for the exact same Python version you have (select <strong>Modify</strong>, make sure <strong>pip</strong> is selected on the next screen, tick
+            <strong>Add Python to environment variables</strong> on the screen after that, then click <strong>Install</strong>), or installing Python again from scratch
+            <a href="#windows-python">&rarr;</a>.
+        </p>
+        </li>
+        </ul>
+        <h4 id="windows-python" class="linkify"><a href="#windows-python">Installing Python</a></h4>
+        <ol>
+            <li>
+                Download the latest version of <a href="https://www.python.org/downloads/" target="_blank">Python 3</a>. It should be version 3.3 or later.
+            </li>
 
-				<li>Install it, and make sure you select <strong>Add Python to Path</strong>. This is very important!
-					<img src="assets/images/windows-python-install.png" alt="Installing Python on Windows">
-				</li>
-			</ol>
+            <li>
+                Install it, and make sure you select <strong>Add Python to Path</strong>. This is very important!
+                <img src="assets/images/windows-python-install.png" alt="Installing Python on Windows">
+            </li>
+        </ol>
 
-			<h4 id="windows-aispace" class="linkify"><a href="#windows-aispace">Installing AISpace2</a></h4>
-			<ol>
-				<li>Once Python is installed, you should make sure your version of pip is up-to-date:
-					<pre><code>python -m pip install --upgrade pip</code></pre>
-				</li>
-				<li>Then install Jupyter and AISpace2: Open the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>) and run:
-					<pre><code>pip3 install jupyter
+        <h4 id="windows-aispace" class="linkify"><a href="#windows-aispace">Installing AISpace2</a></h4>
+        <ol>
+            <li>
+                Once Python is installed, you should make sure your version of pip is up-to-date:
+                <pre><code>python -m pip install --upgrade pip</code></pre>
+            </li>
+            <li>Download the newest <a href="https://github.com/AISpace2/AISpace2/releases">Release Version</a> of AISpace2 source code and unzip the files to the directory where you want to store AISpace2.</li>
+            <li>
+                Then install Jupyter and AISpace2: Open the <strong>Command Prompt</strong> (<kbd>Win</kbd> + <kbd>R</kbd>, <code>cmd.exe</code>), navigate to the directory where you place AISpace source code and run:
+                <pre><code>pip3 install jupyter
 pip3 install jupyterlab
-pip3 install aispace2 --user</code></pre>
-				</li>
-				<li>
-					You will need to install <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> if you do not have them already.
-				</li>
-				<li>
-					After that, you can install the lab extension by running the following: <pre><code>jupyter labextension install aispace2
-jupyter labextension install @jupyter-widgets/jupyterlab-manager</code></pre>
-				</li>
-				<li>
-					In the folder where you would like to save the notebooks, run <pre><code>git clone https://github.com/AISpace2/AISpace2.git
-cd AISpace2
-jupyter lab</code></pre></li>
-				<li>
-					This will launch Jupyter Lab in your default browser. We recommend that you view the widgets using Chrome. After you run <code>jupyter lab</code>, the url at which the jupyter notebooks are running will be printed out in the terminal. You can copy
-					paste this url into Chrome.
-				</li>
-			</ol>
-			<h3>Troubleshooting</h3>
-			<p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
-			<p>
+pip3 install -e .</code></pre>
+            </li>
+            <li>
+                You will need to install <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> if you do not have them already.
+            </li>
+            <li>
+                After that, you can install the lab extension by running the following: <pre><code>cd js
+npm run update-lab-extension
+jupyter labextension install
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+cd ..</code></pre>
+            </li>
+        </ol>
+        <h4> Launch Jupyter Lab</h4>
+        To launch AISpace2, simply run <code>jupyter lab </code> in the directory where you stored the source code.
+                    This will launch Jupyter Lab in your default browser. We recommend that you view the widgets using Chrome. After you run <code>jupyter lab</code>, the url at which the jupyter notebooks are running will be printed out in the terminal. You can copy
+                    paste this url into Chrome.
+        <h3>Troubleshooting</h3>
+        <p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
+        <p>
 				You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
-				<pre><code>nvm install 8
+        <pre><code>nvm install 8
 nvm use 8</code></pre> in the same folder as where you will be installing the extension.
 			</p>
-	</section>
+    </section>
 	<script>
   date = new Date(document.lastModified)
   month = date.getMonth() + 1
