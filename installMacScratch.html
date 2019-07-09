@@ -1,4 +1,4 @@
-<!--MacOSScratch-->
+﻿<!--MacOSScratch-->
 <html lang="en">
 
 <head>
@@ -47,7 +47,7 @@
 		<br>
 		<a href="./install.html#macos">&larr; Go Back</a>
 		<h2> For MacOS Without Anaconda</h2>
-		<h3 id="macos-without-anaconda" class="linkify"><a href="#macos-without-anaconda">Without
+		<h3 id="macos-without-anaconda" class="linkify"><a href="#macos-without-anaconda">Install AISpace2 Without
 		Anaconda</a></h3>
 		<ol>
 			<li>
@@ -77,28 +77,28 @@
 					<a href="https://packaging.python.org/tutorials/installing-packages/#id10" target="_blank">here</a> for further instructions.
 				</p>
 			</li>
-			<li>
-				All that is left to do is to install Jupyter and enable our extension:
-				<pre><code>pip3 install jupyter
+<li>Download the newest <a href="https://github.com/AISpace2/AISpace2/releases">Release Version</a> of AISpace2 source code and unzip the files to the directory where you want to store AISpace2.</li>
+            <li>
+                Then install Jupyter and AISpace2: In the terminal, navigate to the directory where you place AISpace source code and run:
+                <pre><code>pip3 install jupyter
 pip3 install jupyterlab
-pip3 install aispace2 --user</code></pre>
-			</li>
-			<li>
-				You will need to install <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> if you do not have them already.
-			</li>
-			<li>
-				After that, you can install the lab extension by running the following: <pre><code>jupyter labextension install aispace2
-jupyter labextension install @jupyter-widgets/jupyterlab-manager</code></pre>
-			</li>
-			<li>
-				In the folder where you would like to save the notebooks, run <pre><code>git clone https://github.com/AISpace2/AISpace2.git
-cd AISpace2
-jupyter lab</code></pre></li>
-			<li>
-				This will launch Jupyter Lab in your default browser. We recommend that you view the widgets using Chrome. After you run <code>jupyter lab</code>, the url at which the jupyter notebooks are running will be printed out in the terminal. You can copy
-				paste this url into Chrome.
-			</li>
-		</ol>
+pip3 install -e .</code></pre>
+            </li>
+            <li>
+                You will need to install <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> if you do not have them already.
+            </li>
+            <li>
+                After that, you can install the lab extension by running the following: <pre><code>cd js
+npm run update-lab-extension
+jupyter labextension install
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+cd ..</code></pre>
+            </li>
+        </ol>
+        <h3> Launch Jupyter Lab</h3>
+        To launch AISpace2, simply run <code>jupyter lab </code> in the directory where you stored the source code.
+                    <br />This will launch Jupyter Lab in your default browser. We recommend that you view the widgets using Chrome. After you run <code>jupyter lab</code>, the url at which the jupyter notebooks are running will be printed out in the terminal. You can copy
+                    paste this url into Chrome.
 		<h3>Troubleshooting</h3>
 		<p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
 		<p>
