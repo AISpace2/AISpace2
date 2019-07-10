@@ -125,9 +125,10 @@ class StepDOMWidget(DOMWidget):
             self._request_pause = True
 
         def print_positions(nodes):
-            text = "Node positions:"
+            text = "positions={"
             for node in nodes:
-                text += "\n'{}': ({},{})".format(node['name'], int(node['x']), int(node['y']))
+                text += "\n'{}': ({},{}),".format(node['name'], int(node['x']), int(node['y']))
+            text = text[:-1] + "}"
             self.send({'action': 'showPositions', 'positions': text})
 
         self._fine_step = step_through_to_level(4)

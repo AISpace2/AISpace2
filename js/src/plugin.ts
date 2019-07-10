@@ -8,8 +8,8 @@ import { Widget } from "@phosphor/widgets";
 
 import { IJupyterWidgetRegistry } from "@jupyter-widgets/base";
 
-import BayesViewer from "./bayes/BayesViewer";
-import BayesViewerModel from "./bayes/BayesViewerModel";
+import BayesVisualizer from "./bayes/BayesVisualizer";
+import BayesVisualizerModel from "./bayes/BayesVisualizerModel";
 import CSPBuilder from "./csp/CSPBuilder";
 import CSPBuilderModel from "./csp/CSPBuilderModel";
 import CSPViewer from "./csp/CSPVisualizer";
@@ -45,8 +45,8 @@ function activateWidgetExtension(
     name: (packageJSON as any).name,
     version: EXTENSION_SPEC_VERSION,
     exports: {
-      BayesViewer,
-      BayesViewerModel,
+      BayesVisualizer,
+      BayesVisualizerModel,
       CSPBuilder,
       CSPBuilderModel,
       CSPViewer,

@@ -3,7 +3,7 @@ import { IEvent } from "../Events";
 import {
   deserializeGraph,
   Graph,
-  ICSPGraphNode,
+  IBayesGraphNode,
   IGraphJSON,
   serializeGraph
 } from "../Graph";
@@ -13,7 +13,7 @@ const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
 
 /**
  * The model that receives messages and synced traitlets from the backend.
- * See the accompanying backend file: `aispace2/jupyter/csp/cspbuilder.py`
+ * See the accompanying backend file: `aispace2/jupyter/bayes/bayesbuilder.py`
  */
 export default class CSPBuilderModel extends widgets.DOMWidgetModel {
   public static serializers = Object.assign(
@@ -31,10 +31,11 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
       ...super.defaults(),
       _model_module: "aispace2",
       _model_module_version: EXTENSION_SPEC_VERSION,
-      _model_name: "CSPBuilderModel",
+      _model_name: "BayesBuilderModel",
       _view_module: "aispace2",
       _view_module_version: EXTENSION_SPEC_VERSION,
-      _view_name: "CSPBuilder"
+      _view_name: "BayesBuilder",
+      decimal_place: 2
     };
   }
 
@@ -50,20 +51,25 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
     });
   }
 
-  // The JSON representing the CSP graph
-  get graph(): Graph<ICSPGraphNode> {
+  // The JSON representing the Belief Network graph
+  get graph(): Graph<IBayesGraphNode> {
     return this.get("graph");
   }
 
-  set graph(val: Graph<ICSPGraphNode>) {
+  set graph(val: Graph<IBayesGraphNode>) {
     this.set("graph", val);
+  }
+
+  get textSize(): number {
+    return this.get("text_size");
   }
 
   get detailLevel(): number {
     return this.get("detail_level");
   }
 
-  get textSize(): number {
-    return this.get("text_size");
+  // return the decimal place in the query result
+  get decimalPlace(): number {
+    return this.get("decimal_place");
   }
 }

@@ -46,7 +46,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           this.vue.output = event.text;
           break;
         case "showPositions":
-          this.vue.positions = this.vue.positions ? "" : event.positions
+          this.vue.positions = this.vue.positions && event.positions == this.vue.positions ? "" : event.positions
           break;
       }
     });
@@ -207,7 +207,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /**
    * Prompt the user that the AC needs to be finished before the domain can be split.
    */
-  private chooseDomainSplitBeforeAC(event: CSPEvents.ICSPChooseDomainSplitEventBeforeAC) {
+  private chooseDomainSplitBeforeAC(event: CSPEvents.ICSPChooseDomainSplitBeforeACEvent) {
     window.alert("Arc consistency needs to be finished before the domain can be split.");
   }
 }

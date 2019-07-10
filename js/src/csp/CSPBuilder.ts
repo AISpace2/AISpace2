@@ -1,5 +1,6 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
+import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
@@ -16,7 +17,7 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
   private static readonly SHOW_PYTHON_CODE = "python-code";
 
   public model: CSPBuilderModel;
-  public vue: any;
+  public vue: Vue;
 
   public initialize(opts: any) {
     super.initialize(opts);

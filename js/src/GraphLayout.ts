@@ -280,11 +280,11 @@ export function d3TreeLayout(
         }
       });
 
-      /** 
+      /**
        * Deal with overlapped edges:
        * To make sure that two overlapped edges are splitted and always maintain parallel,
        * Need to make two fake nodes (x1,y1) (x2,y2) moving alone circles centered at the target and source nodes.
-      */ 
+       */ 
       graph.edges.forEach(edge => {
         edge.x1 = edge.source.x;
         edge.x2 = edge.target.x;

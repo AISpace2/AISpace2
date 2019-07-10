@@ -41,7 +41,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           this.vue.output = event.text;
           break;
         case "showPositions":
-          this.vue.positions = this.vue.positions ? "" : event.positions
+          this.vue.positions = this.vue.positions && event.positions == this.vue.positions ? "" : event.positions
           break;
       }
     });
@@ -151,7 +151,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   /**
    * Highlights nodes in the visualization, as described by the event object.
    */
-  private highlightNodes(event: SearchEvents.IHighlightNodeEvent) {
+  private highlightNodes(event: SearchEvents.ISearchHighlightNodeEvent) {
     for (const nodeId of event.nodeIds) {
       this.vue.$set(
         this.model.graph.idMap[nodeId].styles,
@@ -172,7 +172,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   /**
    * Highlights a path in the visualization, as described by the event object.
    */
-  private highlightPath(event: SearchEvents.IHighlightPathEvent) {
+  private highlightPath(event: SearchEvents.ISearchHighlightPathEvent) {
     for (const edgeId of event.path) {
       this.vue.$set(
         this.model.graph.idMap[edgeId].styles,
