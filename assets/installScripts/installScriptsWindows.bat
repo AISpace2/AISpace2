@@ -18,4 +18,3 @@ npm run update-lab-extension
 jupyter labextension install
 cd ..
 jupyter lab
-pause
