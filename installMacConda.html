@@ -50,14 +50,19 @@
     <h2> For MacOS With Anaconda</h2>
     <h3 id="macos-anaconda-one-click" class="linkify"> <a href="#macos-anaconda-one-click">With Anaconda and Script File</a></h3>
     <ol>
-      <li>Download <a href="https://www.anaconda.com/distribution/" target="_blank">Anaconda</a>, making sure to get the Python 3+ version. The Python 2 version is not supported.
+      <li>Install <a href="https://www.anaconda.com/distribution/" target="_blank">Anaconda</a>, making sure to get the Python 3+ version. The Python 2 version is not supported.
       </li>
       <li>You will need to install <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> if you do not have them already.</li>
       <li>Download <a href="./assets/AISpace2.zip" download>AISpace2 souce code</a> and unzip the file in the directory where you want to store it.</li>
-      <li>Download and unzip the <a href="./assets/OneClickInstall/AISpace2MacInstall.zip">installaiton scripts</a> and place the 2 <code>*.command</code> files in the same directory as the source code.</li>
+      <li>Download the <a href="./assets/installScripts/installScriptsMac.command" download="installScripts.command">installaiton scripts</a> and place it in the same directory as the source code.</li>
       <li>Open the terminal then execute the following:
-        <pre><code>sh /PATH/TO/FILE/AISpace2MacInstall/InstallAISpace2.command</code></pre>
+        <pre><code>sh /PATH/TO/FILE/installScripts.command</code></pre>
       </ol>
+      <p>
+        After the installation the JupyterLab will automatically open and you can select the notebooks (<code>*.ipynb</code> files) inside <code>AISpace2/notebooks/</code> to run.
+        In the future if you want to run AISpace2, simply open the JupyterLab in Anaconda or execute the following in the terminal:
+        <pre><code>jupyter lab</code></pre>
+      </p>
   		<h3>Troubleshooting</h3>
   		<p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
   		<p>
