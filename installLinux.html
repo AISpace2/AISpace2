@@ -54,24 +54,26 @@
 			<li>
 				You will need to install <a href="https://www.python.org/" target="_blank">Python 3.3+</a>.
 			</li>
-			<li>After that, you can install Jupyter and the <strong>AISpace2</strong> extension by running the following: <pre><code>pip3 install jupyter
-pip3 install jupyterlab
-pip3 install aispace2 --user</code></pre>
-			</li>
 			<li>
 				You will need to install <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> if you do not have them already.
 			</li>
+			<li>Download the newest <a href="https://github.com/AISpace2/AISpace2/releases">Release</a> Version of AISpace2 source code and unzip the files to the directory where you want to store AISpace2.
+			<li>After that, you can install Jupyter and the <strong>AISpace2</strong> extension by running the following in side the directory of the source code: <pre><code>pip3 install jupyter
+pip3 install jupyterlab
+pip3 install -e .</code></pre>
+			</li>
+
 			<li>
-				After that, you can install the lab extension by running the following: <pre><code>jupyter labextension install aispace2
-jupyter labextension install @jupyter-widgets/jupyterlab-manager</code></pre>
+				After that, you can install the lab extension by running the following: <pre><code>cd js
+npm run update-lab-extension
+jupyter labextension install
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+cd ..</code></pre>
 			</li>
 			<li>
-				In the folder where you would like to save the notebooks, run <pre><code>git clone https://github.com/AISpace2/AISpace2.git
-cd AISpace2
-jupyter lab</code></pre></li>
-			<li>
-				This will launch Jupyter Lab in your default browser. We recommend that you view the widgets using Chrome. After you run <code>jupyter lab</code>, the url at which the jupyter notebooks are running will be printed out in the terminal. You can copy
-				paste this url into Chrome.
+			To launch AISpace2, simply run <code>jupyter lab </code> in the directory where you stored the source code.
+                    <br />This will launch Jupyter Lab in your default browser. We recommend that you view the widgets using Chrome. After you run <code>jupyter lab</code>, the url at which the jupyter notebooks are running will be printed out in the terminal. You can copy
+                    paste this url into Chrome.
 			</li>
 		</ol>
 		<h3>Troubleshooting</h3>
