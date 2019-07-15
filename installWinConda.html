@@ -52,15 +52,18 @@
 		<h2> For Windows With Anaconda </h2>
 		<h3 id="windows-anaconda-one-click" class="linkify"><a href="#windows-anaconda-one-click">Using Anaconda and One Click Install</a></h3>
 		<ol>
-			<li>Download <a href="https://www.anaconda.com/distribution/" target="_blank">Anaconda</a> for Windows, making sure you select the Python 3+ version.</li>
+			<li>Install <a href="https://www.anaconda.com/distribution/" target="_blank">Anaconda</a> for Windows, making sure you select the Python 3+ version.</li>
 			<li>Run the downloaded installer. Make sure you enabled "add Anaconda to PATH".</li>
 			<li>
 				You will need to install <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> if you do not have them already.
 			</li>
 			<li>Download <a href="./assets/AISpace2.zip" download>AISpace2 souce code</a> and unzip the file in the directory where you want to store it.</li>
-			<li>Download and unzip the <a href="./assets/OneClickInstall/AISpace2WinInstall.zip">installaiton scripts</a> and place the 4 <code>*.bat</code> files in the same directory as the source code.</li>
-			<li>Double click on file <code>InstallAISpace2.bat</code> and follow the instruction</li>
+			<li>Download the <a href="./assets/OneClickInstall/WindowsInstall.bat" download>installaiton scripts</a> and place it in the same directory as the source code.</li>
+			<li>Double click on <code>InstallAISpace2.bat</code> and follow the instructions.</li>
 		</ol>
+		After the installation the JupyterLab will automatically open and you can select the notebooks (<code>*.ipynb</code> files) inside <code>AISpace2/notebooks/</code> to run.
+		In the future if you want to run AISpace2, simply open the JupyterLab in Anaconda or execute the following in the command line tool:
+		<pre><code>jupyter lab</code></pre>
 		<h3>Troubleshooting</h3>
 		<p>If you are using node 10 and your installation of the aispace2 labextension hangs, try to install it using node 8.</p>
 		<p>
