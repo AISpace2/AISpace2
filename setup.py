@@ -82,7 +82,7 @@ class NPM(Command):
             return True
         except:
             try:
-                check_call(['powershell','-command','npm', '--version'])
+                check_call(['powershell', '-command','npm', '--version'])
                 return True
             except:
                 return False
