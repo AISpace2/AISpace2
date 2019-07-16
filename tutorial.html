@@ -98,6 +98,7 @@
             <li><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></li>
             <li><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></li>
             <li><a href="#tutorial-faq-why-update-aipython-not-reflect">Why doesn't the update to codes in <code>./aipython/</code> take effect?</a></li>
+            <li><a href="#tutorial-faq-why-update-frontend-not-reflect">Why doesn't the update to codes in <code>./js/</code> take effect?</a></li>
             <li><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></li>
           </ul>
         </li>
@@ -528,6 +529,7 @@ bn2 <span style="color: #666666">=</span> Belief_network(<span style="color: #00
         <li><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></li>
         <li><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></li>
         <li><a href="#tutorial-faq-why-update-aipython-not-reflect">Why doesn't the update to codes in <code>./aipython/</code> take effect?</a></li>
+        <li><a href="#tutorial-faq-why-update-frontend-not-reflect">Why doesn't the update to codes in <code>./js/</code> take effect?</a></li>
         <li><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></li>
       </ul>
       <h3 id="tutorial-faq-relationship-aispace-aispace2" class="linkify"><a href="#tutorial-faq-relationship-aispace-aispace2">What's the relationship between AISpace and AISpace2?</a></h3>
@@ -653,6 +655,13 @@ e<span style="color: #666666">.</span>foo()
             Click the button to restart the kernel in JupyterLab
           </figcaption>
         </figure>
+      </p>
+      <h3 id="tutorial-faq-why-update-frontend-not-reflect" class="linkify"><a href="#tutorial-faq-why-update-frontend-not-reflect">Why doesn't the update to codes in <code>./js/</code> take effect?</a></h3>
+      <p>
+        Whenever you make a change to the frontend codes, i.e. Javascripts files in <code>./js/</code>, you need to let Webpack recompile them by running:
+        <pre>npm update-lab-extension
+jupyter labextension install</pre>
+        in <code>./js/</code> directory. After recompiling, you need to refresh the page.
       </p>
       <h3 id="tutorial-faq-what-how-display" class="linkify"><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></h3>
       <p>
