@@ -1,5 +1,4 @@
 cd "$(dirname "$0")"
-cd AISpace2
 read -n1 -r -p "Make sure you have installed Anaconda, git, Node.js and npm.`echo $'\nPress any key to continue ...'`"
 echo Installing jupyterlab ...
 conda install -c conda-forge jupyterlab
