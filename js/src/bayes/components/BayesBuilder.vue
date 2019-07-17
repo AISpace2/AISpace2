@@ -775,12 +775,14 @@ export default class BayesGraphBuilder extends Vue {
       this.temp_node_name = "";
       this.temp_node_domain = "";
       this.warning_message = "";
+      this.succeed_message = "";
       this.temp_node_evidences = this.selection.evidences.slice(0);
     } else {
       this.selection = null;
       this.temp_node_name = "";
       this.temp_node_domain = "";
       this.warning_message = "";
+      this.succeed_message = "";
     }
   }
 
@@ -798,6 +800,7 @@ export default class BayesGraphBuilder extends Vue {
       this.temp_node_name = "";
       this.temp_node_domain = "";
       this.warning_message = "";
+      this.succeed_message = "";
     }
   }
 }
