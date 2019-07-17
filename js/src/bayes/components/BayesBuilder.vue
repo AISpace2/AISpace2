@@ -726,7 +726,7 @@ export default class BayesGraphBuilder extends Vue {
   */
   CalLastBoxValue(vals: number[]) {
     var result = 1 - vals.reduce((a, b) => a + b, 0);
-    return result.toFixed(2);
+    return result;
   }
 
   findLastInputboxRef(prob_name_index: number) {
