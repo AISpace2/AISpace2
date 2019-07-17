@@ -179,10 +179,10 @@
                   type="number"
                   @focus="$event.target.select()"
                   :value="temp_node_evidences[index_p1 * selection.domain.length + index_snn2]"
-                  @input="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = Number($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = 0,
+                  @input="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = 0,
                   (index_snn2 === selection.domain.length - 1) ? null : $refs[findLastInputboxRef(index_p1)][0].value = CalLastBoxValue(getSameLineInputBoxVal(index_p1)),
                   (index_snn2 === selection.domain.length - 1) ? null : temp_node_evidences[index_p1 * selection.domain.length + selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index_p1))"
-                  @change="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = Number($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = 0"
+                  @change="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = 0"
                 />
               </div>
             </div>
