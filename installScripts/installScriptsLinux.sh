@@ -1,5 +1,5 @@
-cd "$(dirname "$0")"
-read -n1 -r -p "Make sure you have installed Anaconda, git, Node.js and npm.`echo $'\nPress any key to continue ...'`"
+dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+cd $dir
 cd ..
 echo Installing jupyterlab ...
 conda install -c conda-forge jupyterlab=0.35
