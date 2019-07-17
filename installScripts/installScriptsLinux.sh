@@ -13,6 +13,6 @@ pip install -r requirements-dev.txt
 cd js
 npm install
 npm run update-lab-extension
-jupiter labextension install
+jupyter labextension install
 cd ..
 jupyter lab
