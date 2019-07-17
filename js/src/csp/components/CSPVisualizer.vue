@@ -48,7 +48,7 @@
         <div>Choose domain to split</div>
         <div>Currently spliting Node: {{FocusNode.nodeName}}</div>
         <div v-for="key in FocusNode.domain" :key = "key">    
-        <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames" @change="uniqueCheck">
+        <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames">
         <label :for = "key">{{key}}</label>     
         </div>
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
@@ -120,15 +120,7 @@ export default class CSPGraphInteractor extends Vue {
         }
      }
   }
-    
-  uniqueCheck(e){
-      this.FocusNode.checkedNames = [];
-      if (e.target.checked) {
-          this.FocusNode.checkedNames.push(e.target.value);
-      }
-  }    
-    
-
+        
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
   }
@@ -136,8 +128,9 @@ export default class CSPGraphInteractor extends Vue {
   nodeClicked(node: ICSPGraphNode) {
     this.$emit("click:node", node);
     if(node.domain !== undefined){
-    this.FocusNode.domain = node.domain[0];    
+    this.FocusNode.domain = node.domain;    
     this.FocusNode.nodeName = node.name;
+    this.FocusNode.checkedNames = [];    
     }        
   }
 

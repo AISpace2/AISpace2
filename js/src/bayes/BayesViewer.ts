@@ -62,7 +62,12 @@ export default class BayesViewer extends DOMWidgetView {
 
       this.vue.$on("click:submit", () => {
         Analytics.trackEvent("Bayes Visualizer", "Observe Node");      
-        this.chooseObservation();
+        this.chooseObservation();   
+          
+        this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
+          this.vue.$emit("click:query-node", variableNode);          
+          this.vue.$set(variableNode.styles, "strokeWidth", 0);
+        });          
       });
 
       this.vue.$on("click:query-node", (node: IBayesGraphNode) => {
@@ -75,17 +80,20 @@ export default class BayesViewer extends DOMWidgetView {
           name: node.name,
           evidences: dumpData.map((n: IObservation) => {
             return {"name": n.name, "value": n.value};
-          })});
+          })});    
       });
         
       this.vue.$on('reset', () => {
         this.manager.reset();
+        
         this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
-          variableNode.prob = undefined;
-          variableNode.observed = undefined;
+          this.vue.$set(variableNode,"prob",undefined);
+          this.vue.$set(variableNode,"observed",undefined);
+          this.vue.$set(variableNode,"displaying",undefined);            
           this.vue.$set(variableNode.styles, "strokeWidth", 0);
           this.vue.FocusNode.domain = [];
         });
+       
       });
 
       if (!this.model.previouslyRendered) {
@@ -106,13 +114,14 @@ export default class BayesViewer extends DOMWidgetView {
   }
 
   private chooseObservation() {
-      if(this.vue.FocusNode.checkedNames.length === 0){alert("Please choose one domain before submit");return;}
+      if(this.vue.FocusNode.checkedNames === ''){alert("Please choose one domain before submit");return;}
       const nodes =  this.model.graph.nodes.filter(node => node.name === this.vue.FocusNode.nodeName);
       const variableNode = nodes[0] as IBayesGraphNode;
-      let value: null | string | boolean = this.vue.FocusNode.checkedNames[0];
+      let value: null | string | boolean = this.vue.FocusNode.checkedNames;
       if (value === "true"){value = true;}
       if (value === "false"){value = false;}
       this.manager.add(variableNode.name, value);
       this.vue.$set(variableNode, "observed", value.toString());
+      this.vue.FocusNode.domain = [];              
   }
 }

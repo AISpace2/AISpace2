@@ -4,11 +4,11 @@
           :x="-size.width/2" :y="-size.height/2"
           :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="this.showFullTextFlag() ? 30 : 25"></rect>
 
-    <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? -8 : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
+    <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? (subtext.length != 0 ? -size.height/2 + textSize : 0) : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{displayText}}
     </text>
-    <text :v-show="subtext !== undefined" id="subtext" :font-size="textSize"  v-if="subtext != null" ref="subtext" x="0" y="8" :fill="textColour" text-anchor="middle" alignment-baseline="middle" style="white-space: pre;">
-      {{displaySubText}}
+    <text :v-show="subtext !== undefined" id="subtext" :font-size="textSize - 2"  v-if="subtext != null" ref="subtext" x="0" :y="-size.height/2 + textSize + 2" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
+      <tspan x="0" dy="1.6em" id="subspan" v-for = "key in displayTest" style="white-space: pre; font-weight: bold;">{{key}}</tspan>
     </text>
   </g>
 </template>
@@ -23,7 +23,7 @@
    *
    * Events Emitted:
    * - 'updateBounds':
-   *       The bounds (size of node) have be    en updated.
+   *       The bounds (size of node) have been updated.
    *       Passes a size object {rx: number, ry: number} as an argument.
    *       To correctly implement automatic node sizing, you should listen for this event and update
    *       the edges to use this information. E.g. for DirectedEdge, update (source|dest)R(x|y) prop.
@@ -53,9 +53,18 @@
         this.truncatedSubtext = this.subtext ? this.subtext : "";
         this.fitSubtext();
       }
-      this.measureTextHeight(this.text, this.flag.TEXT);
-      this.measureTextHeight(this.subtext, this.flag.SUBTEXT);
+      this.computeWidthAndHeight();
+        
     }
+    
+    height() {
+      this.computeWidthAndHeight();
+      if (this.showNoTextFlag() || this.text === "{}") {
+        return this.minHeight;
+      }
+      return Math.max(this.computedTotalHeight, this.minHeight) + this.padding.height;
+    }    
+    
     /** The maximum of `computedTextWidth` and `computedSubtextWidth`. */
     get computedTotalWidth() {
       return Math.max(this.computedTextWidth, this.computedSubtextWidth);
@@ -65,6 +74,11 @@
       return this.format(text);
     }
 
+    get displayTest() {
+      let text = this.showFullTextFlag() ? this.subtext : this.truncatedSubtext;
+      return this.format(text).split('\n');
+    }    
+    
     /**
      * Computes the width and height of the rendered text elements and updates the following:
      * - `computedTextWidth`
@@ -86,18 +100,18 @@
       } else if (this.cache.height != -1) {
         textHeight = this.cache.height;
       } else {
-        textHeight = this.$refs.text.getBoundingClientRect().height;
+        textHeight = this.$refs.text.getBoundingClientRect().height;  
       }
 
       textWidth = this.measureTextWidth(this.text);
 
       if (this.$refs.subtext === null || this.$refs.subtext === undefined) {
-        subtextHeight = 0;
-      } else if (this.cache.subHeight != -1) {
-        subtextHeight = this.cache.subHeight;
-      } else {
-        subtextHeight = this.$refs.subtext.getBoundingClientRect().height;
-      }
+        subtextHeight = 0;      
+   //   } else if (this.cache.subHeight != -1) {
+   //     subtextHeight = this.cache.subHeight;
+      } else {     
+        subtextHeight = this.$refs.subtext.getBoundingClientRect().height; 
+        }
 
       subtextWidth = this.measureTextWidth(this.subtext);
 
@@ -143,11 +157,14 @@
     get rawWidth() {
       return this.computedTotalWidth;
     }
+    
 
     @Watch("subtext")
     onSubtextChanged() {
+      this.cache.subHeight = -1;
       this.truncatedSubtext = this.subtext;
       this.fitSubtext();
+      this.updateText();    
     }
 
     @Watch("textSize")

@@ -1,11 +1,11 @@
-<template>
+za<template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
     <button id="query-mode" :style="stateStyle('query')" class = "btn btn-default" @click="changemode('query');">Query</button>
     <button id="observe-mode" :style="stateStyle('observe')" class = "btn btn-default" @click="changemode('observe');">Observe</button>
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
     >
       <template slot="node" slot-scope="props">
-        <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext= "probText(props.node)"
+        <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext= "probGraph(props.node)"
                                    :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                                    :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel" @updateBounds="updateNodeBounds(props.node, $event)"
                                    :stroke-width="nodeStrokeWidth(props.node)" style="white-space: pre;">
@@ -42,7 +42,7 @@
         <div>Choose domain to observe</div>
         <div>Currently Observing Node: {{FocusNode.nodeName}}</div>
         <div v-for="key in FocusNode.domain" :key = "key">    
-        <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames" @change="uniqueCheck">
+        <input type="radio" :id="key" :value= "key" v-model="FocusNode.checkedNames">
         <label :for = "key">{{key}}</label>     
         </div>
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
@@ -106,17 +106,10 @@
       return {
         FocusNode:{
         domain:[],
-        checkedNames: [],
+        checkedNames: '',
         nodeName: String
         }
      }
-    }
-    
-    uniqueCheck(e){
-      this.FocusNode.checkedNames = [];
-      if (e.target.checked) {
-          this.FocusNode.checkedNames.push(e.target.value);
-      }
     }
     
     changemode(e:String){
@@ -133,11 +126,14 @@
     nodeClicked(node: IBayesGraphNode) {
       if (this.isQuerying) {
         this.$emit("click:query-node", node);
+        node.displaying = true;
          
       } else {
         this.FocusNode.domain = node.domain;   
         this.FocusNode.nodeName = node.name;    
+        this.FocusNode.checkedNames = '';  
       }
+
     }
 
     strokeWidth(edge: IGraphEdge, isHovering: boolean) {
@@ -169,9 +165,10 @@
 
     // Returns a formatted string representing the probability of a variable node after query
     probText(node: IBayesGraphNode) {
+      if(node.displaying != undefined && node.displaying !== false){  
       if (node.prob === undefined) {
 	    if (node.observed === undefined) return undefined;
-	    return "\n" + "Obs: " + node.observed;
+	    return  "Obs: " + node.observed;
 	  }
       else {
         let text = "";
@@ -180,9 +177,30 @@
         }
         text = text.slice(0, -2)  // delete last comma and space
 	      if (node.observed === undefined) return text;
-        return  "Obs: " + node.observed + "\n" + text;
+        return  "Obs: " + node.observed + '\n' + text;
       }
 	  }
+        return undefined;
+    }
+    
+    // Returns a formatted string graph representing the probability of a variable node after query
+    probGraph(node: IBayesGraphNode) {
+      if(node.displaying != undefined && node.displaying !== false ){  
+      if (node.prob !== undefined) {
+        let text = "";
+        text += "_".repeat(30) + '\n'
+        var prob = "|";
+        var width = 20;
+        for (var key in node.prob) {
+          var number = node.prob[key];
+          var namel  = key.length;
+          text += key + " ".repeat(width - 10 - namel) + number.toFixed(this.decimalPlace) + ":" + " ".repeat(5) + prob.repeat(number*20) + " ".repeat(width-number*20) + '\n';            
+        }
+        return text;
+	  }
+    } 
+     return "";
+    }   
 
     addTextSize(){
       this.textSize ++;

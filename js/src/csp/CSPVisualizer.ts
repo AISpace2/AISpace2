@@ -38,7 +38,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         case "chooseDomainSplit":{
           this.vue.needSplit = true;  
           return ;}
-        case "chooseDomainSplitBeforeAC":
+        case "chooseDomainSplitBeforeAC":  
           return this.chooseDomainSplitBeforeAC(event);
         case "setSolution":
           this.vue.pre_solution += "\n        " + event.solution;
@@ -205,8 +205,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private chooseDomainSplit() {
     if(this.vue.FocusNode.checkedNames.length ===0){alert("Please choose domain to split before submiting"); return;}
-    const domainString = this.vue.FocusNode.checkedNames[0];  
-    const newDomain = domainString != null ? domainString.split(",").filter(d => d) : null;
+    const newDomain = this.vue.FocusNode.checkedNames;
     this.send({ event: "domain_split", domain: newDomain });
     this.vue.needSplit = false;
   }
@@ -215,6 +214,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Prompt the user that the AC needs to be finished before the domain can be split.
    */
   private chooseDomainSplitBeforeAC(event: CSPEvents.ICSPChooseDomainSplitEventBeforeAC) {
+    if(!this.vue.needSplit){  
     window.alert("Arc consistency needs to be finished before the domain can be split.");
+    }
   }
 }
