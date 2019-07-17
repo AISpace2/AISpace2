@@ -35,8 +35,6 @@ class CSP(Displayable):
     """A CSP consists of
     * domains, a dictionary that maps each variable to its domain
     * constraints, a list of constraints
-    * variables, a set of variables
-    * var_to_const, a variable to set of constraints dictionary
     * positions, a dictionary that maps each node into its (x,y)-position.
     """
     def __init__(self, domains, constraints, positions = {}):

@@ -6,7 +6,7 @@ from ipywidgets import register
 from traitlets import Bool, Dict, Float, Instance, Unicode
 
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
-from .cspjsonbridge import (csp_from_json, csp_to_json, generate_csp_graph_mappings)
+from .cspjsonbridge import (json_to_csp, csp_to_json, generate_csp_graph_mappings)
 
 from ... import __version__
 
@@ -26,7 +26,7 @@ class Displayable(StepDOMWidget):
     _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The CSP that is synced as a graph to the frontend.
-    graph = Instance(klass=CSP, allow_none=True).tag(sync=True, to_json=csp_to_json, from_json=csp_from_json)
+    graph = Instance(klass=CSP, allow_none=True).tag(sync=True, to_json=csp_to_json, from_json=json_to_csp)
 
     # Constrols whether the auto arc consistency button will show up in the widget (will not in SLS)
     need_AC_button = Bool(True).tag(sync=True)

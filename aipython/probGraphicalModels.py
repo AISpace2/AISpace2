@@ -44,6 +44,8 @@ class Inference_method(Displayable):
 from .probVariables import Variable
 from .probFactors import Prob
 
+bn_empty = Belief_network([], [])
+
 boolean = [False, True]
 A = Variable("A", boolean)
 B = Variable("B", boolean)

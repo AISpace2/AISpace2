@@ -2,7 +2,7 @@ from aipython.cspProblem import CSP
 from ipywidgets import DOMWidget, register
 from traitlets import Dict, Instance, Unicode, Integer
 
-from .cspjsonbridge import csp_from_json, csp_to_json, csp_to_python_code
+from .cspjsonbridge import json_to_csp, csp_to_json, csp_to_python_code
 
 from ... import __version__
 
@@ -29,7 +29,7 @@ class CSPBuilder(DOMWidget):
     _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The CSP that is synced as a graph to the frontend.
-    graph = Instance(klass=CSP, allow_none=True).tag(sync=True, from_json=csp_from_json, to_json=csp_to_json)
+    graph = Instance(klass=CSP, allow_none=True).tag(sync=True, from_json=json_to_csp, to_json=csp_to_json)
     text_size = Integer(12).tag(sync=True)
     detail_level = Integer(1).tag(sync=True)
 
@@ -38,11 +38,14 @@ class CSPBuilder(DOMWidget):
         self.graph = csp
 
     def csp(self):
-        """Converts the CSP represented by this builder into a Python CSP object."""
+        """Converts the CSP represented by this builder into
+        a Python aipython.cspProblem.CSP object."""
         return self.graph
 
     def py_code(self):
-        """Converts the CSP represented by this builder into Python code."""
+        """Converts the search problem represented by this builder into Python code.
+        The code is added to a new cell in the notebook.
+        """
         self.send({
             'action': 'python-code',
             'code': csp_to_python_code(self.csp())

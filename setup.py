@@ -81,7 +81,11 @@ class NPM(Command):
             check_call(['npm', '--version'])
             return True
         except:
-            return False
+            try:
+                check_call(['powershell', '-command','npm', '--version'])
+                return True
+            except:
+                return False
 
     def should_run_npm_install(self):
         package_json = os.path.join(node_root, 'package.json')
@@ -98,8 +102,12 @@ class NPM(Command):
 
         if self.should_run_npm_install():
             log.info("Installing build dependencies with npm.  This may take a while...")
-            check_call(['npm', 'install'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
-            check_call(['npm', 'run', 'build:prod'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)            
+            try:
+                check_call(['npm', 'install'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
+                check_call(['npm', 'run', 'build:dev'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
+            except:
+                check_call(['powershell', '-command','npm', 'install'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
+                check_call(['powershell', '-command','npm', 'run', 'build:dev'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
             os.utime(self.node_modules, None)
 
         for t in self.targets:

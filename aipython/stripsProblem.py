@@ -24,9 +24,9 @@ class Strips(object):
 class STRIPS_domain(object):
     def __init__(self, feats_vals, strips_map):
         """Problem domain
-        feats_vals is a feature:domain dictionary, 
+        feats_vals is a feature:domain dictionary,
                 mapping each feature to its domain
-        strips_map is an action:strips dictionary, 
+        strips_map is an action:strips dictionary,
                 mapping each action to its Strips representation
         """
         self.actions = set(strips_map)  # set of all actions
@@ -37,19 +37,19 @@ boolean = {True, False}
 delivery_domain = STRIPS_domain(
     {'RLoc':{'cs', 'off', 'lab', 'mr'}, 'RHC':boolean, 'SWC':boolean,
      'MW':boolean, 'RHM':boolean},           #feaures:values dictionary
-    {'mc_cs': Strips({'RLoc':'cs'}, {'RLoc':'off'}),   
+    {'mc_cs': Strips({'RLoc':'cs'}, {'RLoc':'off'}),
      'mc_off': Strips({'RLoc':'off'}, {'RLoc':'lab'}),
      'mc_lab': Strips({'RLoc':'lab'}, {'RLoc':'mr'}),
      'mc_mr': Strips({'RLoc':'mr'}, {'RLoc':'cs'}),
-     'mcc_cs': Strips({'RLoc':'cs'}, {'RLoc':'mr'}),   
+     'mcc_cs': Strips({'RLoc':'cs'}, {'RLoc':'mr'}),
      'mcc_off': Strips({'RLoc':'off'}, {'RLoc':'cs'}),
      'mcc_lab': Strips({'RLoc':'lab'}, {'RLoc':'off'}),
      'mcc_mr': Strips({'RLoc':'mr'}, {'RLoc':'lab'}),
-     'puc': Strips({'RLoc':'cs', 'RHC':False}, {'RHC':True}),  
+     'puc': Strips({'RLoc':'cs', 'RHC':False}, {'RHC':True}),
      'dc': Strips({'RLoc':'off', 'RHC':True}, {'RHC':False, 'SWC':False}),
      'pum': Strips({'RLoc':'mr','MW':True}, {'RHM':True,'MW':False}),
      'dm': Strips({'RLoc':'off', 'RHM':True}, {'RHM':False})
-    } )
+    })
 
 class Planning_problem(object):
     def __init__(self, prob_domain, initial_state, goal, positions={}):
@@ -57,7 +57,8 @@ class Planning_problem(object):
         a planning problem consists of
         * a planning domain
         * the initial state
-        * a goal 
+        * a goal
+        * positions
         """
         self.prob_domain = prob_domain
         self.initial_state = initial_state
@@ -65,16 +66,16 @@ class Planning_problem(object):
         self.positions = positions
 
 strips_simple1 = Planning_problem(delivery_domain,
-                            {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
-                             'RHM':False}, 
+                            {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False,
+                             'RHM':False},
                             {'RLoc':'off'})
 strips_simple2 = Planning_problem(delivery_domain,
-                            {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
-                             'RHM':False}, 
+                            {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False,
+                             'RHM':False},
                             {'SWC':False})
 strips_simple3 = Planning_problem(delivery_domain,
-                            {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False, 
-                             'RHM':False}, 
+                            {'RLoc':'lab', 'MW':True, 'SWC':True, 'RHC':False,
+                             'RHM':False},
                             {'SWC':False, 'MW':False, 'RHM':False})
 
 ### blocks world
@@ -89,13 +90,13 @@ def clear(x):
     return 'clear_'+x
 def create_blocks_world(blocks = ['a','b','c','d']):
     blocks_and_table = blocks+['table']
-    stmap =  {move(x,y,z):Strips({on(x,y):True, clear(x):True, clear(z):True}, 
+    stmap =  {move(x,y,z):Strips({on(x,y):True, clear(x):True, clear(z):True},
                                  {on(x,z):True, on(x,y):False, clear(y):True, clear(z):False})
                     for x in blocks
                     for y in blocks_and_table
                     for z in blocks
                     if x!=y and y!=z and z!=x}
-    stmap.update({move(x,y,'table'):Strips({on(x,y):True, clear(x):True}, 
+    stmap.update({move(x,y,'table'):Strips({on(x,y):True, clear(x):True},
                                  {on(x,'table'):True, on(x,y):False, clear(y):True})
                     for x in blocks
                     for y in blocks
@@ -106,12 +107,12 @@ def create_blocks_world(blocks = ['a','b','c','d']):
 
 blocks1dom = create_blocks_world(['a','b','c'])
 strips_blocks1 = Planning_problem(blocks1dom,
-     {on('a','table'):True,clear('a'):True, clear('b'):True,on('b','c'):True, 
+     {on('a','table'):True,clear('a'):True, clear('b'):True,on('b','c'):True,
       on('c','table'):True,clear('c'):False}, # initial state
      {on('a','b'):True, on('c','a'):True})  #goal
 
 blocks2dom = create_blocks_world(['a','b','c','d'])
-tower4 = {clear('a'):True, on('a','b'):True, clear('b'):False, 
+tower4 = {clear('a'):True, on('a','b'):True, clear('b'):False,
       on('b','c'):True, clear('c'):False, on('c','d'):True,
       clear('b'):False, on('d','table'):True}
 strips_blocks2 = Planning_problem(blocks2dom,
