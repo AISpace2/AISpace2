@@ -1,5 +1,5 @@
 cd "$(dirname "$0")"
-read -n1 -r -p "Make sure you have installed Anaconda, git, Node.js.`echo $'\nPress any key to continue ...'`"
+read -n1 -r -p "Make sure you have installed pip and Node.js.`echo $'\nPress any key to continue ...'`"
 cd ..
 echo Installing jupyterlab ...
 pip install --upgrade jupyterlab

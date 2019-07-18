@@ -1,6 +1,6 @@
 @setlocal enableextensions
 @cd /d "%~dp0"
-echo Make sure you have installed Anaconda, git, Node.js.
+echo Make sure you have installed pip and Node.js.
 pause
 cd ..
 echo Installing jupyterlab ...
