@@ -45,14 +45,14 @@
       <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
       <div class="positions" style="white-space: pre;">{{positions}}</div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
-        <div>Choose domain to split</div>
-        <div>Currently spliting Node: {{FocusNode.nodeName}}</div>
-        <div v-for="key in FocusNode.domain" :key = "key">    
-        <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames">
-        <label :for = "key">{{key}}</label>     
+        <div>Current variable: {{FocusNode.nodeName}}</div>
+        <div>You can split the domain. Choose the values in one domain:</div>
+        <div v-for="key in FocusNode.domain" :key = "key">
+          <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames">
+          <label :for = "key">{{key}}</label>
         </div>
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
-      </div>          
+      </div>
     </div>
   </div>
 </template>
@@ -108,30 +108,30 @@ export default class CSPGraphInteractor extends Vue {
   legendColor: string[];
   // Whether the auto arc consistency button will show up
   needACButton: boolean;
-  // Whether do we need domain spliting
+  // Whether we need domain spliting
   needSplit: boolean;
-    
+
   data() {
-      return {
-        FocusNode:{
+    return {
+      FocusNode: {
         domain:[],
         checkedNames: [],
         nodeName: String
-        }
-     }
+      }
+    }
   }
-        
+
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
   }
 
   nodeClicked(node: ICSPGraphNode) {
     this.$emit("click:node", node);
-    if(node.domain !== undefined){
-    this.FocusNode.domain = node.domain;    
-    this.FocusNode.nodeName = node.name;
-    this.FocusNode.checkedNames = [];    
-    }        
+    if (node.domain !== undefined) {
+      this.FocusNode.domain = node.domain;
+      this.FocusNode.nodeName = node.name;
+      this.FocusNode.checkedNames = [];
+    }
   }
 
   nodeStrokeColour(node: ICSPGraphNode, isHovering: boolean = false) {

@@ -89,6 +89,5 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
   // Whether the split details will show up
   get needSplit(): boolean {
     return this.get("need_Split");
-  }    
-    
+  }
 }

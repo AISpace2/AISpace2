@@ -1,4 +1,4 @@
-za<template>
+<template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
     <button id="query-mode" :style="stateStyle('query')" class = "btn btn-default" @click="changemode('query');">Query</button>
     <button id="observe-mode" :style="stateStyle('observe')" class = "btn btn-default" @click="changemode('observe');">Observe</button>
@@ -39,14 +39,14 @@ za<template>
       <div class="output" style="white-space: pre;">{{output}}</div>
       <div class="positions" style="white-space: pre;">{{positions}}</div>
       <div v-if="FocusNode.domain.length > 0 && !isQuerying">
-        <div>Choose domain to observe</div>
-        <div>Currently Observing Node: {{FocusNode.nodeName}}</div>
-        <div v-for="key in FocusNode.domain" :key = "key">    
+        <div>Current variable: {{FocusNode.nodeName}}</div>
+        <div>Choose a value to observe:</div>
+        <div v-for="key in FocusNode.domain" :key = "key">
         <input type="radio" :id="key" :value= "key" v-model="FocusNode.checkedNames">
-        <label :for = "key">{{key}}</label>     
+        <label :for = "key">{{key}}</label>
         </div>
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
-      </div>  
+      </div>
     </div>
   </div>
 </template>
@@ -71,7 +71,7 @@ za<template>
    * - 'click:fine-step': The "fine step" button has been clicked.
    * - 'click:step': The "step" button has been clicked.
    * - 'click:auto-solve': The "auto solve" button has been clicked.
-   * - 'click:submit': User chooses node domain to observe. 
+   * - 'click:submit': User chooses node domain to observe.
    */
   @Component({
     components: {
@@ -101,7 +101,6 @@ za<template>
     // the number of decimal places to show for the node's probability
     decimalPlace: number;
     // the checkboxs of node
-    
     data() {
       return {
         FocusNode:{
@@ -111,13 +110,12 @@ za<template>
         }
      }
     }
-    
+
     changemode(e:String){
         if(e === "query"){this.isQuerying = true;}
         else {this.isQuerying =false;}
         this.FocusNode.domain = [];
     }
-    
 
     edgeClicked(edge: IGraphEdge) {
       this.$emit("click:edge", edge);
@@ -127,13 +125,11 @@ za<template>
       if (this.isQuerying) {
         this.$emit("click:query-node", node);
         node.displaying = true;
-         
       } else {
-        this.FocusNode.domain = node.domain;   
-        this.FocusNode.nodeName = node.name;    
-        this.FocusNode.checkedNames = '';  
+        this.FocusNode.domain = node.domain;
+        this.FocusNode.nodeName = node.name;
+        this.FocusNode.checkedNames = '';
       }
-
     }
 
     strokeWidth(edge: IGraphEdge, isHovering: boolean) {
@@ -165,10 +161,10 @@ za<template>
 
     // Returns a formatted string representing the probability of a variable node after query
     probText(node: IBayesGraphNode) {
-      if(node.displaying != undefined && node.displaying !== false){  
+      if(node.displaying != undefined && node.displaying !== false){
       if (node.prob === undefined) {
 	    if (node.observed === undefined) return undefined;
-	    return  "Obs: " + node.observed;
+	    return "Obs: " + node.observed;
 	  }
       else {
         let text = "";
@@ -177,15 +173,15 @@ za<template>
         }
         text = text.slice(0, -2)  // delete last comma and space
 	      if (node.observed === undefined) return text;
-        return  "Obs: " + node.observed + '\n' + text;
+        return "Obs: " + node.observed + '\n' + text;
       }
 	  }
         return undefined;
     }
-    
+
     // Returns a formatted string graph representing the probability of a variable node after query
     probGraph(node: IBayesGraphNode) {
-      if(node.displaying != undefined && node.displaying !== false ){  
+      if(node.displaying != undefined && node.displaying !== false ){
       if (node.prob !== undefined) {
         let text = "";
         text += "_".repeat(30) + '\n'
@@ -194,13 +190,13 @@ za<template>
         for (var key in node.prob) {
           var number = node.prob[key];
           var namel  = key.length;
-          text += key + " ".repeat(width - 10 - namel) + number.toFixed(this.decimalPlace) + ":" + " ".repeat(5) + prob.repeat(number*20) + " ".repeat(width-number*20) + '\n';            
+          text += key + " ".repeat(width - 10 - namel) + number.toFixed(this.decimalPlace) + ":" + " ".repeat(5) + prob.repeat(number*20) + " ".repeat(width-number*20) + '\n';
         }
         return text;
-	  }
-    } 
+	     }
+    }
      return "";
-    }   
+    }
 
     addTextSize(){
       this.textSize ++;

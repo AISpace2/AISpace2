@@ -246,14 +246,14 @@
       let canvas = document.createElement('canvas');
       let context = canvas.getContext("2d");
       context!.font = this.textSize.toString() + "px serif";
-      if(text){
-      var subtext = text.split('\n');
-      var measureText = subtext[0];
-      for(var key in subtext){
+      if (text) {
+        var subtext = text.split('\n');
+        var measureText = subtext[0];
+        for(var key in subtext) {
           if(measureText.length <= key.length){
-              measureText = key;
+            measureText = key;
           }
-      }
+        }
       }
       return context!.measureText(measureText).width;
     }
@@ -272,7 +272,6 @@
         ctx.font = this.textSize.toString() + "px serif";
 
         ctx.clearRect(0, 0, width, height);
-        "ctx.fillText(text, width * 0.1, height / 2);"
         ctx.restore();
 
         document.body.appendChild(canvas);
@@ -312,8 +311,7 @@
         }
 
         height = bottomMost - topMost + 1;
-          
-          
+
         if (flag === this.flag.TEXT) {
           this.cache.height = height;
         } else if (flag === this.flag.SUBTEXT) {
