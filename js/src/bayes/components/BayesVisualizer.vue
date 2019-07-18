@@ -198,6 +198,9 @@
         return text;
 	     }
     }
+     if (node.observed !== undefined) {
+         return "Observation: " + node.observed + '\n';
+     }
      return "";
     }
 
