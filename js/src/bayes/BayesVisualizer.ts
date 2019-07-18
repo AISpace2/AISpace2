@@ -60,9 +60,14 @@ export default class BayesVisualizer extends DOMWidgetView {
         });
       });
 
-      this.vue.$on("click:observe-node", (node: IBayesGraphNode) => {
+      this.vue.$on("click:submit", () => {
         Analytics.trackEvent("Bayes Visualizer", "Observe Node");
-        this.chooseObservation(node);
+        this.chooseObservation();
+
+        this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
+          this.vue.$emit("click:query-node", variableNode);
+          this.vue.$set(variableNode.styles, "strokeWidth", 0);
+        });
       });
 
       this.vue.$on("click:query-node", (node: IBayesGraphNode) => {
@@ -81,10 +86,11 @@ export default class BayesVisualizer extends DOMWidgetView {
       this.vue.$on('reset', () => {
         this.manager.reset();
         this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
-          variableNode.falseProb = undefined;
-          variableNode.trueProb = undefined;
-          variableNode.observed = undefined;
+          this.vue.$set(variableNode,"prob",undefined);
+          this.vue.$set(variableNode,"observed",undefined);
+          this.vue.$set(variableNode,"displaying",undefined);
           this.vue.$set(variableNode.styles, "strokeWidth", 0);
+          this.vue.FocusNode.domain = [];
         });
       });
 
@@ -105,40 +111,15 @@ export default class BayesVisualizer extends DOMWidgetView {
     }
   }
 
-  private chooseObservation(node: IBayesGraphNode) {
-    function notProperResponse(res: string): boolean {
-      const containsMultipleDomain: boolean = res.includes(', ');
-      let notOneOfDomain: boolean;
-
-      const domainString: string[] = [];
-
-      for (let e of node.domain) {
-        if(typeof(e) !== "string") {
-          e = e.toString();
-        }
-        domainString.push(e);
-      }
-
-      notOneOfDomain = !domainString.includes(res);
-
-      return containsMultipleDomain || notOneOfDomain || res === "";
-    }
-
-    let response: null | string;
-
-    do {
-      response = window.prompt(
-        "Choose only one observation", node.domain.join(", "));
-      if (response !== null) {response = response.trim();}
-    } while (response !== null && notProperResponse(response));
-
-    let value: null | string | boolean = response;
-
-    if (value !== null && !value.includes(', ')) {
-      if (value === "true") { value = true;}
-      else if (value === "false") { value = false;}
-	  node.observed = response;
-      this.manager.add(node.name, value)
-    };
+  private chooseObservation() {
+      if(this.vue.FocusNode.checkedNames === ''){alert("Please choose one domain before submit");return;}
+      const nodes =  this.model.graph.nodes.filter(node => node.name === this.vue.FocusNode.nodeName);
+      const variableNode = nodes[0] as IBayesGraphNode;
+      let value: null | string | boolean = this.vue.FocusNode.checkedNames;
+      if (value === "true"){value = true;}
+      if (value === "false"){value = false;}
+      this.manager.add(variableNode.name, value);
+      this.vue.$set(variableNode, "observed", value.toString());
+      this.vue.FocusNode.domain = [];
   }
 }

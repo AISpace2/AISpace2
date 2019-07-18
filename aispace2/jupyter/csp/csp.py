@@ -258,7 +258,7 @@ class Displayable(StepDOMWidget):
             variable = args[2]
             domain = args[4]
             constraint = args[6]
-            self._send_set_domains_action(variable, [domain])
+            self._send_set_domains_action(variable, domain)
             self._send_highlight_arcs_action((variable, constraint), style='bold', colour='green')
 
         elif args[0] == "Processing arc (":
