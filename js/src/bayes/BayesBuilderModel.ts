@@ -15,7 +15,7 @@ const EXTENSION_SPEC_VERSION = (packageJSON as any).version;
  * The model that receives messages and synced traitlets from the backend.
  * See the accompanying backend file: `aispace2/jupyter/bayes/bayesbuilder.py`
  */
-export default class CSPBuilderModel extends widgets.DOMWidgetModel {
+export default class BayesBuilderModel extends widgets.DOMWidgetModel {
   public static serializers = Object.assign(
     {
       graph: {

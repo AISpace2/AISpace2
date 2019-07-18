@@ -147,6 +147,7 @@ class Prob(Factor_stored):
         Factor_stored.__init__(self,pars+[var],cpt)
         self.child = var
         self.parents = pars
+        self.cpt = cpt
         assert self.size==len(cpt),"Table size incorrect "+str(self)
 
     def cond_dist(self,par_assignment):

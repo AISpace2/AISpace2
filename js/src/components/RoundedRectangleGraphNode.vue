@@ -54,17 +54,16 @@
         this.fitSubtext();
       }
       this.computeWidthAndHeight();
-        
     }
-    
+
     height() {
       this.computeWidthAndHeight();
       if (this.showNoTextFlag() || this.text === "{}") {
         return this.minHeight;
       }
       return Math.max(this.computedTotalHeight, this.minHeight) + this.padding.height;
-    }    
-    
+    }
+
     /** The maximum of `computedTextWidth` and `computedSubtextWidth`. */
     get computedTotalWidth() {
       return Math.max(this.computedTextWidth, this.computedSubtextWidth);
@@ -77,8 +76,8 @@
     get displayTest() {
       let text = this.showFullTextFlag() ? this.subtext : this.truncatedSubtext;
       return this.format(text).split('\n');
-    }    
-    
+    }
+
     /**
      * Computes the width and height of the rendered text elements and updates the following:
      * - `computedTextWidth`
@@ -100,17 +99,15 @@
       } else if (this.cache.height != -1) {
         textHeight = this.cache.height;
       } else {
-        textHeight = this.$refs.text.getBoundingClientRect().height;  
+        textHeight = this.$refs.text.getBoundingClientRect().height;
       }
 
       textWidth = this.measureTextWidth(this.text);
 
       if (this.$refs.subtext === null || this.$refs.subtext === undefined) {
-        subtextHeight = 0;      
-   //   } else if (this.cache.subHeight != -1) {
-   //     subtextHeight = this.cache.subHeight;
-      } else {     
-        subtextHeight = this.$refs.subtext.getBoundingClientRect().height; 
+        subtextHeight = 0;
+      } else {
+        subtextHeight = this.$refs.subtext.getBoundingClientRect().height;
         }
 
       subtextWidth = this.measureTextWidth(this.subtext);
@@ -158,14 +155,13 @@
     get rawWidth() {
       return this.computedTotalWidth;
     }
-    
 
     @Watch("subtext")
     onSubtextChanged() {
       this.cache.subHeight = -1;
       this.truncatedSubtext = this.subtext;
       this.fitSubtext();
-      this.updateText();    
+      this.updateText();
     }
 
     @Watch("textSize")

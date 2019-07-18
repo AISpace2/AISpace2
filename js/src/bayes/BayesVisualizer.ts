@@ -61,13 +61,13 @@ export default class BayesVisualizer extends DOMWidgetView {
       });
 
       this.vue.$on("click:submit", () => {
-        Analytics.trackEvent("Bayes Visualizer", "Observe Node");      
-        this.chooseObservation();   
-          
+        Analytics.trackEvent("Bayes Visualizer", "Observe Node");
+        this.chooseObservation();
+
         this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
-          this.vue.$emit("click:query-node", variableNode);          
+          this.vue.$emit("click:query-node", variableNode);
           this.vue.$set(variableNode.styles, "strokeWidth", 0);
-        });          
+        });
       });
 
       this.vue.$on("click:query-node", (node: IBayesGraphNode) => {
@@ -80,20 +80,18 @@ export default class BayesVisualizer extends DOMWidgetView {
           name: node.name,
           evidences: dumpData.map((n: IObservation) => {
             return {"name": n.name, "value": n.value};
-          })});    
+          })});
       });
-        
+
       this.vue.$on('reset', () => {
         this.manager.reset();
-        
         this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
           this.vue.$set(variableNode,"prob",undefined);
           this.vue.$set(variableNode,"observed",undefined);
-          this.vue.$set(variableNode,"displaying",undefined);            
+          this.vue.$set(variableNode,"displaying",undefined);
           this.vue.$set(variableNode.styles, "strokeWidth", 0);
           this.vue.FocusNode.domain = [];
         });
-       
       });
 
       if (!this.model.previouslyRendered) {
@@ -124,6 +122,6 @@ export default class BayesVisualizer extends DOMWidgetView {
       if (value === "false"){value = false;}
       this.manager.add(variableNode.name, value);
       this.vue.$set(variableNode, "observed", value.toString());
-      this.vue.FocusNode.domain = [];              
+      this.vue.FocusNode.domain = [];
   }
 }

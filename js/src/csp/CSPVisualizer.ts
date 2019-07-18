@@ -35,10 +35,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           return this.setDomains(event);
         case "highlightNodes":
           return this.highlightNodes(event);
-        case "chooseDomainSplit":{
-          this.vue.needSplit = true;  
-          return ;}
-        case "chooseDomainSplitBeforeAC":  
+        case "chooseDomainSplit":
+          this.vue.needSplit = true;
+          break;
+        case "chooseDomainSplitBeforeAC":
           return this.chooseDomainSplitBeforeAC(event);
         case "setSolution":
           this.vue.pre_solution += "\n        " + event.solution;
@@ -69,7 +69,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           legendText: labelDict.cspLabelText,
           legendColor: labelDict.cspLabelColor,
           needACButton: this.model.needACButton,
-          needSplit: false  
+          needSplit: false
         }
       }).$mount(this.el);
 
@@ -122,12 +122,11 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           varType: node.type
         });
       });
-      
-      this.vue.$on("click:submit", () => {
-        Analytics.trackEvent("Bayes Visualizer", "Observe Node");   
-        this.chooseDomainSplit();               
-      });        
 
+      this.vue.$on("click:submit", () => {
+        Analytics.trackEvent("Bayes Visualizer", "Observe Node");
+        this.chooseDomainSplit();
+      });
 
       // Functions called on the Python backend are queued until first render
       if (!this.model.previouslyRendered && this.model.waitForRender) {
@@ -204,7 +203,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Requests the user choose a domain for one side of the split.
    */
   private chooseDomainSplit() {
-    if(this.vue.FocusNode.checkedNames.length ===0){alert("Please choose domain to split before submiting"); return;}
+    if (this.vue.FocusNode.checkedNames.length ===0) {
+      alert("Please choose domain to split before submiting");
+      return;
+    }
     const newDomain = this.vue.FocusNode.checkedNames;
     this.send({ event: "domain_split", domain: newDomain });
     this.vue.needSplit = false;
@@ -214,9 +216,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Prompt the user that the AC needs to be finished before the domain can be split.
    */
   private chooseDomainSplitBeforeAC(event: CSPEvents.ICSPChooseDomainSplitBeforeACEvent) {
-    
-    if(!this.vue.needSplit){window.alert("Arc consistency needs to be finished before the domain can be split.");
-      }
+    if (!this.vue.needSplit) {
+      window.alert("Arc consistency needs to be finished before the domain can be split.");
     }
   }
-
+}
