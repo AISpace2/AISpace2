@@ -109,7 +109,7 @@ export default class BayesVisualizer extends DOMWidgetView {
     } else {
       const variableNode = nodes[0] as IBayesGraphNode;
       variableNode.prob = event.prob;
-      this.vue.$set(variableNode.styles, "strokeWidth", 2);
+      if(variableNode.displaying)this.vue.$set(variableNode.styles, "strokeWidth", 2);
     }
   }
 
