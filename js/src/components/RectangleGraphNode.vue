@@ -247,9 +247,9 @@
       let context = canvas.getContext("2d");
       context!.font = this.textSize.toString() + "px serif";
       if(text){
-      var subtext = text.split('\n');
-      var measureText = subtext[0];
-      for(var key in subtext){
+      var splitText : string[] = text.split('\n');
+      var measureText : string = splitText[0];
+      for(var key of splitText){
           if(measureText.length <= key.length){
               measureText = key;
           }

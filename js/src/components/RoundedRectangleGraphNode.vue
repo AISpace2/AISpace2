@@ -117,6 +117,7 @@
 
       this.computedTextWidth = textWidth;
       this.computedSubtextWidth = subtextWidth;
+      this.computedTotalWidth = Math.max(this.computedTextWidth, this.computedSubtextWidth);
       this.computedTotalHeight = textHeight + subtextHeight;
     }
 
