@@ -81,5 +81,41 @@ def json_to_bayes_problem(json, widget_model=None):
     return Belief_network(listOfVars, listOfProb)
 
 def bayes_problem_to_python_code(problem):
-    # TODO-issue-84
-    return
+    """Converts the JSON representation of a Belief_network into Python code.
+    Example:
+        ::
+            >>> bayes_problem_to_python_code(problem)
+            'from aipython.probGraphicalModels import Belief_network
+             from aipython.probVariables import Variable
+             from aipython.probFactors import Prob
+            problem = Belief_network([Variable("A",boolean),Variable("B",boolean)],
+                [Prob(Variable("A",boolean),[],[0.9,0.1]),Prob(Variable("B",boolean),[Variable("A",boolean)],[0.9,0.1,0.05,0.95])'
+
+    Args:
+        problem (aipython.probGraphicalModels.Belief_network):
+            The bayes problem to convert to Python code.
+
+    Returns:
+        (string):
+            A string of Python code that, when executed, recinstructs to the bayes problem given.
+    """
+    var_strings = []
+    for variable in problem.listOfVars:
+        name = variable.name
+        domain = variable.domain
+        var_strings.append("Variable({},{})".format(name, domain))
+
+    prob_strings = []
+    for prob in problem.listOfProb:
+        child = prob.child
+        parents = prob.parents
+        cpt = prob.cpt
+        prob_strings.append("Prob({},{},{})".format(child, parents, cpt))
+
+    template = """from aipython.probGraphicalModels.Belief_network import Belief_network
+from aipython.probVariables import Variable
+from aipython.probFactors import Prob
+bayes_problem = Belief_network($listOfVars, $listOfProb)"""
+    return Template(template).substitute(
+        listOfVars = ', '.join(var_strings),
+        listOfProb = ', '.join(prob_strings))
