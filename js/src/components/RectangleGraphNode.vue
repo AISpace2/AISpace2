@@ -246,11 +246,11 @@
       let canvas = document.createElement('canvas');
       let context = canvas.getContext("2d");
       context!.font = this.textSize.toString() + "px serif";
-      if(text){
+      if (text) {
       var splitText : string[] = text.split('\n');
       var measureText : string = splitText[0];
-      for(var key of splitText){
-          if(measureText.length <= key.length){
+      for (var key of splitText) {
+          if (measureText.length <= key.length) {
               measureText = key;
           }
       }

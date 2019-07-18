@@ -188,7 +188,9 @@ za<template>
       if(node.displaying != undefined && node.displaying !== false ){  
       if (node.prob !== undefined) {
         let text = "";
-        if(node.observed !== undefined){text += "Observation: " + node.observed + '\n';}
+        if (node.observed !== undefined) {
+            text += "Observation: " + node.observed + '\n';
+        }
         text += "_".repeat(30) + '\n';
         var prob = "|";
         var width = 20;
