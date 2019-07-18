@@ -55,9 +55,35 @@
 
       <h2 id="install" class="linkify"><a href="#install">Install Locally</a></h2>
       <p>
-        Current version: 0.7.6. Choose your operation system to install locally the AISpace2 extension for Jupyter:
-        <a href="./installWindows.html">Windows</a>, <a href="./installMacAndLinux.html">MacOS or Linux</a>.
+        Current version: 0.7.7.
       </p>
+      <ol>
+        <li>You will need to install <a href="https://pip.pypa.io/en/stable/installing/">pip</a> and <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> if you do not have them already.</li>
+        <li>Download <a href="./assets/AISpace2.zip" download>AISpace2 souce code</a> and unzip the file in the directory where you want to store it.</li>
+        <li>
+          <ol>
+            <li>
+              <strong>Windows:</strong>Double click on the installation scripts <code>AISpace2/installScripts/installScriptsWindows.bat</code> (enter <code>y</code> to confirm if prompted).
+            </li>
+            <li>
+              <strong>MacOS or Linux:</strong>Run the following command lines (enter <code>y</code> to confirm if prompted):
+              <pre>sh /PATH/TO/FOLDER/AISpace2/installScripts/installScripts.sh</pre>
+            </li>
+          </ol>
+        </li>
+      </ol>
+      <p>
+        After the installation the JupyterLab will automatically open and you can select the notebooks (<code>*.ipynb</code> files) inside <code>AISpace2/notebooks/</code> to run.
+        In the future if you want to run AISpace2, simply run the following in the Terminal:
+        <pre>jupyter lab</pre>
+      </p>
+    	<h3>Troubleshooting</h3>
+    	<p>If you are using node 10 and your installation of the AISpace2 labextension hangs, try to install it using node 8.</p>
+    	<p>
+    		You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
+        <pre>nvm install 8
+nvm use 8</pre> in the same folder as where you will be installing the extension.
+    	</p>
       <h2 id="jupyterhub" class="linkify"><a href="#jupyterhub">JupyterHub: TODO</a></h2>
       <p>
         Are you a <abbr title="University of British Columbia">UBC</abbr> student or have access to a JupyterHub instance (which
