@@ -15,6 +15,8 @@ declare let ga: any;
 import "./style.css";
 
 import * as packageJSON from "../package.json";
+import BayesBuilder from "./bayes/BayesBuilder";
+import BayesBuilderModel from "./bayes/BayesBuilderModel";
 import BayesVisualizer from "./bayes/BayesVisualizer";
 import BayesVisualizerModel from "./bayes/BayesVisualizerModel";
 import CSPBuilder from "./csp/CSPBuilder";
@@ -28,6 +30,8 @@ import SearchViewerModel from "./search/SearchVisualizerModel";
 
 // Export widget models and views, and the npm package version number.
 module.exports = {
+  BayesBuilder,
+  BayesBuilderModel,
   BayesVisualizer,
   BayesVisualizerModel,
   CSPBuilder,
