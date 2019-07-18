@@ -29,10 +29,10 @@
     "update-lab-extension": "webpack --config webpack.labExtension.js"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^2.0.1",
-    "@jupyterlab/application": "^1.0.0",
-    "@jupyterlab/apputils": "^1.0.0",
-    "@jupyterlab/notebook": "^1.0.0",
+    "@jupyter-widgets/base": "^1.2.5",
+    "@jupyterlab/application": "^0.19.1",
+    "@jupyterlab/apputils": "^0.19.1",
+    "@jupyterlab/notebook": "^0.19.2",
     "@types/d3": "^4.13.2",
     "@types/node": "^8.10.49",
     "ajv": "^5.5.2",
