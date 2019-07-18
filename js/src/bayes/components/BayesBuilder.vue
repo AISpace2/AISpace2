@@ -156,7 +156,7 @@
         <div v-if="selection">
           <p style="color: blue">
             You selected node:
-            <span style="color: rgb(250, 106, 130)">{{selection.name}}</span>, Its parents are: {
+            <span style="color: rgb(250, 106, 130)">{{selection.name}}</span>. Parents: {
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
           </p>
@@ -173,7 +173,7 @@
             <div v-for="(p1, index_p1) of allComb(probList(selection))">
               <div v-if="p1" class="prob_name" v-for="p2 of p1.split(',')">{{p2}}</div>
               <div class="input_box_container" v-for="(snn2, index_snn2) of selection.domain">
-                <input 
+                <input
                   :class="getInputBoxClass(index_p1, temp_node_evidences[(index_p1 * selection.domain.length + index_snn2)])"
                   :ref="generateRef(selection) + index_p1.toString() + '_' + index_snn2.toString()"
                   type="number"
@@ -538,7 +538,7 @@ export default class BayesGraphBuilder extends Vue {
           this.selection.target.parents.indexOf(this.selection.source.name),
           1
         );
-        // reset edge.target's evidences 
+        // reset edge.target's evidences
         this.resetEvidencesOnModify(this.selection.target);
         this.graph.removeEdge(this.selection as IGraphEdge);
       }
@@ -561,7 +561,7 @@ export default class BayesGraphBuilder extends Vue {
   }
 
   /**
-   * Find all combinations of parents. 
+   * Find all combinations of parents.
    * e.g. parents = {name: "Node1", domain: ["true", "false"]}, {name: "Node2", domain: ["a", "b"]}
    * => returns [["Node1 = true", "Node1 = false"], ["Node2 = a", "Node2 = b"]]
    */
@@ -612,7 +612,7 @@ export default class BayesGraphBuilder extends Vue {
 
   /** For each line of prob inputboxes generate its reference
    * the format is: Parent1Name-Parent2Name_SelectedNodeName
-   * and for each prob inputbox in this line, the reference won't be generate here, 
+   * and for each prob inputbox in this line, the reference won't be generate here,
    * but the format is:
    * Parent1Name-Parent2Name_SelectedNodeName[index of row]_[index of domain of selected]
    */
@@ -621,7 +621,7 @@ export default class BayesGraphBuilder extends Vue {
       var temp = node.parents.slice(0);
       var str = temp.join('-');
       var result = str + '_' + node.name;
-      return result; 
+      return result;
     }  else {
       return '';
     }
@@ -634,12 +634,12 @@ export default class BayesGraphBuilder extends Vue {
     this.warning_message = "";
     this.succeed_message = "";
     var isvalid: boolean = true;
-  
+
     if (this.temp_node_evidences.find( e => (e > 1 || e < 0))) {
       this.warning_message = "The highlited values are invalid!";
       isvalid = false;
     }
-      
+
     if (this.CalAllSumOfSameLineInputBox(this.temp_node_evidences).find(x => x !== 1)) {
       if (this.warning_message !== "") {
           this.warning_message = "The highlighted values are invalid! The highlited line doesn't sum up to 1!";
@@ -655,7 +655,7 @@ export default class BayesGraphBuilder extends Vue {
     }
 
     this.$forceUpdate();
-  
+
   }
 
     /** Returns a list of sums of all rows of prob inputbox */
@@ -697,7 +697,7 @@ export default class BayesGraphBuilder extends Vue {
     return inputboxclass;
   }
 
- /** Get values for all prob inputboxes in the same row except for the last 
+ /** Get values for all prob inputboxes in the same row except for the last
    * for some reason this.refs doesn't work here
    * values are from temp_node_evidences.
   */
@@ -734,9 +734,9 @@ export default class BayesGraphBuilder extends Vue {
     var l = this.selection.domain.length;
     var ref_prefix = this.generateRef(this.selection);
     if (this.selection.parents.length > 0) {
-      return ref_prefix + pni + '_' + (l - 1).toString(); 
+      return ref_prefix + pni + '_' + (l - 1).toString();
     } else {
-      return ref_prefix + (l - 1).toString(); 
+      return ref_prefix + (l - 1).toString();
     }
   }
 
