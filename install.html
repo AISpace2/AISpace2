@@ -55,12 +55,18 @@
 
       <h2 id="install" class="linkify"><a href="#install">Install Locally</a></h2>
       <p>
-        Current version: 0.7.7.
+        Current version: 0.7.8.
       </p>
       <ol>
         <li>
-          You are highly likely to have <a href="https://pip.pypa.io/en/stable/installing/" target="_blank">pip</a> and <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> already,
-          but if you don't, you need to install them first.
+          You need to have <a href="https://www.python.org/downloads/" target="_blank">Python 3</a> and <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> for AISpace2,
+          you can check whether you have them by running
+          <pre>python --version
+node --version</pre>
+          If it does not return a version number, that means you don't have the corresponding package installed. Note that you need to have your Python version at least 3.3 and we recommend that Node.js version be 8.
+          If your Node.js version is 9 or 10, there might be some unexpected behavior during the installation. In that case you can use Node.js 8 by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
+          <pre>nvm install 8
+rnvm use 8</pre> in the same folder as where you will be installing the extension.
         </li>
         <li>Download <a href="./assets/AISpace2.zip" download>AISpace2</a> and unzip the file in the directory where you want to store it.</li>
         <li>
@@ -80,13 +86,6 @@
         In the future if you want to run AISpace2, simply run the following command line:
         <pre>jupyter lab</pre>
       </p>
-    	<h3>Troubleshooting</h3>
-    	<p>If you are using node 10 and your installation of the AISpace2 labextension hangs, try to install it using node 8.</p>
-    	<p>
-    		You can do this by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md">nvm</a> and running
-        <pre>nvm install 8
-nvm use 8</pre> in the same folder as where you will be installing the extension.
-    	</p>
       <h2 id="jupyterhub" class="linkify"><a href="#jupyterhub">JupyterHub: TODO</a></h2>
       <p>
         Are you a <abbr title="University of British Columbia">UBC</abbr> student or have access to a JupyterHub instance (which
