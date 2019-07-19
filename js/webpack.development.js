@@ -1,6 +1,6 @@
 /**
  * Webpack configuration for development.
- * 
+ *
  * Contains plugins and settings that make development a better experience.
  */
 
@@ -25,6 +25,7 @@ if (!fs.existsSync(path.resolve(__dirname, "vendor", "vendor-manifest.json"))) {
 }
 
 const devConfig = {
+  mode: "development",
   main: {
     devtool: "eval-source-map",
     plugins: [

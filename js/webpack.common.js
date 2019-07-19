@@ -4,6 +4,7 @@
 const webpack = require("webpack");
 const version = require("./package.json").version;
 const path = require("path");
+const { VueLoaderPlugin } = require("vue-loader");
 
 const babelLoader = {
   loader: "babel-loader",
@@ -34,7 +35,7 @@ module.exports = {
      * "load_ipython_extension" function which is required for any notebook
      * extension.
      */
-    
+
     entry: "./src/extension.js",
     output: {
       filename: "extension.js",
@@ -45,11 +46,11 @@ module.exports = {
   main: {
     /**
      * Bundle for the notebook containing the custom widget views and models.
-     * 
+     *
      * This bundle contains the implementation for the custom widget views and custom widget.
      * It must be an AMD module to work with Jupyter.
      */
-        
+
     entry: ["babel-polyfill", "./src/widget.ts"],
     output: {
       filename: "index.js",
@@ -146,5 +147,6 @@ module.exports = {
       publicPath: "https://unpkg.com/aispace2@" + version + "/dist/"
     },
     externals: ["@jupyter-widgets/base"]
-  }
+  },
+  plugins: [new VueLoaderPlugin()]
 };

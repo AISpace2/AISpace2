@@ -1,4 +1,5 @@
 const path = require("path");
+const { VueLoaderPlugin } = require("vue-loader");
 
 const babelLoader = {
   loader: "babel-loader",
@@ -20,14 +21,13 @@ const tsLoader = [
 ];
 
 module.exports = {
- //main: {
     /**
      * Bundle for the notebook containing the custom widget views and models.
      *
      * This bundle contains the implementation for the custom widget views and custom widget.
      * It must be an AMD module to work with Jupyter.
      */
-
+    mode: "production",
     entry: ["babel-polyfill", "./src/index.ts"],
     output: {
       filename: "labExtension.js",
@@ -96,6 +96,9 @@ module.exports = {
         vue$: "vue/dist/vue.esm.js"
       }
     },
-    externals: ["@jupyter-widgets/base", "underscore"]
-  //}
+    externals: ["@jupyter-widgets/base", "underscore"],
+    performance: {
+        hints: false
+    },
+    plugins: [new VueLoaderPlugin()]
 };

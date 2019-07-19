@@ -1,6 +1,6 @@
 /**
  * Webpack configuration for production.
- * 
+ *
  * Optimizes and minifies bundle.
  */
 
@@ -9,6 +9,7 @@ const merge = require("webpack-merge");
 const commonConfig = require("./webpack.common.js");
 
 module.exports = merge.multiple(commonConfig, {
+  mode: "production",
   main: {
     devtool: "source-map",
     optimization: {
