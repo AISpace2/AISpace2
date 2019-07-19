@@ -4,14 +4,14 @@ echo Make sure you have installed pip and Node.js.
 pause
 cd ..
 echo Installing jupyterlab ...
-call pip install --upgrade jupyterlab
+call pip3 install --upgrade jupyterlab
 echo Installing ipywidgets ...
-call pip install --upgrade ipywidgets
+call pip3 install --upgrade ipywidgets
 echo Installing labextension ...
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
 echo Installing AISpace2 library ...
-pip install -e .
-pip install -r requirements-dev.txt
+pip3 install -e .
+pip3 install -r requirements-dev.txt
 cd js
 call npm install
 echo Building AISpace2 frontend ...
