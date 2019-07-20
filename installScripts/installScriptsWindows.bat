@@ -10,7 +10,8 @@ call pip3 install --upgrade ipywidgets
 echo Installing labextension ...
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
 echo Installing AISpace2 library ...
-pip3 install -e .
+call pip3 install -r requirements-dev.txt
+call pip3 install -e .
 cd js
 call npm install
 echo Building AISpace2 frontend ...
