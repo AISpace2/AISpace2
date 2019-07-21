@@ -1,6 +1,6 @@
 {
   "name": "aispace2",
-  "version": "0.7.9",
+  "version": "0.7.10",
   "description": "A Jupyter extension for the next-generation of AISpace.",
   "author": "AISpace2",
   "license": "GPL-3.0",
