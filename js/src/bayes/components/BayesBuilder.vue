@@ -175,7 +175,6 @@
             <span style="color: rgb(250, 106, 130)">{{selection.name}}</span>. Parents: {
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
-            <span style="color: green">{{selection.evidences}}</span>
           </p>
           <div class="prob_table_grid" v-if="selection.parents.length > 0">
             <div>
@@ -204,7 +203,7 @@
                   @input="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = null,
                   (index_snn2 === selection.domain.length - 1) ? null : $refs[findLastInputboxRef(index_p1)][0].value = CalLastBoxValue(getSameLineInputBoxVal(index_p1)),
                   (index_snn2 === selection.domain.length - 1) ? null : temp_node_evidences[index_p1 * selection.domain.length + selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index_p1)),
-                  $forceUpdate()"
+                  updateInputBox($event.target.value)"
                   @change="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = null"
                 />
               </div>
@@ -231,7 +230,7 @@
                   @input="$event.target.value ? temp_node_evidences[index] = Number($event.target.value) : temp_node_evidences[index] = null,
                   (index === selection.domain.length - 1) ? null : $refs[findLastInputboxRef(index)][0].value = CalLastBoxValue(getSameLineInputBoxVal(index)),
                   (index === selection.domain.length - 1) ? null : temp_node_evidences[selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index)),
-                  $forceUpdate()"
+                  updateInputBox($event.target.value)"
                   @change="$event.target.value ? temp_node_evidences[index] = Number($event.target.value) : temp_node_evidences[index] = null"
                 />
               </div>
@@ -1182,6 +1181,14 @@ export default class BayesGraphBuilder extends Vue {
       return ref_prefix + pni + "_" + (l - 1).toString();
     } else {
       return ref_prefix + (l - 1).toString();
+    }
+  }
+
+  /** Avoid issue that the user can't input 0s after "0."
+   * since the inputbox is checking values immediately */
+  updateInputBox(value: string) {
+    if (value.match(/^[0-9]+\.*([0-9]*[1-9]+)*$/)) {
+      this.$forceUpdate();
     }
   }
 
