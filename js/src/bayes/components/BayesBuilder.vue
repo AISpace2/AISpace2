@@ -57,52 +57,65 @@
         <b>Mode:</b>
       </span>
       <BayesToolbar @modechanged="setMode"></BayesToolbar>
-      <div v-if="mode == 'variable'">
-        <pre></pre>
-        <p style="color: blue">
-          You can create a new variable here. Please change the name and the domain of the new variable,
-          <br />and then double click at a position where you want the new node to be created.
-          <br />If you don't change the name or the domain, the new node will be generated with default value.
-        </p>
-        <pre></pre>
-        <label>
-          <b>Name</b>
-        </label>
-        <input
-          type="text"
-          style="backgroundColor: yellow"
-          :value="temp_node_name"
-          @focus="$event.target.select()"
-          @input="temp_node_name = $event.target.value"
-        />
-        <label>
-          <b>Domain (use comma to separate values)</b>
-        </label>
-        <input
-          type="text"
-          style="backgroundColor: yellow"
-          :value="temp_node_domain"
-          @focus="$event.target.select()"
-          @input="temp_node_domain = $event.target.value"
-        />
-        <pre></pre>
-        <p style="color: red">{{warning_message}}</p>
-      </div>
-      <div v-else-if="mode == 'edge'">
-        <pre></pre>
-        <p
-          v-if="(graph.nodes.indexOf(first) < 0)"
-          style="color: blue"
-        >Select the first node to begin.</p>
-        <p
-          style="color: blue"
-          v-else-if="(graph.nodes.indexOf(first) > -1) && (selection == first || selection == null || selection.type == 'edge')"
-        >
-          Source node:
-          <span style="color: green">{{first.name}}</span>. Select an end node to create an edge.
-        </p>
-        <pre></pre>
-        <p style="color: red">{{warning_message}}</p>
+      <div v-if="mode == 'create'">
+        <p style="color: blue">Please select between:</p>
+        <input type="radio" id="create_variable" value="variable" v-model="create_mode" />
+        <label for="create_variable">Variable</label>
+        <input type="radio" id="create_edge" value="edge" v-model="create_mode" />
+        <label for="create_edge">Edge</label>
+        <div v-if="mode == 'create' && create_mode == 'variable'">
+          <pre></pre>
+          <p style="color: blue">
+            You can create a new variable here. Please change the name and the domain of the new variable,
+            <br />and then double click at a position where you want the new node to be created.
+            <br />If you don't change the name or the domain, the new node will be generated with default value.
+          </p>
+          <pre></pre>
+          <label>
+            <b>Name</b>
+          </label>
+          <input
+            type="text"
+            style="backgroundColor: yellow"
+            :value="temp_node_name"
+            @focus="$event.target.select()"
+            @input="temp_node_name = $event.target.value"
+          />
+          <label>
+            <b>Domain (use comma to separate values)</b>
+          </label>
+          <input
+            type="text"
+            style="backgroundColor: yellow"
+            :value="temp_node_domain"
+            @focus="$event.target.select()"
+            @input="temp_node_domain = $event.target.value"
+          />
+          <pre></pre>
+          <p>
+            <span style="color: red">{{warning_message}}</span>
+            <span style="color: green">{{succeed_message}}</span>
+          </p>
+        </div>
+        <div v-else-if="mode == 'create' && create_mode == 'edge'">
+          <pre></pre>
+          <p
+            v-if="(graph.nodes.indexOf(first) < 0)"
+            style="color: blue"
+          >Select the first node to begin.</p>
+          <p
+            style="color: blue"
+            v-else-if="(graph.nodes.indexOf(first) > -1) && (selection == first || selection == null || selection.type == 'edge')"
+          >
+            Source node:
+            <span style="color: green">{{first.name}}</span>. Select an end node to create an edge.
+          </p>
+          <pre></pre>
+          <p>
+            <span style="color: red">{{warning_message}}</span>
+            <span style="color: green">{{succeed_message}}</span>
+          </p>
+        </div>
       </div>
     </div>
 
@@ -141,7 +154,10 @@
           />
           <button @click="IsValidModify(temp_node_name, temp_node_domain)">Submit</button>
           <pre></pre>
-          <p style="color: red">{{warning_message}}</p>
+          <p>
+            <span style="color: red">{{warning_message}}</span>
+            <span style="color: green">{{succeed_message}}</span>
+          </p>
         </div>
       </div>
       <div v-else-if="mode == 'delete'">
@@ -159,56 +175,76 @@
             <span style="color: rgb(250, 106, 130)">{{selection.name}}</span>. Parents: {
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
+            <span style="color: green">{{selection.evidences}}</span>
           </p>
           <div class="prob_table_grid" v-if="selection.parents.length > 0">
             <div>
-              <div class="parent_node" v-for="pn of selection.parents">
+              <div class="parent_node" v-for="pn of selection.parents" :key="pn">
                 <span style="color: green">{{pn}}</span>
               </div>
               <div
                 class="select_node_dm"
                 v-for="snn of selection.domain"
+                :key="snn"
               >{{selection.name}} = {{snn}}</div>
             </div>
-            <div v-for="(p1, index_p1) of allComb(probList(selection))">
-              <div v-if="p1" class="prob_name" v-for="p2 of p1.split(',')">{{p2}}</div>
-              <div class="input_box_container" v-for="(snn2, index_snn2) of selection.domain">
+            <div v-for="(p1, index_p1) of allComb(probList(selection))" :key="index_p1">
+              <div v-if="p1" class="prob_name" v-for="p2 of p1.split(',')" :key="p2">{{p2}}</div>
+              <div
+                class="input_box_container"
+                v-for="(snn2, index_snn2) of selection.domain"
+                :key="index_snn2"
+              >
                 <input
                   :class="getInputBoxClass(index_p1, temp_node_evidences[(index_p1 * selection.domain.length + index_snn2)])"
                   :ref="generateRef(selection) + index_p1.toString() + '_' + index_snn2.toString()"
                   type="number"
                   @focus="$event.target.select()"
                   :value="temp_node_evidences[index_p1 * selection.domain.length + index_snn2]"
-                  @input="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = 0,
+                  @input="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = null,
                   (index_snn2 === selection.domain.length - 1) ? null : $refs[findLastInputboxRef(index_p1)][0].value = CalLastBoxValue(getSameLineInputBoxVal(index_p1)),
-                  (index_snn2 === selection.domain.length - 1) ? null : temp_node_evidences[index_p1 * selection.domain.length + selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index_p1))"
-                  @change="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = 0"
+                  (index_snn2 === selection.domain.length - 1) ? null : temp_node_evidences[index_p1 * selection.domain.length + selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index_p1)),
+                  $forceUpdate()"
+                  @change="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = null"
                 />
               </div>
             </div>
           </div>
           <div class="prob_table_grid" v-if="selection.parents.length == 0">
-            <div class="select_node_dm" v-for="snn_ of selection.domain">{{selection.name}} = {{snn_}}</div>
+            <div
+              class="select_node_dm"
+              :key="snn_"
+              v-for="snn_ of selection.domain"
+            >{{selection.name}} = {{snn_}}</div>
             <div>
-              <div class="input_box_container" v-for="(snn_2, index) of selection.domain">
-              <input
+              <div
+                class="input_box_container"
+                v-for="(snn_2, index) of selection.domain"
+                :key="index"
+              >
+                <input
                   :ref="generateRef(selection) + index.toString()"
                   :class="getInputBoxClass(index, temp_node_evidences[index])"
                   type="number"
                   :value="temp_node_evidences[index]"
                   @focus="$event.target.select()"
-                  @input="$event.target.value ? temp_node_evidences[index] = Number($event.target.value) : temp_node_evidences[index] = 0,
+                  @input="$event.target.value ? temp_node_evidences[index] = Number($event.target.value) : temp_node_evidences[index] = null,
                   (index === selection.domain.length - 1) ? null : $refs[findLastInputboxRef(index)][0].value = CalLastBoxValue(getSameLineInputBoxVal(index)),
-                  (index === selection.domain.length - 1) ? null : temp_node_evidences[selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index))"
-                  @change="$event.target.value ? temp_node_evidences[index] = Number($event.target.value) : temp_node_evidences[index] = 0"
+                  (index === selection.domain.length - 1) ? null : temp_node_evidences[selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index)),
+                  $forceUpdate()"
+                  @change="$event.target.value ? temp_node_evidences[index] = Number($event.target.value) : temp_node_evidences[index] = null"
                 />
               </div>
             </div>
           </div>
           <div>
-            <span><span style="color: blue">Click Submit to confirm probability changes, click Cancel to cancel.</span>
-            <button @click="IsEvidencesValid()">Submit</button>
-            <button @click="cancelProbSet()">Cancel</button></span>
+            <span>
+              <span
+                style="color: blue"
+              >Click Submit to confirm probability changes, click Cancel to cancel.</span>
+              <button @click="IsEvidencesValid()">Submit</button>
+              <button @click="cancelProbSet()">Cancel</button>
+            </span>
           </div>
           <pre><span style="color: red">{{warning_message}}</span><span style="color: green">{{succeed_message}}</span></pre>
         </div>
@@ -235,7 +271,7 @@ import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNod
 import { NODATA } from "dns";
 import { IBayesObserveEvent } from "../BayesVisualizerEvents";
 
-type Mode = "select" | "variable" | "edge" | "delete" | "set_prob";
+type Mode = "select" | "create" | "delete" | "set_prob";
 
 /**
  * Component to visually construct a Belief Network graph.
@@ -258,6 +294,7 @@ export default class BayesGraphBuilder extends Vue {
 
   /** The mode of the editor. */
   mode: Mode = "select";
+  prev_mode: Mode = "select";
   /** The currently selected node or edge. Actions are preformed on the selection. */
   selection: IBayesGraphNode | IGraphEdge | null = null;
   /** During edge creation, tracks the source node of the edge to be formed. */
@@ -269,98 +306,377 @@ export default class BayesGraphBuilder extends Vue {
   warning_message: string = "";
   succeed_message: string = "";
   temp_node_evidences: number[];
+  create_mode: string = "variable";
+  /** MAX_DIGITS is to solve the problem of float type number calculation in js,
+   * to get precise result, we use integer calculation instead,
+   * for each prob, we multiply it with MAX_DIGITS and round it to an integer,
+   * the user cannot use prob more than 12 digits after "0.",
+   * if they do so, the calculation will be incorrect and the whole line will be
+   * valued as invalid.*/
+  MAX_DIGITS: number = 10000000000;
+  ROUND: number = 10;
 
-  /** Switches to a new mode. */
+  /** Switches to a new mode.
+   * - Selection will remain unchanged if switch between "select" and "set_prob" mode.
+   */
   setMode(mode: Mode) {
     this.mode = mode;
-    this.selection = null;
-    this.first = null;
+    if (!(this.mode === "set_prob" && this.prev_mode === "select")) {
+      if (!(this.mode === "select" && this.prev_mode === "set_prob")) {
+        this.selection = null;
+      }
+    } else {
+      this.prev_mode = "set_prob";
+    }
   }
 
-  testGenRef(a: number, b: number) {
-    return generateRef(this.selection) + a.toString() + '_' + b.toString();
-  }
-
-  /** Returns whether there is a node to be drawn */
-  IsTempNode(name: string, domain: string) {
+  /** Returns whether name and domain for a new node to be created are valid */
+  IsTempNode(name_raw: string, domain: string) {
+    var name = name_raw.trimLeft().trimRight();
     var node_to_be_drawn = true;
     if (
       name === null ||
       name === "" ||
-      !name.match(/[a-zA-Z$_][a-zA-Z0-9$_]*/)
+      !name.match(/^[a-zA-Z$_]+[a-zA-Z0-9$_ ]*$/)
     ) {
       node_to_be_drawn = false;
       this.warning_message = "Name not valid. Please enter a new name.";
+      this.succeed_message = "";
     } else if (this.NameExists(name)) {
       node_to_be_drawn = false;
       this.warning_message = "Name exists! Please enter a different name.";
+      this.succeed_message = "";
     } else if (
       domain === null ||
       domain === "" ||
-      !domain.match(/([a-zA-Z0-9$_]+)(,(\s)*[a-zA-Z0-9$_]+)*/)
+      !domain.match(/^[a-zA-Z0-9$_ ]+(,(\s)*[a-zA-Z0-9$_ ]*)*$/)
     ) {
       node_to_be_drawn = false;
       this.warning_message = "Domain not valid, Please enter a new domain.";
+      this.succeed_message = "";
     } else {
       this.warning_message = "";
+      this.succeed_message = "Node added.";
     }
     return node_to_be_drawn;
   }
 
-  /** Returns whether the modified node values are valid, if valid, update the values */
+  /** Returns whether the modified node name and domain are valid,
+   * if valid, update the values */
   IsValidModify(name: string, domain: string) {
     if (
       name === null ||
       name === "" ||
-      !name.match(/[a-zA-Z$_][a-zA-Z0-9$_]*/)
+      !name.match(/^[a-zA-Z$_]+[a-zA-Z0-9$_ ]*$/)
     ) {
       this.warning_message = "Name not valid. Please enter a new name.";
+      this.succeed_message = "";
     } else if (this.NameExists(name) && this.selection.name !== name) {
       this.warning_message = "Name exists! Please enter a different name.";
     } else if (
       domain === null ||
       domain === "" ||
-      !domain.match(/([a-zA-Z0-9$_]+)(,(\s)*[a-zA-Z0-9$_]+)*/)
+      !domain.match(/^[a-zA-Z0-9$_ ]+(,(\s)*[a-zA-Z0-9$_ ]*)*$/)
     ) {
-      this.warning_message = "Domain not valid, Please enter a new domain..";
+      this.warning_message = "Domain not valid. Please enter a new domain.";
+      this.succeed_message = "";
     } else {
       this.selection!.name = name;
-      var temp = this.domainToBoolean(domain.split(/,\s*/));
-      if (this.selection!.domain !== temp) {
-        // on domain changes, reset evidence of the node.
-        this.selection!.domain = temp;
-        this.resetEvidencesOnModify(this.selection);
-        // reset evidences of the selected node's children.
-        this.graph.edges.forEach(e => {
-          if (e.source === this.selection) {
-            this.resetEvidencesOnModify(e.target);
-          }
-        });
+      var newdomain = this.handleDomain(domain);
+
+      if (this.selection!.domain.join(",") !== newdomain.join(",")) {
+        // When new domain has a different length with the previous domain, modify evidences:
+        if (this.selection!.domain.length !== newdomain.length) {
+          // get dictionary before selection's domain is changed:
+          var dicOriginal = this.dicEvidences(this.selection);
+
+          var olddomain = this.selection!.domain.slice(0);
+
+          this.selection!.domain = newdomain;
+
+          this.selection!.evidences = [];
+          // get dictionary of current selection's evidences:
+          var dicAfter = this.dicEvidences(this.selection);
+
+          this.handleEvidencesOnDomainChange(dicOriginal, dicAfter, this
+            .selection as IBayesGraphNode);
+
+          this.selection!.evidences = this.disdicEvidence(dicAfter, this
+            .selection as IBayesGraphNode);
+
+          this.graph.edges.forEach(e => {
+            if (e.source === this.selection) {
+              this.selection.domain = olddomain;
+              var dicOriginal_child = this.dicEvidences(
+                e.target as IBayesGraphNode
+              );
+
+              this.dicOriginal_child = dicOriginal_child;
+
+              e.target.evidences = [];
+              this.selection.domain = newdomain;
+              var dicAfter_child = this.dicEvidences(
+                e.target as IBayesGraphNode
+              );
+
+              this.dicAfter_child = dicAfter_child;
+
+              this.handleEvidencesOnDomainChange(
+                dicOriginal_child,
+                dicAfter_child,
+                e.target as IBayesGraphNode
+              );
+
+              e.target.evidences = this.disdicEvidence(
+                dicAfter_child,
+                e.target as IBayesGraphNode
+              );
+            }
+          });
+        }
+        // When domain remains the same length, no need to modify evidences.
+        else {
+          this.selection!.domain = newdomain;
+        }
       }
       this.warning_message = "";
+      this.succeed_message = "Updated.";
     }
   }
 
-  /** Reset evidences, it should be called:
-   * - a parent of this node is removed
-   * - an edge towards this node is removed
-   * - an edge towards this node is added
-   * - the domain of this node changes
+  /** This will handle domain:
+   * - If domain has duplicated value, delete duplicates
+   * - If domain has white-spaces at the beginning or the end, trim the domain
+   * - Remove any empty string
+   * - If domain only contains "true" or "false", convert to boolean list
    */
-  resetEvidencesOnModify(node: IBayesGraphNode) {
+  handleDomain(domain_raw: string) {
+    var domain_temp = domain_raw
+      .trimLeft()
+      .trimRight()
+      .split(/,\s*/)
+      .filter(x => x !== "");
+    var domain: string[] = [];
+    domain_temp.forEach(d => {
+      var temp = d.trimLeft().trimRight();
+      domain.push(temp);
+    });
+
+    // remove duplicates
+    while (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
+      var duplicated = domain.find(
+        x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1
+      );
+      domain = domain.filter(x => x !== duplicated);
+      domain.push(duplicated!);
+    }
+
+    // Covert true/false strings to boolean
+    if (domain.find(x => x !== "false" && x !== "true")) {
+      return domain;
+    } else {
+      return [false, true];
+    }
+  }
+
+  /** create a dictionary for evidences */
+  dicEvidences(node: IBayesGraphNode) {
+    var result = {};
     if (node.parents.length > 0) {
-      var l = this.allComb(this.probList(node)).length;
-      node.evidences = [];
-      if (node.domain.length !== 0) {
-          for (var i = 0; i < l * node.domain.length; i++) {
-              node.evidences.push(1 / node.domain.length);
+      var allprobNames = this.allComb(this.probList_with_parents_name(node));
+      for (var i = 0; i < allprobNames.length; i++) {
+        var key = allprobNames[i];
+        result[key] = {};
+        node.domain.forEach(d_0 => {
+          var d: string = d_0.toString();
+          if (node.evidences.length > 0) {
+            result[key][d] =
+              node.evidences[i * node.domain.length + node.domain.indexOf(d_0)];
+          } else {
+            result[key][d] = "no value";
           }
+        });
       }
     } else {
-      for (var i = 0; i < node.domain.length; i++) {
-        node.evidences.push(1 / node.domain.length);
+      node.domain.forEach(d_0 => {
+        var d: string = d_0.toString();
+        if (node.evidences.length > 0) {
+          result[d] = node.evidences[node.domain.indexOf(d_0)];
+        } else {
+          result[d] = "no value";
+        }
+      });
+    }
+    return result;
+  }
+
+  /** Generate evidence list from evidence dictionary */
+  disdicEvidence(dicEvidences: Object, node: IBayesGraphNode) {
+    var result: any[] = [];
+    if (node.parents.length > 0) {
+      var allprobNames = this.allComb(this.probList_with_parents_name(node));
+      allprobNames.forEach(pn => {
+        node.domain.forEach(d_0 => {
+          var d = d_0.toString();
+          result.push(dicEvidences[pn][d]);
+        });
+      });
+    } else {
+      node.domain.forEach(d_0 => {
+        var d = d_0.toString();
+        result.push(dicEvidences[d]);
+      });
+    }
+    return result;
+  }
+
+  /** Modify evidences on  node's domain changed
+   * If the length of the selected domain changes, in each line:
+   *  - if any elements remain the same name, normalize them
+   *  - if there's new element added,
+   *     these element will be assigned with prob = 0,
+   *  - if there's only new elements no old elements: average
+   * If the lengthe doesn't change, keep all probs unchanged.
+   * @param dicOriginal is dictionary of @param node's evidences before domain(either node's domain or its's parents' domain) changed,
+   * @param dicAfter is dictionary of @param nodes's evidences after domain changed*/
+  handleEvidencesOnDomainChange(
+    dicOriginal: Object,
+    dicAfter: Object,
+    node: IBayesGraphNode
+  ) {
+    var listOfkeys = Object.keys(dicAfter);
+    if (node.parents.length > 0) {
+      listOfkeys.forEach(k => {
+        var curr_sum_of_line = 0;
+        if (dicOriginal[k]) {
+          node.domain.forEach(d_0 => {
+            var d = d_0.toString();
+            if (dicOriginal[k][d]) {
+              dicAfter[k][d] = "need_to_be_normalized";
+              curr_sum_of_line += dicOriginal[k][d];
+            } else {
+              dicAfter[k][d] = 0;
+            }
+          });
+        } else {
+          node.domain.forEach(d_0 => {
+            var d = d_0.toString();
+            dicAfter[k][d] = 0;
+          });
+        }
+        var ratio = 1 / curr_sum_of_line;
+        var sum_of_line_except_last_rounded = 0;
+        node.domain.forEach(d_0 => {
+          var d = d_0.toString();
+          if (curr_sum_of_line !== 0) {
+            if (dicAfter[k][d] === "need_to_be_normalized") {
+              if (node.domain.indexOf(d_0) !== node.domain.length - 1) {
+                var temp = parseFloat(
+                  (dicOriginal[k][d] * ratio).toFixed(this.ROUND)
+                );
+                dicAfter[k][d] = temp;
+                sum_of_line_except_last_rounded += temp;
+              } else {
+                dicAfter[k][d] = parseFloat(
+                  (1 - sum_of_line_except_last_rounded).toFixed(this.ROUND)
+                );
+              }
+            }
+          } else {
+            if (node.domain.indexOf(d_0) !== node.domain.length - 1) {
+              var temp = parseFloat(
+                (1 / node.domain.length).toFixed(this.ROUND)
+              );
+              dicAfter[k][d] = temp;
+              sum_of_line_except_last_rounded += temp;
+            } else {
+              dicAfter[k][d] = parseFloat(
+                (1 - sum_of_line_except_last_rounded).toFixed(this.ROUND)
+              );
+            }
+          }
+        });
+      });
+    } else {
+      // When the selected node doesn't have parents
+      var curr_sum_of_line = 0;
+      var sum_of_line_except_last_rounded = 0;
+      listOfkeys.forEach(k => {
+        if (dicOriginal[k]) {
+          dicAfter[k] = "need_to_be_normalized";
+          curr_sum_of_line += dicOriginal[k];
+        } else {
+          dicAfter[k] = 0;
+        }
+      });
+
+      var ratio = 1 / curr_sum_of_line;
+      listOfkeys.forEach(k => {
+        if (curr_sum_of_line !== 0) {
+          if (dicAfter[k] === "need_to_be_normalized") {
+            if (node.domain[node.domain.length - 1].toString() !== k) {
+              var temp = parseFloat(
+                (dicOriginal[k] * ratio).toFixed(this.ROUND)
+              );
+              dicAfter[k] = temp;
+              sum_of_line_except_last_rounded += temp;
+            } else {
+              dicAfter[k] = parseFloat(
+                (1 - sum_of_line_except_last_rounded).toFixed(this.ROUND)
+              );
+            }
+          }
+        } else {
+          // Situation when all old values in domain are deleted
+          if (node.domain[node.domain.length - 1].toString() !== k) {
+            var temp = parseFloat((1 / node.domain.length).toFixed(this.ROUND));
+            dicAfter[k] = temp;
+            sum_of_line_except_last_rounded += temp;
+          } else {
+            dicAfter[k] = 1 - sum_of_line_except_last_rounded;
+          }
+        }
+      });
+    }
+  }
+
+  /**
+   * Find all combinations of parents.
+   * e.g. parents = {name: "Node1", domain: ["true", "false"]}, {name: "Node2", domain: ["a", "b"]}
+   * => returns [["Node1 = true", "Node1 = false"], ["Node2 = a", "Node2 = b"]]
+   */
+  probList_with_parents_name(node: IBayesGraphNode) {
+    if (node.parents.length === 0 || node.parents === null) {
+      return [];
+    }
+    var probNameList: string[][] = [];
+    node.parents.forEach(p => {
+      var domains = this.domainToString(
+        this.graph.nodes.find(n => n.name === p)!
+      );
+      var probNameList_curr_p: string[] = [];
+      domains.forEach(d => {
+        probNameList_curr_p.push(p + "=" + d);
+      });
+      probNameList.push(probNameList_curr_p);
+    });
+    return probNameList;
+  }
+
+  /** Generate evidences for a newly created node */
+  initialEvidences(domain: string[] | boolean[]) {
+    var evidences: number[] = [];
+    var curr_sum = 0;
+    for (var i = 0; i < domain.length; i++) {
+      if (i !== domain.length - 1) {
+        var temp = parseFloat((1 / domain.length).toFixed(this.ROUND));
+        evidences.push(temp);
+        curr_sum += temp;
+      } else {
+        evidences.push(parseFloat((1 - curr_sum).toFixed(this.ROUND)));
       }
     }
+    return evidences;
   }
 
   /** Check whether the given node name exists */
@@ -388,16 +704,13 @@ export default class BayesGraphBuilder extends Vue {
   /** Adds a node to the graph at position (x, y). */
   createNode(x: number, y: number) {
     if (
-      this.mode === "variable" &&
+      this.mode === "create" &&
+      this.create_mode === "variable" &&
       this.IsTempNode(this.temp_node_name, this.temp_node_domain)
     ) {
       var emptystrarr: string[] = [];
-      var evidencearr: number[] = [];
-      var domainval = this.domainToBoolean(this.temp_node_domain.split(/,\s*/));
-
-      for (var i = 0; i < domainval.length; i ++) {
-        evidencearr.push(1 / domainval.length);
-        }
+      var domainval = this.handleDomain(this.temp_node_domain);
+      var evidencearr = this.initialEvidences(domainval);
 
       this.graph.addNode({
         id: shortid.generate(),
@@ -408,6 +721,7 @@ export default class BayesGraphBuilder extends Vue {
         evidences: evidencearr,
         domain: domainval
       } as IBayesGraphNode);
+
       this.temp_node_name = this.genNewDefaultName();
       this.temp_node_domain = "false, true";
       this.warning_message = "";
@@ -417,7 +731,8 @@ export default class BayesGraphBuilder extends Vue {
   /** Adds a new edge to the graph. */
   createEdge() {
     if (
-      this.mode === "edge" &&
+      this.mode === "create" &&
+      this.create_mode === "edge" &&
       this.selection !== null &&
       this.first !== null &&
       this.canEdgeBeAdded(
@@ -432,8 +747,18 @@ export default class BayesGraphBuilder extends Vue {
         name: "edge1"
       });
 
+      var dicOriginal = this.dicEvidences(this.selection as IBayesGraphNode);
+
       this.selection.parents.push(this.first.name);
-      this.resetEvidencesOnModify(this.selection);
+
+      var dicAfter = this.dicEvidences(this.selection as IBayesGraphNode);
+
+      this.handleEvidencesOnParentAdded(dicOriginal, dicAfter, this
+        .selection as IBayesGraphNode);
+
+      this.selection.evidences = this.disdicEvidence(dicAfter, this
+        .selection as IBayesGraphNode);
+
       this.warning_message = "";
       this.first = null;
       this.selection = null;
@@ -446,6 +771,7 @@ export default class BayesGraphBuilder extends Vue {
   canEdgeBeAdded(source: IBayesGraphNode, target: IBayesGraphNode) {
     var canEdgeBeAdded = true;
     this.warning_message = "";
+    this.succeed_message = "";
     if (source === target) {
       return false;
     }
@@ -458,14 +784,53 @@ export default class BayesGraphBuilder extends Vue {
     this.graph.edges.forEach(e => {
       if (e.source === target && e.target === source) {
         this.warning_message = "No bi-direction edges between two nodes.";
+        this.succeed_message = "";
         return (canEdgeBeAdded = false);
       }
       if (e.source === source && e.target === target) {
         this.warning_message = "Edge already exists.";
+        this.succeed_message = "";
         return (canEdgeBeAdded = false);
       }
     });
+    if (canEdgeBeAdded) {
+      this.succeed_message = "Edge added.";
+    }
     return canEdgeBeAdded;
+  }
+
+  /** Handle the children @param node's evidences when a parent is added
+   * params:
+   * @param dicOriginal is the dictionary of @param node's evidences before a parent is added,
+   * @param dicAfter is the dictionary of @param node's evidences after a parent is added.
+   *
+   * - this function copy orginal line in prob table for each assignment of the new parent.
+   */
+  handleEvidencesOnParentAdded(
+    dicOriginal: Object,
+    dicAfter: Object,
+    node: IBayesGraphNode
+  ) {
+    var listOfkeys = Object.keys(dicAfter);
+    if (node.parents.length === 1) {
+      listOfkeys.forEach(k => {
+        node.domain.forEach(d_0 => {
+          var d = d_0.toString();
+          dicAfter[k][d] = dicOriginal[d];
+        });
+      });
+    } else {
+      listOfkeys.forEach(k => {
+        // first generate the old key which can help with getting value from dicOriginal
+        var temp = k.split(",");
+        temp.pop();
+        var oldkey = temp.join(",");
+        node.domain.forEach(d_0 => {
+          var d = d_0.toString();
+          dicAfter[k][d] = dicOriginal[oldkey][d];
+        });
+      });
+    }
   }
 
   strokeColour(edge: IGraphEdge, isHovering: boolean) {
@@ -507,19 +872,6 @@ export default class BayesGraphBuilder extends Vue {
     return `{${node.domain!.join(", ")}}`;
   }
 
-  domainToString(node: IBayesGraphNode) {
-    return node.domain!.join(",").split(",");
-  }
-
-  domainToBoolean(domain: string[]) {
-    var temp = domain;
-    if (domain.join(",").match(/(true,\s*false)|(false,\s*true)/)) {
-      return [false, true];
-    } else {
-      return domain;
-    }
-  }
-
   /** Updates the user selection. If the selection was previously selected, unselects it. */
   updateSelection(selection: IBayesGraphNode | IGraphEdge) {
     if (this.selection === selection) {
@@ -533,13 +885,25 @@ export default class BayesGraphBuilder extends Vue {
   deleteSelection() {
     if (this.selection && this.mode === "delete") {
       if (this.graph.edges.indexOf(this.selection as IGraphEdge) > -1) {
+        var dicOriginal = this.dicEvidences(this.selection.target);
+
         // remove edge.source from edge.target.parents
         this.selection.target.parents.splice(
           this.selection.target.parents.indexOf(this.selection.source.name),
           1
         );
-        // reset edge.target's evidences
-        this.resetEvidencesOnModify(this.selection.target);
+
+        this.selection.target.evidences = [];
+        var dicAfter = this.dicEvidences(this.selection.target);
+
+        // update edge.target's evidences
+        this.handleEvidencesOnParentDeleted(
+          dicOriginal,
+          dicAfter,
+          this.selection.target,
+          this.selection.source
+        );
+
         this.graph.removeEdge(this.selection as IGraphEdge);
       }
       if (this.graph.nodes.indexOf(this.selection as IBayesGraphNode) > -1) {
@@ -550,20 +914,76 @@ export default class BayesGraphBuilder extends Vue {
     }
   }
 
-  /** Remove the deleted node from all children's parents lists, and reset children's evidences*/
+  /** Remove the deleted node from all children's parents lists, and update children's evidences*/
   cleanParentsEvidenceOnNodeDel(node: IBayesGraphNode) {
     this.graph.edges.forEach(edge => {
       if (edge.source === node) {
-        edge.target.parents.splice(edge.target.parents.indexOf(node.name), 1);
-        this.resetEvidencesOnModify(edge.target);
+        var child = edge.target;
+
+        var dicOriginal = this.dicEvidences(child as IBayesGraphNode);
+
+        child.parents.splice(child.parents.indexOf(node.name), 1);
+
+        child.evidences = [];
+        var dicAfter = this.dicEvidences(child as IBayesGraphNode);
+
+        this.handleEvidencesOnParentDeleted(
+          dicOriginal,
+          dicAfter,
+          child as IBayesGraphNode,
+          node as IBayesGraphNode
+        );
+
+        child.evidences = this.disdicEvidence(
+          dicAfter,
+          child as IBayesGraphNode
+        );
       }
     });
+  }
+
+  /** Handle the children @param node's evidences when a parent is deleted
+   * @param dicOriginal is the dictionary of @param node's evidences before the parent is deleted,
+   * @param dicAfter is the dictionary of @param node's evidences after the parent is deleted,
+   * @param parent is the deleted parent.
+   * When a parent is deleted, the evidences in @param node only remain the probs of
+   * when the deleted parent is assigned with the first value in its domain
+   */
+  handleEvidencesOnParentDeleted(
+    dicOriginal: Object,
+    dicAfter: Object,
+    node: IBayesGraphNode,
+    parent: IBayesGraphNode
+  ) {
+    var newlistOfkeys = Object.keys(dicAfter);
+    if (node.parents.length === 0) {
+      var oldkey = parent.name + "=" + parent.domain[0].toString();
+      newlistOfkeys.forEach(k => {
+        dicAfter[k] = dicOriginal[oldkey][k];
+      });
+    } else {
+      var oldlistOfkeys = Object.keys(dicOriginal);
+      var firstdomainofparent = parent.name + "=" + parent.domain[0];
+      oldlistOfkeys.forEach(ok => {
+        var temp = ok.split(",");
+        if (temp.includes(firstdomainofparent)) {
+          var index = temp.indexOf(firstdomainofparent);
+          temp.splice(index, 1);
+
+          var key = temp.join(",");
+          node.domain.forEach(d_0 => {
+            var d = d_0.toString();
+            dicAfter[key][d] = dicOriginal[ok][d];
+          });
+        }
+      });
+    }
   }
 
   /**
    * Find all combinations of parents.
    * e.g. parents = {name: "Node1", domain: ["true", "false"]}, {name: "Node2", domain: ["a", "b"]}
-   * => returns [["Node1 = true", "Node1 = false"], ["Node2 = a", "Node2 = b"]]
+   * => returns [["true", "false"], ["a", "b"]]
    */
   probList(node: IBayesGraphNode) {
     if (node.parents.length === 0 || node.parents === null) {
@@ -571,7 +991,9 @@ export default class BayesGraphBuilder extends Vue {
     }
     var probNameList: string[][] = [];
     node.parents.forEach(p => {
-      var domains = this.domainToString(this.graph.nodes.find(n => n.name === p));
+      var domains = this.domainToString(
+        this.graph.nodes.find(n => n.name === p)!
+      );
       var probNameList_curr_p: string[] = [];
       domains.forEach(d => {
         probNameList_curr_p.push(d);
@@ -579,6 +1001,10 @@ export default class BayesGraphBuilder extends Vue {
       probNameList.push(probNameList_curr_p);
     });
     return probNameList;
+  }
+
+  domainToString(node: IBayesGraphNode) {
+    return node.domain!.join(",").split(",");
   }
 
   /**
@@ -609,7 +1035,6 @@ export default class BayesGraphBuilder extends Vue {
     return output;
   }
 
-
   /** For each line of prob inputboxes generate its reference
    * the format is: Parent1Name-Parent2Name_SelectedNodeName
    * and for each prob inputbox in this line, the reference won't be generate here,
@@ -619,11 +1044,11 @@ export default class BayesGraphBuilder extends Vue {
   generateRef(node: IBayesGraphNode) {
     if (node) {
       var temp = node.parents.slice(0);
-      var str = temp.join('-');
-      var result = str + '_' + node.name;
+      var str = temp.join("-");
+      var result = str + "_" + node.name;
       return result;
-    }  else {
-      return '';
+    } else {
+      return "";
     }
   }
 
@@ -635,18 +1060,30 @@ export default class BayesGraphBuilder extends Vue {
     this.succeed_message = "";
     var isvalid: boolean = true;
 
-    if (this.temp_node_evidences.find( e => (e > 1 || e < 0))) {
+    if (this.temp_node_evidences.findIndex(e => e > 1 || e < 0) > -1) {
       this.warning_message = "The highlited values are invalid!";
       isvalid = false;
     }
+    if (
+      this.temp_node_evidences.findIndex(e => e === null || e === undefined) >
+      -1
+    ) {
+      this.warning_message = "Please fill in all input boxes";
+      isvalid = false;
+    }
 
-    if (this.CalAllSumOfSameLineInputBox(this.temp_node_evidences).find(x => x !== 1)) {
+    if (
+      this.CalAllSumOfSameLineInputBox(this.temp_node_evidences).find(
+        x => x / this.MAX_DIGITS !== 1
+      )
+    ) {
       if (this.warning_message !== "") {
-          this.warning_message = "The highlighted values are invalid! The highlited line doesn't sum up to 1!";
-        } else {
-          this.warning_message = "The highlited line doesn't sum up to 1!";
-        }
-        isvalid = false;
+        this.warning_message =
+          "The highlighted values are invalid! The highlited line doesn't sum up to 1!";
+      } else {
+        this.warning_message = "The highlited line doesn't sum up to 1!";
+      }
+      isvalid = false;
     }
 
     if (isvalid) {
@@ -655,23 +1092,25 @@ export default class BayesGraphBuilder extends Vue {
     }
 
     this.$forceUpdate();
-
   }
 
-    /** Returns a list of sums of all rows of prob inputbox */
-    CalAllSumOfSameLineInputBox(evidences: number[]) {
+  /**-----------------------------Prob Set Mode Autofill----------------------------------- */
+
+  /** Returns a list of sums of all rows of prob inputbox */
+  CalAllSumOfSameLineInputBox(evidences: number[]) {
     // first slice the node's evidences
-      var linesums = [];
-      var sliced = [];
-      var chunksize = this.selection.domain.length;
-      for (var i = 0; i < evidences.length; i += chunksize){
-        sliced.push(evidences.slice(i, i+chunksize));
+    var linesums: number[] = [];
+    var sliced = [];
+    var chunksize = this.selection.domain.length;
+    for (var i = 0; i < evidences.length; i += chunksize) {
+      sliced.push(evidences.slice(i, i + chunksize));
     }
-      sliced.forEach(s => {
-        linesums.push(s.reduce((a, b) => a + b, 0))
+    sliced.forEach(s => {
+      var s_ = s.map(x => x * this.MAX_DIGITS);
+      linesums.push(s_.reduce((a, b) => a + b, 0));
     });
 
-      return linesums;
+    return linesums;
   }
 
   CalSumOfSameLineInputBox(index: number) {
@@ -691,16 +1130,20 @@ export default class BayesGraphBuilder extends Vue {
 
   getInputBoxClass(index: number, val: number) {
     var inputboxclass = "input_box";
-    if (val > 1 || val < 0 || this.CalSumOfSameLineInputBox(index) !== 1) {
+    if (
+      val > 1 ||
+      val < 0 ||
+      this.CalSumOfSameLineInputBox(index) !== this.MAX_DIGITS
+    ) {
       inputboxclass = "input_box_invalid";
     }
     return inputboxclass;
   }
 
- /** Get values for all prob inputboxes in the same row except for the last
+  /** Get values for all prob inputboxes in the same row except for the last
    * for some reason this.refs doesn't work here
    * values are from temp_node_evidences.
-  */
+   */
   getSameLineInputBoxVal(index: number) {
     var sameRowProbVals: number[] = [];
     if (this.selection) {
@@ -713,28 +1156,30 @@ export default class BayesGraphBuilder extends Vue {
           sameRowProbIndexes.push(i);
         }
       }
-      sameRowProbIndexes.forEach(index_ =>{
-        sameRowProbVals.push(this.temp_node_evidences[index_]);
+      sameRowProbIndexes.forEach(index_ => {
+        sameRowProbVals.push(
+          Math.round(this.temp_node_evidences[index_] * this.MAX_DIGITS)
+        );
       });
-      }
+    }
 
-      return sameRowProbVals;
+    return sameRowProbVals;
   }
-
 
   /** Calculate the value presented in the last prob inputbox when other boxes are changed.
-  */
+   */
   CalLastBoxValue(vals: number[]) {
-    var result = 1 - vals.reduce((a, b) => a + b, 0);
-    return result;
+    var result = this.MAX_DIGITS - vals.reduce((a, b) => a + b, 0);
+    return result / this.MAX_DIGITS;
   }
 
+  /** Find the reference of the last inputbox of a row */
   findLastInputboxRef(prob_name_index: number) {
     var pni = prob_name_index.toString();
     var l = this.selection.domain.length;
     var ref_prefix = this.generateRef(this.selection);
     if (this.selection.parents.length > 0) {
-      return ref_prefix + pni + '_' + (l - 1).toString();
+      return ref_prefix + pni + "_" + (l - 1).toString();
     } else {
       return ref_prefix + (l - 1).toString();
     }
@@ -757,7 +1202,14 @@ export default class BayesGraphBuilder extends Vue {
 
   @Watch("selection")
   onSelectionChanged() {
-    if (this.mode === "edge") {
+    this.temp_node_name = "";
+    this.temp_node_domain = "";
+    if (!(this.mode == "create" && this.create_mode === "edge")) {
+      this.warning_message = "";
+      this.succeed_message = "";
+    }
+
+    if (this.mode == "create" && this.create_mode === "edge") {
       if (this.first == null) {
         this.first = this.selection as IBayesGraphNode;
       } else {
@@ -766,41 +1218,56 @@ export default class BayesGraphBuilder extends Vue {
     } else if (this.mode === "select" && this.selection) {
       this.temp_node_name = this.selection.name!;
       this.temp_node_domain = `${this.selection.domain!.join(", ")}`;
-      this.warning_message = "";
     } else if (this.mode === "delete" && this.selection) {
       this.deleteSelection();
-    } else if (this.mode == "variable") {
+    } else if (this.mode === "create" && this.create_mode == "variable") {
       this.selection = null;
+      this.temp_node_name = this.genNewDefaultName();
+      this.temp_node_domain = "false, true";
     } else if (this.mode === "set_prob" && this.selection) {
-      this.temp_node_name = "";
-      this.temp_node_domain = "";
-      this.warning_message = "";
-      this.succeed_message = "";
       this.temp_node_evidences = this.selection.evidences.slice(0);
     } else {
       this.selection = null;
-      this.temp_node_name = "";
-      this.temp_node_domain = "";
-      this.warning_message = "";
-      this.succeed_message = "";
     }
   }
 
   @Watch("mode")
   onModeChanged() {
-    if (this.mode === "variable") {
+    this.temp_node_name = "";
+    this.temp_node_domain = "";
+    this.warning_message = "";
+    this.succeed_message = "";
+    this.temp_node_evidences = [];
+
+    // Remain selection unchanged if the previous mode is select and current mode is set_prob
+    if (this.mode !== "set_prob") {
+      this.prev_mode = this.mode;
+    }
+
+    if (this.mode === "create" && this.create_mode === "variable") {
+      this.temp_node_name = this.genNewDefaultName();
+      this.temp_node_domain = "false, true";
+      this.selection = null;
+    }
+
+    if (this.mode === "select" && this.selection) {
+      this.temp_node_name = this.selection.name!;
+      this.temp_node_domain = `${this.selection.domain!.join(", ")}`;
+    }
+
+    if (this.mode === "set_prob" && this.selection) {
+      this.temp_node_evidences = this.selection.evidences.slice(0);
+    }
+  }
+
+  @Watch("create_mode")
+  onCreateModeChange() {
+    if (this.mode === "create" && this.create_mode === "variable") {
       this.temp_node_name = this.genNewDefaultName();
       this.temp_node_domain = "false, true";
       this.warning_message = "";
-    } else if (this.mode === "select" && this.selection) {
-      this.temp_node_name = this.selection.name!;
-      this.temp_node_domain = `${this.selection.domain!.join(", ")}`;
-      this.warning_message = "";
-    } else {
-      this.temp_node_name = "";
-      this.temp_node_domain = "";
-      this.warning_message = "";
       this.succeed_message = "";
+      this.selection = null;
     }
   }
 }
@@ -818,7 +1285,7 @@ text.domain {
   max-height: 300px;
   max-width: 700px;
   padding: 10px;
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
   overflow: scroll;
 }
 
@@ -878,9 +1345,9 @@ div.input_box_container {
   background-color: pink;
 }
 
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>
