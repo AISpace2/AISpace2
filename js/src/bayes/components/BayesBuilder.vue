@@ -81,7 +81,7 @@
             @input="temp_node_name = $event.target.value"
           />
           <label>
-            <b>Domain (use comma to separate values)</b>
+            <b>Domain</b>
           </label>
           <input
             type="text"
@@ -90,6 +90,7 @@
             @focus="$event.target.select()"
             @input="temp_node_domain = $event.target.value"
           />
+          (use comma to separate values)
           <pre></pre>
           <p>
             <span style="color: red">{{warning_message}}</span>
@@ -877,24 +878,26 @@ export default class BayesGraphBuilder extends Vue {
   deleteSelection() {
     if (this.selection && this.mode === "delete") {
       if (this.graph.edges.indexOf(this.selection as IGraphEdge) > -1) {
-        var dicOriginal = this.dicEvidences(this.selection.target);
+        var source = this.selection.source;
+        var target = this.selection.target;
+
+        var dicOriginal = this.dicEvidences(target);
 
         // remove edge.source from edge.target.parents
-        this.selection.target.parents.splice(
-          this.selection.target.parents.indexOf(this.selection.source.name),
-          1
-        );
+        target.parents.splice(target.parents.indexOf(source.name), 1);
 
-        this.selection.target.evidences = [];
-        var dicAfter = this.dicEvidences(this.selection.target);
+        target.evidences = [];
+        var dicAfter = this.dicEvidences(target);
 
         // update edge.target's evidences
         this.handleEvidencesOnParentDeleted(
           dicOriginal,
           dicAfter,
-          this.selection.target,
-          this.selection.source
+          target,
+          source
         );
+
+        target.evidences = this.disdicEvidence(dicAfter, target);
 
         this.graph.removeEdge(this.selection as IGraphEdge);
       }

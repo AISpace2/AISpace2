@@ -1,7 +1,3 @@
-<style type="text/css">
-  .radioInputGroup { margin: 0 10px 0 10px; }
-</style>
-
 <template>
   <span>
     <span class="radioInputGroup">
@@ -45,4 +41,7 @@ export default class BayesToolbar extends Vue {
 </script>
 
 <style scoped>
+.radioInputGroup {
+  margin: 0 10px 0 10px;
+}
 </style>
