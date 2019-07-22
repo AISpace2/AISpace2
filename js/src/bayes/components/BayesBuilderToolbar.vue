@@ -1,13 +1,25 @@
+<style type="text/css">
+  .radioInputGroup { margin: 0 10px 0 10px; }
+</style>
+
 <template>
   <span>
-    <input type="radio" id="one" value="create" v-model="picked" />
-    <label for="one">Create</label>
-    <input type="radio" id="zero" value="select" v-model="picked" />
-    <label for="zero">Select</label>
-    <input type="radio" id="three" value="set_prob" v-model="picked" />
-    <label for="three">Set Probability Table</label>
-    <input type="radio" id="two" value="delete" v-model="picked" />
-    <label for="two">Delete</label>
+    <span class="radioInputGroup">
+      <input type="radio" id="one" value="create" v-model="picked" />
+      <label for="one">Create</label>
+    </span>
+    <span class="radioInputGroup">
+      <input type="radio" id="zero" value="select" v-model="picked" />
+      <label for="zero">Select</label>
+    </span>
+    <span class="radioInputGroup">
+      <input type="radio" id="three" value="set_prob" v-model="picked" />
+      <label for="three">Set Probability Table</label>
+    </span>
+    <span class="radioInputGroup">
+      <input type="radio" id="two" value="delete" v-model="picked" />
+      <label for="two">Delete</label>
+    </span>
   </span>
 </template>
 
@@ -34,4 +46,3 @@ export default class BayesToolbar extends Vue {
 
 <style scoped>
 </style>
-

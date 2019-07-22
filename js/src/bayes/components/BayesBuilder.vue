@@ -58,7 +58,7 @@
       </span>
       <BayesToolbar @modechanged="setMode"></BayesToolbar>
       <div v-if="mode == 'create'">
-        <p style="color: blue">Please select between:</p>
+        <p style="color: blue">Select an object to create:</p>
         <input type="radio" id="create_variable" value="variable" v-model="create_mode" />
         <label for="create_variable">Variable</label>
         <input type="radio" id="create_edge" value="edge" v-model="create_mode" />
@@ -66,9 +66,8 @@
         <div v-if="mode == 'create' && create_mode == 'variable'">
           <pre></pre>
           <p style="color: blue">
-            You can create a new variable here. Please change the name and the domain of the new variable,
-            <br />and then double click at a position where you want the new node to be created.
-            <br />If you don't change the name or the domain, the new node will be generated with default value.
+            Set the name and the domain of the variable below,
+            <br/>and then double click at a position on the canvas where you want the new node to be created.
           </p>
           <pre></pre>
           <label>
@@ -102,12 +101,12 @@
           <p
             v-if="(graph.nodes.indexOf(first) < 0)"
             style="color: blue"
-          >Select the first node to begin.</p>
+          >Select a start node.</p>
           <p
             style="color: blue"
             v-else-if="(graph.nodes.indexOf(first) > -1) && (selection == first || selection == null || selection.type == 'edge')"
           >
-            Source node:
+            Start node:
             <span style="color: green">{{first.name}}</span>. Select an end node to create an edge.
           </p>
           <pre></pre>
@@ -123,17 +122,16 @@
       <div v-if="mode =='select'">
         <pre></pre>
         <p style="color: blue">
-          Please select a node.
-          <br />You can change the name and the domain of the selected node.
+          Set the name and the domain of a node by cliking on it.
         </p>
         <div v-if="selection && (graph.nodes.indexOf(selection) > -1)">
           <p style="color: blue">
             You selected node
-            <span style="color: green">{{selection.name}}</span>
+            <span style="color: green">{{selection.name}}</span>.
           </p>
           <pre></pre>
           <label>
-            <b>New Name</b>
+            <b>Name:</b>
           </label>
           <input
             type="text"
@@ -143,7 +141,7 @@
             @input="temp_node_name = $event.target.value"
           />
           <label>
-            <b>New Domain (use comma to separate values)</b>
+            <b>Domain:</b>
           </label>
           <input
             type="text"
@@ -152,8 +150,8 @@
             :value="selection ? temp_node_domain : null"
             @input="temp_node_domain = $event.target.value"
           />
+          (use comma to separate values)
           <button @click="IsValidModify(temp_node_name, temp_node_domain)">Submit</button>
-          <pre></pre>
           <p>
             <span style="color: red">{{warning_message}}</span>
             <span style="color: green">{{succeed_message}}</span>
@@ -161,18 +159,16 @@
         </div>
       </div>
       <div v-else-if="mode == 'delete'">
-        <pre></pre>
-        <p style="color: blue">Click on a node or an edge to delete it.</p>
+        <p style="color: blue">Click on a node or an edge to delete.</p>
       </div>
     </div>
     <div>
       <div v-if="mode == 'set_prob'">
-        <pre></pre>
         <p style="color: blue">Click on a node to modifiy the probability table here.</p>
         <div v-if="selection">
           <p style="color: blue">
-            You selected node:
-            <span style="color: rgb(250, 106, 130)">{{selection.name}}</span>. Parents: {
+            You selected node
+            <span style="color: green">{{selection.name}}</span>. Parents: {
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
           </p>
@@ -238,14 +234,11 @@
           </div>
           <div>
             <span>
-              <span
-                style="color: blue"
-              >Click Submit to confirm probability changes, click Cancel to cancel.</span>
               <button @click="IsEvidencesValid()">Submit</button>
               <button @click="cancelProbSet()">Cancel</button>
             </span>
           </div>
-          <pre><span style="color: red">{{warning_message}}</span><span style="color: green">{{succeed_message}}</span></pre>
+          <span style="color: red">{{warning_message}}</span><span style="color: green">{{succeed_message}}</span>
         </div>
       </div>
     </div>
@@ -343,7 +336,7 @@ export default class BayesGraphBuilder extends Vue {
       this.succeed_message = "";
     } else if (this.NameExists(name)) {
       node_to_be_drawn = false;
-      this.warning_message = "Name exists! Please enter a different name.";
+      this.warning_message = "Name already exists.";
       this.succeed_message = "";
     } else if (
       domain === null ||
@@ -355,7 +348,7 @@ export default class BayesGraphBuilder extends Vue {
       this.succeed_message = "";
     } else {
       this.warning_message = "";
-      this.succeed_message = "Node added.";
+      this.succeed_message = "Variable created.";
     }
     return node_to_be_drawn;
   }
@@ -371,7 +364,7 @@ export default class BayesGraphBuilder extends Vue {
       this.warning_message = "Name not valid. Please enter a new name.";
       this.succeed_message = "";
     } else if (this.NameExists(name) && this.selection.name !== name) {
-      this.warning_message = "Name exists! Please enter a different name.";
+      this.warning_message = "Name already exists.";
     } else if (
       domain === null ||
       domain === "" ||
@@ -439,7 +432,7 @@ export default class BayesGraphBuilder extends Vue {
         }
       }
       this.warning_message = "";
-      this.succeed_message = "Updated.";
+      this.succeed_message = "Node updated.";
     }
   }
 
@@ -793,7 +786,7 @@ export default class BayesGraphBuilder extends Vue {
       }
     });
     if (canEdgeBeAdded) {
-      this.succeed_message = "Edge added.";
+      this.succeed_message = "Edge created.";
     }
     return canEdgeBeAdded;
   }
@@ -1060,14 +1053,14 @@ export default class BayesGraphBuilder extends Vue {
     var isvalid: boolean = true;
 
     if (this.temp_node_evidences.findIndex(e => e > 1 || e < 0) > -1) {
-      this.warning_message = "The highlited values are invalid!";
+      this.warning_message = "The highlited values are invalid.";
       isvalid = false;
     }
     if (
       this.temp_node_evidences.findIndex(e => e === null || e === undefined) >
       -1
     ) {
-      this.warning_message = "Please fill in all input boxes";
+      this.warning_message = "Please fill in all input boxes.";
       isvalid = false;
     }
 
@@ -1078,9 +1071,9 @@ export default class BayesGraphBuilder extends Vue {
     ) {
       if (this.warning_message !== "") {
         this.warning_message =
-          "The highlighted values are invalid! The highlited line doesn't sum up to 1!";
+          "The highlighted values are invalid. The highlited line doesn't sum up to 1.";
       } else {
-        this.warning_message = "The highlited line doesn't sum up to 1!";
+        this.warning_message = "The highlited line doesn't sum up to 1.";
       }
       isvalid = false;
     }
