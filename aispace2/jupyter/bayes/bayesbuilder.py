@@ -28,16 +28,8 @@ class BayesBuilder(DOMWidget):
         super().__init__()
         self.graph = bayes_problem
 
-    def bayes_problem(self):
-        """Converts the bayes problem represented by this builder into
-        a Python aipython.probGraphicalModels.Belief_network object object"""
-        return self.graph
-
     def py_code(self):
         """Converts the search problem represented by this builder into Python code.
         The code is added to a new cell in the notebook.
         """
-        self.send({
-            'action': 'python-code',
-            'code': bayes_problem_to_python_code(self.bayes_problem())
-        })
+        print(bayes_problem_to_python_code(self.graph))

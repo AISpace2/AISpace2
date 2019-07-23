@@ -168,7 +168,7 @@ def search_problem_to_python_code(problem):
 
     Example:
         ::
-            >>> search_problem_to_python_code(csp)
+            >>> search_problem_to_python_code(problem)
             'from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
             search_problem = Search_problem_from_explicit_graph({'a', 'b'}, [Arc('a', 'b', cost=5), 'a', {'b'}])'
 
@@ -189,12 +189,21 @@ def search_problem_to_python_code(problem):
     start = problem.start
     goals = problem.goals
     hmap = problem.hmap
+    positions = problem.positions
 
-    template = """from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
-search_problem = Search_problem_from_explicit_graph($nodes, [$arcs], $start, $goals, $hmap)"""
+    template = """from aipython.searchProblem import Search_problem_from_explicit_graph, Arc\n
+search_problem = Search_problem_from_explicit_graph(
+    nodes=$nodes,
+    arcs=[$arcs],
+    start=$start,
+    goals=$goals,
+    hmap=$hmap,
+    positions=$positions)"""
+
     return Template(template).substitute(
         nodes=nodes,
         arcs=', '.join(arcs),
         start=start.__repr__(),
         goals=goals,
-        hmap=hmap)
+        hmap=hmap,
+        positions=positions)
