@@ -57,9 +57,9 @@ export interface ICSPSetOrderEvent extends IEvent {
   action: "setOrder";
   // The string representing the name of the splitted variable
   var: string;
-  // The string representing the domain of the splitted variable
+  // The string representing the first half domain of the splitted variable
   domain: string[];
-  // The string representing the domain of the splitted variable
+  // The string representing the second half domain of the splitted variable
   other: string[];
 }
 

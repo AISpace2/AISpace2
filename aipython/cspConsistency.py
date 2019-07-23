@@ -95,7 +95,7 @@ class Con_solver(Displayable):
             self.display(0, "Solution found: ", {var: select(new_domains[var]) for var in new_domains})
             return {var: select(new_domains[var]) for var in domains}
         else:
-            self.display(5, "You can now split domain. Click on a variable whose domain has more than 1 value.")
+            self.display(4, "You can now split domain. Click on a variable whose domain has more than 1 value.")
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
             if var:
                 dom1, dom2 = self.partition_domain(new_domains[var], var)
