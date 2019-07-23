@@ -211,13 +211,13 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Requests the user choose a domain for one side of the split.
    */
   private chooseDomainSplit() {
-    if (this.vue.FocusNode.checkedNames.length ===0) {
-      alert("Please choose domain to split before submiting");
+    if (this.vue.FocusNode.checkedNames.length == 0) {
+      alert("Choose at least one value to split.");
       return;
     }
 
-    if (this.vue.FocusNode.checkedNames.length === this.vue.FocusNode.domain.length) {
-      alert("Please do not submiting the whole domain in domian spliting");
+    if (this.vue.FocusNode.checkedNames.length == this.vue.FocusNode.domain.length) {
+      alert("Do not choose all values to split.");
       this.vue.checkedNames = [];
       return;
     }
@@ -281,7 +281,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private setSolution(event: CSPEvents.ICSPSetSolutionEvent) {
     var lines = this.vue.pre_solution.split('\n');
-    var str = " ".repeat(this.vue.spaces) + "Solution found: "+ event.solution;
+    var str = " ".repeat(this.vue.spaces) + "Solution: "+ event.solution;
     lines.splice(this.vue.ind, 0, str);
     this.vue.pre_solution = lines.join('\n');
     this.vue.ind += 1;

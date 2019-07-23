@@ -99,7 +99,7 @@ class Con_solver(Displayable):
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
             if var:
                 dom1, dom2 = self.partition_domain(new_domains[var], var)
-                self.display(3, "...splitting", var, "into", dom1, "and", dom2)
+                self.display(3, "... splitting", var, "into", dom1, "and", dom2)
                 new_doms1 = copy_with_assign(new_domains, var, dom1)
                 new_doms2 = copy_with_assign(new_domains, var, dom2)
                 to_do = self.new_to_do(var, None)
@@ -109,7 +109,7 @@ class Con_solver(Displayable):
                 self.display(5, "Solving new domain with", var, dom2)
                 self.display(3, "New domain. Adding", to_do if to_do else "nothing", "to to_do.")
                 self.solve_one(new_doms2, to_do)
-                self.display(5, "No more solutions since no more domains")
+                self.display(5, "No more solutions since no more domains.")
                 return
 
     def split_var(self, iter_vars):
