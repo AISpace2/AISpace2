@@ -7,9 +7,9 @@ print(jspath)
 print("Make sure you have installed pip and Node.js.")
 input("Press Enter to continue...")
 
-isPIP = None;
-isNPM = None;
-isNode = None;
+isPIP = None; #None: No pip detected, False: using pip3, True: using pip
+isNPM = None; #None: No NPM detected, False: using powershell, True: useing CMD
+isNode = None; #None: No Node detected, False: using powershell, True: useing CMD
 try:
 	check_call(['pip3', '--version'])
 	isPIP = False
