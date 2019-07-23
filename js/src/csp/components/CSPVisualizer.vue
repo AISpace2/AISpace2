@@ -43,7 +43,6 @@
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
       <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
-      <div class="positions" style="white-space: pre;">{{positions}}</div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
         <div>Current variable: {{FocusNode.nodeName}}</div>
         <div>You can split the domain. Choose the values in one domain:</div>
@@ -59,6 +58,7 @@
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
         </div>
       </div>
+	  <div class="positions" style="white-space: pre;">{{positions}}</div>
     </div>
   </div>
 </template>
