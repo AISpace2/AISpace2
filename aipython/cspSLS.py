@@ -239,7 +239,7 @@ class Updatable_priority_queue(object):
         """returns True iff the priority queue is empty"""
         return all(triple[2] == self.REMOVED for triple in self.pq)
 
-from aipython.cspProblem import test
+#from aipython.cspProblem import test
 def sls_solver(csp,prob_best=0.7):
     """stochastic local searcher"""
     se0 = SLSearcher(csp)
@@ -249,9 +249,9 @@ def any_conflict_solver(csp):
     """stochastic local searcher (any-conflict)"""
     return sls_solver(csp,0)
 
-if __name__ == "__main__":
-    test(sls_solver)
-    test(any_conflict_solver)
+#if __name__ == "__main__":
+#    test(sls_solver)
+#    test(any_conflict_solver)
 
 ## Test Solving CSPs with Search:
 # from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d

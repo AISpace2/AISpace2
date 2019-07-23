@@ -140,9 +140,9 @@ def select(iterable):
         return e  # returns first element found
 
 #from aipython.cspProblem import test
-#def ac_solver(csp):
-#    "arc consistency (solve_one)"
-#    return Con_solver(csp).solve_one()
+def ac_solver(csp):
+    "arc consistency (solve_one)"
+    return Con_solver(csp).solve_one()
 #if __name__ == "__main__":
 #    test(ac_solver)
 
