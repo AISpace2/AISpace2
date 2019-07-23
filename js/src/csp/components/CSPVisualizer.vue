@@ -51,14 +51,14 @@
           <label :for = "key">{{key}}</label>
         </div>
         <span>
-        <button id="selectHalf" class = "btn btn-default" @click="selectHalf()">Select Half</button>
-        <button id="selectRandom" class = "btn btn-default" @click="selectRandom()">Select Random</button>
+          <button id="selectHalf" class = "btn btn-default" @click="selectHalf()">Select Half</button>
+          <button id="selectRandom" class = "btn btn-default" @click="selectRandom()">Select Random</button>
         </span>
         <div>
-        <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
+          <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
         </div>
       </div>
-	  <div class="positions" style="white-space: pre;">{{positions}}</div>
+	    <div class="positions" style="white-space: pre;">{{positions}}</div>
     </div>
   </div>
 </template>
