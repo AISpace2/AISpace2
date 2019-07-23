@@ -45,6 +45,24 @@ export interface ICSPSetSolutionEvent extends IEvent {
   solution: string;
 }
 
+export interface ICSPSetSplitEvent extends IEvent {
+  action: "setSplit";
+  // The string representing the domain of the splitted variable
+  domain: string[];
+  // The string representing the name of the splitted variable
+  var: string;
+}
+
+export interface ICSPSetOrderEvent extends IEvent {
+  action: "setOrder";
+  // The string representing the name of the splitted variable
+  var: string;
+  // The string representing the domain of the splitted variable
+  domain: string[];
+  // The string representing the domain of the splitted variable
+  other: string[];
+}
+
 export interface ICSPShowPositionsEvent extends IEvent {
   action: "showPositions";
   // The string representing the node positions
@@ -59,5 +77,7 @@ export type Events =
   | ICSPChooseDomainSplitEvent
   | ICSPChooseDomainSplitBeforeACEvent
   | ICSPSetSolutionEvent
+  | ICSPSetSplitEvent
+  | ICSPSetOrderEvent
   | ICSPShowPositionsEvent
   | Events;

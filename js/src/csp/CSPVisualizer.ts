@@ -41,8 +41,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         case "chooseDomainSplitBeforeAC":
           return this.chooseDomainSplitBeforeAC(event);
         case "setSolution":
-          this.vue.pre_solution += "\n        " + event.solution;
+          this.vue.pre_solution += "\n" + " ".repeat(this.vue.spaces) + "Solution found: "+ event.solution;
           break;
+        case "setSplit":
+          return this.setSplit(event);
+        case "setOrder":
+          return this.setOrder(event);
         case "output":
           this.vue.output = event.text;
           break;
@@ -69,6 +73,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           legendText: labelDict.cspLabelText,
           legendColor: labelDict.cspLabelColor,
           needACButton: this.model.needACButton,
+          spaces: 4,
+          history: {},
+          doOrder: 1,
+          origin: 4,
           needSplit: false
         }
       }).$mount(this.el);
@@ -207,9 +215,19 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       alert("Please choose domain to split before submiting");
       return;
     }
+
+    if (this.vue.FocusNode.checkedNames.length === this.vue.FocusNode.domain.length) {
+      alert("Please do not submiting the whole domain in domian spliting");
+      this.vue.checkedNames = [];
+      return;
+    }
+
     const newDomain = this.vue.FocusNode.checkedNames;
     this.send({ event: "domain_split", domain: newDomain });
     this.vue.needSplit = false;
+    this.vue.FocusNode.checkedNames = [];
+    this.vue.FocusNode.domain = [];
+    this.vue.FocusNode.nodeName = "";
   }
 
   /**
@@ -219,5 +237,30 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     if (!this.vue.needSplit) {
       window.alert("Arc consistency needs to be finished before the domain can be split.");
     }
+  }
+
+  /**
+   * Set and display the split history of csp
+   */
+  private setSplit(event: CSPEvents.ICSPSetSplitEvent) {
+    if (event.domain.length === 0) {
+        return;
+    }
+    this.vue.spaces = this.vue.origin + 4 * this.vue.history[event.var][event.domain];
+    this.vue.pre_solution += "\n" + " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.domain + "}";
+    this.vue.needSplit = false;
+    this.vue.spaces += 4;
+  }
+
+  private setOrder(event: CSPEvents.ICSPSetOrderEvent) {
+    if (!this.vue.history) {
+       this.vue.history = {};
+    }
+    if (!this.vue.history[event.var]) {
+       this.vue.history[event.var] = {};
+    }
+    this.vue.history[event.var][event.domain] = this.vue.doOrder;
+    this.vue.history[event.var][event.other] = this.vue.doOrder;
+    this.vue.doOrder += 1;
   }
 }

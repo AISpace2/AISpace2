@@ -51,7 +51,13 @@
           <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames">
           <label :for = "key">{{key}}</label>
         </div>
+        <span>  
+        <button id="selectHalf" class = "btn btn-default" @click="selectHalf()">Select Half</button>
+        <button id="selectRandom" class = "btn btn-default" @click="selectRandom()">Select Random</button>
+        </span>
+        <div>
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
+        </div>
       </div>
     </div>
   </div>
@@ -110,6 +116,14 @@ export default class CSPGraphInteractor extends Vue {
   needACButton: boolean;
   // Whether we need domain spliting
   needSplit: boolean;
+  // space needed to print solution history
+  spaces: number;
+  // default spaces used to print history of solutions
+  origin: number;
+  // the dictionary of domains need split
+  history: {};
+  // the order that domains were added to history
+  doOrder: number;
 
   data() {
     return {
@@ -118,6 +132,25 @@ export default class CSPGraphInteractor extends Vue {
         checkedNames: [],
         nodeName: String
       }
+    }
+  }
+
+  selectHalf() {
+    let size = this.FocusNode.domain.length;
+    this.FocusNode.checkedNames = [];
+    for (let index = 0; index < size / 2; index ++) {
+        this.FocusNode.checkedNames.push(this.FocusNode.domain[index]);
+    }
+  }
+
+  selectRandom() {
+    let size = Math.floor(Math.random() * (this.FocusNode.domain.length - 1) + 1);
+    this.FocusNode.checkedNames = [];
+    for (let index = 0; index < size; index ++) {
+        let rand = Math.floor(Math.random() * this.FocusNode.domain.length);
+        if (!this.FocusNode.checkedNames.includes(this.FocusNode.domain[rand])) {
+            this.FocusNode.checkedNames.push(this.FocusNode.domain[rand]);
+        }
     }
   }
 
