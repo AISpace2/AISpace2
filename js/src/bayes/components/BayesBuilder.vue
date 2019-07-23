@@ -117,7 +117,7 @@
     </div>
 
     <div>
-      <div v-if="mode =='select'">
+      <div v-if="mode =='select'" v-on:keyup.enter="$refs.btn_select_submit.click()"">
         <pre></pre>
         <p style="color: blue">Set the name and the domain of a node by cliking on it.</p>
         <div v-if="selection && (graph.nodes.indexOf(selection) > -1)">
@@ -148,6 +148,7 @@
           />
           (use comma to separate values)
           <button
+            ref="btn_select_submit"
             @click="IsValidModify(temp_node_name, temp_node_domain)"
           >Submit</button>
           <p>
@@ -161,7 +162,7 @@
       </div>
     </div>
     <div>
-      <div v-if="mode == 'set_prob'">
+      <div v-if="mode == 'set_prob'" v-on:keyup.enter="$refs.btn_prob_submit.click()">
         <p style="color: blue">Click on a node to modifiy the probability table here.</p>
         <div v-if="selection">
           <p style="color: blue">
@@ -170,7 +171,6 @@
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
           </p>
-          <p>{{selection.evidences}}{{temp_node_evidences}}</p>
           <div class="prob_table_grid" v-if="selection.parents.length > 0">
             <div>
               <div class="parent_node" v-for="pn of selection.parents" :key="pn">
@@ -229,7 +229,7 @@
           </div>
           <div>
             <span>
-              <button @click="IsEvidencesValid()">Submit</button>
+              <button ref="btn_prob_submit" @click="IsEvidencesValid()">Submit</button>
               <button @click="cancelProbSet()">Cancel</button>
             </span>
           </div>
