@@ -48,7 +48,6 @@ os.chdir(parentpath)
 try:
 	check_call([pipcmd, 'install', '--upgrade','jupyterlab'])
 	check_call([pipcmd, 'install', '--upgrade','ipywidgets'])
-	check_call(['jupyter','labextension', 'install' ,'@jupyter-widgets/jupyterlab-manager'])
 	check_call([pipcmd, 'install','-r','requirements-dev.txt'])
 	check_call([pipcmd, 'install','-e','.'])
 except:
@@ -57,6 +56,7 @@ except:
 os.chdir(jspath)
 try:
 	check_call(powershell + ['npm', 'install'])
+    check_call(['jupyter','labextension', 'install' ,'@jupyter-widgets/jupyterlab-manager'])
 	check_call(powershell + ['npm', 'run','update-lab-extension'])
 	check_call(['jupyter','labextension', 'install'])
 except:
