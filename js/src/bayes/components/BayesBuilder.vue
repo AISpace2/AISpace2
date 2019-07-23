@@ -196,7 +196,7 @@
                   type="text"
                   @focus="$event.target.select()"
                   @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
-                  @keyup="($event.target.value === null || $event.target.value === '') ? fillLastInputbox(0, index_p1, index_snn2) : null"
+                  @keyup="($event.target.value === null || $event.target.value === '') ? handleEmptyInput(index_p1, index_snn2) : null"
                   :value="temp_node_evidences[index_p1 * selection.domain.length + index_snn2]"
                   @input="handleInputValue($event.target.value, index_p1, index_snn2)"
                 />
@@ -222,7 +222,7 @@
                   :value="temp_node_evidences[index]"
                   @focus="$event.target.select($event.target.value)"
                   @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
-                  @keyup="($event.target.value === null || $event.target.value === '') ? fillLastInputbox(0, 0, index_snn2) : null"
+                  @keyup="($event.target.value === null || $event.target.value === '') ? handleEmptyInput(0, index) : null"
                   @input="handleInputValue($event.target.value, 0, index)"
                 />
               </div>
@@ -1086,8 +1086,6 @@ export default class BayesGraphBuilder extends Vue {
     this.$forceUpdate();
   }
 
-  /**-----------------------------Prob Set Mode Autofill----------------------------------- */
-
   /** Returns a list of sums of all rows of prob inputbox */
   CalAllSumOfSameLineInputBox(evidences: number[]) {
     // first slice the node's evidences
@@ -1133,6 +1131,7 @@ export default class BayesGraphBuilder extends Vue {
     return inputboxclass;
   }
 
+  /** This is to prevent non-numeric input in Safari since type="number" doesn't work in Safari */
   handleInputValue(val: string, pni: number, di: number) {
     if (val.length === 0 || val === null) {
       this.temp_node_evidences[pni * this.selection.domain.length + di] = 0;
@@ -1148,6 +1147,14 @@ export default class BayesGraphBuilder extends Vue {
     }
   }
 
+  /** Update the color of the inputbox when the box has been emptied */
+  handleEmptyInput(pni: number, di: number) {
+    this.fillLastInputbox("0", pni, di);
+    this.$forceUpdate();
+    this.temp_node_evidences[pni * this.selection.domain.length + di] = null;
+  }
+
+  /** Autofill last input box in a row to keep sum of this row = 1 */
   fillLastInputbox(val: string, pni: number, di: number) {
     if (this.selection.parents.length > 0) {
       this.temp_node_evidences[
