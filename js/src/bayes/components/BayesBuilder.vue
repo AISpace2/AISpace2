@@ -125,7 +125,6 @@
             You selected node
             <span style="color: green">{{selection.name}}</span>.
           </p>
-          <input ref="test" type="text" @input="checkInputValue($event.target.value)" />
           <pre></pre>
           <label>
             <b>Name:</b>
@@ -325,11 +324,7 @@ export default class BayesGraphBuilder extends Vue {
   IsTempNode(name_raw: string, domain: string) {
     var name = name_raw.trimLeft().trimRight();
     var node_to_be_drawn = true;
-    if (
-      name === null ||
-      name === "" ||
-      !name.match(/^[a-zA-Z$_]+[a-zA-Z0-9$_ ]*$/)
-    ) {
+    if (name === null || name.match(/^\s*$/)) {
       node_to_be_drawn = false;
       this.warning_message = "Name not valid. Please enter a new name.";
       this.succeed_message = "";
@@ -355,15 +350,12 @@ export default class BayesGraphBuilder extends Vue {
   /** Returns whether the modified node name and domain are valid,
    * if valid, update the values */
   IsValidModify(name: string, domain: string) {
-    if (
-      name === null ||
-      name === "" ||
-      !name.match(/^[a-zA-Z$_]+[a-zA-Z0-9$_ ]*$/)
-    ) {
+    if (name === null || name.match(/^\s*$/)) {
       this.warning_message = "Name not valid. Please enter a new name.";
       this.succeed_message = "";
     } else if (this.NameExists(name) && this.selection.name !== name) {
       this.warning_message = "Name already exists.";
+      this.succeed_message = "";
     } else if (
       domain === null ||
       domain === "" ||
@@ -372,7 +364,7 @@ export default class BayesGraphBuilder extends Vue {
       this.warning_message = "Domain not valid. Please enter a new domain.";
       this.succeed_message = "";
     } else {
-      this.selection!.name = name;
+      this.selection!.name = name.trimLeft().trimRight();
       var newdomain = this.handleDomain(domain);
 
       if (this.selection!.domain.join(",") !== newdomain.join(",")) {
@@ -705,7 +697,7 @@ export default class BayesGraphBuilder extends Vue {
 
       this.graph.addNode({
         id: shortid.generate(),
-        name: this.temp_node_name,
+        name: this.temp_node_name.trimLeft().trimRight(),
         x,
         y,
         parents: emptystrarr,
