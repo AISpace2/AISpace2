@@ -37,7 +37,6 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
-      <div class="positions" style="white-space: pre;">{{positions}}</div>
       <div v-if="FocusNode.domain.length > 0 && !isQuerying">
         <div>Current variable: {{FocusNode.nodeName}}</div>
         <div>Choose a value to observe:</div>
@@ -47,6 +46,7 @@
         </div>
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
       </div>
+        <div class="positions" style="white-space: pre;">{{positions}}</div>
     </div>
   </div>
 </template>
