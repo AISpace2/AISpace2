@@ -109,7 +109,7 @@ class Con_solver(Displayable):
                 self.display(5, "Solving new domain with", var, dom2)
                 self.display(3, "New domain. Adding", to_do if to_do else "nothing", "to to_do.")
                 self.solve_one(new_doms2, to_do)
-                self.display(5, "No more solutions since no more domains")
+                self.display(5, "No more solutions since no more domains.")
                 return
 
     def split_var(self, iter_vars):
