@@ -67,7 +67,7 @@
           <pre></pre>
           <p style="color: blue">
             Set the name and the domain of the variable below,
-            <br/>and then double click at a position on the canvas where you want the new node to be created.
+            <br />and then double click at a position on the canvas where you want the new node to be created.
           </p>
           <pre></pre>
           <label>
@@ -99,10 +99,7 @@
         </div>
         <div v-else-if="mode == 'create' && create_mode == 'edge'">
           <pre></pre>
-          <p
-            v-if="(graph.nodes.indexOf(first) < 0)"
-            style="color: blue"
-          >Select a start node.</p>
+          <p v-if="(graph.nodes.indexOf(first) < 0)" style="color: blue">Select a start node.</p>
           <p
             style="color: blue"
             v-else-if="(graph.nodes.indexOf(first) > -1) && (selection == first || selection == null || selection.type == 'edge')"
@@ -122,14 +119,13 @@
     <div>
       <div v-if="mode =='select'">
         <pre></pre>
-        <p style="color: blue">
-          Set the name and the domain of a node by cliking on it.
-        </p>
+        <p style="color: blue">Set the name and the domain of a node by cliking on it.</p>
         <div v-if="selection && (graph.nodes.indexOf(selection) > -1)">
           <p style="color: blue">
             You selected node
             <span style="color: green">{{selection.name}}</span>.
           </p>
+          <input ref="test" type="text" @input="checkInputValue($event.target.value)" />
           <pre></pre>
           <label>
             <b>Name:</b>
@@ -152,7 +148,9 @@
             @input="temp_node_domain = $event.target.value"
           />
           (use comma to separate values)
-          <button @click="IsValidModify(temp_node_name, temp_node_domain)">Submit</button>
+          <button
+            @click="IsValidModify(temp_node_name, temp_node_domain)"
+          >Submit</button>
           <p>
             <span style="color: red">{{warning_message}}</span>
             <span style="color: green">{{succeed_message}}</span>
@@ -173,6 +171,7 @@
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
           </p>
+          <p>{{selection.evidences}}{{temp_node_evidences}}</p>
           <div class="prob_table_grid" v-if="selection.parents.length > 0">
             <div>
               <div class="parent_node" v-for="pn of selection.parents" :key="pn">
@@ -194,14 +193,12 @@
                 <input
                   :class="getInputBoxClass(index_p1, temp_node_evidences[(index_p1 * selection.domain.length + index_snn2)])"
                   :ref="generateRef(selection) + index_p1.toString() + '_' + index_snn2.toString()"
-                  type="number"
+                  type="text"
                   @focus="$event.target.select()"
+                  @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
+                  @keyup="($event.target.value === null || $event.target.value === '') ? fillLastInputbox(0, index_p1, index_snn2) : null"
                   :value="temp_node_evidences[index_p1 * selection.domain.length + index_snn2]"
-                  @input="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = null,
-                  (index_snn2 === selection.domain.length - 1) ? null : $refs[findLastInputboxRef(index_p1)][0].value = CalLastBoxValue(getSameLineInputBoxVal(index_p1)),
-                  (index_snn2 === selection.domain.length - 1) ? null : temp_node_evidences[index_p1 * selection.domain.length + selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index_p1)),
-                  updateInputBox($event.target.value)"
-                  @change="$event.target.value ? temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = parseFloat($event.target.value) : temp_node_evidences[index_p1 * selection.domain.length + index_snn2] = null"
+                  @input="handleInputValue($event.target.value, index_p1, index_snn2)"
                 />
               </div>
             </div>
@@ -221,14 +218,12 @@
                 <input
                   :ref="generateRef(selection) + index.toString()"
                   :class="getInputBoxClass(index, temp_node_evidences[index])"
-                  type="number"
+                  type="text"
                   :value="temp_node_evidences[index]"
-                  @focus="$event.target.select()"
-                  @input="$event.target.value ? temp_node_evidences[index] = Number($event.target.value) : temp_node_evidences[index] = null,
-                  (index === selection.domain.length - 1) ? null : $refs[findLastInputboxRef(index)][0].value = CalLastBoxValue(getSameLineInputBoxVal(index)),
-                  (index === selection.domain.length - 1) ? null : temp_node_evidences[selection.domain.length - 1] = CalLastBoxValue(getSameLineInputBoxVal(index)),
-                  updateInputBox($event.target.value)"
-                  @change="$event.target.value ? temp_node_evidences[index] = Number($event.target.value) : temp_node_evidences[index] = null"
+                  @focus="$event.target.select($event.target.value)"
+                  @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
+                  @keyup="($event.target.value === null || $event.target.value === '') ? fillLastInputbox(0, 0, index_snn2) : null"
+                  @input="handleInputValue($event.target.value, 0, index)"
                 />
               </div>
             </div>
@@ -239,7 +234,8 @@
               <button @click="cancelProbSet()">Cancel</button>
             </span>
           </div>
-          <span style="color: red">{{warning_message}}</span><span style="color: green">{{succeed_message}}</span>
+          <span style="color: red">{{warning_message}}</span>
+          <span style="color: green">{{succeed_message}}</span>
         </div>
       </div>
     </div>
@@ -286,8 +282,8 @@ export default class BayesGraphBuilder extends Vue {
   layout: GraphLayout;
 
   /** The mode of the editor. */
-  mode: Mode = "select";
-  prev_mode: Mode = "select";
+  mode: Mode = "create";
+  prev_mode: Mode = "create";
   /** The currently selected node or edge. Actions are preformed on the selection. */
   selection: IBayesGraphNode | IGraphEdge | null = null;
   /** During edge creation, tracks the source node of the edge to be formed. */
@@ -299,6 +295,8 @@ export default class BayesGraphBuilder extends Vue {
   warning_message: string = "";
   succeed_message: string = "";
   temp_node_evidences: number[];
+  temp: string;
+
   create_mode: string = "variable";
   /** MAX_DIGITS is to solve the problem of float type number calculation in js,
    * to get precise result, we use integer calculation instead,
@@ -1055,15 +1053,14 @@ export default class BayesGraphBuilder extends Vue {
     this.succeed_message = "";
     var isvalid: boolean = true;
 
+    this.temp_node_evidences.forEach((ev, index) => {
+      if (ev === null || ev === undefined || Number.isNaN(ev)) {
+        this.temp_node_evidences[index] = 0;
+      }
+    });
+
     if (this.temp_node_evidences.findIndex(e => e > 1 || e < 0) > -1) {
       this.warning_message = "The highlited values are invalid.";
-      isvalid = false;
-    }
-    if (
-      this.temp_node_evidences.findIndex(e => e === null || e === undefined) >
-      -1
-    ) {
-      this.warning_message = "Please fill in all input boxes.";
       isvalid = false;
     }
 
@@ -1128,11 +1125,49 @@ export default class BayesGraphBuilder extends Vue {
     if (
       val > 1 ||
       val < 0 ||
+      Number.isNaN(val) ||
       this.CalSumOfSameLineInputBox(index) !== this.MAX_DIGITS
     ) {
       inputboxclass = "input_box_invalid";
     }
     return inputboxclass;
+  }
+
+  handleInputValue(val: string, pni: number, di: number) {
+    if (val.length === 0 || val === null) {
+      this.temp_node_evidences[pni * this.selection.domain.length + di] = 0;
+    } else if (val.match(/^[0-9\.]*[^0-9\.]$/)) {
+      var temp = null;
+      if (val.length > 1) {
+        temp = val.substring(0, val.length - 1);
+      }
+      this.$refs[this.findInputboxRef(pni, di)][0].value = temp;
+    } else {
+      this.fillLastInputbox(val, pni, di);
+      this.updateInputBox(val);
+    }
+  }
+
+  fillLastInputbox(val: string, pni: number, di: number) {
+    if (this.selection.parents.length > 0) {
+      this.temp_node_evidences[
+        pni * this.selection.domain.length + di
+      ] = parseFloat(val);
+      if (di !== this.selection.domain.length - 1) {
+        var lastboxval = this.CalLastBoxValue(this.getSameLineInputBoxVal(pni));
+        this.$refs[this.findLastInputboxRef(pni)][0].value = lastboxval;
+        this.temp_node_evidences[
+          pni * this.selection.domain.length + this.selection.domain.length - 1
+        ] = lastboxval;
+      }
+    } else {
+      this.temp_node_evidences[di] = parseFloat(val);
+      if (di !== this.selection.domain.length - 1) {
+        var lastboxval = this.CalLastBoxValue(this.getSameLineInputBoxVal(di));
+        this.$refs[this.findLastInputboxRef(di)][0].value = lastboxval;
+        this.temp_node_evidences[this.selection.domain.length - 1] = lastboxval;
+      }
+    }
   }
 
   /** Get values for all prob inputboxes in the same row except for the last
@@ -1170,21 +1205,36 @@ export default class BayesGraphBuilder extends Vue {
 
   /** Find the reference of the last inputbox of a row */
   findLastInputboxRef(prob_name_index: number) {
-    var pni = prob_name_index.toString();
     var l = this.selection.domain.length;
     var ref_prefix = this.generateRef(this.selection);
     if (this.selection.parents.length > 0) {
-      return ref_prefix + pni + "_" + (l - 1).toString();
+      return ref_prefix + prob_name_index + "_" + (l - 1).toString();
     } else {
       return ref_prefix + (l - 1).toString();
+    }
+  }
+
+  /** Find the reference of the inputbox */
+  findInputboxRef(prob_name_index: number, domain_index: number) {
+    var ref_prefix = this.generateRef(this.selection);
+    if (this.selection.parents.length > 0) {
+      return ref_prefix + prob_name_index + "_" + domain_index;
+    } else {
+      return ref_prefix + domain_index;
     }
   }
 
   /** Avoid issue that the user can't input 0s after "0."
    * since the inputbox is checking values immediately */
   updateInputBox(value: string) {
-    if (value.match(/^[0-9]+\.*([0-9]*[1-9]+)*$/)) {
-      this.$forceUpdate();
+    // setTimeout(() => this.updateInputBox_(value), 1000);
+    if (!value.match(/^[0-9]+\.$/)) {
+      if (
+        value.match(/^[0-9]+\.?([0-9]*[1-9]+)*$/) ||
+        value.match(/^([0-9\.]*[^0-9\.]+[0-9\.]*)+$/)
+      ) {
+        this.$forceUpdate();
+      }
     }
   }
 
