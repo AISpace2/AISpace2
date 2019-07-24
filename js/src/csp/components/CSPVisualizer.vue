@@ -126,7 +126,9 @@ export default class CSPGraphInteractor extends Vue {
   doOrder: number;
   // index that tracks the branch we are splitting
   ind: number;
-
+  // the indent spacing between shown in domain spliting history
+  indent: number;
+    
   data() {
     return {
       FocusNode: {
