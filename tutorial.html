@@ -166,31 +166,23 @@
       <p>
         <svg viewBox="0 0 42 32">
           <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-        </svg>&mdash; the start node is filled in pink.
-      </p>
-      <p>
-        <svg viewBox="0 0 42 32">
-          <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-        </svg>&mdash; the regular nodes are filled in white.
+        </svg>&mdash; The start node is filled in purple.
       </p>
       <p>
         <svg viewBox="0 0 42 32">
           <ellipse rx="20" ry="15" fill="gold" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-        </svg>&mdash; the goal nodes are filled in yellow.
+        </svg>&mdash; The goal nodes are filled in yellow.
+      </p>
+      <p>
+        <svg viewBox="0 0 42 32">
+          <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+        </svg>&mdash; The regular nodes (neither start nor goal) are filled in white.
       </p>
       <p>
         <svg viewBox="0 0 44 34">
           <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
-        </svg>&mdash; the nodes at the end of each path on the frontier are outlined in green.
+        </svg>&mdash; The frontier nodes are the nodes at the end of each path in the frontier. They are outlined in green.
       </p>
-      <p>
-        <svg viewBox="0 0 130 38">
-          <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
-          <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="blue" fill="blue" stroke-width="7"></polygon>
-          <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="19"></ellipse>
-          <ellipse rx="20" ry="15" fill="gold" stroke="blue" stroke-width="3" cx="105" cy="19"></ellipse>
-        </svg>
-        &mdash; the neighbouring nodes of the current path are outlined in blue.</p>
       <p>
         <svg viewBox="0 0 220 38">
           <path data-v-6814c63b="" d="M40,19L80,19" stroke="red" stroke-width="4"></path>
@@ -201,7 +193,16 @@
           <ellipse rx="20" ry="15" fill="white" stroke="red" stroke-width="3" cx="105" cy="19"></ellipse>
           <ellipse rx="20" ry="15" fill="gold" stroke="red" stroke-width="3" cx="189" cy="19"></ellipse>
         </svg>
-        &mdash; the path being expanded is outlined in red.
+        &mdash; The current path is the being expanded. It is outlined in red.
+      </p>
+      <p>
+        <svg viewBox="0 0 130 38">
+          <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
+          <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="blue" fill="blue" stroke-width="7"></polygon>
+          <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="19"></ellipse>
+          <ellipse rx="20" ry="15" fill="gold" stroke="blue" stroke-width="3" cx="105" cy="19"></ellipse>
+        </svg>
+        &mdash; The neighbouring nodes are the neighbours of the nodes in the current path. They are outlined in blue.
       </p>
       <h3 id="tutorial-search-supported-classes" class="linkify"><a href="#tutorial-search-supported-classes">Supported Classes</a></h3>
       <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
@@ -285,18 +286,23 @@
       <h3 id="tutorial-csp-legend" class="linkify"><a href="#tutorial-csp-legend">Legend</a></h3>
       <p>
         <svg viewBox="0 0 30 20">
-          <line x1="0" x2="30" y1="10" y2="10" stroke="blue" stroke-width="5"></line>
-        </svg> &mdash; the arc needs to be checked to see whether it is consistent.
+          <line x1="0" x2="20" y1="0" y2="20" stroke="blue" stroke-width="5"></line>
+        </svg> &mdash; To-do arc: the arc needs to be checked to see whether it is consistent.
       </p>
       <p>
         <svg viewBox="0 0 30 20">
-          <line x1="0" x2="30" y1="10" y2="10" stroke="green" stroke-width="5"></line>
-        </svg> &mdash; the arc is consistent.
+          <line x1="0" x2="20" y1="0" y2="20" stroke="green" stroke-width="5"></line>
+        </svg> &mdash; Consistent arc: the arc is consistent.
       </p>
       <p>
         <svg viewBox="0 0 30 20">
-          <line x1="0" x2="30" y1="10" y2="10" stroke="red" stroke-width="5"></line>
-        </svg> &mdash; the arc is not consistent.
+          <line x1="0" x2="20" y1="0" y2="20" stroke="red" stroke-width="5"></line>
+        </svg> &mdash; Inconsistent arc: the arc is not consistent.
+      </p>
+      <p>
+        <svg viewBox="0 0 30 20">
+          <line x1="0" x2="20" y1="0" y2="20" stroke="purple" stroke-width="5"></line>
+        </svg> &mdash; Domain-splittable variable: the variable whose domain can be split is outlined in purple.
       </p>
       <p>
         You can click on any blue or red arc to perform arc consistency algorithm on that arc. When you use Fine Step, Step, Auto Arc Consistency or
