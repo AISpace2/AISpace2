@@ -1090,7 +1090,7 @@ export default class BayesGraphBuilder extends Vue {
     });
 
     if (this.temp_node_evidences.findIndex(e => e > 1 || e < 0) > -1) {
-      this.warning_message = "The highlited values are invalid.";
+      this.warning_message = "The hightlighted values are invalid.";
       isvalid = false;
     }
 
@@ -1101,9 +1101,9 @@ export default class BayesGraphBuilder extends Vue {
     ) {
       if (this.warning_message !== "") {
         this.warning_message =
-          "The highlighted values are invalid. The highlited line doesn't sum up to 1.";
+          "The highlighted values are invalid. The hightlighted line doesn't sum up to 1.";
       } else {
-        this.warning_message = "The highlited line doesn't sum up to 1.";
+        this.warning_message = "The highlighted line doesn't sum up to 1.";
       }
       isvalid = false;
     }
