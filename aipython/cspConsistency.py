@@ -93,7 +93,7 @@ class Con_solver(Displayable):
             self.display(0, "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.")
             return False
         elif all(len(new_domains[var]) == 1 for var in domains):
-            self.display(0, "Solution found: ", {var: select(new_domains[var]) for var in new_domains})
+            self.display(0, "Solution found:", {var: select(new_domains[var]) for var in new_domains})
             return {var: select(new_domains[var]) for var in domains}
         else:
             self.display(4, "You can now split domain. Click on a variable whose domain has more than 1 value.")

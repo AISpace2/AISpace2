@@ -41,8 +41,8 @@
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output">{{output}}</div>
-      <div v-if="pre_solution" class="output">History: <br>{{pre_solution}}</div>
+      <div class="output" v-bind:class="{ 'solutionText': output.includes('Solution found'), 'warningText': output.includes('No more solutions') }">{{output}}</div>
+      <div v-if="preSolution" class="output">Solution history:<br><span class="solutionText">{{preSolution}}</span></div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
         <div>Current variable: {{FocusNode.nodeName}}</div>
         <div>You can split the domain. Choose the values in one domain:</div>
@@ -101,7 +101,7 @@ export default class CSPGraphInteractor extends Vue {
   // Text describing what is currently happening
   output: string;
   // The text representing the solutions found so far
-  pre_solution: string;
+  preSolution: string;
   // The text representing the positions for nodes
   positions: string;
   // Layout object that controls where nodes are drawn. */

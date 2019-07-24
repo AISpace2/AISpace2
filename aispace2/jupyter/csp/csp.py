@@ -290,8 +290,12 @@ class Displayable(StepDOMWidget):
         elif args[0] == "... splitting":
             self.send({'action': 'setOrder', 'var':args[1], 'domain': args[3], 'other':args[5]})
 
-        elif args[0] == "Solution found: ":
-            self.send({'action': 'setSolution', 'solution': str(args[1])})
+        elif args[0] == "Solution found:":
+            solString = ""
+            for var in args[1]:
+                solString += var + "=" + str(args[1][var]) + ", "
+            solString = solString[:-2]
+            self.send({'action': 'setPreSolution', 'solution': solString})
             args += ("\nClick Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.", )
 
         elif args[0] == "Solving new domain with":

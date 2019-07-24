@@ -39,8 +39,8 @@ export interface ICSPChooseDomainSplitBeforeACEvent extends IEvent {
   action: "chooseDomainSplitBeforeAC";
 }
 
-export interface ICSPSetSolutionEvent extends IEvent {
-  action: "setSolution";
+export interface ICSPSetPreSolutionEvent extends IEvent {
+  action: "setPreSolution";
   // The string representing the new solution
   solution: string;
 }
@@ -80,7 +80,7 @@ export type Events =
   | ICSPHighlightNodesEvent
   | ICSPChooseDomainSplitEvent
   | ICSPChooseDomainSplitBeforeACEvent
-  | ICSPSetSolutionEvent
+  | ICSPSetPreSolutionEvent
   | ICSPSetSplitEvent
   | ICSPSetOrderEvent
   | ICSPShowPositionsEvent

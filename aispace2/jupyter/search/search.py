@@ -159,17 +159,17 @@ class Displayable(StepDOMWidget):
             self._send_highlight_nodes_action(neighbour_nodes, 'blue')
             self._send_highlight_path_action(arcs_of_path, 'blue')
 
-        elif args[0] == "Frontier: ":
+        elif args[0] == "Frontier:":
             self._frontier = args[1]
             self._send_clear_action()
             self._send_frontier_updated_action()
 
-        elif args[0] == "Solution found: ":
-            self.send({'action': 'setSolution', 'solution': str(args[1]), 'cost': args[3]})
+        elif args[0] == "Solution found:":
+            self.send({'action': 'setPreSolution', 'solution': str(args[1]), 'cost': args[3]})
             args += ("\nClick Step or Auto Solve to find more solutions.", )
 
-        elif args[0] == "New best path: ":
-            self.send({'action': 'setSolution', 'solution': str(args[1]), 'cost': args[3]})
+        elif args[0] == "New best path:":
+            self.send({'action': 'setPreSolution', 'solution': str(args[1]), 'cost': args[3]})
             args += ('\nClick Step or Auto Solve to try to find a solution with less cost.', )
 
         super().display(level, *args, **kwargs)

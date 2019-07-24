@@ -38,8 +38,8 @@
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output">Frontier: {{frontier}}</div>
-      <div class="output">{{output}}</div>
-      <div v-if="pre_solution" class="output">Solution history: {{pre_solution}}</div>
+      <div class="output" v-bind:class="{ 'solutionText': output.includes('Solution found') || output.includes('New best path'), 'warningText': output.includes('No more solutions') }">{{output}}</div>
+      <div v-if="preSolution" class="output">Solution history: <span class="solutionText">{{preSolution}}</span></div>
       <div class="output">{{positions}}</div>
     </div>
   </div>
@@ -78,7 +78,7 @@
     // The text representing the frontier
     frontier: string;
     // The text representing the solutions found so far. Persistent until new solution found
-    pre_solution: string;
+    preSolution: string;
     // The text representing the positions for nodes
     positions: string;
     // True if edge costs should be shown on the edges

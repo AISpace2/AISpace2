@@ -34,8 +34,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         case "setFrontier":
           this.vue.frontier = event.frontier;
           break;
-        case "setSolution":
-          this.vue.pre_solution += "\n        " + event.solution + " (cost: " + event.cost + ")";
+        case "setPreSolution":
+          this.vue.preSolution += "\n        " + event.solution + " (cost: " + event.cost + ")";
           break;
         case "output":
           this.vue.output = event.text;
@@ -64,7 +64,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
           output: null,
-          pre_solution: "",
+          preSolution: "",
           positions: null,
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,
