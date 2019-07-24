@@ -277,6 +277,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     this.vue.needSplit = false;
     this.vue.spaces += this.vue.indent;
     this.vue.doOrder += 1;
+    this.vue.FocusNode.checkedNames = [];
+    this.vue.FocusNode.domain = [];
+    this.vue.FocusNide.nodeName = "";
   }
 
   /**
