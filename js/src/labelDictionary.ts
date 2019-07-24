@@ -9,17 +9,18 @@ const COLOR = {
 
 const label = {
   csp: {
-    "todo arc": COLOR.BLUE,
-    "consistent arc": COLOR.GREEN,
-    "inconsistent arc": COLOR.RED
+    "To-do arc": COLOR.BLUE,
+    "Consistent arc": COLOR.GREEN,
+    "Inconsistent arc": COLOR.RED,
+    "Domain-splittable nodes": COLOR.PURPLE
   },
 
   search: {
-    "current path": COLOR.RED,
-    "neighbor nodes": COLOR.BLUE,
-    "frontier nodes": COLOR.GREEN,
-    "start node": COLOR.PURPLE,
-    "goal nodes": COLOR.YELLOW
+    "Current path": COLOR.RED,
+    "Neighbor nodes": COLOR.BLUE,
+    "Frontier nodes": COLOR.GREEN,
+    "Start node": COLOR.PURPLE,
+    "Goal nodes": COLOR.YELLOW
   },
 };
 
