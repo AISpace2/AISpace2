@@ -1089,7 +1089,7 @@ export default class BayesGraphBuilder extends Vue {
     });
 
     if (this.temp_node_evidences.findIndex(e => e > 1 || e < 0) > -1) {
-      this.warning_message = "The hightlighted values are invalid.";
+      this.warning_message = "The highlighted values are invalid.";
       isvalid = false;
     }
 
