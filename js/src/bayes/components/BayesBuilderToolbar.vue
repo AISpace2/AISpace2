@@ -31,7 +31,7 @@ type Mode = "select" | "create" | "delete" | "set_prob";
  */
 @Component
 export default class BayesToolbar extends Vue {
-  picked: Mode = "select";
+  picked: Mode = "create";
 
   @Watch("picked")
   onPickedChanged() {
