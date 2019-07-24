@@ -163,7 +163,7 @@
     </div>
     <div>
       <div v-if="mode == 'set_prob'" v-on:keyup.enter="$refs.btn_prob_submit.click()">
-        <p style="color: blue">Click on a node to modifiy the probability table here.</p>
+        <p style="color: blue">Click on a node to modifiy its probability table.</p>
         <div v-if="selection">
           <p style="color: blue">
             You selected node
@@ -351,7 +351,7 @@ export default class BayesGraphBuilder extends Vue {
       this.succeed_message = "";
     } else if (this.checkDomainDuplicates(domain)) {
       node_to_be_drawn = false;
-      this.warning_message = "Domain contains duplicated values."
+      this.warning_message = "Domain contains duplicate values."
       this.succeed_message = "";
     } else {
       this.warning_message = "";
@@ -374,10 +374,10 @@ export default class BayesGraphBuilder extends Vue {
       domain === "" ||
       !domain.match(/^[a-zA-Z0-9$_ ]+(,(\s)*[a-zA-Z0-9$_ ]*)*$/)
     ) {
-      this.warning_message = "Domain not valid. Please enter a new domain.";
+      this.warning_message = "Domain is not valid. Please enter a new domain.";
       this.succeed_message = "";
     } else if (this.checkDomainDuplicates(domain)) {
-      this.warning_message = "Domain contains duplicated values."
+      this.warning_message = "Domain contains duplicate values."
       this.succeed_message = "";
     } else {
       this.selection!.name = name.trimLeft().trimRight();
@@ -461,7 +461,7 @@ export default class BayesGraphBuilder extends Vue {
       domain.push(temp);
     });
 
-    // remove duplicates 
+    // remove duplicates
     /*
     while (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
       var duplicated = domain.find(
@@ -1093,16 +1093,11 @@ export default class BayesGraphBuilder extends Vue {
       isvalid = false;
     }
 
-    if (
-      this.CalAllSumOfSameLineInputBox(this.temp_node_evidences).find(
-        x => x / this.MAX_DIGITS !== 1
-      )
-    ) {
+    if (this.CalAllSumOfSameLineInputBox(this.temp_node_evidences).find(x => x / this.MAX_DIGITS !== 1)) {
       if (this.warning_message !== "") {
-        this.warning_message =
-          "The highlighted values are invalid. The hightlighted line doesn't sum up to 1.";
+        this.warning_message = "Highlighted values are invalid.";
       } else {
-        this.warning_message = "The highlighted line doesn't sum up to 1.";
+        this.warning_message = "Highlighted line doesn't sum to 1.";
       }
       isvalid = false;
     }
@@ -1130,7 +1125,7 @@ export default class BayesGraphBuilder extends Vue {
           s[index] = 0;
         } else if (typeof se === "string") {
           if (se !== "." && (se.match(/^\.[0-9]*$/) || se.match(/^[0-9]*\.$/))) {
-            s[index] = parseFloat(se); 
+            s[index] = parseFloat(se);
           }
         }
       });
@@ -1208,8 +1203,8 @@ export default class BayesGraphBuilder extends Vue {
     }
   }
 
-  /** When user cursor leaves current input box, 
-   * - if the value is "", "." or null, reset them to 0 
+  /** When user cursor leaves current input box,
+   * - if the value is "", "." or null, reset them to 0
    * - if the value is, for example, "4.", set it to "4"
    * - if the value is, for example, ".4", set it to "0.4"*/
   onBlurRest(val: string, pni: number, di: number) {
