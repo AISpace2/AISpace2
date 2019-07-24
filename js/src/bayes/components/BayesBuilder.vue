@@ -171,7 +171,6 @@
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
           </p>
-          <p>{{selection.evidences}}{{temp_node_evidences}}</p>
           <div class="prob_table_grid" v-if="selection.parents.length > 0">
             <div>
               <div class="parent_node" v-for="pn of selection.parents" :key="pn">
