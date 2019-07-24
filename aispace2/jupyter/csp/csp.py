@@ -297,6 +297,9 @@ class Displayable(StepDOMWidget):
         elif args[0] == "Solving new domain with":
             self.send({'action': 'setSplit', 'domain': args[2], 'var': args[1]})
 
+        elif args[0] == "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.":
+            self.send({'action': 'noSolution'})
+
         #############################
         ### SLS-specific displays ###
         #############################

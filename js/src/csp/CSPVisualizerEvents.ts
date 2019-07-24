@@ -69,6 +69,10 @@ export interface ICSPShowPositionsEvent extends IEvent {
   positions: string;
 }
 
+export interface ICSPNoSolutionEvent extends IEvent {
+  action: "noSolution";
+}
+
 // CSP Visualizer Events
 export type Events =
   | ICSPHighlightArcsEvent
@@ -80,4 +84,5 @@ export type Events =
   | ICSPSetSplitEvent
   | ICSPSetOrderEvent
   | ICSPShowPositionsEvent
+  | ICSPNoSolutionEvent
   | Events;
