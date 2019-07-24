@@ -37,10 +37,10 @@
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="frontier" style="white-space: pre;">Frontier: {{frontier}}</div>
-      <div class="output" style="white-space: pre;">{{output}}</div>
-      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Solution history: {{pre_solution}}</div>
-      <div class="positions" style="white-space: pre;">{{positions}}</div>
+      <div class="output">Frontier: {{frontier}}</div>
+      <div class="output">{{output}}</div>
+      <div v-if="pre_solution" class="output">Solution history: {{pre_solution}}</div>
+      <div class="output">{{positions}}</div>
     </div>
   </div>
 </template>
