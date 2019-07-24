@@ -121,12 +121,12 @@ export default class CSPGraphInteractor extends Vue {
   // default spaces used to print history of solutions
   origin: number;
   // the dictionary of domains need split
-  history: {};
+  history: object;
   // the order that domains were added to history
   doOrder: number;
-  // index that tracks the branch we are splitting  
+  // index that tracks the branch we are splitting
   ind: number;
-    
+
   data() {
     return {
       FocusNode: {
