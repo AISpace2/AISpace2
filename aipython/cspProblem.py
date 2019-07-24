@@ -165,15 +165,14 @@ csp_crossword2d = CSP({"p00":letters, "p01":letters, "p02":letters,
                    Constraint(("p01","p11","p21"), is_word),
                    Constraint(("p02","p12","p22"), is_word)])
 
-def test(CSP_solver, csp=csp_simple2,
-             solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
-    """CSP_solver is a solver that finds a solution to a CSP.
-    CSP_solver takes a csp and returns a solution.
-    csp has to be a CSP, where solutions is the list of all solutions.
-    This tests whether the solution returned by CSP_solver is a solution.
-    """
-    print("Testing csp with",CSP_solver.__doc__)
-    sol0 = CSP_solver(csp)
-    print("Solution found:",sol0)
-    assert sol0 in solutions, "Solution not found for "+str(csp)
-    print("Passed unit test")
+# def test(CSP_solver, csp=csp_simple2, solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
+#     """CSP_solver is a solver that finds a solution to a CSP.
+#     CSP_solver takes a csp and returns a solution.
+#     csp has to be a CSP, where solutions is the list of all solutions.
+#     This tests whether the solution returned by CSP_solver is a solution.
+#     """
+#     print("Testing csp with", CSP_solver.__doc__)
+#     sol0 = CSP_solver(csp)
+#     print("Solution found:", sol0)
+#     assert sol0 in solutions, "Solution not found for " + str(csp)
+#     print("Passed unit test")

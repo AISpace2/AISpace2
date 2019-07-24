@@ -287,9 +287,15 @@ class Displayable(StepDOMWidget):
 
                 self._send_highlight_arcs_action(arcs_to_highlight, style='normal', colour='blue')
 
+        elif args[0] == "... splitting":
+            self.send({'action': 'setOrder', 'var':args[1], 'domain': args[3], 'other':args[5]})
+
         elif args[0] == "Solution found: ":
             self.send({'action': 'setSolution', 'solution': str(args[1])})
             args += ("\nClick Step, Auto Arc Consistency or Auto Solve to find more solutions.", )
+
+        elif args[0] == "Solving new domain with":
+            self.send({'action': 'setSplit', 'domain': args[2], 'var': args[1]})
 
         #############################
         ### SLS-specific displays ###
