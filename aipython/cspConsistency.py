@@ -140,12 +140,12 @@ def select(iterable):
     for e in iterable:
         return e  # returns first element found
 
-#from aipython.cspProblem import test
-def ac_solver(csp):
-    "arc consistency (solve_one)"
-    return Con_solver(csp).solve_one()
-#if __name__ == "__main__":
-#    test(ac_solver)
+# from aipython.cspProblem import test
+# def ac_solver(csp):
+#     "arc consistency (solve_one)"
+#     return Con_solver(csp).solve_one()
+# if __name__ == "__main__":
+#     test(ac_solver)
 
 from aipython.searchProblem import Arc, Search_problem
 
@@ -183,18 +183,18 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
                     self.display(2, "...",var,"in",dom,"has no solution")
         return neighs
 
-#from aipython.cspProblem import test
-from aipython.searchGeneric import Searcher
-
-def ac_search_solver(csp):
-    """arc consistency (search interface)"""
-    sol = Searcher(Search_with_AC_from_CSP(csp)).search()
-    if sol:
-        return {v:select(d) for (v,d) in sol.end().items()}
-
-if __name__ == "__main__":
-    test(ac_search_solver)
-
+# from aipython.cspProblem import test
+# from aipython.searchGeneric import Searcher
+#
+# def ac_search_solver(csp):
+#     """arc consistency (search interface)"""
+#     sol = Searcher(Search_with_AC_from_CSP(csp)).search()
+#     if sol:
+#         return {v:select(d) for (v,d) in sol.end().items()}
+#
+# if __name__ == "__main__":
+#     test(ac_search_solver)
+#
 ## Test Solving CSPs with Arc consistency and domain splitting:
 # from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
 # Con_solver(simple_csp2).solve_one()

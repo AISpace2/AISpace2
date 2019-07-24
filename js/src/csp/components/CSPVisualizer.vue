@@ -42,7 +42,7 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
-      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Domain splitting history: <br>{{pre_solution}}</div>
+      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">History: <br>{{pre_solution}}</div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
         <div>Current variable: {{FocusNode.nodeName}}</div>
         <div>You can split the domain. Choose the values in one domain:</div>
@@ -121,10 +121,10 @@ export default class CSPGraphInteractor extends Vue {
   // default spaces used to print history of solutions
   origin: number;
   // the dictionary of domains need split
-  history: {};
+  history: object;
   // the order that domains were added to history
   doOrder: number;
-  // index that tracks the branch we are splitting  
+  // index that tracks the branch we are splitting
   ind: number;
   // the indent spacing between shown in domain spliting history
   indent: number;
