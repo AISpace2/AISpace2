@@ -171,6 +171,7 @@
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
           </p>
+          <p>{{selection.evidences}}{{temp_node_evidences}}</p>
           <div class="prob_table_grid" v-if="selection.parents.length > 0">
             <div>
               <div class="parent_node" v-for="pn of selection.parents" :key="pn">
@@ -195,9 +196,10 @@
                   type="text"
                   @focus="$event.target.select()"
                   @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
-                  @keyup="($event.target.value === null || $event.target.value === '') ? handleEmptyInput(index_p1, index_snn2) : null"
+                  @keyup="($event.target.value === null || $event.target.value === ''|| $event.target.value.match(/^\.[0-9]*$/) || $event.target.value.match(/^[0-9]*\.$/)) ? handleEmptyOrDotInput($event.target.value, index_p1, index_snn2) : null"
                   :value="temp_node_evidences[index_p1 * selection.domain.length + index_snn2]"
                   @input="handleInputValue($event.target.value, index_p1, index_snn2)"
+                  @blur="onBlurRest($event.target.value, index_p1, index_snn2)"
                 />
               </div>
             </div>
@@ -221,8 +223,9 @@
                   :value="temp_node_evidences[index]"
                   @focus="$event.target.select($event.target.value)"
                   @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
-                  @keyup="($event.target.value === null || $event.target.value === '') ? handleEmptyInput(0, index) : null"
+                  @keyup="($event.target.value === null || $event.target.value === '' || $event.target.value.match(/^\.[0-9]*$/) || $event.target.value.match(/^[0-9]*\.$/)) ? handleEmptyOrDotInput($event.target.value, 0, index) : null"
                   @input="handleInputValue($event.target.value, 0, index)"
+                  @blur="onBlurRest($event.target.value, 0, index)"
                 />
               </div>
             </div>
@@ -258,6 +261,7 @@ import { GraphLayout } from "../../GraphLayout";
 import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode";
 import { NODATA } from "dns";
 import { IBayesObserveEvent } from "../BayesVisualizerEvents";
+import { parse } from "path";
 
 type Mode = "select" | "create" | "delete" | "set_prob";
 
@@ -293,7 +297,7 @@ export default class BayesGraphBuilder extends Vue {
   temp_node_domain: string = "";
   warning_message: string = "";
   succeed_message: string = "";
-  temp_node_evidences: number[];
+  temp_node_evidences: [];
   temp: string;
 
   create_mode: string = "variable";
@@ -305,6 +309,12 @@ export default class BayesGraphBuilder extends Vue {
    * valued as invalid.*/
   MAX_DIGITS: number = 10000000000;
   ROUND: number = 10;
+
+
+  created() {
+    this.temp_node_name = this.genNewDefaultName();
+    this.temp_node_domain = "false,true";
+  }
 
   /** Switches to a new mode.
    * - Selection will remain unchanged if switch between "select" and "set_prob" mode.
@@ -340,6 +350,10 @@ export default class BayesGraphBuilder extends Vue {
       node_to_be_drawn = false;
       this.warning_message = "Domain not valid, Please enter a new domain.";
       this.succeed_message = "";
+    } else if (this.checkDomainDuplicates(domain)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Domain contains duplicated values."
+      this.succeed_message = "";
     } else {
       this.warning_message = "";
       this.succeed_message = "Variable created.";
@@ -362,6 +376,9 @@ export default class BayesGraphBuilder extends Vue {
       !domain.match(/^[a-zA-Z0-9$_ ]+(,(\s)*[a-zA-Z0-9$_ ]*)*$/)
     ) {
       this.warning_message = "Domain not valid. Please enter a new domain.";
+      this.succeed_message = "";
+    } else if (this.checkDomainDuplicates(domain)) {
+      this.warning_message = "Domain contains duplicated values."
       this.succeed_message = "";
     } else {
       this.selection!.name = name.trimLeft().trimRight();
@@ -445,7 +462,8 @@ export default class BayesGraphBuilder extends Vue {
       domain.push(temp);
     });
 
-    // remove duplicates
+    // remove duplicates 
+    /*
     while (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
       var duplicated = domain.find(
         x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1
@@ -453,12 +471,32 @@ export default class BayesGraphBuilder extends Vue {
       domain = domain.filter(x => x !== duplicated);
       domain.push(duplicated!);
     }
+    */
 
     // Covert true/false strings to boolean
     if (domain.find(x => x !== "false" && x !== "true")) {
       return domain;
     } else {
       return [false, true];
+    }
+  }
+
+  checkDomainDuplicates(domain_raw: string) {
+    var domain_temp = domain_raw
+      .trimLeft()
+      .trimRight()
+      .split(/,\s*/)
+      .filter(x => x !== "");
+    var domain: string[] = [];
+    domain_temp.forEach(d => {
+      var temp = d.trimLeft().trimRight();
+      domain.push(temp);
+    });
+
+    if (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -1046,7 +1084,7 @@ export default class BayesGraphBuilder extends Vue {
     var isvalid: boolean = true;
 
     this.temp_node_evidences.forEach((ev, index) => {
-      if (ev === null || ev === undefined || Number.isNaN(ev)) {
+      if (ev === null || ev === undefined || Number.isNaN(ev) || ev === '.') {
         this.temp_node_evidences[index] = 0;
       }
     });
@@ -1079,7 +1117,7 @@ export default class BayesGraphBuilder extends Vue {
   }
 
   /** Returns a list of sums of all rows of prob inputbox */
-  CalAllSumOfSameLineInputBox(evidences: number[]) {
+  CalAllSumOfSameLineInputBox(evidences: []) {
     // first slice the node's evidences
     var linesums: number[] = [];
     var sliced = [];
@@ -1088,6 +1126,15 @@ export default class BayesGraphBuilder extends Vue {
       sliced.push(evidences.slice(i, i + chunksize));
     }
     sliced.forEach(s => {
+      s.forEach((se, index) => {
+        if (se === "." || se === null) {
+          s[index] = 0;
+        } else if (typeof se === "string") {
+          if (se !== "." && (se.match(/^\.[0-9]*$/) || se.match(/^[0-9]*\.$/))) {
+            s[index] = parseFloat(se); 
+          }
+        }
+      });
       var s_ = s.map(x => x * this.MAX_DIGITS);
       linesums.push(s_.reduce((a, b) => a + b, 0));
     });
@@ -1110,12 +1157,12 @@ export default class BayesGraphBuilder extends Vue {
     this.$forceUpdate();
   }
 
-  getInputBoxClass(index: number, val: number) {
+  getInputBoxClass(index: number, val: number | string) {
     var inputboxclass = "input_box";
     if (
       val > 1 ||
       val < 0 ||
-      Number.isNaN(val) ||
+      (Number.isNaN(parseFloat(val)) && val !== "." && val !== "" && val !== null) ||
       this.CalSumOfSameLineInputBox(index) !== this.MAX_DIGITS
     ) {
       inputboxclass = "input_box_invalid";
@@ -1125,25 +1172,55 @@ export default class BayesGraphBuilder extends Vue {
 
   /** This is to prevent non-numeric input in Safari since type="number" doesn't work in Safari */
   handleInputValue(val: string, pni: number, di: number) {
-    if (val.length === 0 || val === null) {
-      this.temp_node_evidences[pni * this.selection.domain.length + di] = 0;
-    } else if (val.match(/^[0-9\.]*[^0-9\.]$/)) {
-      var temp = null;
-      if (val.length > 1) {
-        temp = val.substring(0, val.length - 1);
+    if (val.length === 0 || val === null || val === "." || val.match(/^\.[0-9]*$/) || val.match(/^[0-9]*\.$/)) {
+      this.temp_node_evidences.forEach((e, index) => {
+        if (e === null || e === ".") {
+          this.temp_node_evidences[index] = 0;
+        } else if (typeof e === "string") {
+          if (e.match(/^\.[0-9]*$/)|| e.match(/^[0-9]*\.$/)) {
+            this.temp_node_evidences[index] = parseFloat(e);
+          }
+        }
+      });
+    } else if (val.match(/^.*[^0-9\.].*$/) || !val.match(/^[0-9]*\.?[0-9]*$/)) {
+      var result = val.replace(/[^\d.]/g, "");
+      if (!result.match(/^[0-9]*\.?[0-9]*$/)){
+        var indexofdot = result.indexOf(".");
+        var result_removed_dot = result.replace(/\./g, "");
+        result = result_removed_dot.slice(0, indexofdot) + "." + result_removed_dot.slice(indexofdot, result_removed_dot.length);
       }
-      this.$refs[this.findInputboxRef(pni, di)][0].value = temp;
+      this.$refs[this.findInputboxRef(pni, di)][0].value = result;
     } else {
       this.fillLastInputbox(val, pni, di);
-      this.updateInputBox(val);
+      this.updateInputBox(val, pni, di);
     }
   }
 
   /** Update the color of the inputbox when the box has been emptied */
-  handleEmptyInput(pni: number, di: number) {
-    this.fillLastInputbox("0", pni, di);
-    this.$forceUpdate();
-    this.temp_node_evidences[pni * this.selection.domain.length + di] = null;
+  handleEmptyOrDotInput(val: string, pni: number, di: number) {
+    if (val.match(/^\.[0-9]*$/)|| val.match(/^[0-9]*\.$/)) {
+      val === "." ? this.fillLastInputbox("0", pni, di) : this.fillLastInputbox(val, pni, di);
+      this.$forceUpdate();
+      this.temp_node_evidences[pni * this.selection.domain.length + di] = val;
+    } else if (val === "" || val === null){
+      this.fillLastInputbox("0", pni, di);
+      this.$forceUpdate();
+      this.temp_node_evidences[pni * this.selection.domain.length + di] = null;
+    }
+  }
+
+  /** When user cursor leaves current input box, 
+   * - if the value is "", "." or null, reset them to 0 
+   * - if the value is, for example, "4.", set it to "4"
+   * - if the value is, for example, ".4", set it to "0.4"*/
+  onBlurRest(val: string, pni: number, di: number) {
+    if (val === "" || val === null || val === ".") {
+      this.temp_node_evidences[pni * this.selection.domain.length + di] = 0;
+      this.$refs[this.findInputboxRef(pni, di)][0].value = "0";
+    } else if (val.match(/^\.[0-9]*$/)|| val.match(/^[0-9]*\.$/)) {
+      this.temp_node_evidences[pni * this.selection.domain.length + di] = parseFloat(val);
+      this.$refs[this.findInputboxRef(pni, di)][0].value = parseFloat(val);
+    }
   }
 
   /** Autofill last input box in a row to keep sum of this row = 1 */
@@ -1225,16 +1302,15 @@ export default class BayesGraphBuilder extends Vue {
 
   /** Avoid issue that the user can't input 0s after "0."
    * since the inputbox is checking values immediately */
-  updateInputBox(value: string) {
-    // setTimeout(() => this.updateInputBox_(value), 1000);
+  updateInputBox(value: string, pni: number, di: number) {
     if (!value.match(/^[0-9]+\.$/)) {
       if (
-        value.match(/^[0-9]+\.?([0-9]*[1-9]+)*$/) ||
+        value.match(/^[0-9]*\.?([0-9]*[1-9]+)*$/) ||
         value.match(/^([0-9\.]*[^0-9\.]+[0-9\.]*)+$/)
       ) {
         this.$forceUpdate();
       }
-    }
+  }
   }
 
   // Whenever a node reports it has resized, update it's style so that it redraws.
@@ -1314,6 +1390,9 @@ export default class BayesGraphBuilder extends Vue {
 
   @Watch("create_mode")
   onCreateModeChange() {
+    this.warning_message = "";
+    this.succeed_message = "";
+    this.selection = null;
     if (this.mode === "create" && this.create_mode === "variable") {
       this.temp_node_name = this.genNewDefaultName();
       this.temp_node_domain = "false, true";
