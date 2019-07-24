@@ -1,4 +1,5 @@
 import { ISearchGraphNode } from "../Graph";
+import * as labelDict from "../labelDictionary";
 
 /** Returns a formatted string representing the search node's heuristic value. */
 export function nodeHText(node: ISearchGraphNode) {
@@ -10,9 +11,9 @@ export function nodeHText(node: ISearchGraphNode) {
 export function nodeFillColour(node: ISearchGraphNode) {
   switch (node.type) {
     case "search:start":
-      return "orchid";
+      return labelDict.searchLegend["Start node"];
     case "search:goal":
-      return "gold";
+      return labelDict.searchLegend["Goal node"];
     default:
       return "white";
   }
