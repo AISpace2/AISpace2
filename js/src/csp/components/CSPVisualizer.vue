@@ -42,7 +42,7 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" style="white-space: pre;">{{output}}</div>
-      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">Domain splitting history: <br>{{pre_solution}}</div>
+      <div v-if="pre_solution" class="pre_solution" style="white-space: pre;">History: <br>{{pre_solution}}</div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
         <div>Current variable: {{FocusNode.nodeName}}</div>
         <div>You can split the domain. Choose the values in one domain:</div>
