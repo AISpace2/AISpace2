@@ -171,8 +171,8 @@
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
           </p>
-          <div class="prob_table_grid_with_parents_container" v-if="selection.parents.length > 0">
-            <div class="prob_table_grid_with_parents">
+          <div class="prob_table_grid_container" v-if="selection.parents.length > 0">
+            <div class="prob_table_grid">
               <div class="header">
                 <div class="parent_node" v-for="pn of selection.parents" :key="pn">
                   <span style="color: green">{{pn}}</span>
@@ -189,7 +189,9 @@
                   v-for="(p1, index_p1) of allComb(probList(selection))"
                   :key="index_p1"
                 >
-                  <div class="prob_name" v-for="p2 of p1.split(',')" :key="p2"><div>{{p2}}</div></div>
+                  <div class="prob_name" v-for="p2 of p1.split(',')" :key="p2">
+                    <div>{{p2}}</div>
+                  </div>
                   <div
                     class="input_box_container"
                     v-for="(snn2, index_snn2) of selection.domain"
@@ -212,37 +214,46 @@
               <div class="uniform_btns">
                 <div v-for="(x, index_x) of allComb(probList(selection))" :key="index_x">
                   <div class="uniform_btn_container">
-                    <button class="uniform_btn" @click="UniformThisRow(index_x)">Uniform</button>
+                    <button class="uniform_btn" @click="UniformAllEvidences()">Uniform</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="prob_table_grid" v-if="selection.parents.length == 0">
-            <div>
-              <div
-                class="select_node_dm"
-                :key="snn_"
-                v-for="snn_ of selection.domain"
-              >{{selection.name}} = {{snn_}}</div>
-            </div>
-            <div>
-              <div
-                class="input_box_container"
-                v-for="(snn_2, index) of selection.domain"
-                :key="index"
-              >
-                <input
-                  :ref="generateRef(selection) + index.toString()"
-                  :class="getInputBoxClass(index, temp_node_evidences[index])"
-                  type="text"
-                  :value="temp_node_evidences[index]"
-                  @focus="$event.target.select($event.target.value)"
-                  @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
-                  @keyup="($event.target.value === null || $event.target.value === '' || $event.target.value.match(/^\.[0-9]*$/) || $event.target.value.match(/^[0-9]*\.$/)) ? handleEmptyOrDotInput($event.target.value, 0, index) : null"
-                  @input="handleInputValue($event.target.value, 0, index)"
-                  @blur="onBlurRest($event.target.value, 0, index)"
-                />
+          <div class="prob_table_grid_container">
+            <div class="prob_table_grid" v-if="selection.parents.length == 0">
+              <div class="header">
+                <div
+                  class="select_node_dm"
+                  :key="snn_"
+                  v-for="snn_ of selection.domain"
+                >{{selection.name}} = {{snn_}}</div>
+              </div>
+              <div class="body">
+                <div class="row">
+                  <div
+                    class="input_box_container"
+                    v-for="(snn_2, index) of selection.domain"
+                    :key="index"
+                  >
+                    <input
+                      :ref="generateRef(selection) + index.toString()"
+                      :class="getInputBoxClass(index, temp_node_evidences[index])"
+                      type="text"
+                      :value="temp_node_evidences[index]"
+                      @focus="$event.target.select($event.target.value)"
+                      @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
+                      @keyup="($event.target.value === null || $event.target.value === '' || $event.target.value.match(/^\.[0-9]*$/) || $event.target.value.match(/^[0-9]*\.$/)) ? handleEmptyOrDotInput($event.target.value, 0, index) : null"
+                      @input="handleInputValue($event.target.value, 0, index)"
+                      @blur="onBlurRest($event.target.value, 0, index)"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="uniform_btns">
+                <div class="uniform_btn_container">
+                  <button class="uniform_btn" @click="UniformThisRow(index)">Uniform</button>
+                </div>
               </div>
             </div>
           </div>
@@ -670,7 +681,9 @@ export default class BayesGraphBuilder extends Vue {
             dicAfter[k] = temp;
             sum_of_line_except_last_rounded += temp;
           } else {
-            dicAfter[k] = 1 - sum_of_line_except_last_rounded;
+            dicAfter[k] = parseFloat(
+              (1 - sum_of_line_except_last_rounded).toFixed(this.ROUND)
+            );
           }
         }
       });
@@ -1476,7 +1489,7 @@ text.domain {
   font-size: 12px;
 }
 
-.prob_table_grid_with_parents {
+.prob_table_grid {
   display: grid;
   grid-template-areas:
     "header header"
@@ -1489,7 +1502,7 @@ text.domain {
   margin: 0;
 }
 
-.prob_table_grid_with_parents_container {
+.prob_table_grid_container {
   display: inline-block;
   background-color: white;
   white-space: nowrap;
@@ -1498,17 +1511,6 @@ text.domain {
   border: 2px solid #4caf50;
   overflow: scroll;
   padding-bottom: 20px;
-}
-
-.prob_table_grid {
-  display: inline-block;
-  background-color: white;
-  white-space: nowrap;
-  max-height: 300px;
-  max-width: 700px;
-  padding: 10px;
-  border: 2px solid #4caf50;
-  overflow: scroll;
 }
 
 .header {
