@@ -95,7 +95,7 @@ class Con_solver(Displayable):
         elif all(len(new_domains[var]) == 1 for var in domains):
             self.display(0, "Solution found:", {var: select(new_domains[var]) for var in new_domains})
             if to_do is None:
-                self.display(5, "No more solutions since no more domains.")
+                self.display(4, "No more solutions since no more domains.")
         else:
             self.display(4, "You can now split domain. Click on a variable whose domain has more than 1 value.")
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
@@ -105,13 +105,14 @@ class Con_solver(Displayable):
                 new_doms1 = copy_with_assign(new_domains, var, dom1)
                 new_doms2 = copy_with_assign(new_domains, var, dom2)
                 to_do = self.new_to_do(var, None)
-                self.display(5, "Solving new domain with", var, dom1)
+                self.display(4, "Solving new domain with", var, dom1)
                 self.display(3, "New domain. Adding", to_do if to_do else "nothing", "to to_do.")
                 self.solve_one(new_doms1, to_do)
-                self.display(5, "Solving new domain with", var, dom2)
+                self.display(4, "Solving new domain with", var, dom2)
                 self.display(3, "New domain. Adding", to_do if to_do else "nothing", "to to_do.")
                 self.solve_one(new_doms2, to_do)
-                self.display(5, "No more solutions since no more domains.")
+                if domains == self.csp.domains:
+                    self.display(4, "No more solutions since no more domains.")
                 return
 
     def split_var(self, iter_vars):
