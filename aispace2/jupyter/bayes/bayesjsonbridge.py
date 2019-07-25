@@ -18,12 +18,18 @@ def bayes_problem_to_json(bayesNet, widget_model=None):
     Returns:
         List of variable dictionary"""
     def parseNode(variables, factors):
-        nodes = [{'id': str(hash(var.name)),
-                  'name': var.name,
-                  'domain': var.domain,
-                  'parents': [],
-                  'evidences': []
-                  } for var in variables]
+        nodes = []
+        for var in variables:
+           nodes.append({
+                'id': str(hash(var.name)),
+                'name': var.name,
+                'domain': var.domain,
+                'parents': [],
+                'evidences': []
+           })
+           if var.name in bayesNet.positions:
+               nodes[-1]['x'] = bayesNet.positions[var.name][0]
+               nodes[-1]['y'] = bayesNet.positions[var.name][1]
 
         nodesMap = {node["name"]: index for index, node in enumerate(nodes)}
 
