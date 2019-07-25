@@ -277,15 +277,16 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     this.vue.needSplit = false;
     this.vue.spaces += this.vue.indent;
     this.vue.doOrder += 1;
-    this.vue.FocusNode.checkedNames = [];
-    this.vue.FocusNode.domain = [];
-    this.vue.FocusNide.nodeName = "";
+    if (this.vue.FocusNode) {
+        this.vue.FocusNode.domain = [];
+        this.vue.FocusNode.checkedNames = [];
+    }
   }
 
   /**
    * Set and display the split history of csp, indicating the brach that is currently expanding
    */
-  private sePreSolution(event: CSPEvents.ICSPSetPreSolutionEvent) {
+  private setPreSolution(event: CSPEvents.ICSPSetPreSolutionEvent) {
     var lines = this.vue.preSolution.split('\n');
     var str = " ".repeat(this.vue.spaces) + "Solution: "+ event.solution;
     lines.splice(this.vue.ind, 0, str);

@@ -94,7 +94,8 @@ class Con_solver(Displayable):
             return False
         elif all(len(new_domains[var]) == 1 for var in domains):
             self.display(0, "Solution found:", {var: select(new_domains[var]) for var in new_domains})
-            return {var: select(new_domains[var]) for var in domains}
+            if to_do is None:
+                self.display(5, "No more solutions since no more domains.")
         else:
             self.display(4, "You can now split domain. Click on a variable whose domain has more than 1 value.")
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
