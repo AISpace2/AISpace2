@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import * as Analytics from "../Analytics";
 import { ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
-import * as labelDict from "../labelDictionary";
+import { cspLabelText, cspLabelColor } from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
@@ -71,8 +71,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           positions: null,
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,
-          legendText: labelDict.cspLabelText,
-          legendColor: labelDict.cspLabelColor,
+          legendText: cspLabelText,
+          legendColor: cspLabelColor,
           needACButton: this.model.needACButton,
           spaces: 4,
           history: {},

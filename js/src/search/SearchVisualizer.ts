@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 import { without } from "underscore";
 import * as Analytics from "../Analytics";
 import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
-import * as labelDict from "../labelDictionary";
+import { searchLabelText, searchLabelColor } from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
 import * as SearchEvents from "./SearchVisualizerEvents";
@@ -68,8 +68,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           positions: null,
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,
-          legendText: labelDict.searchLabelText,
-          legendColor: labelDict.searchLabelColor,
+          legendText: searchLabelText,
+          legendColor: searchLabelColor,
           frontier: []
         }
       }).$mount(this.el);
