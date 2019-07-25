@@ -171,48 +171,48 @@
             <span style="color: green">{{selection.parents.join(", ")}}</span>
             }.
           </p>
-          <div class="prob_table_grid_with_parents" v-if="selection.parents.length > 0">
-            <div class="header">
-              <div class="parent_node" v-for="pn of selection.parents" :key="pn">
-                <span style="color: green">{{pn}}</span>
-              </div>
-              <div
-                class="select_node_dm"
-                v-for="snn of selection.domain"
-                :key="snn"
-              >{{selection.name}} = {{snn}}</div>
-            </div>
-            <div class="body">
-              <div
-                class="row"
-                v-for="(p1, index_p1) of allComb(probList(selection))"
-                :key="index_p1"
-              >
-                <div class="prob_name" v-for="p2 of p1.split(',')" :key="p2">{{p2}}</div>
+          <div class="prob_table_grid_with_parents_container" v-if="selection.parents.length > 0">
+            <div class="prob_table_grid_with_parents">
+              <div class="header">
+                <div class="parent_node" v-for="pn of selection.parents" :key="pn">
+                  <span style="color: green">{{pn}}</span>
+                </div>
                 <div
-                  class="input_box_container"
-                  v-for="(snn2, index_snn2) of selection.domain"
-                  :key="index_snn2"
+                  class="select_node_dm"
+                  v-for="snn of selection.domain"
+                  :key="snn"
+                >{{selection.name}} = {{snn}}</div>
+              </div>
+              <div class="body">
+                <div
+                  class="row"
+                  v-for="(p1, index_p1) of allComb(probList(selection))"
+                  :key="index_p1"
                 >
-                  <input
-                    :class="getInputBoxClass(index_p1, temp_node_evidences[(index_p1 * selection.domain.length + index_snn2)])"
-                    :ref="generateRef(selection) + index_p1.toString() + '_' + index_snn2.toString()"
-                    type="text"
-                    @focus="$event.target.select()"
-                    @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
-                    @keyup="($event.target.value === null || $event.target.value === ''|| $event.target.value.match(/^\.[0-9]*$/) || $event.target.value.match(/^[0-9]*\.$/)) ? handleEmptyOrDotInput($event.target.value, index_p1, index_snn2) : null"
-                    :value="temp_node_evidences[index_p1 * selection.domain.length + index_snn2]"
-                    @input="handleInputValue($event.target.value, index_p1, index_snn2)"
-                    @blur="onBlurRest($event.target.value, index_p1, index_snn2)"
-                  />
+                  <div class="prob_name" v-for="p2 of p1.split(',')" :key="p2">{{p2}}</div>
+                  <div
+                    class="input_box_container"
+                    v-for="(snn2, index_snn2) of selection.domain"
+                    :key="index_snn2"
+                  >
+                    <input
+                      :class="getInputBoxClass(index_p1, temp_node_evidences[(index_p1 * selection.domain.length + index_snn2)])"
+                      :ref="generateRef(selection) + index_p1.toString() + '_' + index_snn2.toString()"
+                      type="text"
+                      @focus="$event.target.select()"
+                      @keydown="$event.target.value === 'NaN' ? $event.target.value = '' : null"
+                      @keyup="($event.target.value === null || $event.target.value === ''|| $event.target.value.match(/^\.[0-9]*$/) || $event.target.value.match(/^[0-9]*\.$/)) ? handleEmptyOrDotInput($event.target.value, index_p1, index_snn2) : null"
+                      :value="temp_node_evidences[index_p1 * selection.domain.length + index_snn2]"
+                      @input="handleInputValue($event.target.value, index_p1, index_snn2)"
+                      @blur="onBlurRest($event.target.value, index_p1, index_snn2)"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="uniform_btns">
-              <div v-for="(x, index_x) of allComb(probList(selection))" :key="index_x">
-                <div class="uniform_btn_container">
-                  <div>
-                    <button class="uniform_btn" @click="UniformThisRow(index_x)">Uniform This Row</button>
+              <div class="uniform_btns">
+                <div v-for="(x, index_x) of allComb(probList(selection))" :key="index_x">
+                  <div class="uniform_btn_container">
+                    <button class="uniform_btn" @click="UniformThisRow(index_x)">Uniform</button>
                   </div>
                 </div>
               </div>
@@ -1484,9 +1484,17 @@ text.domain {
     "body uniform_btns";
   background-color: white;
   white-space: nowrap;
+  max-height: 100%;
+  max-width: 100%;
+  padding-bottom: 20px;
+}
+
+.prob_table_grid_with_parents_container {
+  display: inline-block;
+  background-color: white;
+  white-space: nowrap;
   max-height: 300px;
   max-width: 700px;
-  padding-bottom: 20px;
   border: 2px solid #4caf50;
   overflow: scroll;
 }
@@ -1541,10 +1549,6 @@ div.select_node_dm:hover {
   overflow-x: scroll;
 }
 
-.row {
-  text-align: center;
-}
-
 div.prob_name {
   text-align: center;
   display: inline-block;
@@ -1574,11 +1578,14 @@ div.input_box_container {
   background-color: pink;
 }
 
+.row {
+  float: left;
+}
+
 .body {
+  width: 125px;
   grid-area: body;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: table;
 }
 
 .uniform_btns {
