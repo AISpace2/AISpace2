@@ -189,7 +189,7 @@
                   v-for="(p1, index_p1) of allComb(probList(selection))"
                   :key="index_p1"
                 >
-                  <div class="prob_name" v-for="p2 of p1.split(',')" :key="p2">{{p2}}</div>
+                  <div class="prob_name" v-for="p2 of p1.split(',')" :key="p2"><div>{{p2}}</div></div>
                   <div
                     class="input_box_container"
                     v-for="(snn2, index_snn2) of selection.domain"
@@ -1486,7 +1486,7 @@ text.domain {
   white-space: nowrap;
   max-height: 100%;
   max-width: 100%;
-  padding-bottom: 20px;
+  margin: 0;
 }
 
 .prob_table_grid_with_parents_container {
@@ -1497,6 +1497,7 @@ text.domain {
   max-width: 700px;
   border: 2px solid #4caf50;
   overflow: scroll;
+  padding-bottom: 20px;
 }
 
 .prob_table_grid {
@@ -1580,12 +1581,19 @@ div.input_box_container {
 
 .row {
   float: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0;
+  height: 20px;
 }
 
 .body {
-  width: 125px;
   grid-area: body;
-  display: table;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .uniform_btns {
@@ -1598,9 +1606,9 @@ div.input_box_container {
   right: 0;
 }
 
-.uniform_btn {
+.uniform_btn_container {
   height: 20px;
-  bottom: 0;
+  margin: 0;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
