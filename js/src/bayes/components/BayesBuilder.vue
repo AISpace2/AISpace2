@@ -248,7 +248,7 @@
           </div>
           <div>
             <span>
-              <button @click="UniformAllEvidences()">Uniform All</button>
+              <button @click="UniformAllEvidences()">All Uniform</button>
               <button ref="btn_prob_submit" @click="IsEvidencesValid()">Submit</button>
               <button @click="cancelProbSet()">Cancel</button>
             </span>
