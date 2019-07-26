@@ -90,10 +90,10 @@ class Con_solver(Displayable):
             domains = self.csp.domains
         new_domains = self.make_arc_consistent(domains, to_do)
         if any(len(new_domains[var]) == 0 for var in domains):
-            self.display(0, "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.")
+            self.display(1, "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.")
             return False
         elif all(len(new_domains[var]) == 1 for var in domains):
-            self.display(0, "Solution found:", {var: select(new_domains[var]) for var in new_domains})
+            self.display(1, "Solution found:", {var: select(new_domains[var]) for var in new_domains})
             if to_do is None:
                 self.display(4, "No more solutions since no more domains.")
         else:
