@@ -143,8 +143,8 @@ export class Graph<
       const newNode = Object.assign({}, node);
 
       // Remove properties not present in the Python model
-      delete newNode.x;
-      delete newNode.y;
+      // delete newNode.x;
+      // delete newNode.y;
       delete newNode.styles;
 
       nodes.push(newNode);

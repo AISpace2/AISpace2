@@ -39,7 +39,7 @@ class CSP(Displayable):
     * constraints, a list of constraints
     * positions, a dictionary that maps name of each node into its (x,y)-position.
     """
-    def __init__(self, domains, constraints, positions = {}):
+    def __init__(self, domains, constraints, positions={}):
         self.variables = set(domains)
         self.domains = domains
         self.constraints = constraints
