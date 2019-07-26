@@ -54,103 +54,104 @@
 
     <div>
       <span>
-        <b>Mode:</b>
+        <strong>Mode:</strong>
       </span>
       <BayesToolbar @modechanged="setMode"></BayesToolbar>
       <div v-if="mode == 'create'">
-        <p style="color: blue">Select an object to create:</p>
-        <input type="radio" id="create_variable" value="variable" v-model="create_mode" />
-        <label for="create_variable">Variable</label>
-        <input type="radio" id="create_edge" value="edge" v-model="create_mode" />
-        <label for="create_edge">Edge</label>
-        <div v-if="mode == 'create' && create_mode == 'variable'">
-          <pre></pre>
-          <p style="color: blue">
-            Set the name and the domain of the variable below,
-            <br />and then double click at a position on the canvas where you want the new node to be created.
-          </p>
-          <pre></pre>
-          <label>
-            <b>Name</b>
-          </label>
-          <input
-            type="text"
-            style="backgroundColor: yellow"
-            :value="temp_node_name"
-            @focus="$event.target.select()"
-            @input="temp_node_name = $event.target.value"
-          />
-          <label>
-            <b>Domain</b>
-          </label>
-          <input
-            type="text"
-            style="backgroundColor: yellow"
-            :value="temp_node_domain"
-            @focus="$event.target.select()"
-            @input="temp_node_domain = $event.target.value"
-          />
-          (use comma to separate values)
-          <pre></pre>
-          <p>
+        <p style="color: blue">
+          <strong>To create variable</strong>: Set the name and the domain of the variable below,
+          <br />and then double click at a position on the canvas where you want the new node to be created.
+          <br />
+          <span style="color: black">
+            <label>
+              <strong>Name</strong>
+            </label>
+            <input
+              type="text"
+              style="backgroundColor: yellow"
+              :value="temp_node_name"
+              @focus="$event.target.select()"
+              @input="temp_node_name = $event.target.value"
+            />
+            <label>
+              <strong>Domain</strong>
+            </label>
+            <input
+              type="text"
+              style="backgroundColor: yellow"
+              :value="temp_node_domain"
+              @focus="$event.target.select()"
+              @input="temp_node_domain = $event.target.value"
+            />
+            (use comma to separate values)
+          </span>
+          <br />
+          <span>
             <span style="color: red">{{warning_message}}</span>
             <span style="color: green">{{succeed_message}}</span>
-          </p>
-        </div>
-        <div v-else-if="mode == 'create' && create_mode == 'edge'">
-          <pre></pre>
-          <p v-if="(graph.nodes.indexOf(first) < 0)" style="color: blue">Select a start node.</p>
-          <p
-            style="color: blue"
+          </span>
+          <br />
+          <strong>To create edge</strong>: Select a start node, then select an end node.
+          If you want to change the start node, click on it to unselect it.
+          <br />
+          <span v-if="(graph.nodes.indexOf(first) < 0)" style="color: black">No start node selected.</span>
+          <span
             v-else-if="(graph.nodes.indexOf(first) > -1) && (selection == first || selection == null || selection.type == 'edge')"
+            style="color: black"
           >
             Start node:
             <span style="color: green">{{first.name}}</span>. Select an end node to create an edge.
-          </p>
-          <pre></pre>
-          <p>
-            <span style="color: red">{{warning_message}}</span>
-            <span style="color: green">{{succeed_message}}</span>
-          </p>
-        </div>
+          </span>
+          <br />
+          <span>
+            <span style="color: red">{{edge_warning_message}}</span>
+            <span style="color: green">{{edge_succeed_message}}</span>
+          </span>
+        </p>
       </div>
     </div>
 
     <div>
       <div v-if="mode =='select'" v-on:keyup.enter="$refs.btn_select_submit.click()">
-        <pre></pre>
-        <p style="color: blue">Set the name and the domain of a node by cliking on it.</p>
+        <p style="color: blue">
+          Set the name and the domain of a node by cliking on it.
+          <br />
+          <br />
+        </p>
         <div v-if="selection && (graph.nodes.indexOf(selection) > -1)">
           <p style="color: blue">
             You selected node
             <span style="color: green">{{selection.name}}</span>.
+            <span style="color: black">
+              <label>
+                <strong>Name:</strong>
+              </label>
+              <input
+                type="text"
+                style="backgroundColor: yellow"
+                :value="selection ? temp_node_name : null"
+                @focus="$event.target.select()"
+                @input="temp_node_name = $event.target.value"
+              />
+              <label>
+                <strong>Domain:</strong>
+              </label>
+              <input
+                type="text"
+                style="backgroundColor: yellow"
+                @focus="$event.target.select()"
+                :value="selection ? temp_node_domain : null"
+                @input="temp_node_domain = $event.target.value"
+              />
+              (use comma to separate values)
+              <button
+                ref="btn_select_submit"
+                @click="IsValidModify(temp_node_name, temp_node_domain)"
+              >Submit</button>
+            </span>
+            <br />
+            <br />
           </p>
-          <pre></pre>
-          <label>
-            <b>Name:</b>
-          </label>
-          <input
-            type="text"
-            style="backgroundColor: yellow"
-            :value="selection ? temp_node_name : null"
-            @focus="$event.target.select()"
-            @input="temp_node_name = $event.target.value"
-          />
-          <label>
-            <b>Domain:</b>
-          </label>
-          <input
-            type="text"
-            style="backgroundColor: yellow"
-            @focus="$event.target.select()"
-            :value="selection ? temp_node_domain : null"
-            @input="temp_node_domain = $event.target.value"
-          />
-          (use comma to separate values)
-          <button
-            ref="btn_select_submit"
-            @click="IsValidModify(temp_node_name, temp_node_domain)"
-          >Submit</button>
           <p>
             <span style="color: red">{{warning_message}}</span>
             <span style="color: green">{{succeed_message}}</span>
@@ -158,12 +159,21 @@
         </div>
       </div>
       <div v-else-if="mode == 'delete'">
-        <p style="color: blue">Click on a node or an edge to delete.</p>
+        <p style="color: blue">
+          Click on a node or an edge to delete.
+          <br />
+          <br />
+        </p>
+        <p style="color: green">{{succeed_message}}</p>
       </div>
     </div>
     <div>
       <div v-if="mode == 'set_prob'" v-on:keyup.enter="$refs.btn_prob_submit.click()">
-        <p style="color: blue">Click on a node to modifiy the probability table here.</p>
+        <p style="color: blue">
+          Click on a node to modifiy the probability table here.
+          <br />
+          <br />
+        </p>
         <div v-if="selection">
           <p style="color: blue">
             You selected node
@@ -264,8 +274,12 @@
               <button @click="cancelProbSet()">Cancel</button>
             </span>
           </div>
-          <span style="color: red">{{warning_message}}</span>
-          <span style="color: green">{{succeed_message}}</span>
+          <p>
+            <br />
+            <br />
+            <span style="color: red">{{warning_message}}</span>
+            <span style="color: green">{{succeed_message}}</span>
+          </p>
         </div>
       </div>
     </div>
@@ -325,10 +339,10 @@ export default class BayesGraphBuilder extends Vue {
   temp_node_domain: string = "";
   warning_message: string = "";
   succeed_message: string = "";
+  edge_succeed_message: string = "";
+  edge_warning_message: string = "";
   temp_node_evidences: [];
   temp: string;
-
-  create_mode: string = "variable";
   /** MAX_DIGITS is to solve the problem of float type number calculation in js,
    * to get precise result, we use integer calculation instead,
    * for each prob, we multiply it with MAX_DIGITS and round it to an integer,
@@ -784,7 +798,6 @@ export default class BayesGraphBuilder extends Vue {
   createNode(x: number, y: number) {
     if (
       this.mode === "create" &&
-      this.create_mode === "variable" &&
       this.IsTempNode(this.temp_node_name, this.temp_node_domain)
     ) {
       var emptystrarr: string[] = [];
@@ -805,13 +818,13 @@ export default class BayesGraphBuilder extends Vue {
       this.temp_node_domain = "false, true";
       this.warning_message = "";
     }
+    this.cleanEdgeMessage();
   }
 
   /** Adds a new edge to the graph. */
   createEdge() {
     if (
       this.mode === "create" &&
-      this.create_mode === "edge" &&
       this.selection !== null &&
       this.first !== null &&
       this.canEdgeBeAdded(
@@ -838,7 +851,7 @@ export default class BayesGraphBuilder extends Vue {
       this.selection.evidences = this.disdicEvidence(dicAfter, this
         .selection as IBayesGraphNode);
 
-      this.warning_message = "";
+      this.edge_warning_message = "";
       this.first = null;
       this.selection = null;
     }
@@ -849,8 +862,11 @@ export default class BayesGraphBuilder extends Vue {
   /** Check whether the edge can be created */
   canEdgeBeAdded(source: IBayesGraphNode, target: IBayesGraphNode) {
     var canEdgeBeAdded = true;
-    this.warning_message = "";
-    this.succeed_message = "";
+    this.edge_warning_message = "";
+    this.edge_succeed_message = "";
+    if (source === null || target === null) {
+      return false;
+    }
     if (source === target) {
       return false;
     }
@@ -862,20 +878,27 @@ export default class BayesGraphBuilder extends Vue {
     }
     this.graph.edges.forEach(e => {
       if (e.source === target && e.target === source) {
-        this.warning_message = "No bi-direction edges between two nodes.";
-        this.succeed_message = "";
+        this.edge_warning_message = "No bi-direction edges between two nodes.";
+        this.edge_succeed_message = "";
         return (canEdgeBeAdded = false);
       }
       if (e.source === source && e.target === target) {
-        this.warning_message = "Edge already exists.";
-        this.succeed_message = "";
+        this.edge_warning_message = "Edge already exists.";
+        this.edge_succeed_message = "";
         return (canEdgeBeAdded = false);
       }
     });
     if (canEdgeBeAdded) {
-      this.succeed_message = "Edge created.";
+      this.edge_succeed_message = "Edge created.";
     }
     return canEdgeBeAdded;
+  }
+
+  cleanEdgeMessage() {
+    if (this.mode === "create") {
+      this.edge_warning_message = "";
+      this.edge_succeed_message = "";
+    }
   }
 
   /** Handle the children @param node's evidences when a parent is added
@@ -955,6 +978,7 @@ export default class BayesGraphBuilder extends Vue {
   updateSelection(selection: IBayesGraphNode | IGraphEdge) {
     if (this.selection === selection) {
       this.selection = null;
+      this.first = null;
     } else {
       this.selection = selection;
     }
@@ -986,10 +1010,12 @@ export default class BayesGraphBuilder extends Vue {
         target.evidences = this.disdicEvidence(dicAfter, target);
 
         this.graph.removeEdge(this.selection as IGraphEdge);
+        this.succeed_message = "Edge deleted.";
       }
       if (this.graph.nodes.indexOf(this.selection as IBayesGraphNode) > -1) {
         this.cleanParentsEvidenceOnNodeDel(this.selection as IBayesGraphNode);
         this.graph.removeNode(this.selection as IBayesGraphNode);
+        this.succeed_message = "Node deleted.";
       }
       this.selection = null;
     }
@@ -1412,12 +1438,17 @@ export default class BayesGraphBuilder extends Vue {
   onSelectionChanged() {
     this.temp_node_name = "";
     this.temp_node_domain = "";
-    if (!(this.mode == "create" && this.create_mode === "edge")) {
-      this.warning_message = "";
-      this.succeed_message = "";
+    this.warning_message = "";
+    this.succeed_message = "";
+
+    if (!(this.mode == "create")) {
+      this.edge_warning_message = "";
+      this.edge_succeed_message = "";
     }
 
-    if (this.mode == "create" && this.create_mode === "edge") {
+    if (this.mode == "create") {
+      this.temp_node_name = this.genNewDefaultName();
+      this.temp_node_domain = "false, true";
       if (this.first == null) {
         this.first = this.selection as IBayesGraphNode;
       } else {
@@ -1428,10 +1459,6 @@ export default class BayesGraphBuilder extends Vue {
       this.temp_node_domain = `${this.selection.domain!.join(", ")}`;
     } else if (this.mode === "delete" && this.selection) {
       this.deleteSelection();
-    } else if (this.mode === "create" && this.create_mode == "variable") {
-      this.selection = null;
-      this.temp_node_name = this.genNewDefaultName();
-      this.temp_node_domain = "false, true";
     } else if (this.mode === "set_prob" && this.selection) {
       this.temp_node_evidences = this.selection.evidences.slice(0);
     } else {
@@ -1446,13 +1473,14 @@ export default class BayesGraphBuilder extends Vue {
     this.warning_message = "";
     this.succeed_message = "";
     this.temp_node_evidences = [];
+    this.first = null;
 
     // Remain selection unchanged if the previous mode is select and current mode is set_prob
     if (this.mode !== "set_prob") {
       this.prev_mode = this.mode;
     }
 
-    if (this.mode === "create" && this.create_mode === "variable") {
+    if (this.mode === "create") {
       this.temp_node_name = this.genNewDefaultName();
       this.temp_node_domain = "false, true";
       this.selection = null;
@@ -1468,17 +1496,11 @@ export default class BayesGraphBuilder extends Vue {
     }
   }
 
-  @Watch("create_mode")
-  onCreateModeChange() {
-    this.warning_message = "";
-    this.succeed_message = "";
-    this.selection = null;
-    if (this.mode === "create" && this.create_mode === "variable") {
-      this.temp_node_name = this.genNewDefaultName();
-      this.temp_node_domain = "false, true";
-      this.warning_message = "";
-      this.succeed_message = "";
-      this.selection = null;
+  @Watch("first")
+  onFirstChange() {
+    if (this.selection) {
+      this.edge_succeed_message = "";
+      this.edge_warning_message = "";
     }
   }
 }
