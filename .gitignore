@@ -12,6 +12,7 @@ node_modules/
 aispace2/static/
 js/vendor/*
 !js/vendor/vendor.js
+js/labExtension.js
 
 # macOS
 .DS_Store

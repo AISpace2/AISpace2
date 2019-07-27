@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import * as Analytics from "../Analytics";
 import { ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
-import * as labelDict from "../labelDictionary";
+import { cspLabelText, cspLabelColor } from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
@@ -40,9 +40,14 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           break;
         case "chooseDomainSplitBeforeAC":
           return this.chooseDomainSplitBeforeAC(event);
-        case "setSolution":
-          this.vue.pre_solution += "\n        " + event.solution;
-          break;
+        case "setPreSolution":
+          return this.setPreSolution(event);
+        case "setSplit":
+          return this.setSplit(event);
+        case "setOrder":
+          return this.setOrder(event);
+        case "noSolution":
+          return this.noSolution(event);
         case "output":
           this.vue.output = event.text;
           break;
@@ -62,13 +67,19 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           width: 0,
           height: 0,
           output: null,
-          pre_solution: "",
+          preSolution: "",
           positions: null,
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,
-          legendText: labelDict.cspLabelText,
-          legendColor: labelDict.cspLabelColor,
+          legendText: cspLabelText,
+          legendColor: cspLabelColor,
           needACButton: this.model.needACButton,
+          spaces: 4,
+          history: {},
+          doOrder: 1,
+          origin: 4,
+          ind: 0,
+          indent: 8,
           needSplit: false
         }
       }).$mount(this.el);
@@ -203,13 +214,23 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Requests the user choose a domain for one side of the split.
    */
   private chooseDomainSplit() {
-    if (this.vue.FocusNode.checkedNames.length ===0) {
-      alert("Please choose domain to split before submiting");
+    if (this.vue.FocusNode.checkedNames.length == 0) {
+      alert("Choose at least one value to split.");
       return;
     }
+
+    if (this.vue.FocusNode.checkedNames.length == this.vue.FocusNode.domain.length) {
+      alert("Do not choose all values to split.");
+      this.vue.checkedNames = [];
+      return;
+    }
+
     const newDomain = this.vue.FocusNode.checkedNames;
     this.send({ event: "domain_split", domain: newDomain });
     this.vue.needSplit = false;
+    this.vue.FocusNode.checkedNames = [];
+    this.vue.FocusNode.domain = [];
+    this.vue.FocusNode.nodeName = "";
   }
 
   /**
@@ -219,5 +240,68 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     if (!this.vue.needSplit) {
       window.alert("Arc consistency needs to be finished before the domain can be split.");
     }
+  }
+
+  /**
+   * Set and display the split history of csp, indicating the brach that is currently expanding
+   */
+  private setSplit(event: CSPEvents.ICSPSetSplitEvent) {
+    if (event.domain.length === 0) {
+        return;
+    }
+    this.vue.preSolution = this.vue.preSolution.replace('●','');
+    var lines = this.vue.preSolution.split('\n');
+    lines[this.vue.ind] += '●';
+    this.vue.preSolution = lines.join('\n');
+    this.vue.ind += 1;
+  }
+
+  /**
+   * Set and display the split history of csp
+   */
+  private setOrder(event: CSPEvents.ICSPSetOrderEvent) {
+    if (!this.vue.history) {
+       this.vue.history = {};
+    }
+    if (!this.vue.history[event.var]) {
+       this.vue.history[event.var] = {};
+    }
+    this.vue.history[event.var][event.domain] = this.vue.doOrder;
+    this.vue.history[event.var][event.other] = this.vue.doOrder;
+    this.vue.spaces = this.vue.origin + this.vue.indent * this.vue.history[event.var][event.domain];
+    var lines = this.vue.preSolution.split('\n');
+    var str = " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.domain + "}";
+    var str1 = " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.other + "}";
+    lines.splice(this.vue.ind, 0, str,str1);
+    this.vue.preSolution = lines.join('\n');
+    this.vue.needSplit = false;
+    this.vue.spaces += this.vue.indent;
+    this.vue.doOrder += 1;
+    if (this.vue.FocusNode) {
+        this.vue.FocusNode.domain = [];
+        this.vue.FocusNode.checkedNames = [];
+    }
+  }
+
+  /**
+   * Set and display the split history of csp, indicating the brach that is currently expanding
+   */
+  private setPreSolution(event: CSPEvents.ICSPSetPreSolutionEvent) {
+    var lines = this.vue.preSolution.split('\n');
+    var str = " ".repeat(this.vue.spaces) + "Solution: "+ event.solution;
+    lines.splice(this.vue.ind, 0, str);
+    this.vue.preSolution = lines.join('\n');
+    this.vue.ind += 1;
+  }
+
+  /**
+   * indicating users that no solution found with current domain branch
+   */
+  private noSolution(event: CSPEvents.ICSPSetPreSolutionEvent) {
+    var lines = this.vue.preSolution.split('\n');
+    var str = " ".repeat(this.vue.spaces) + "No solution";
+    lines.splice(this.vue.ind, 0, str);
+    this.vue.preSolution = lines.join('\n');
+    this.vue.ind += 1;
   }
 }

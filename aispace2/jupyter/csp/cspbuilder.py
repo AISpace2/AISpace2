@@ -37,16 +37,7 @@ class CSPBuilder(DOMWidget):
         super().__init__()
         self.graph = csp
 
-    def csp(self):
-        """Converts the CSP represented by this builder into
-        a Python aipython.cspProblem.CSP object."""
-        return self.graph
-
-    def py_code(self):
-        """Converts the search problem represented by this builder into Python code.
-        The code is added to a new cell in the notebook.
+    def py_code(self, need_positions=False):
+        """Prints the CSP represented by Python code.
         """
-        self.send({
-            'action': 'python-code',
-            'code': csp_to_python_code(self.csp())
-        })
+        print(csp_to_python_code(self.graph, need_positions))

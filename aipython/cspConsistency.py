@@ -47,7 +47,7 @@ class Con_solver(Displayable):
                 to_do |= add_to_do      # set union
                 self.display(3, "Adding", add_to_do if add_to_do else "nothing", "to to_do.")
             self.display(4, "Arc: (", var, ",", const, ") now consistent")
-        self.display(2, "AC done. Reduced domains: ", domains)
+        self.display(4, "AC done. Reduced domains: ", domains)
         return domains
 
     def new_to_do(self, var, const):
@@ -90,24 +90,29 @@ class Con_solver(Displayable):
             domains = self.csp.domains
         new_domains = self.make_arc_consistent(domains, to_do)
         if any(len(new_domains[var]) == 0 for var in domains):
+            self.display(1, "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.")
             return False
         elif all(len(new_domains[var]) == 1 for var in domains):
-            self.display(0, "Solution found: ", {var: select(new_domains[var]) for var in new_domains})
-            return {var: select(new_domains[var]) for var in domains}
+            self.display(1, "Solution found:", {var: select(new_domains[var]) for var in new_domains})
+            if to_do is None:
+                self.display(4, "No more solutions since no more domains.")
         else:
-            self.display(2, "You can now split domain. Click on a variable whose domain has more than 1 value.")
+            self.display(4, "You can now split domain. Click on a variable whose domain has more than 1 value.")
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
             if var:
                 dom1, dom2 = self.partition_domain(new_domains[var], var)
-                self.display(3, "...splitting", var, "into", dom1, "and", dom2)
+                self.display(3, "... splitting", var, "into", dom1, "and", dom2)
                 new_doms1 = copy_with_assign(new_domains, var, dom1)
                 new_doms2 = copy_with_assign(new_domains, var, dom2)
                 to_do = self.new_to_do(var, None)
+                self.display(4, "Solving new domain with", var, dom1)
                 self.display(3, "New domain. Adding", to_do if to_do else "nothing", "to to_do.")
                 self.solve_one(new_doms1, to_do)
+                self.display(4, "Solving new domain with", var, dom2)
                 self.display(3, "New domain. Adding", to_do if to_do else "nothing", "to to_do.")
                 self.solve_one(new_doms2, to_do)
-                self.display(5, "No more solutions since no more domains")
+                if domains == self.csp.domains:
+                    self.display(4, "No more solutions since no more domains.")
                 return
 
     def split_var(self, iter_vars):
@@ -137,12 +142,12 @@ def select(iterable):
     for e in iterable:
         return e  # returns first element found
 
-from aipython.cspProblem import test
-def ac_solver(csp):
-    "arc consistency (solve_one)"
-    return Con_solver(csp).solve_one()
-if __name__ == "__main__":
-    test(ac_solver)
+# from aipython.cspProblem import test
+# def ac_solver(csp):
+#     "arc consistency (solve_one)"
+#     return Con_solver(csp).solve_one()
+# if __name__ == "__main__":
+#     test(ac_solver)
 
 from aipython.searchProblem import Arc, Search_problem
 
@@ -180,18 +185,18 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
                     self.display(2, "...",var,"in",dom,"has no solution")
         return neighs
 
-from aipython.cspProblem import test
-from aipython.searchGeneric import Searcher
-
-def ac_search_solver(csp):
-    """arc consistency (search interface)"""
-    sol = Searcher(Search_with_AC_from_CSP(csp)).search()
-    if sol:
-        return {v:select(d) for (v,d) in sol.end().items()}
-
-if __name__ == "__main__":
-    test(ac_search_solver)
-
+# from aipython.cspProblem import test
+# from aipython.searchGeneric import Searcher
+#
+# def ac_search_solver(csp):
+#     """arc consistency (search interface)"""
+#     sol = Searcher(Search_with_AC_from_CSP(csp)).search()
+#     if sol:
+#         return {v:select(d) for (v,d) in sol.end().items()}
+#
+# if __name__ == "__main__":
+#     test(ac_search_solver)
+#
 ## Test Solving CSPs with Arc consistency and domain splitting:
 # from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
 # Con_solver(simple_csp2).solve_one()

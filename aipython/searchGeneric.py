@@ -44,18 +44,18 @@ class Searcher(Displayable):
         self.display(2, "Ready")
         while not self.empty_frontier():
             path = self.frontier.pop()
-            self.display(2, "Expanding: ", path, "(cost: ", path.cost,")")
+            self.display(2, "Expanding: ", path, "(cost:", path.cost,")")
             self.num_expanded += 1
             if self.problem.is_goal(path.end()):    # solution found
                 # self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier", "\nPath found: ", path)
-                self.display(1, "Solution found: ", path, "(cost: ", path.cost, ")")
+                self.display(1, "Solution found:", path, "(cost:", path.cost, ")")
                 self.solution = path   # store the solution found
             else:
                 neighs = self.problem.neighbors(path.end())
                 self.display(3, "Neighbors are", neighs)
                 for arc in reversed(neighs):
                     self.add_to_frontier(Path(path, arc))
-                self.display(3, "Frontier: ", self.frontier)
+                self.display(3, "Frontier:", self.frontier)
         self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded, "paths expanded.")
 
 import heapq        # part of the Python standard library

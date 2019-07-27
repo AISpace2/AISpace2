@@ -1,7 +1,8 @@
 <template>
   <div tabindex="0" @keydown.stop class="search_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
-                         @click:node="updateSelection" @click:edge="updateSelection">
+                         @click:node="updateSelection" @click:edge="updateSelection"
+                         :legendColor="legendColor" :legendText="legendText">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :text="props.node.name"
                           :subtext="nodeHText(props.node)"
@@ -66,7 +67,7 @@ import { nodeFillColour, nodeHText } from "../SearchUtils";
 
 /**
  * Component to visually construct a search graph.
- * 
+ *
  * Currently incomplete.
  */
 @Component({
@@ -83,6 +84,8 @@ export default class SearchGraphBuilder extends Vue {
   layout: GraphLayout;
   textSize: number;
   detailLevel: number;
+  legendText: string[];
+  legendColor: string[];
 
   /** The current node or edge being selected. */
   selection: ISearchGraphNode | ISearchGraphEdge | null = null;

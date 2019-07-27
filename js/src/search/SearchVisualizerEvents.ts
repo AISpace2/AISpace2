@@ -28,8 +28,8 @@ export interface ISearchUpdateFrontierEvent extends IEvent {
   frontier: string;
 }
 
-export interface ISearchSetSolutionEvent extends IEvent {
-  action: "setSolution";
+export interface ISearchSetPreSolutionEvent extends IEvent {
+  action: "setPreSolution";
   // The string representing the new solution
   solution: string;
   // The cost of the solution
@@ -48,6 +48,6 @@ export type Events =
   | ISearchHighlightPathEvent
   | ISearchClearEvent
   | ISearchUpdateFrontierEvent
-  | ISearchSetSolutionEvent
+  | ISearchSetPreSolutionEvent
   | ISearchShowPositionsEvent
   | Events;

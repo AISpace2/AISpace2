@@ -138,6 +138,7 @@ def json_to_search_problem(json, widget_model=None):
     start = None
     goals = set()
     hmap = {}
+    positions = {}
 
     for node in json['nodes']:
         nodes.add(node['name'])
@@ -151,6 +152,8 @@ def json_to_search_problem(json, widget_model=None):
         if node['h'] != 0:
             hmap[node['name']] = node['h']
 
+        positions[node['name']] = (int(node['x']), int(node['y']))
+
     arcs = []
     for edge in json['edges']:
         cost = 0
@@ -160,15 +163,15 @@ def json_to_search_problem(json, widget_model=None):
                   node_map[edge['target']]['name'], cost)
         arcs.append(arc)
 
-    return Search_problem_from_explicit_graph(nodes, arcs, start, goals, hmap)
+    return Search_problem_from_explicit_graph(nodes, arcs, start, goals, hmap, positions)
 
 
-def search_problem_to_python_code(problem):
-    """Converts a JSON representation of a search problem into Python code.
+def search_problem_to_python_code(problem, need_positions=False):
+    """Converts a Search_problem_from_explicit_graph into Python code.
 
     Example:
         ::
-            >>> search_problem_to_python_code(csp)
+            >>> search_problem_to_python_code(problem)
             'from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
             search_problem = Search_problem_from_explicit_graph({'a', 'b'}, [Arc('a', 'b', cost=5), 'a', {'b'}])'
 
@@ -189,12 +192,21 @@ def search_problem_to_python_code(problem):
     start = problem.start
     goals = problem.goals
     hmap = problem.hmap
+    positions = problem.positions if need_positions else {}
 
-    template = """from aipython.searchProblem import Search_problem_from_explicit_graph, Arc
-search_problem = Search_problem_from_explicit_graph($nodes, [$arcs], $start, $goals, $hmap)"""
+    template = """from aipython.searchProblem import Search_problem_from_explicit_graph, Arc\n
+search_problem = Search_problem_from_explicit_graph(
+    nodes=$nodes,
+    arcs=[$arcs],
+    start=$start,
+    goals=$goals,
+    hmap=$hmap,
+    positions=$positions)"""
+
     return Template(template).substitute(
         nodes=nodes,
         arcs=', '.join(arcs),
         start=start.__repr__(),
         goals=goals,
-        hmap=hmap)
+        hmap=hmap,
+        positions=positions)

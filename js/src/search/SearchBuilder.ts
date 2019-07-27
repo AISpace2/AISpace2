@@ -4,6 +4,7 @@ import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
+import { searchLabelText, searchLabelColor } from "../labelDictionary";
 import SearchGraphBuilder from "./components/SearchBuilder.vue";
 import SearchBuilderModel from "./SearchBuilderModel";
 declare let Jupyter: any;
@@ -14,20 +15,11 @@ declare let Jupyter: any;
  * See the accompanying backend file: `aispace2/jupyter/search/searchbuilder.py`.
  */
 export default class SearchBuilder extends widgets.DOMWidgetView {
-  private static readonly SHOW_PYTHON_CODE = "python-code";
-
   public model: SearchBuilderModel;
   public vue: Vue;
 
   public initialize(opts: any) {
     super.initialize(opts);
-
-    this.listenTo(this.model, "view:msg", (event: IEvent) => {
-      if (event.action === SearchBuilder.SHOW_PYTHON_CODE) {
-        // Replace cell contents with the code
-        Jupyter.notebook.insert_cell_below().set_text((event as any).code);
-      }
-    });
   }
 
   public render() {
@@ -41,7 +33,9 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
           detailLevel: this.model.detailLevel,
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
-          layout: new GraphLayout(d3ForceLayout(), relativeLayout())
+          layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
+          legendText: searchLabelText.slice(0, 2), // only use legend for Start node and Goal node
+          legendColor: searchLabelColor.slice(0, 2) // only use legend for Start node and Goal node
         },
         watch: {
           graph: {

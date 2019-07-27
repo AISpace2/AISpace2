@@ -12,9 +12,9 @@ class Graphical_model(object):
     """The class of graphical models.
     A graphical model consists of a set of variables and a set of factors.
 
-    vars - a list of variables
+    vars - a list of variables (name should be unique)
     factors - a list of factors
-    positions - a dictionary that maps each var into its (x,y)-position
+    positions - a dictionary that maps each variable's name into its (x,y)-position
     """
     def __init__(self, vars=None, factors=None, positions={}):
         self.variables = vars
@@ -26,9 +26,9 @@ class Belief_network(Graphical_model):
 
     def __init__(self, vars=None, factors=None, positions={}):
         """
-        vars - a list of variables
+        vars - a list of variables (name should be unique)
         factors - a list of factors
-        positions - a dictionary that maps each var into its (x,y)-position
+        positions - a dictionary that maps each variable's name into its (x,y)-position
         """
         Graphical_model.__init__(self, vars, factors, positions)
 

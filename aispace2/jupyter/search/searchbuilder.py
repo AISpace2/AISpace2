@@ -33,15 +33,7 @@ class SearchBuilder(DOMWidget):
         super().__init__()
         self.graph = search_problem
 
-    def search_problem(self):
-        """Converts the search problem represented by this builder into
-        a Python aipython.searchProblem.Search_problem_from_explicit_graph object.
+    def py_code(self, need_positions=False):
+        """Prints the search problem represented by Python code.
         """
-        return self.graph
-
-    def py_code(self):
-        """Converts the search problem represented by this builder into Python code.
-        The code is added to a new cell in the notebook.
-        """
-        code = search_problem_to_python_code(self.search_problem())
-        self.send({'action': 'python-code', 'code': code})
+        print(search_problem_to_python_code(self.graph, need_positions))

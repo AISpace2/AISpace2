@@ -154,10 +154,11 @@ def json_to_csp(graph_json, widget_model=None):
             if scope:
                 constraints.append(Constraint(tuple(scope), lt))
 
-    return CSP(domains, constraints)
+    positions = { node['name']: (int(node['x']), int(node['y'])) for node in graph_json['nodes'] }
 
+    return CSP(domains, constraints, positions)
 
-def csp_to_python_code(csp):
+def csp_to_python_code(csp, need_positions=False):
     """Converts a CSP into Python code that, when executed, creates the CSP.
 
     Example:
@@ -173,15 +174,22 @@ def csp_to_python_code(csp):
         (string):
             A string containing Python code. Executing this string will cause a CSP to be created.
     """
+    domains = csp.domains
     constraint_strings = []
     for constraint in csp.constraints:
         scope = constraint.scope
         name = constraint.condition.__name__
         constraint_strings.append("Constraint({}, {})".format(scope, name))
+    positions = csp.positions if need_positions else {}
 
     template = """from aipython.cspProblem import CSP, Constraint
-from operator import lt
-csp = CSP($domains, [$constraints])"""
+from operator import lt\n
+csp = CSP(
+    domains=$domains,
+    constraints=[$constraints]
+    positions=$positions)"""
 
     return Template(template).substitute(
-        domains=csp.domains, constraints=', '.join(constraint_strings))
+        domains=domains,
+        constraints=', '.join(constraint_strings),
+        positions=positions)

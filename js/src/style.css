@@ -18,6 +18,7 @@ strong {
 .output {
   margin-top: 5px;
   font-size: 14px;
+  white-space: pre;
 }
 
 .transitions,
@@ -27,4 +28,16 @@ strong {
 
 .radioInputGroup {
   margin: 0 10px 0 10px;
+
+.solutionText,
+.successText {
+  color: green;
+}
+
+.warningText {
+  color: red;
+}
+
+.nodeText {
+  color: blue;
 }

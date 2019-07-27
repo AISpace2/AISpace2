@@ -39,16 +39,38 @@ export interface ICSPChooseDomainSplitBeforeACEvent extends IEvent {
   action: "chooseDomainSplitBeforeAC";
 }
 
-export interface ICSPSetSolutionEvent extends IEvent {
-  action: "setSolution";
+export interface ICSPSetPreSolutionEvent extends IEvent {
+  action: "setPreSolution";
   // The string representing the new solution
   solution: string;
+}
+
+export interface ICSPSetSplitEvent extends IEvent {
+  action: "setSplit";
+  // The string representing the domain of the splitted variable
+  domain: string[];
+  // The string representing the name of the splitted variable
+  var: string;
+}
+
+export interface ICSPSetOrderEvent extends IEvent {
+  action: "setOrder";
+  // The string representing the name of the splitted variable
+  var: string;
+  // The string representing the first half domain of the splitted variable
+  domain: string[];
+  // The string representing the second half domain of the splitted variable
+  other: string[];
 }
 
 export interface ICSPShowPositionsEvent extends IEvent {
   action: "showPositions";
   // The string representing the node positions
   positions: string;
+}
+
+export interface ICSPNoSolutionEvent extends IEvent {
+  action: "noSolution";
 }
 
 // CSP Visualizer Events
@@ -58,6 +80,9 @@ export type Events =
   | ICSPHighlightNodesEvent
   | ICSPChooseDomainSplitEvent
   | ICSPChooseDomainSplitBeforeACEvent
-  | ICSPSetSolutionEvent
+  | ICSPSetPreSolutionEvent
+  | ICSPSetSplitEvent
+  | ICSPSetOrderEvent
   | ICSPShowPositionsEvent
+  | ICSPNoSolutionEvent
   | Events;

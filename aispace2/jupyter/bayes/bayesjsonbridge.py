@@ -18,12 +18,18 @@ def bayes_problem_to_json(bayesNet, widget_model=None):
     Returns:
         List of variable dictionary"""
     def parseNode(variables, factors):
-        nodes = [{'id': str(hash(var.name)),
-                  'name': var.name,
-                  'domain': var.domain,
-                  'parents': [],
-                  'evidences': []
-                  } for var in variables]
+        nodes = []
+        for var in variables:
+           nodes.append({
+                'id': str(hash(var.name)),
+                'name': var.name,
+                'domain': var.domain,
+                'parents': [],
+                'evidences': []
+           })
+           if var.name in bayesNet.positions:
+               nodes[-1]['x'] = bayesNet.positions[var.name][0]
+               nodes[-1]['y'] = bayesNet.positions[var.name][1]
 
         nodesMap = {node["name"]: index for index, node in enumerate(nodes)}
 
@@ -100,7 +106,7 @@ def bayes_problem_to_python_code(problem):
             A string of Python code that, when executed, recinstructs to the bayes problem given.
     """
     var_strings = []
-    for variable in problem.listOfVars:
+    for variable in problem.vars:
         name = variable.name
         domain = variable.domain
         var_strings.append("Variable({},{})".format(name, domain))
@@ -111,11 +117,17 @@ def bayes_problem_to_python_code(problem):
         parents = prob.parents
         cpt = prob.cpt
         prob_strings.append("Prob({},{},{})".format(child, parents, cpt))
+    positions = problem.positions
 
     template = """from aipython.probGraphicalModels.Belief_network import Belief_network
 from aipython.probVariables import Variable
-from aipython.probFactors import Prob
-bayes_problem = Belief_network($listOfVars, $listOfProb)"""
+from aipython.probFactors import Prob\n
+bayes_problem = Belief_network(
+    vars=[$vars],
+    factors=[$probs],
+    positions=$positions)"""
+
     return Template(template).substitute(
-        listOfVars = ', '.join(var_strings),
-        listOfProb = ', '.join(prob_strings))
+        vars=', '.join(var_strings),
+        prob=', '.join(prob_strings),
+        positions=positions)
