@@ -818,6 +818,8 @@ export default class BayesGraphBuilder extends Vue {
       this.temp_node_domain = "false, true";
       this.warning_message = "";
     }
+    this.first = null;
+    this.selection = null;
     this.cleanEdgeMessage();
   }
 
@@ -857,6 +859,8 @@ export default class BayesGraphBuilder extends Vue {
     }
     this.first = null;
     this.selection = null;
+    this.warning_message = "";
+    this.succeed_message = "";
   }
 
   /** Check whether the edge can be created */
@@ -1438,18 +1442,18 @@ export default class BayesGraphBuilder extends Vue {
   onSelectionChanged() {
     this.temp_node_name = "";
     this.temp_node_domain = "";
-    this.warning_message = "";
-    this.succeed_message = "";
 
-    if (!(this.mode == "create")) {
+    if (!(this.mode === "create" || this.mode === "delete")) {
       this.edge_warning_message = "";
       this.edge_succeed_message = "";
+      this.warning_message = "";
+      this.succeed_message = "";
     }
 
-    if (this.mode == "create") {
+    if (this.mode === "create") {
       this.temp_node_name = this.genNewDefaultName();
       this.temp_node_domain = "false, true";
-      if (this.first == null) {
+      if (this.first === null) {
         this.first = this.selection as IBayesGraphNode;
       } else {
         this.createEdge();
@@ -1472,6 +1476,8 @@ export default class BayesGraphBuilder extends Vue {
     this.temp_node_domain = "";
     this.warning_message = "";
     this.succeed_message = "";
+    this.edge_succeed_message = "";
+    this.edge_warning_message = "";
     this.temp_node_evidences = [];
     this.first = null;
 
@@ -1501,6 +1507,8 @@ export default class BayesGraphBuilder extends Vue {
     if (this.selection) {
       this.edge_succeed_message = "";
       this.edge_warning_message = "";
+      this.warning_message = "";
+      this.succeed_message = "";
     }
   }
 }
