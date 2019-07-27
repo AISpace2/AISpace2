@@ -230,8 +230,8 @@
               </div>
             </div>
           </div>
-          <div class="prob_table_grid_container">
-            <div class="prob_table_grid" v-if="selection.parents.length == 0">
+          <div class="prob_table_grid_container" v-if="selection.parents.length == 0">
+            <div class="prob_table_grid">
               <div class="header">
                 <div
                   class="select_node_dm"
