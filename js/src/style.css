@@ -20,3 +20,7 @@ svg text {
 .transitions * {
   transition: all 0.4s ease-in-out, stroke 0s, fill 0s, stroke-width 0.2s;
 }
+
+strong {
+  font-weight: bold;
+}
