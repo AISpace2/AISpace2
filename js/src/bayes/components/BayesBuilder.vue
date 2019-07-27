@@ -142,7 +142,6 @@
               >Submit</button>
             </span>
             <br />
-            <br />
           </p>
           <p>
             <span class="warningText">{{warning_message}}</span>
@@ -475,7 +474,7 @@ export default class BayesGraphBuilder extends Vue {
   }
 
   /** This will handle domain:
-   * - If domain has duplicated value, delete duplicates
+   * - If domain has duplicated value, send a warning message
    * - If domain has white-spaces at the beginning or the end, trim the domain
    * - Remove any empty string
    * - If domain only contains "true" or "false", convert to boolean list
@@ -492,23 +491,7 @@ export default class BayesGraphBuilder extends Vue {
       domain.push(temp);
     });
 
-    // remove duplicates
-    /*
-    while (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
-      var duplicated = domain.find(
-        x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1
-      );
-      domain = domain.filter(x => x !== duplicated);
-      domain.push(duplicated!);
-    }
-    */
-
-    // Covert true/false strings to boolean
-    if (domain.find(x => x !== "false" && x !== "true")) {
-      return domain;
-    } else {
-      return [false, true];
-    }
+    return domain;
   }
 
   checkDomainDuplicates(domain_raw: string) {
