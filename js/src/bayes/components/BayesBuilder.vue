@@ -64,7 +64,7 @@
           <br />
           <span>
             <label>
-              <strong>Name</strong>
+              <strong>Name:</strong>
             </label>
             <input
               type="text"
@@ -73,10 +73,11 @@
               @input="temp_node_name = $event.target.value"
             />
             <label>
-              <strong>Domain</strong>
+              <strong>Domain:</strong>
             </label>
             <input
               type="text"
+              style="width: 150px;"
               :value="temp_node_domain"
               @focus="$event.target.select()"
               @input="temp_node_domain = $event.target.value"
@@ -108,12 +109,12 @@
         <p class="builder_output">
           Set the name and the domain of a node by cliking on it.
           <br />
-          <br />
         </p>
         <div v-if="selection && (graph.nodes.indexOf(selection) > -1)">
           <p class="builder_output">
             You selected node
             <span class="nodeText">{{selection.name}}</span>.
+            <br />
             <span>
               <label>
                 <strong>Name:</strong>
@@ -129,6 +130,7 @@
               </label>
               <input
                 type="text"
+                style="width: 150px;"
                 @focus="$event.target.select()"
                 :value="selection ? temp_node_domain : null"
                 @input="temp_node_domain = $event.target.value"
@@ -160,8 +162,7 @@
     <div>
       <div v-if="mode == 'set_prob'" v-on:keyup.enter="$refs.btn_prob_submit.click()">
         <p class="builder_output">
-          Click on a node to modifiy the probability table here.
-          <br />
+          Click on a node to modifiy its probability table.
           <br />
         </p>
         <div v-if="selection">
@@ -214,7 +215,7 @@
               <div class="uniform_btns">
                 <div v-for="(x, index_x) of allComb(probList(selection))" :key="index_x">
                   <div class="uniform_btn_container">
-                    <button class="uniform_btn" @click="UniformAllEvidences()">Uniform</button>
+                    <button class="uniform_btn" @click="UniformThisRow(index_x)">Uniform</button>
                   </div>
                 </div>
               </div>
@@ -252,7 +253,7 @@
               </div>
               <div class="uniform_btns">
                 <div class="uniform_btn_container">
-                  <button class="uniform_btn" @click="UniformThisRow(index)">Uniform</button>
+                  <button class="uniform_btn" @click="UniformAllEvidences()">Uniform</button>
                 </div>
               </div>
             </div>
