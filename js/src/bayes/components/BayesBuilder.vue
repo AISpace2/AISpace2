@@ -214,7 +214,7 @@
               <div class="uniform_btns">
                 <div v-for="(x, index_x) of allComb(probList(selection))" :key="index_x">
                   <div class="uniform_btn_container">
-                    <button class="uniform_btn" @click="UniformAllEvidences()">Uniform</button>
+                    <button class="uniform_btn" @click="UniformThisRow(index_x)">Uniform</button>
                   </div>
                 </div>
               </div>
@@ -252,7 +252,7 @@
               </div>
               <div class="uniform_btns">
                 <div class="uniform_btn_container">
-                  <button class="uniform_btn" @click="UniformThisRow(index)">Uniform</button>
+                  <button class="uniform_btn" @click="UniformAllEvidences()">Uniform</button>
                 </div>
               </div>
             </div>
