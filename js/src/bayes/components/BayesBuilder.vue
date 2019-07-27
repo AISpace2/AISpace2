@@ -59,7 +59,7 @@
       <BayesToolbar @modechanged="setMode"></BayesToolbar>
       <div v-if="mode == 'create'">
         <p style="color: blue">
-          <strong>To create variable</strong>: Set the name and the domain of the variable below,
+          <strong>To create variable:</strong> Set the name and the domain of the variable below,
           <br />and then double click at a position on the canvas where you want the new node to be created.
           <br />
           <span style="color: black">
@@ -90,19 +90,13 @@
             <span style="color: red">{{warning_message}}</span>
             <span style="color: green">{{succeed_message}}</span>
           </span>
+          <br /><br />
+          <strong>To create edge:</strong> Click on the start node, then click on the end node.
           <br />
-          <strong>To create edge</strong>: Select a start node, then select an end node.
-          If you want to change the start node, click on it to unselect it.
-          <br />
-          <span v-if="(graph.nodes.indexOf(first) < 0)" style="color: black">No start node selected.</span>
-          <span
-            v-else-if="(graph.nodes.indexOf(first) > -1) && (selection == first || selection == null || selection.type == 'edge')"
-            style="color: black"
-          >
+          <span v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')" style="color: black">
             Start node:
-            <span style="color: green">{{first.name}}</span>. Select an end node to create an edge.
+            <span style="color: green">{{first.name}}</span>. Click on the end node to create an edge, or click on <span style="color: green">{{first.name}}</span> again to unselect it.
           </span>
-          <br />
           <span>
             <span style="color: red">{{edge_warning_message}}</span>
             <span style="color: green">{{edge_succeed_message}}</span>

@@ -5,6 +5,10 @@ svg text {
   user-select: none;
 }
 
+strong {
+  font-weight: bold;
+}
+
 .p-Widget {
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -21,6 +25,6 @@ svg text {
   transition: all 0.4s ease-in-out, stroke 0s, fill 0s, stroke-width 0.2s;
 }
 
-strong {
-  font-weight: bold;
+.radioInputGroup {
+  margin: 0 10px 0 10px;
 }
