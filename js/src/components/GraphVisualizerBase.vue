@@ -344,7 +344,6 @@
     overflow: hidden;
     position: relative;
     margin-bottom: 10px;
-    -webkit-user-select: none;
   }
 
   svg {
