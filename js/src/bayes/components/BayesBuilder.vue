@@ -58,17 +58,16 @@
       </span>
       <BayesToolbar @modechanged="setMode"></BayesToolbar>
       <div v-if="mode == 'create'">
-        <p style="color: blue">
+        <p class="builder_output">
           <strong>To create variable:</strong> Set the name and the domain of the variable below,
-          <br />and then double click at a position on the canvas where you want the new node to be created.
+          <br />      and then double click at a position on the canvas where you want the new node to be created.
           <br />
-          <span style="color: black">
+          <span>
             <label>
               <strong>Name</strong>
             </label>
             <input
               type="text"
-              style="backgroundColor: yellow"
               :value="temp_node_name"
               @focus="$event.target.select()"
               @input="temp_node_name = $event.target.value"
@@ -78,7 +77,6 @@
             </label>
             <input
               type="text"
-              style="backgroundColor: yellow"
               :value="temp_node_domain"
               @focus="$event.target.select()"
               @input="temp_node_domain = $event.target.value"
@@ -87,19 +85,19 @@
           </span>
           <br />
           <span>
-            <span style="color: red">{{warning_message}}</span>
-            <span style="color: green">{{succeed_message}}</span>
+            <span class="warningText">{{warning_message}}</span>
+            <span class="successText">{{succeed_message}}</span>
           </span>
-          <br /><br />
+          <br />
           <strong>To create edge:</strong> Click on the start node, then click on the end node.
           <br />
-          <span v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')" style="color: black">
+          <span v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')">
             Start node:
-            <span style="color: green">{{first.name}}</span>. Click on the end node to create an edge, or click on <span style="color: green">{{first.name}}</span> again to unselect it.
+            <span class="nodeText">{{first.name}}</span>. Click on the end node to create an edge, or click on <span class="nodeText">{{first.name}}</span> again to unselect it.
           </span>
           <span>
-            <span style="color: red">{{edge_warning_message}}</span>
-            <span style="color: green">{{edge_succeed_message}}</span>
+            <span class="warningText">{{edge_warning_message}}</span>
+            <span class="successText">{{edge_succeed_message}}</span>
           </span>
         </p>
       </div>
@@ -107,22 +105,21 @@
 
     <div>
       <div v-if="mode =='select'" v-on:keyup.enter="$refs.btn_select_submit.click()">
-        <p style="color: blue">
+        <p class="builder_output">
           Set the name and the domain of a node by cliking on it.
           <br />
           <br />
         </p>
         <div v-if="selection && (graph.nodes.indexOf(selection) > -1)">
-          <p style="color: blue">
+          <p class="builder_output">
             You selected node
-            <span style="color: green">{{selection.name}}</span>.
-            <span style="color: black">
+            <span class="nodeText">{{selection.name}}</span>.
+            <span>
               <label>
                 <strong>Name:</strong>
               </label>
               <input
                 type="text"
-                style="backgroundColor: yellow"
                 :value="selection ? temp_node_name : null"
                 @focus="$event.target.select()"
                 @input="temp_node_name = $event.target.value"
@@ -132,7 +129,6 @@
               </label>
               <input
                 type="text"
-                style="backgroundColor: yellow"
                 @focus="$event.target.select()"
                 :value="selection ? temp_node_domain : null"
                 @input="temp_node_domain = $event.target.value"
@@ -147,39 +143,39 @@
             <br />
           </p>
           <p>
-            <span style="color: red">{{warning_message}}</span>
-            <span style="color: green">{{succeed_message}}</span>
+            <span class="warningText">{{warning_message}}</span>
+            <span class="successText">{{succeed_message}}</span>
           </p>
         </div>
       </div>
       <div v-else-if="mode == 'delete'">
-        <p style="color: blue">
+        <p class="builder_output">
           Click on a node or an edge to delete.
           <br />
           <br />
         </p>
-        <p style="color: green">{{succeed_message}}</p>
+        <p class="successText">{{succeed_message}}</p>
       </div>
     </div>
     <div>
       <div v-if="mode == 'set_prob'" v-on:keyup.enter="$refs.btn_prob_submit.click()">
-        <p style="color: blue">
+        <p class="builder_output">
           Click on a node to modifiy the probability table here.
           <br />
           <br />
         </p>
         <div v-if="selection">
-          <p style="color: blue">
+          <p class="builder_output">
             You selected node
-            <span style="color: green">{{selection.name}}</span>. Parents: {
-            <span style="color: green">{{selection.parents.join(", ")}}</span>
+            <span class="nodeText">{{selection.name}}</span>. Parents: {
+            <span class="nodeText">{{selection.parents.join(", ")}}</span>
             }.
           </p>
           <div class="prob_table_grid_container" v-if="selection.parents.length > 0">
             <div class="prob_table_grid">
               <div class="header">
                 <div class="parent_node" v-for="pn of selection.parents" :key="pn">
-                  <span style="color: green">{{pn}}</span>
+                  <span class="nodeText">{{pn}}</span>
                 </div>
                 <div
                   class="select_node_dm"
@@ -197,7 +193,7 @@
                     <div>{{p2}}</div>
                   </div>
                   <div
-                    class="input_box_container"
+                    class="text_input_box_container"
                     v-for="(snn2, index_snn2) of selection.domain"
                     :key="index_snn2"
                   >
@@ -236,7 +232,7 @@
               <div class="body">
                 <div class="row">
                   <div
-                    class="input_box_container"
+                    class="text_input_box_container"
                     v-for="(snn_2, index) of selection.domain"
                     :key="index"
                   >
@@ -269,10 +265,8 @@
             </span>
           </div>
           <p>
-            <br />
-            <br />
-            <span style="color: red">{{warning_message}}</span>
-            <span style="color: green">{{succeed_message}}</span>
+            <span class="warningText">{{warning_message}}</span>
+            <span class="successText">{{succeed_message}}</span>
           </p>
         </div>
       </div>
@@ -1246,7 +1240,7 @@ export default class BayesGraphBuilder extends Vue {
   }
 
   getInputBoxClass(index: number, val: number | string) {
-    var inputboxclass = "input_box";
+    var inputboxclass = ""; // default: no class
     if (
       val > 1 ||
       val < 0 ||
@@ -1256,7 +1250,7 @@ export default class BayesGraphBuilder extends Vue {
         val !== null) ||
       this.CalSumOfSameLineInputBox(index) !== this.MAX_DIGITS
     ) {
-      inputboxclass = "input_box_invalid";
+      inputboxclass = "text_input_box_invalid";
     }
     return inputboxclass;
   }
@@ -1586,23 +1580,6 @@ div.prob_name {
 
 div.prob_name:hover {
   overflow-x: scroll;
-}
-
-div.input_box_container {
-  text-align: center;
-  display: inline-block;
-  width: 125px;
-  height: 20px;
-}
-
-.input_box {
-  width: 100px;
-  background-color: yellow;
-}
-
-.input_box_invalid {
-  width: 100px;
-  background-color: pink;
 }
 
 .row {

@@ -9,10 +9,20 @@ strong {
   font-weight: bold;
 }
 
-.p-Widget {
-  font-family: "Roboto", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+input[type=text] {
+  width: 100px;
+  background-color: yellow;
+}
+
+.text_input_box_invalid {
+  background-color: pink;
+}
+
+.text_input_box_container {
+  text-align: center;
+  display: inline-block;
+  width: 125px;
+  height: 20px;
 }
 
 .output {
@@ -21,13 +31,9 @@ strong {
   white-space: pre;
 }
 
-.transitions,
-.transitions * {
-  transition: all 0.4s ease-in-out, stroke 0s, fill 0s, stroke-width 0.2s;
+.builder_output {
+  color: black;
 }
-
-.radioInputGroup {
-  margin: 0 10px 0 10px;
 
 .solutionText,
 .successText {
@@ -40,4 +46,19 @@ strong {
 
 .nodeText {
   color: blue;
+}
+
+.radioInputGroup {
+  margin: 0 10px 0 10px;
+}
+
+.p-Widget {
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.transitions,
+.transitions * {
+  transition: all 0.4s ease-in-out, stroke 0s, fill 0s, stroke-width 0.2s;
 }
