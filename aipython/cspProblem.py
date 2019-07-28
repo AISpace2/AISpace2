@@ -9,7 +9,6 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 from aipython.utilities import Displayable, dict_union
-from operator import lt,ne,eq,gt
 
 class Constraint(object):
     """A Constraint consists of
@@ -66,48 +65,85 @@ class CSP(Displayable):
                     for con in self.constraints
                     if all(v in  assignment  for v in con.scope))
 
-def ne_(val):
-    """not equal value"""
-    # nev = lambda x: x != val   # alternative definition
-    # nev = partial(neq,val)     # another alternative definition
-    def nev(x):
-        return val != x
-    nev.__name__ = str(val)+"!="      # name of the function
-    return nev
+## Constraint Functions:
 
-def is_(val):
-    """is a value"""
-    # isv = lambda x: x == val   # alternative definition
-    # isv = partial(eq,val)      # another alternative definition
-    def isv(x):
-        return val == x
-    isv.__name__ = str(val)+"=="
-    return isv
+# Negate the input function
+def NOT(fn):
+    def toReturn(*args,**kwargs):
+        return not fn(*args,**kwargs)
+    return toReturn
+
+## Basic constraints:
+def TRUE():
+    return True
+
+def FALSE():
+    return False
+
+## Uniary constraints
+def StringEquals(str1, str2=None):
+    if str2 is None:
+        return lambda x: x == str1
+    return str == str2 # binary constraint
+
+def LessThan(num1, num2=None):
+    if num2 is None:
+        return lambda x: x < num1
+    return num1 < num2 # binary constraint
+
+def Equals(num1, num2=None):
+    if num2 is None:
+        return lambda x: x == num1
+    return num1 == num2 # binary constraint
+
+def GreaterThan(num1, num2=None):
+    if num2 is None:
+        return lambda x: x > num1
+    return num1 > num2 # binary constraint
+
+def IsTrue(bool):
+    return bool
+
+def IsFalse(bool):
+    return not bool
+
+## Binary constraints
+def AND(bool1, bool2):
+    return bool1 and bool2
+
+def OR(bool1, bool2):
+    return bool1 or bool2
+
+def IMPLIES(bool1, bool2):
+    return (not bool1) or bool2
+
+def XOR(bool1, bool2):
+    return (bool1 and (not bool2)) or ((not bool1) and bool2)
 
 csp_empty = CSP({},[])
 
 csp_simple1 = CSP({'A':{1,2,3},'B':{1,2,3}, 'C':{1,2,3}},
-            [Constraint('Con1',('A','B'),lt),
-             Constraint('Con2',('B','C'),lt)])
+            [Constraint('Con1',('A','B'),LessThan),
+             Constraint('Con2',('B','C'),LessThan)])
 
 csp_simple2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}},
-            [Constraint('Con1',('A','B'),lt),
-             Constraint('Con2',('B',),ne_(2)),
-             Constraint('Con3',('B','C'),lt)])
+            [Constraint('Con1',('A','B'),LessThan),
+             Constraint('Con2',('B',),NOT(Equals(2))),
+             Constraint('Con3',('B','C'),LessThan)])
 
 csp_extended = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4},
             'D':{1,2,3,4}, 'E':{1,2,3,4}},
-           [Constraint('Con1',('B',),ne_(3)),
-            Constraint('Con2',('C',),ne_(2)),
-            Constraint('Con3',('A','B'),ne),
-            Constraint('Con4',('B','C'),ne),
-            Constraint('Con5',('C','D'),lt),
-            Constraint('Con6',('A','D'),eq),
-            Constraint('Con7',('A','E'),gt),
-            Constraint('Con8',('B','E'),gt),
-            Constraint('Con9',('C','E'),gt),
-            Constraint('Con10',('D','E'),gt),
-            Constraint('Con11',('B','D'),ne)])
+           [Constraint('Con1',('B',),NOT(Equals(3))),
+            Constraint('Con2',('C',),NOT(Equals(2))),
+            Constraint('Con3',('A','B'),NOT(Equals)),
+            Constraint('Con4',('B','C'),NOT(Equals)),
+            Constraint('Con5',('C','D'),LessThan),
+            Constraint('Con6',('A','D'),Equals),
+            Constraint('Con7',('A','E'),GreaterThan),
+            Constraint('Con8',('B','E'),GreaterThan),
+            Constraint('Con9',('C','E'),GreaterThan),
+            Constraint('Con10',('D','E'),GreaterThan),
+            Constraint('Con11',('B','D'),NOT(Equals))])
 
 def meet_at(p1,p2):
     """returns a function that is true when the words meet at the postions p1, p2
