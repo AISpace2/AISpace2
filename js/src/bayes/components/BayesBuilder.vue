@@ -138,7 +138,7 @@
               (use comma to separate values)
               <button
                 ref="btn_select_submit"
-                @click="IsValidModify(temp_node_name, temp_node_domain)"
+                @click="isValidModify(temp_node_name, temp_node_domain)"
               >Submit</button>
             </span>
             <br />
@@ -198,7 +198,7 @@
                     :key="index_snn2"
                   >
                     <input
-                      :class="getInputBoxClass(index_p1, temp_node_evidences[(index_p1 * selection.domain.length + index_snn2)])"
+                      :class="{ 'text_input_box_invalid': isInvalidInputeBox(index_p1, temp_node_evidences[(index_p1 * selection.domain.length + index_snn2)])}"
                       :ref="generateRef(selection) + index_p1.toString() + '_' + index_snn2.toString()"
                       type="text"
                       @focus="$event.target.select()"
@@ -214,7 +214,7 @@
               <div class="uniform_btns">
                 <div v-for="(x, index_x) of allComb(probList(selection))" :key="index_x">
                   <div class="uniform_btn_container">
-                    <button class="uniform_btn" @click="UniformThisRow(index_x)">Uniform</button>
+                    <button class="uniform_btn" @click="uniformThisRow(index_x)">Uniform</button>
                   </div>
                 </div>
               </div>
@@ -238,7 +238,7 @@
                   >
                     <input
                       :ref="generateRef(selection) + index.toString()"
-                      :class="getInputBoxClass(index, temp_node_evidences[index])"
+                      :class="{ 'text_input_box_invalid': isInvalidInputeBox(index, temp_node_evidences[index])}"
                       type="text"
                       :value="temp_node_evidences[index]"
                       @focus="$event.target.select($event.target.value)"
@@ -252,15 +252,15 @@
               </div>
               <div class="uniform_btns">
                 <div class="uniform_btn_container">
-                  <button class="uniform_btn" @click="UniformAllEvidences()">Uniform</button>
+                  <button class="uniform_btn" @click="uniformAllRows()">Uniform</button>
                 </div>
               </div>
             </div>
           </div>
           <div>
             <span>
-              <button @click="UniformAllEvidences()">All Uniform</button>
-              <button ref="btn_prob_submit" @click="IsEvidencesValid()">Submit</button>
+              <button @click="uniformAllRows()">All Uniform</button>
+              <button ref="btn_prob_submit" @click="isEvidenceValid()">Submit</button>
               <button @click="cancelProbSet()">Cancel</button>
             </span>
           </div>
@@ -360,12 +360,12 @@ export default class BayesGraphBuilder extends Vue {
   }
 
   /** Returns whether name and domain for a new node to be created are valid */
-  IsTempNode(name_raw: string, domain: string) {
+  isTempNode(name_raw: string, domain: string) {
     var name = name_raw.trimLeft().trimRight();
     var node_to_be_drawn = true;
     if (name === null || name.match(/^\s*$/)) {
       node_to_be_drawn = false;
-      this.warning_message = "Name not valid. Please enter a new name.";
+      this.warning_message = "Name not valid.";
       this.succeed_message = "";
     } else if (this.NameExists(name)) {
       node_to_be_drawn = false;
@@ -377,7 +377,7 @@ export default class BayesGraphBuilder extends Vue {
       !domain.match(/^.+(,(\s)*.*)*$/)
     ) {
       node_to_be_drawn = false;
-      this.warning_message = "Domain not valid, Please enter a new domain.";
+      this.warning_message = "Domain not valid.";
       this.succeed_message = "";
     } else if (this.checkDomainDuplicates(domain)) {
       node_to_be_drawn = false;
@@ -392,9 +392,9 @@ export default class BayesGraphBuilder extends Vue {
 
   /** Returns whether the modified node name and domain are valid,
    * if valid, update the values */
-  IsValidModify(name: string, domain: string) {
+  isValidModify(name: string, domain: string) {
     if (name === null || name.match(/^\s*$/)) {
-      this.warning_message = "Name not valid. Please enter a new name.";
+      this.warning_message = "Name not valid.";
       this.succeed_message = "";
     } else if (this.NameExists(name) && this.selection.name !== name) {
       this.warning_message = "Name already exists.";
@@ -404,7 +404,7 @@ export default class BayesGraphBuilder extends Vue {
       domain === "" ||
       !domain.match(/^.+(,(\s)*.*)*$/)
     ) {
-      this.warning_message = "Domain not valid. Please enter a new domain.";
+      this.warning_message = "Domain not valid.";
       this.succeed_message = "";
     } else if (this.checkDomainDuplicates(domain)) {
       this.warning_message = "Domain contains duplicated values.";
@@ -715,7 +715,7 @@ export default class BayesGraphBuilder extends Vue {
     return evidences;
   }
 
-  UniformAllEvidences() {
+  uniformAllRows() {
     var temp = this.initialEvidences(this.selection!.domain);
     if (this.selection!.parents.length > 0) {
       var number_of_rows = Math.round(
@@ -735,7 +735,7 @@ export default class BayesGraphBuilder extends Vue {
     this.$forceUpdate();
   }
 
-  UniformThisRow(index_of_row: number) {
+  uniformThisRow(index_of_row: number) {
     var row_length = this.selection!.domain.length;
     var temp = this.initialEvidences(this.selection!.domain);
     for (var i = 0; i < row_length; i++) {
@@ -770,7 +770,7 @@ export default class BayesGraphBuilder extends Vue {
   createNode(x: number, y: number) {
     if (
       this.mode === "create" &&
-      this.IsTempNode(this.temp_node_name, this.temp_node_domain)
+      this.isTempNode(this.temp_node_name, this.temp_node_domain)
     ) {
       var emptystrarr: string[] = [];
       var domainval = this.handleDomain(this.temp_node_domain);
@@ -1141,7 +1141,7 @@ export default class BayesGraphBuilder extends Vue {
   /** Check whether modified temp_node_evidences is valid, and
    * Update selection.evidences if modification is valid
    */
-  IsEvidencesValid() {
+  isEvidenceValid() {
     this.warning_message = "";
     this.succeed_message = "";
     var isvalid: boolean = true;
@@ -1158,7 +1158,7 @@ export default class BayesGraphBuilder extends Vue {
     }
 
     if (
-      this.CalAllSumOfSameLineInputBox(this.temp_node_evidences).find(
+      this.calAllSumOfSameLineInputBox(this.temp_node_evidences).find(
         x => x / this.MAX_DIGITS !== 1
       )
     ) {
@@ -1180,7 +1180,7 @@ export default class BayesGraphBuilder extends Vue {
   }
 
   /** Returns a list of sums of all rows of prob inputbox */
-  CalAllSumOfSameLineInputBox(evidences: []) {
+  calAllSumOfSameLineInputBox(evidences: []) {
     // first slice the node's evidences
     var linesums: number[] = [];
     var sliced = [];
@@ -1208,11 +1208,11 @@ export default class BayesGraphBuilder extends Vue {
     return linesums;
   }
 
-  CalSumOfSameLineInputBox(index: number) {
+  calSumOfSameLineInputBox(index: number) {
     if (this.selection.parents.length > 0) {
-      return this.CalAllSumOfSameLineInputBox(this.temp_node_evidences)[index];
+      return this.calAllSumOfSameLineInputBox(this.temp_node_evidences)[index];
     } else {
-      return this.CalAllSumOfSameLineInputBox(this.temp_node_evidences)[0];
+      return this.calAllSumOfSameLineInputBox(this.temp_node_evidences)[0];
     }
   }
 
@@ -1223,31 +1223,18 @@ export default class BayesGraphBuilder extends Vue {
     this.$forceUpdate();
   }
 
-  getInputBoxClass(index: number, val: number | string) {
-    var inputboxclass = ""; // default: no class
-    if (
-      val > 1 ||
-      val < 0 ||
-      (Number.isNaN(parseFloat(val)) &&
-        val !== "." &&
-        val !== "" &&
-        val !== null) ||
-      this.CalSumOfSameLineInputBox(index) !== this.MAX_DIGITS
-    ) {
-      inputboxclass = "text_input_box_invalid";
-    }
-    return inputboxclass;
+  isInvalidInputeBox(index: number, val: number | string) {
+    return val > 1 || val < 0 || (Number.isNaN(parseFloat(val)) && val !== "." && val !== "" && val !== null) ||
+      this.calSumOfSameLineInputBox(index) !== this.MAX_DIGITS;
   }
 
   /** This is to prevent non-numeric input in Safari since type="number" doesn't work in Safari */
   handleInputValue(val: string, pni: number, di: number) {
-    if (
-      val.length === 0 ||
+    if ( val.length === 0 ||
       val === null ||
       val === "." ||
       val.match(/^\.[0-9]*$/) ||
-      val.match(/^[0-9]*\.$/)
-    ) {
+      val.match(/^[0-9]*\.$/) ) {
       this.temp_node_evidences.forEach((e, index) => {
         if (e === null || e === ".") {
           this.temp_node_evidences[index] = 0;
@@ -1262,10 +1249,7 @@ export default class BayesGraphBuilder extends Vue {
       if (!result.match(/^[0-9]*\.?[0-9]*$/)) {
         var indexofdot = result.indexOf(".");
         var result_removed_dot = result.replace(/\./g, "");
-        result =
-          result_removed_dot.slice(0, indexofdot) +
-          "." +
-          result_removed_dot.slice(indexofdot, result_removed_dot.length);
+        result = result_removed_dot.slice(0, indexofdot) + "." + result_removed_dot.slice(indexofdot, result_removed_dot.length);
       }
       this.$refs[this.findInputboxRef(pni, di)][0].value = result;
     } else {
@@ -1277,9 +1261,7 @@ export default class BayesGraphBuilder extends Vue {
   /** Update the color of the inputbox when the box has been emptied */
   handleEmptyOrDotInput(val: string, pni: number, di: number) {
     if (val.match(/^\.[0-9]*$/) || val.match(/^[0-9]*\.$/)) {
-      val === "."
-        ? this.fillLastInputbox("0", pni, di)
-        : this.fillLastInputbox(val, pni, di);
+      val === "." ? this.fillLastInputbox("0", pni, di) : this.fillLastInputbox(val, pni, di);
       this.$forceUpdate();
       this.temp_node_evidences[pni * this.selection.domain.length + di] = val;
     } else if (val === "" || val === null) {
@@ -1598,9 +1580,7 @@ div.prob_name:hover {
   margin: 0;
 }
 
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.text_input_box_invalid {
+  background-color: pink;
 }
 </style>
