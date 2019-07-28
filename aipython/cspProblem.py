@@ -21,7 +21,7 @@ class Constraint(object):
     def __init__(self, name, scope, condition):
         self.scope = scope
         self.condition = condition
-        self.name = name + ": " + self.condition.__name__ + str(self.scope)
+        self.name = name # + ": " + self.condition.__name__ + str(self.scope)
 
     def __repr__(self):
         return self.name
