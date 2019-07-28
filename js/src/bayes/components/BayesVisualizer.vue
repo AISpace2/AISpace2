@@ -36,7 +36,7 @@
         <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output">{{output}}</div>
+      <div class="output" v-bind:class="chooseClass()">{{output}}</div>
       <div v-if="FocusNode.domain.length > 0 && !isQuerying">
         <div>Current variable: {{FocusNode.nodeName}}</div>
         <div>Choose a value to observe:</div>
@@ -111,10 +111,22 @@
      }
     }
 
-    changemode(e:String){
-        if(e === "query"){this.isQuerying = true;}
-        else {this.isQuerying =false;}
+    changemode(e:String) {
+        if (e === "query") {
+            this.isQuerying = true;
+        }
+        else {
+            this.isQuerying =false;
+        }
         this.FocusNode.domain = [];
+    }
+
+    chooseClass() {
+        var warning: boolean = false;
+        if (this.output) {
+            warning = this.output.includes("Please choose one value before submit");
+        }
+        return {'warningText': warning}
     }
 
     edgeClicked(edge: IGraphEdge) {

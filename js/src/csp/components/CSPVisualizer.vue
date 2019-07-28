@@ -41,7 +41,7 @@
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output" v-bind:class="{ 'solutionText': output.includes('Solution found'), 'warningText': output.includes('No more solutions') }">{{output}}</div>
+      <div class="output" v-bind:class="chooseClass()">{{output}}</div>
       <div v-if="preSolution" class="output">Solution history:<br><span class="solutionText">{{preSolution}}</span></div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
         <div>Current variable: {{FocusNode.nodeName}}</div>
@@ -158,16 +158,34 @@ export default class CSPGraphInteractor extends Vue {
     }
   }
 
+  chooseClass() {
+      var solution: boolean = false;
+      var warning: boolean = false;
+      if (this.output) {
+          solution = this.output.includes('Solution found') || this.output.includes("Please choose the values in the selected domain");
+          warning  = this.output.includes('No more solutions') ||  this.output.includes("Arc consistency needs to be finished") || this.output.includes("You can only") || this.output.includes("You can not") || this.output.includes("Do not choose") || this.output.includes("Choose at least one value to split");
+      }
+      return { 'solutionText': solution, 'warningText': warning };
+  }
+
   edgeClicked(edge: IGraphEdge) {
     this.$emit("click:edge", edge);
   }
 
   nodeClicked(node: ICSPGraphNode) {
     this.$emit("click:node", node);
-    if (node.domain !== undefined) {
+    if (this.needSplit) {
       this.FocusNode.domain = node.domain;
       this.FocusNode.nodeName = node.name;
       this.FocusNode.checkedNames = [];
+      if (node.type == "csp:constraint") {
+          this.output = "You can not perform domain splitting in constraint nodes." + "\nPlease select other splittable nodes.";
+          this.FocusNode.domain = [];
+      } else if (node.domain.length == 1) {
+          this.output = "You can only split variable whose domain has more than 1 value." + "\nPlease select other splittable nodes.";
+      } else {
+          this.output = "Please choose the values in the selected domain."
+      }
     }
   }
 

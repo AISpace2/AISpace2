@@ -114,14 +114,22 @@ export default class BayesVisualizer extends DOMWidgetView {
   }
 
   private chooseObservation() {
-      if(this.vue.FocusNode.checkedNames === ''){alert("Please choose one domain before submit");return;}
+      if (this.vue.FocusNode.checkedNames === '') {
+          this.vue.output = "Please choose one value before submit";
+          return;
+      }
       const nodes =  this.model.graph.nodes.filter(node => node.name === this.vue.FocusNode.nodeName);
       const variableNode = nodes[0] as IBayesGraphNode;
       let value: null | string | boolean = this.vue.FocusNode.checkedNames;
-      if (value === "true"){value = true;}
-      if (value === "false"){value = false;}
+      if (value === "true") {
+          value = true;
+      }
+      if (value === "false") {
+          value = false;
+      }
       this.manager.add(variableNode.name, value);
       this.vue.$set(variableNode, "observed", value.toString());
       this.vue.FocusNode.domain = [];
+      this.vue.output = undefined;
   }
 }

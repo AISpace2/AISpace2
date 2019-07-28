@@ -215,22 +215,26 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private chooseDomainSplit() {
     if (this.vue.FocusNode.checkedNames.length == 0) {
-      alert("Choose at least one value to split.");
+      this.vue.output = "Choose at least one value to split.";
       return;
     }
 
     if (this.vue.FocusNode.checkedNames.length == this.vue.FocusNode.domain.length) {
-      alert("Do not choose all values to split.");
-      this.vue.checkedNames = [];
+      this.vue.output = "Do not choose all values to split.";
+      this.vue.FocusNode.checkedNames = [];
       return;
     }
 
     const newDomain = this.vue.FocusNode.checkedNames;
-    this.send({ event: "domain_split", domain: newDomain });
+    this.send({ event: "domain_split", domain: newDomain, var: this.vue.FocusNode.nodeName });
     this.vue.needSplit = false;
     this.vue.FocusNode.checkedNames = [];
     this.vue.FocusNode.domain = [];
     this.vue.FocusNode.nodeName = "";
+    this.model.graph.nodes.map((variableNode: ICSPGraphNode) => {
+          this.vue.$set(variableNode.styles, "stroke", "black");
+          this.vue.$set(variableNode.styles, "strokeWidth", 0);
+        });  
   }
 
   /**
@@ -238,7 +242,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private chooseDomainSplitBeforeAC(event: CSPEvents.ICSPChooseDomainSplitBeforeACEvent) {
     if (!this.vue.needSplit) {
-      window.alert("Arc consistency needs to be finished before the domain can be split.");
+      this.vue.output = "Arc consistency needs to be finished before the domain can be split.";
     }
   }
 

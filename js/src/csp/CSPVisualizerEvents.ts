@@ -30,9 +30,6 @@ export interface ICSPHighlightNodesEvent extends IEvent {
 
 export interface ICSPChooseDomainSplitEvent extends IEvent {
   action: "chooseDomainSplit";
-  // The domain to choose a split from
-  domain: string[];
-  var: string;
 }
 
 export interface ICSPChooseDomainSplitBeforeACEvent extends IEvent {
