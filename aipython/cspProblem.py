@@ -69,15 +69,15 @@ class CSP(Displayable):
 
 # Negate the input function
 def NOT(fn):
-    def toReturn(*args,**kwargs):
-        return not fn(*args,**kwargs)
+    def toReturn(*args, **kwargs):
+        return not fn(*args, **kwargs)
     return toReturn
 
 ## Basic constraints:
-def TRUE():
+def TRUE(*args, **kwargs):
     return True
 
-def FALSE():
+def FALSE(*args, **kwargs):
     return False
 
 ## Uniary constraints
