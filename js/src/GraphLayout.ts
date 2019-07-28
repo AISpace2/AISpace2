@@ -168,6 +168,8 @@ export function d3TreeLayout(
       nodeMap[node.id] = node;
     }
 
+    const nodeMapInTree: { [key: string]: IGraphNode } = {};
+
     interface IHierarchyNode {
       node: IGraphNode;
       children: IHierarchyNode[];
@@ -209,7 +211,7 @@ export function d3TreeLayout(
       }
 
       if (
-        map[edge.target.id].children.some(c => c.node.id === edge.source.id)
+        map[edge.target.id].children.some(c => c.node.id === edge.source.id) || edge.target.id in nodeMapInTree
       ) {
         // There is already an arrow the other way
         // Note that while this prevents endless loops, the tree layout is not designed
@@ -218,6 +220,7 @@ export function d3TreeLayout(
       }
 
       // Add target to source's children
+      nodeMapInTree[edge.target.id] = nodeMap[edge.target.id];
       map[edge.source.id].children.push(map[edge.target.id]);
     }
 

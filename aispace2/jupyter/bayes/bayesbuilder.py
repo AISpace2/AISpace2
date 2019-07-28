@@ -29,7 +29,6 @@ class BayesBuilder(DOMWidget):
         self.graph = bayes_problem
 
     def py_code(self):
-        """Converts the search problem represented by this builder into Python code.
-        The code is added to a new cell in the notebook.
+        """Prints the bayes problem represented by Python code.
         """
         print(bayes_problem_to_python_code(self.graph))

@@ -34,7 +34,7 @@ export interface IGraphEdge {
 export interface IBayesGraphNode extends IGraphNode {
   parents: string[];
   evidences: number[];
-  domain: string[] | boolean[];
+  domain: string[];
   prob?: any;
   observed?: string | null;
   displaying?: boolean;
@@ -43,7 +43,7 @@ export interface IBayesGraphNode extends IGraphNode {
 export type CSPNodeTypes = "csp:variable" | "csp:constraint";
 export interface ICSPGraphNode extends IGraphNode {
   type: CSPNodeTypes;
-  domain?: number[] | string[];
+  domain?: number[] | string[] | boolean[];
 }
 
 export type SearchNodeTypes = "search:start" | "search:goal" | "search:normal";
@@ -143,8 +143,8 @@ export class Graph<
       const newNode = Object.assign({}, node);
 
       // Remove properties not present in the Python model
-      delete newNode.x;
-      delete newNode.y;
+      // delete newNode.x;
+      // delete newNode.y;
       delete newNode.styles;
 
       nodes.push(newNode);

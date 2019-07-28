@@ -13,16 +13,18 @@ from operator import lt,ne,eq,gt
 
 class Constraint(object):
     """A Constraint consists of
+    * name: the unique name of this constraint
     * scope: a tuple of variables
     * condition: a function that can applied to a tuple of values
     for the variables
     """
-    def __init__(self, scope, condition):
+    def __init__(self, name, scope, condition):
         self.scope = scope
         self.condition = condition
+        self.name = name # + ": " + self.condition.__name__ + str(self.scope)
 
     def __repr__(self):
-        return self.condition.__name__ + str(self.scope)
+        return self.name
 
     def holds(self,assignment):
         """returns the value of Constraint con evaluated in assignment.
@@ -35,9 +37,9 @@ class CSP(Displayable):
     """A CSP consists of
     * domains, a dictionary that maps each variable to its domain
     * constraints, a list of constraints
-    * positions, a dictionary that maps each node into its (x,y)-position.
+    * positions, a dictionary that maps name of each node into its (x,y)-position.
     """
-    def __init__(self, domains, constraints, positions = {}):
+    def __init__(self, domains, constraints, positions={}):
         self.variables = set(domains)
         self.domains = domains
         self.constraints = constraints
@@ -85,27 +87,27 @@ def is_(val):
 csp_empty = CSP({},[])
 
 csp_simple1 = CSP({'A':{1,2,3},'B':{1,2,3}, 'C':{1,2,3}},
-           [ Constraint(('A','B'),lt),
-             Constraint(('B','C'),lt)])
+            [Constraint('Con1',('A','B'),lt),
+             Constraint('Con2',('B','C'),lt)])
 
 csp_simple2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}},
-           [ Constraint(('A','B'),lt),
-             Constraint(('B',),ne_(2)),
-             Constraint(('B','C'),lt)])
+            [Constraint('Con1',('A','B'),lt),
+             Constraint('Con2',('B',),ne_(2)),
+             Constraint('Con3',('B','C'),lt)])
 
 csp_extended = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4},
             'D':{1,2,3,4}, 'E':{1,2,3,4}},
-           [ Constraint(('B',),ne_(3)),
-            Constraint(('C',),ne_(2)),
-            Constraint(('A','B'),ne),
-            Constraint(('B','C'),ne),
-            Constraint(('C','D'),lt),
-            Constraint(('A','D'),eq),
-            Constraint(('A','E'),gt),
-            Constraint(('B','E'),gt),
-            Constraint(('C','E'),gt),
-            Constraint(('D','E'),gt),
-            Constraint(('B','D'),ne)])
+           [Constraint('Con1',('B',),ne_(3)),
+            Constraint('Con2',('C',),ne_(2)),
+            Constraint('Con3',('A','B'),ne),
+            Constraint('Con4',('B','C'),ne),
+            Constraint('Con5',('C','D'),lt),
+            Constraint('Con6',('A','D'),eq),
+            Constraint('Con7',('A','E'),gt),
+            Constraint('Con8',('B','E'),gt),
+            Constraint('Con9',('C','E'),gt),
+            Constraint('Con10',('D','E'),gt),
+            Constraint('Con11',('B','D'),ne)])
 
 def meet_at(p1,p2):
     """returns a function that is true when the words meet at the postions p1, p2
@@ -120,11 +122,11 @@ csp_crossword1 = CSP({'one_across':{'ant', 'big', 'bus', 'car', 'has'},
                   'two_down':{'ginger', 'search', 'symbol', 'syntax'},
                   'three_across':{'book', 'buys', 'hold', 'land', 'year'},
                   'four_across':{'ant', 'big', 'bus', 'car', 'has'}},
-                  [Constraint(('one_across','one_down'),meet_at(0,0)),
-                   Constraint(('one_across','two_down'),meet_at(2,0)),
-                   Constraint(('three_across','two_down'),meet_at(2,2)),
-                   Constraint(('three_across','one_down'),meet_at(0,2)),
-                   Constraint(('four_across','two_down'),meet_at(0,4))])
+                  [Constraint('Con1',('one_across','one_down'),meet_at(0,0)),
+                   Constraint('Con2',('one_across','two_down'),meet_at(2,0)),
+                   Constraint('Con3',('three_across','two_down'),meet_at(2,2)),
+                   Constraint('Con4',('three_across','one_down'),meet_at(0,2)),
+                   Constraint('Con5',('four_across','two_down'),meet_at(0,4))])
 
 words1 = {"add", "age", "aid", "aim", "air", "are", "arm", "art",
     "bad", "bat", "bee", "boa", "dim", "ear", "eel", "eft", "lee", "oaf"}
@@ -137,15 +139,15 @@ words2 = {"add", "ado", "age", "ago", "aid", "ail", "aim", "air",
 
 csp_crossword2 = CSP({'1_down':words1, '2_down':words1, '3_down':words1,
                   '1_across':words1, '4_across':words1, '5_across':words1},
-                  [Constraint(('1_down','1_across'),meet_at(0,0)), # 1_down[0]=1_across[0]
-                   Constraint(('1_down','4_across'),meet_at(1,0)), # 1_down[1]=4_across[0]
-                   Constraint(('1_down','5_across'),meet_at(2,0)),
-                   Constraint(('2_down','1_across'),meet_at(0,1)),
-                   Constraint(('2_down','4_across'),meet_at(1,1)),
-                   Constraint(('2_down','5_across'),meet_at(2,1)),
-                   Constraint(('3_down','1_across'),meet_at(0,2)),
-                   Constraint(('3_down','4_across'),meet_at(1,2)),
-                   Constraint(('3_down','5_across'),meet_at(2,2))
+                  [Constraint('Con1',('1_down','1_across'),meet_at(0,0)), # 1_down[0]=1_across[0]
+                   Constraint('Con2',('1_down','4_across'),meet_at(1,0)), # 1_down[1]=4_across[0]
+                   Constraint('Con3',('1_down','5_across'),meet_at(2,0)),
+                   Constraint('Con4',('2_down','1_across'),meet_at(0,1)),
+                   Constraint('Con5',('2_down','4_across'),meet_at(1,1)),
+                   Constraint('Con6',('2_down','5_across'),meet_at(2,1)),
+                   Constraint('Con7',('3_down','1_across'),meet_at(0,2)),
+                   Constraint('Con8',('3_down','4_across'),meet_at(1,2)),
+                   Constraint('Con9',('3_down','5_across'),meet_at(2,2))
                    ])
 
 def is_word(*letters, words=words1):
@@ -158,12 +160,12 @@ letters = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
 csp_crossword2d = CSP({"p00":letters, "p01":letters, "p02":letters,
                   "p10":letters, "p11":letters, "p12":letters,
                   "p20":letters, "p21":letters, "p22":letters},
-                  [Constraint(("p00","p01","p02"), is_word),
-                   Constraint(("p10","p11","p12"), is_word),
-                   Constraint(("p20","p21","p22"), is_word),
-                   Constraint(("p00","p10","p20"), is_word),
-                   Constraint(("p01","p11","p21"), is_word),
-                   Constraint(("p02","p12","p22"), is_word)])
+                  [Constraint('Con1',("p00","p01","p02"), is_word),
+                   Constraint('Con2',("p10","p11","p12"), is_word),
+                   Constraint('Con3',("p20","p21","p22"), is_word),
+                   Constraint('Con4',("p00","p10","p20"), is_word),
+                   Constraint('Con5',("p01","p11","p21"), is_word),
+                   Constraint('Con6',("p02","p12","p22"), is_word)])
 
 # def test(CSP_solver, csp=csp_simple2, solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
 #     """CSP_solver is a solver that finds a solution to a CSP.
