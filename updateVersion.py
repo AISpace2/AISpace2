@@ -1,6 +1,7 @@
 import os
 import fileinput
 import json
+import re
 
 versionPath = os.path.abspath(os.path.join(os.path.dirname(__file__),'aispace2','_version.py'))
 versionFile = open(versionPath)
@@ -33,7 +34,7 @@ v = input("Enter y to confirm\n")
 if v!= 'y':
     exit()
 for line in fileinput.FileInput(versionPath, inplace=1):
-    if line.startswith('version_info'):
+    if re.findall('version_info = \(\d+, \d+, \d+\)', line):
         line = 'version_info = ' + pyVersion
         print(line)
     else:
