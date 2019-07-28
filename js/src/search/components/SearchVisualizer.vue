@@ -38,7 +38,7 @@
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output">Frontier: {{frontier}}</div>
-      <div class="output" v-bind:class="{ 'solutionText': output.includes('Solution found') || output.includes('New best path'), 'warningText': output.includes('No more solutions') }">{{output}}</div>
+      <div class="output" v-bind:class="chooseClass()">{{output}}</div>
       <div v-if="preSolution" class="output">Solution history: <span class="solutionText">{{preSolution}}</span></div>
       <div class="output">{{positions}}</div>
     </div>
@@ -100,6 +100,16 @@
     detailLevel: number;
     legendText: string[];
     legendColor: string[];
+
+    chooseClass() {
+      var solution: boolean = false;
+      var warning: boolean = false;
+      if (this.output) {
+          solution = this.output.includes("Solution found") || this.output.includes("New best path");
+          warning  = this.output.includes("No more solutions");
+      }
+      return { 'solutionText': solution, 'warningText': warning };
+    }
 
     nodeFillColour(node: ISearchGraphNode, hover: boolean) {
       if (hover) {
