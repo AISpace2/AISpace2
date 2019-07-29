@@ -37,6 +37,7 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" v-bind:class="chooseClass()">{{output}}</div>
+      <div v-if= warningMessage class="warningText">{{warningMessage}}</div>  
       <div v-if="FocusNode.domain.length > 0 && !isQuerying">
         <div>Current variable: {{FocusNode.nodeName}}</div>
         <div>Choose a value to observe:</div>
@@ -87,6 +88,8 @@
     graph: Graph;
     // Text describing what is currently happening
     output: string;
+    // Text descrbing warns users' actions
+    warningMessage: string;
     // The text representing the positions for nodes
     positions: string;
     // Layout object that controls where nodes are drawn
@@ -124,7 +127,7 @@
     chooseClass() {
         var warning: boolean = false;
         if (this.output) {
-            warning = this.output.includes("Please choose one value before submit");
+            //warning = this.output.includes("Please choose one value before submit");
         }
         return {'warningText': warning}
     }

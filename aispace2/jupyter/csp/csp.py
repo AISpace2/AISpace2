@@ -124,7 +124,7 @@ class Displayable(StepDOMWidget):
             self.max_display_level = 2
 
         iter_var = list(iter_var)
-        self._send_highlight_nodes_action(iter_var, "purple")
+        self._send_highlight_nodes_action(iter_var, "orchid")
         self._is_waiting_for_var_selection = True
         self._block_for_user_input.wait()
 

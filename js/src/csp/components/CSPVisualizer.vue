@@ -42,6 +42,7 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" v-bind:class="chooseClass()">{{output}}</div>
+      <div v-if= warningMessage class="warningText">{{warningMessage}}</div>
       <div v-if="preSolution" class="output">Solution history:<br><span class="solutionText">{{preSolution}}</span></div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
         <div>Current variable: {{FocusNode.nodeName}}</div>
@@ -66,7 +67,7 @@
 <script lang="ts">
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+import { Prop, Watch } from "vue-property-decorator";
 
 import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
@@ -100,6 +101,8 @@ export default class CSPGraphInteractor extends Vue {
   graph: Graph<ICSPGraphNode>;
   // Text describing what is currently happening
   output: string;
+  // Text descrbing warns users' actions
+  warningMessage: string;
   // The text representing the solutions found so far
   preSolution: string;
   // The text representing the positions for nodes
@@ -162,8 +165,8 @@ export default class CSPGraphInteractor extends Vue {
       var solution: boolean = false;
       var warning: boolean = false;
       if (this.output) {
-          solution = this.output.includes('Solution found') || this.output.includes("Please choose the values in the selected domain");
-          warning  = this.output.includes('No more solutions') ||  this.output.includes("Arc consistency needs to be finished") || this.output.includes("You can only") || this.output.includes("You can not") || this.output.includes("Do not choose") || this.output.includes("Choose at least one value to split");
+          solution = this.output.includes('Solution found');
+          warning  = this.output.includes('No more solutions');
       }
       return { 'solutionText': solution, 'warningText': warning };
   }
@@ -179,12 +182,13 @@ export default class CSPGraphInteractor extends Vue {
       this.FocusNode.nodeName = node.name;
       this.FocusNode.checkedNames = [];
       if (node.type == "csp:constraint") {
-          this.output = "You can not perform domain splitting in constraint nodes." + "\nPlease select other splittable nodes.";
+          this.warningMessage = "You can not perform domain splitting in constraint nodes." + "\nPlease select other splittable nodes.";
           this.FocusNode.domain = [];
       } else if (node.domain.length == 1) {
-          this.output = "You can only split variable whose domain has more than 1 value." + "\nPlease select other splittable nodes.";
+          this.warningMessage = "You can only split variable whose domain has more than 1 value." + "\nPlease select other splittable nodes.";
       } else {
-          this.output = "Please choose the values in the selected domain."
+         //this.output = "Please choose the values in the selected domain."
+          this.warningMessage = null;
       }
     }
   }
@@ -237,6 +241,11 @@ export default class CSPGraphInteractor extends Vue {
       height: 30,
       y: 20
     };
+  }
+
+  @Watch("output")
+  onOutPutChange() {
+    this.warningMessage = null;
   }
 
   addTextSize(){

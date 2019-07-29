@@ -67,6 +67,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           width: 0,
           height: 0,
           output: null,
+          warningMessage: null,
           preSolution: "",
           positions: null,
           textSize: this.model.textSize,
@@ -206,7 +207,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         "stroke",
         event.colour
       );
-      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 2);
+      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 4);
     }
   }
 
@@ -215,12 +216,12 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private chooseDomainSplit() {
     if (this.vue.FocusNode.checkedNames.length == 0) {
-      this.vue.output = "Choose at least one value to split.";
+      this.vue.warningMessage = "Choose at least one value to split.";
       return;
     }
 
     if (this.vue.FocusNode.checkedNames.length == this.vue.FocusNode.domain.length) {
-      this.vue.output = "Do not choose all values to split.";
+      this.vue.warningMessage = "Do not choose all values to split.";
       this.vue.FocusNode.checkedNames = [];
       return;
     }
@@ -242,7 +243,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private chooseDomainSplitBeforeAC(event: CSPEvents.ICSPChooseDomainSplitBeforeACEvent) {
     if (!this.vue.needSplit) {
-      this.vue.output = "Arc consistency needs to be finished before the domain can be split.";
+      this.vue.warningMessage = "Arc consistency needs to be finished before the domain can be split.";
     }
   }
 

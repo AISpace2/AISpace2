@@ -43,6 +43,7 @@ export default class BayesVisualizer extends DOMWidgetView {
         data: {
           graph: this.model.graph,
           output: null,
+          warningMessage: null,
           positions: null,
           // Layout object that controls where nodes are drawn
           layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
@@ -115,7 +116,7 @@ export default class BayesVisualizer extends DOMWidgetView {
 
   private chooseObservation() {
       if (this.vue.FocusNode.checkedNames === '') {
-          this.vue.output = "Please choose one value before submit";
+          this.vue.warningMessage = "Please choose one value before submit";
           return;
       }
       const nodes =  this.model.graph.nodes.filter(node => node.name === this.vue.FocusNode.nodeName);
@@ -124,6 +125,6 @@ export default class BayesVisualizer extends DOMWidgetView {
       this.manager.add(variableNode.name, value);
       this.vue.$set(variableNode, "observed", value.toString());
       this.vue.FocusNode.domain = [];
-      this.vue.output = undefined;
+      this.vue.warningMessage = null;
   }
 }
