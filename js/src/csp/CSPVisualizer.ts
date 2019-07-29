@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import * as Analytics from "../Analytics";
 import { ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
-import { cspLabelText, cspLabelColor } from "../labelDictionary";
+import { cspLegend, cspLabelText, cspLabelColor } from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
@@ -35,6 +35,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           return this.setDomains(event);
         case "highlightNodes":
           return this.highlightNodes(event);
+        case "highlightSplittableNodes":
+          return this.highlightSplittableNodes(event);
         case "chooseDomainSplit":
           this.vue.needSplit = true;
           break;
@@ -207,10 +209,24 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         "stroke",
         event.colour
       );
-      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 4);
+      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 2);
     }
   }
 
+  /**
+   * Highlights splittable nodes, as described by the event object.
+   */
+  private highlightSplittableNodes(event: CSPEvents.ICSPHighlightSplittableNodesEvent) {
+    for (const nodeId of event.nodeIds) {
+      this.vue.$set(
+        this.model.graph.idMap[nodeId].styles,
+        "stroke",
+        cspLegend["Domain-splittable variable"]
+      );
+      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 4);
+    }
+  }
+    
   /**
    * Requests the user choose a domain for one side of the split.
    */

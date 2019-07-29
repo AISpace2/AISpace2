@@ -124,7 +124,7 @@ class Displayable(StepDOMWidget):
             self.max_display_level = 2
 
         iter_var = list(iter_var)
-        self._send_highlight_nodes_action(iter_var, "orchid")
+        self._send_highlight_splittable_nodes_action(iter_var)
         self._is_waiting_for_var_selection = True
         self._block_for_user_input.wait()
 
@@ -437,6 +437,26 @@ class Displayable(StepDOMWidget):
             'action': 'highlightNodes',
             'nodeIds': nodeIds,
             'colour': colour
+        })
+
+    def _send_highlight_splittable_nodes_action(self, vars):
+        """Sends a message to the front-end visualization to highlight Splittable nodes when users can split domain.
+
+        Args:
+            vars (string|string[]): The name(s) of the splittable variables to highlight.
+        """
+
+        # We don't want to check if it is iterable because a string is iterable
+        if not isinstance(vars, list) and not isinstance(vars, set):
+            vars = [vars]
+
+        nodeIds = []
+        for var in vars:
+            nodeIds.append(self._domain_map[var])
+
+        self.send({
+            'action': 'highlightSplittableNodes',
+            'nodeIds': nodeIds,
         })
 
     def _send_highlight_arcs_action(self, arcs, style='normal', colour=None):

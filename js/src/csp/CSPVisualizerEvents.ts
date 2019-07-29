@@ -28,6 +28,12 @@ export interface ICSPHighlightNodesEvent extends IEvent {
   colour: string;
 }
 
+export interface ICSPHighlightSplittableNodesEvent extends IEvent {
+  action: "highlightSplittableNodes";
+  // The IDs of the nodes to highlight
+  nodeIds: string[];
+}
+
 export interface ICSPChooseDomainSplitEvent extends IEvent {
   action: "chooseDomainSplit";
 }
