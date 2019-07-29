@@ -247,11 +247,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     this.vue.needSplit = false;
     this.vue.FocusNode.checkedNames = [];
     this.vue.FocusNode.domain = [];
-    this.vue.FocusNode.nodeName = "";
-    this.model.graph.nodes.map((variableNode: ICSPGraphNode) => {
-          this.vue.$set(variableNode.styles, "stroke", "black");
-          this.vue.$set(variableNode.styles, "strokeWidth", 0);
-        });  
+    this.vue.FocusNode.nodeName = "";  
   }
 
   /**
@@ -275,6 +271,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     lines[this.vue.ind] += '●';
     this.vue.preSolution = lines.join('\n');
     this.vue.ind += 1;
+    this.model.graph.nodes.map((variableNode: ICSPGraphNode) => {
+          this.vue.$set(variableNode.styles, "stroke", "black");
+          this.vue.$set(variableNode.styles, "strokeWidth", 0);
+        });      
   }
 
   /**
