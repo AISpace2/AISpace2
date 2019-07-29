@@ -3,7 +3,7 @@ Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP)
 and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 """
 
-from operator import lt
+from operator import lt # should be deleted after fixing
 from string import Template
 
 from aipython.cspProblem import CSP, Constraint
