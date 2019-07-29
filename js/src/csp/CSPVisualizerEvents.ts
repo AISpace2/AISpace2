@@ -81,6 +81,7 @@ export type Events =
   | ICSPHighlightArcsEvent
   | ICSPSetDomainsEvent
   | ICSPHighlightNodesEvent
+  | ICSPHighlightSplittableNodesEvent
   | ICSPChooseDomainSplitEvent
   | ICSPChooseDomainSplitBeforeACEvent
   | ICSPSetPreSolutionEvent
