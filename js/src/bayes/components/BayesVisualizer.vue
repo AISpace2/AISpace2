@@ -125,7 +125,7 @@
           checkedNames: '',
           nodeName: String
         },
-        mode: ''
+        mode: "observe"
      }
     }
 
@@ -194,10 +194,10 @@
               return text;
           }
       }
-      if (node.observed !== undefined) {
-          text += "Observation: " + node.observed + '\n';
-      }
       text += node.domain.join(',');
+      if (node.observed !== undefined) {
+          text += '\n' + "Observation: " + node.observed;
+      }
       return text;
     }
 
