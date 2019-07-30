@@ -49,7 +49,7 @@ export default class BayesVisualizer extends DOMWidgetView {
           layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
           textSize: this.model.textSize,
           detailLevel: this.model.detailLevel,
-          isQuerying: true,
+          isQuerying: false,
           decimalPlace: this.model.decimalPlace
         }
       }).$mount(this.el);
