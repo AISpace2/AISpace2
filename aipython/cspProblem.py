@@ -110,7 +110,7 @@ def StringEquals(str1, str2=None):
     if str2 is None:
         def toReturn(x):
             return x == str1
-        toReturn.__name__ = "StringEquals(" + str1 + ")"
+        toReturn.__name__ = "StringEquals('" + str1 + "')"
         return toReturn
     return str == str2  # binary constraint
 
