@@ -1,7 +1,5 @@
 <template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
-    <button id="query-mode" :style="stateStyle('query')" class = "btn btn-default" @click="changemode('query');">Query</button>
-    <button id="observe-mode" :style="stateStyle('observe')" class = "btn btn-default" @click="changemode('observe');">Observe</button>
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
     >
       <template slot="node" slot-scope="props">
@@ -32,6 +30,21 @@
       </template>
     </GraphVisualizerBase>
     <div>
+      <span>
+        <strong>Mode:</strong>
+      </span>
+      <span>
+        <span class="radioInputGroup">
+          <input type="radio" id="observe" value="observe" v-model="mode" />
+          <label for="observe">Observe</label>
+        </span>
+        <span class="radioInputGroup">
+          <input type="radio" id="query" value="query" v-model="mode" />
+          <label for="query">Query</label>
+        </span>
+      </span>
+    </div>    
+    <div>
       <div id="controls" class="btn-group">
         <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
@@ -55,6 +68,7 @@
 <script lang="ts">
   import Vue from "vue";
   import Component from "vue-class-component";
+  import { Prop, Watch } from "vue-property-decorator";
 
   import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
   import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
@@ -110,18 +124,9 @@
           domain:[],
           checkedNames: '',
           nodeName: String
-        }
+        },
+        mode: ''
      }
-    }
-
-    changemode(e:String) {
-        if (e === "query") {
-            this.isQuerying = true;
-        }
-        else {
-            this.isQuerying =false;
-        }
-        this.FocusNode.domain = [];
     }
 
     edgeClicked(edge: IGraphEdge) {
@@ -170,49 +175,30 @@
       return undefined;
     }
 
-    // Returns a formatted string representing the probability of a variable node after query
-    probText(node: IBayesGraphNode) {
-      if(node.displaying != undefined && node.displaying !== false){
-      if (node.prob === undefined) {
-	    if (node.observed === undefined) return undefined;
-	    return "Obs: " + node.observed;
-	  }
-      else {
-        let text = "";
-        for (var key in node.prob) {
-          text += key + ": " + node.prob[key].toFixed(this.decimalPlace) + ", ";
-        }
-        text = text.slice(0, -2)  // delete last comma and space
-	      if (node.observed === undefined) return text;
-        return "Obs: " + node.observed + '\n' + text;
-      }
-	  }
-        return undefined;
-    }
-
     // Returns a formatted string graph representing the probability of a variable node after query
     probGraph(node: IBayesGraphNode) {
-      if(node.displaying != undefined && node.displaying !== false ){
-      if (node.prob !== undefined) {
-        let text = "";
-        if (node.observed !== undefined) {
-            text += "Observation: " + node.observed + '\n';
-        }
-        text += "_".repeat(30) + '\n';
-        var prob = "|";
-        var width = 20;
-        for (var key in node.prob) {
-          var number = node.prob[key];
-          var namel  = key.length;
-          text += key + " ".repeat(width - 10 - namel) + number.toFixed(this.decimalPlace) + ":" + " ".repeat(5) + prob.repeat(number*20) + " ".repeat(width-number*20) + '\n';
-        }
-        return text;
-	     }
-    }
-     if (node.observed !== undefined) {
-         return "Observation: " + node.observed + '\n';
-     }
-     return "";
+      let text = "";
+      if (node.displaying != undefined && node.displaying !== false ) {
+          if (node.prob !== undefined) {
+              if (node.observed !== undefined) {
+                  text += "Observation: " + node.observed + '\n';
+              }
+              text += "_".repeat(30) + '\n';
+              var prob = "|";
+              var width = 20;
+              for (var key in node.prob) {
+                  var number = node.prob[key];
+                  var namel  = key.length;
+                  text += key + " ".repeat(width - 10 - namel) + number.toFixed(this.decimalPlace) + ":" + " ".repeat(5) + prob.repeat(number*20) + " ".repeat(width-number*20) + '\n';
+              }
+              return text;
+          }
+      }
+      if (node.observed !== undefined) {
+          text += "Observation: " + node.observed + '\n';
+      }
+      text += node.domain.join(',');
+      return text;
     }
 
     addTextSize(){
@@ -221,6 +207,16 @@
 
     minusTextSize(){
       if(this.textSize > 0) this.textSize --;
+    }
+
+    @Watch("mode")
+    onModeChange(newVal: string) {
+        if (newVal === "query") {
+            this.isQuerying = true;
+        }else {
+            this.isQuerying = false;
+        }
+        this.FocusNode.domain = [];
     }
 
     // Whenever a node reports it has resized, update it's style so that it redraws.
@@ -235,19 +231,6 @@
         });
     }
 
-    // style selection for state observation and query button
-    stateStyle(state: string): string {
-      const selectedStyle = "color: white; background-color:grey";
-      const unselectedStyle = "background-color:white";
-
-      if (state === "query") {
-        return this.isQuerying ? selectedStyle : unselectedStyle;
-      } else if (state === "observe") {
-        return this.isQuerying ? unselectedStyle : selectedStyle;
-      }
-
-      return unselectedStyle;
-    }
   }
 
 </script>
