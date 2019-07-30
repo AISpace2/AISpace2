@@ -245,15 +245,15 @@ def is_word(*letters, words=words1):
 letters = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
            "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y",
            "z"}
-csp_crossword2d = CSP({"p00": letters, "p01": letters, "p02": letters,
-                       "p10": letters, "p11": letters, "p12": letters,
-                       "p20": letters, "p21": letters, "p22": letters},
-                      [Constraint(("p00", "p01", "p02"), is_word),
-                       Constraint(("p10", "p11", "p12"), is_word),
-                       Constraint(("p20", "p21", "p22"), is_word),
-                       Constraint(("p00", "p10", "p20"), is_word),
-                       Constraint(("p01", "p11", "p21"), is_word),
-                       Constraint(("p02", "p12", "p22"), is_word)])
+csp_crossword2d = CSP({'p00': letters, 'p01': letters, 'p02': letters,
+                       'p10': letters, 'p11': letters, 'p12': letters,
+                       'p20': letters, 'p21': letters, 'p22': letters},
+                      [Constraint(('p00', 'p01', 'p02'), is_word),
+                       Constraint(('p10', 'p11', 'p12'), is_word),
+                       Constraint(('p20', 'p21', 'p22'), is_word),
+                       Constraint(('p00', 'p10', 'p20'), is_word),
+                       Constraint(('p01', 'p11', 'p21'), is_word),
+                       Constraint(('p02', 'p12', 'p22'), is_word)])
 
 # def test(CSP_solver, csp=csp_simple2, solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
 #     """CSP_solver is a solver that finds a solution to a CSP.
