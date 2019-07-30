@@ -1,265 +1,270 @@
 <!DOCTYPE html>
-
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AISpace2 &mdash; Tutorial</title>
-    <link rel="icon" type="image/png" href="assets/images/icons/favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="assets/images/icons/favicon-16x16.png" sizes="16x16" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
-    <link href="assets/styles/style.css" rel="stylesheet">
-    <script src="assets/scripts/siema.min.js"></script>
-    <script>
-      (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-          (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date(); a = s.createElement(o),
-          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-      ga('create', 'UA-105176225-2', 'auto');
-      ga('send', 'pageview');
-    </script>
-  </head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AISpace2 &mdash; Tutorial</title>
+  <link rel="icon" type="image/png" href="assets/images/icons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="assets/images/icons/favicon-16x16.png" sizes="16x16" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
+  <link href="assets/styles/style.css" rel="stylesheet">
+  <script src="assets/scripts/siema.min.js"></script>
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-  <body>
-    <div id="navbar">
-      <a href="index.html">Home</a>
-      <a href="install.html">Install</a>
-      <!-- <a href="notebooks.html">Notebooks</a> -->
-      <a href="contribute.html">Contribute</a>
-      <a href="tutorial.html" class="selected">Tutorial</a>
-      <a href="about.html">About</a>
-    </div>
+    ga('create', 'UA-105176225-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+</head>
 
-    <header>
-      <h1>Tutorial</h1>
-      <h2>The details of AISpace2.</h2>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
-      </svg>
-    </header>
+<body>
+  <div id="navbar">
+    <a href="index.html">Home</a>
+    <a href="install.html">Install</a>
+    <!-- <a href="notebooks.html">Notebooks</a> -->
+    <a href="contribute.html">Contribute</a>
+    <a href="tutorial.html" class="selected">Tutorial</a>
+    <a href="about.html">About</a>
+  </div>
 
-    <section class="column inline">
-      <h1>TL; DR</h1>
-      <p>
-        Don't be scared by tons of information here! Basically AISpace2 is designed to be very easy and friendly to use &mdash; you can skip this page and go play with it first
-        and then go back here when you encounter any troubles or questions. If your question is not resolved here, please send it to <a href = "mailto:help@aispace.org?subject=AISpace2 Feedback">help@aispace.org</a>.
-      </p>
-      <h2 id="tutorial-table-contents" class="linkify"><a href="#tutorial-table-contents">Table of Contents</a></h2>
-      <ul>
-        <li>
-          <a href="#tutorial-common">Common</a>
-          <ul>
-            <li><a href="#tutorial-common-jupyter">JupyterLab</a></li>
-            <li><a href="#tutorial-common-buttons">Buttons</a></li>
-            <li><a href="#tutorial-common-visualization-options">Visualization Options</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#tutorial-search">Search</a>
-          <ul>
-            <li><a href="#tutorial-search-legend">Legend</a></li>
-            <li><a href="#tutorial-search-supported-classes">Supported Classes</a></li>
-            <li><a href="#tutorial-search-included-problems">Included Problems</a></li>
-            <li><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#tutorial-csp">CSP</a>
-          <ul>
-            <li><a href="#tutorial-csp-legend">Legend</a></li>
-            <li><a href="#tutorial-csp-supported-classes">Supported Classes</a></li>
-            <li><a href="#tutorial-csp-included-problems">Included Problems</a></li>
-            <li><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#tutorial-planning">Planning</a>
-          <ul>
-            <li><a href="#tutorial-planning-supported-classes">Supported Classes</a></li>
-            <li><a href="#tutorial-planning-included-problems">Included Problems</a></li>
-            <li><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#tutorial-bayesian">Bayesian Network</a>
-          <ul>
-            <li><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></li>
-            <li><a href="#tutorial-bayesian-included-problems">Included Problems</a></li>
-            <li><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#tutorial-faq">FAQ</a>
-          <ul>
-            <li><a href="#tutorial-faq-relationship-aispace-aispace2">What's the relationship between AIspace and AISpace2?</a></li>
-            <li><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></li>
-            <li><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></li>
-            <li><a href="#tutorial-faq-why-update-aipython-not-reflect">How can I change Python code?</a></li>
-            <li><a href="#tutorial-faq-why-update-frontend-not-reflect">How can I change frontend?</a></li>
-            <li><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></li>
-          </ul>
-        </li>
-      </ul>
-    </section>
+  <header>
+    <h1>Tutorial</h1>
+    <h2>The details of AISpace2.</h2>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
+    </svg>
+  </header>
 
-    <section id="tutorial-common" class="column inline">
-      <h2 id="common" class="linkify"><a href="#tutorial-common">Common</a></h2>
-      Here are some common instructions about AISpace2.
-      <ul>
-        <li><a href="#tutorial-common-jupyter">JupyterLab</a></li>
-        <li><a href="#tutorial-common-buttons">Buttons</a></li>
-        <li><a href="#tutorial-common-visualization-options">Visualization Options</a></li>
-      </ul>
-      <h3 id="tutorial-common-jupyter" class="linkify"><a href="#tutorial-common-jupyter">JupyterLab</a></h3>
-      <p>
-        <a href="https://jupyter-notebook.readthedocs.io/en/stable/" target="_blank">JupyterLab</a>  is based on and very similar to <a href="https://jupyterlab.readthedocs.io/en/stable/" target="_blank">Jupyter Notebook</a>,
-        a web-based and interactive computing notebook environment. If this is your first time using JupyterLab and you have not used Jupyter Notebook before,
-        we particularly recommend getting yourself familiarize with <a href="https://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Notebook%20Basics.html" target="_blank">Jupyter Notebook Basics</a> and
-        <a href="https://jupyterlab.readthedocs.io/en/stable/user/interface.html" target="_blank" >JupyterLab Interface</a> to quickly get up to speed.
-        Notice that <strong>we will only provide the support for JupyterLab</strong> and you might encounter unexpected behaviors if you use AISpace2 in Jupyter Notebook.
-        (What's the difference between JupyterLab and Jupyter Notebook? See <a href="#tutorial-faq-relationship-notebook-lab">here</a>.)
-      </p>
-      <h3 id="tutorial-common-buttons" class="linkify"><a href="#tutorial-common-buttons">Buttons</a></h3>
-      <p>
-        <img src="assets/images/tutorial/common-buttons.png" alt="Main visualizations controls" />
-      </p>
-      <ul>
-        <li><strong>Fine Step</strong>: Advance the procedure to next fine step.</li>
-        <li><strong>Step</strong>: Advance the procedure to next step.</li>
-        <li><strong>Auto Solve</strong>: Run the algorithm step by step until a solution is found.</li>
-        <li><strong>Pause</strong>: Pause as soon as the current fine step has finished. Useful to stop auto solving.
-        <li><strong>Print Positions</strong>: Print the positions of nodes, which can be passed as parameter into problem construction when you want nodes to be at certain place.
-        </li>
-      </ul>
-      <p>You can resize the height of the visualization by dragging the resize handle (<span style="display: inline-block; width: 10px; height: 10px; background: #727272"></span>)
-        in the bottom right corner. The width of the visualization can be changed by resizing the window. In either case, the
-        nodes will reposition themselves until they all fit on screen.</p>
-      <h3 id="tutorial-common-visualization-options" class="linkify"><a href="#tutorial-common-visualization-options">Visualization Options</a></h3>
-      <ul>
-        <li><code>sleep_time</code>: The time, in seconds, between each step in auto solving. Defaults to <code>0.2</code>.
-        </li>
-        <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
-        <li><code>text_size</code>: The fontsize of the text, in pixels. Defaults to <code>15</code>.</li>
-        <li><code>detail_level</code>: The detail level of the information shown on a node. <code>0</code>=showing no text;
-          <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.</li>
-        <li><code>show_edge_costs</code> (only in search related problems): If <code>True</code>, shows the cost of each edge along the line.</li>
-        <li><code>show_node_heuristics</code> (only in search related problems): If <code>True</code>, show the node's heuristic value (h-value) inside the node.</li>
-        <li><code>decimal_place</code> (only in probability related problems): Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
-      </ul>
-    </section>
-
-
-    <section id="tutorial-search" class="column inline">
-      <h2 class="linkify"><a href="#tutorial-search">Search</a></h2>
-      <p>You can explore and investigate famous search algorithms, including depth-first search (DFS), A* search and branch-and-bound search.</p>
-      <ul>
-        <li><a href="#tutorial-search-legend">Legend</a></li>
-        <li><a href="#tutorial-search-supported-classes">Supported Classes</a></li>
-        <li><a href="#tutorial-search-included-problems">Included Problems</a></li>
-        <li><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></li>
-      </ul>
-      <h3 id="tutorial-search-legend" class="linkify"><a href="#tutorial-search-legend">Legend</a></h3>
-      <p>
-        <svg viewBox="0 0 42 32">
-          <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-        </svg>&mdash; The start node is filled in purple.
-      </p>
-      <p>
-        <svg viewBox="0 0 42 32">
-          <ellipse rx="20" ry="15" fill="gold" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-        </svg>&mdash; The goal nodes are filled in yellow.
-      </p>
-      <p>
-        <svg viewBox="0 0 42 32">
-          <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
-        </svg>&mdash; The regular nodes (neither start nor goal) are filled in white.
-      </p>
-      <p>
-        <svg viewBox="0 0 44 34">
-          <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
-        </svg>&mdash; The frontier nodes are the nodes at the end of each path in the frontier. They are outlined in green.
-      </p>
-      <p>
-        <svg viewBox="0 0 220 38">
-          <path data-v-6814c63b="" d="M40,19L80,19" stroke="red" stroke-width="4"></path>
-          <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
-          <path data-v-6814c63b="" d="M125,19L165,19" stroke="red" stroke-width="4"></path>
-          <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(158, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
-          <ellipse rx="20" ry="15" fill="orchid" stroke="red" stroke-width="3" cx="22" cy="19"></ellipse>
-          <ellipse rx="20" ry="15" fill="white" stroke="red" stroke-width="3" cx="105" cy="19"></ellipse>
-          <ellipse rx="20" ry="15" fill="gold" stroke="red" stroke-width="3" cx="189" cy="19"></ellipse>
-        </svg>
-        &mdash; The current path is the being expanded. It is outlined in red.
-      </p>
-      <p>
-        <svg viewBox="0 0 130 38">
-          <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
-          <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="blue" fill="blue" stroke-width="7"></polygon>
-          <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="19"></ellipse>
-          <ellipse rx="20" ry="15" fill="gold" stroke="blue" stroke-width="3" cx="105" cy="19"></ellipse>
-        </svg>
-        &mdash; The neighbour nodes are the neighbours of the nodes in the current path. They are outlined in blue.
-      </p>
-      <h3 id="tutorial-search-supported-classes" class="linkify"><a href="#tutorial-search-supported-classes">Supported Classes</a></h3>
-      <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
-      <h3 id="tutorial-search-included-problems" class="linkify"><a href="#tutorial-search-included-problems">Included Problems</a></h3>
-      <p>
-        <figure>
-          <img src="assets/images/problems/search_simple1.png" alt="Simple Search Problem 1" />
-          <figcaption>
-            <code>search_simple1</code>: A simple search problem
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/search_simple2.png" alt="Simple Search Problem 2" />
-          <figcaption>
-            <code>search_simple2</code>: Another simple search problem
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/search_edgeless.png" alt="Edgeless Search Problem" />
-          <figcaption>
-            <code>search_edgeless</code>: A search problem where there are no edges
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
-          <figcaption>
-            <code>search_acyclic_delivery</code>: A robot delivery problem that has no cycles
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/search_cyclic_delivery.png" alt="Cyclic Search Problem" />
-          <figcaption>
-            <code>search_cyclic_delivery</code>: A robot delivery problem that has cycles
-          </figcaption>
-        </figure>
-      </p>
-      <h3 id="tutorial-search-construct-yourself" class="linkify"><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></h3>
-      <p>
-        Apart from the included problems, you can also construct various search problems by yourself. The simplest way is to use the search builder in <code>/notebooks/search/search_builder.ipynb</code> to help you generate a search problem visually.
-        Alternatively, you can also use the <code>Search_problem_from_explicit_graph</code>
-        class defined in <code>/aipython/searchProblem.py</code> to construct a search problem, which includes
-      </p>
+  <section class="column inline">
+    <h1>TL; DR</h1>
+    <p>
+      Don't be scared by tons of information here! Basically AISpace2 is designed to be very easy and friendly to use &mdash; you can skip this page and go play with it first
+      and then go back here when you encounter any troubles or questions. If your question is not resolved here, please send it to <a href="mailto:help@aispace.org?subject=AISpace2 Feedback">help@aispace.org</a>.
+    </p>
+    <h2 id="tutorial-table-contents" class="linkify"><a href="#tutorial-table-contents">Table of Contents</a></h2>
+    <ul>
+      <li>
+        <a href="#tutorial-common">Common</a>
         <ul>
-          <li><code>nodes</code>, a list of nodes,</li>
-          <li><code>arcs</code>, a list of arcs,</li>
-          <li><code>start</code>, the start node,</li>
-          <li><code>goals</code>, a list of goals,</li>
-          <li><code>hmap</code> (optional), a dictionary of node heuristic values, and</li>
-          <li><code>positions</code> (optional), a dictionary of node positions.</li>
+          <li><a href="#tutorial-common-jupyter">JupyterLab</a></li>
+          <li><a href="#tutorial-common-buttons">Buttons</a></li>
+          <li><a href="#tutorial-common-visualization-options">Visualization Options</a></li>
         </ul>
-      <p>
-        The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
-        You can refer to the file for a more precise definition and some examples of problem construction.
-        One example of defining <code>search_simple1</code> is illustrated below.
-      </p>
-      <!-- HTML generated using hilite.me -->
-      <pre style="margin: 0; line-height: 125%">search_simple1 <span style="color: #666666">=</span> Search_problem_from_explicit_graph(
+      </li>
+      <li>
+        <a href="#tutorial-search">Search</a>
+        <ul>
+          <li><a href="#tutorial-search-legend">Legend</a></li>
+          <li><a href="#tutorial-search-supported-classes">Supported Classes</a></li>
+          <li><a href="#tutorial-search-included-problems">Included Problems</a></li>
+          <li><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-csp">CSP</a>
+        <ul>
+          <li><a href="#tutorial-csp-legend">Legend</a></li>
+          <li><a href="#tutorial-csp-supported-classes">Supported Classes</a></li>
+          <li><a href="#tutorial-csp-included-problems">Included Problems</a></li>
+          <li><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-planning">Planning</a>
+        <ul>
+          <li><a href="#tutorial-planning-supported-classes">Supported Classes</a></li>
+          <li><a href="#tutorial-planning-included-problems">Included Problems</a></li>
+          <li><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-bayesian">Bayesian Network</a>
+        <ul>
+          <li><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></li>
+          <li><a href="#tutorial-bayesian-included-problems">Included Problems</a></li>
+          <li><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#tutorial-faq">FAQ</a>
+        <ul>
+          <li><a href="#tutorial-faq-relationship-aispace-aispace2">What's the relationship between AIspace and AISpace2?</a></li>
+          <li><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></li>
+          <li><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></li>
+          <li><a href="#tutorial-faq-why-update-aipython-not-reflect">How can I change Python code?</a></li>
+          <li><a href="#tutorial-faq-why-update-frontend-not-reflect">How can I change frontend?</a></li>
+          <li><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section id="tutorial-common" class="column inline">
+    <h2 id="common" class="linkify"><a href="#tutorial-common">Common</a></h2>
+    Here are some common instructions about AISpace2.
+    <ul>
+      <li><a href="#tutorial-common-jupyter">JupyterLab</a></li>
+      <li><a href="#tutorial-common-buttons">Buttons</a></li>
+      <li><a href="#tutorial-common-visualization-options">Visualization Options</a></li>
+    </ul>
+    <h3 id="tutorial-common-jupyter" class="linkify"><a href="#tutorial-common-jupyter">JupyterLab</a></h3>
+    <p>
+      <a href="https://jupyter-notebook.readthedocs.io/en/stable/" target="_blank">JupyterLab</a> is based on and very similar to <a href="https://jupyterlab.readthedocs.io/en/stable/" target="_blank">Jupyter Notebook</a>,
+      a web-based and interactive computing notebook environment. If this is your first time using JupyterLab and you have not used Jupyter Notebook before,
+      we particularly recommend getting yourself familiarize with <a href="https://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Notebook%20Basics.html" target="_blank">Jupyter Notebook Basics</a> and
+      <a href="https://jupyterlab.readthedocs.io/en/stable/user/interface.html" target="_blank">JupyterLab Interface</a> to quickly get up to speed.
+      Notice that <strong>we will only provide the support for JupyterLab</strong> and you might encounter unexpected behaviors if you use AISpace2 in Jupyter Notebook.
+      (What's the difference between JupyterLab and Jupyter Notebook? See <a href="#tutorial-faq-relationship-notebook-lab">here</a>.)
+    </p>
+    <h3 id="tutorial-common-buttons" class="linkify"><a href="#tutorial-common-buttons">Buttons</a></h3>
+    <p>
+      <img src="assets/images/tutorial/common-buttons.png" alt="Main visualizations controls" />
+    </p>
+    <ul>
+      <li><strong>Fine Step</strong>: Advance the procedure to next fine step.</li>
+      <li><strong>Step</strong>: Advance the procedure to next step.</li>
+      <li><strong>Auto Solve</strong>: Run the algorithm step by step until a solution is found.</li>
+      <li><strong>Pause</strong>: Pause as soon as the current fine step has finished. Useful to stop auto solving.
+      <li><strong>Print Positions</strong>: Print the positions of nodes, which can be passed as parameter into problem construction when you want nodes to be at certain place.
+      </li>
+    </ul>
+    <p>You can resize the height of the visualization by dragging the resize handle (<span style="display: inline-block; width: 10px; height: 10px; background: #727272"></span>)
+      in the bottom right corner. The width of the visualization can be changed by resizing the window. In either case, the
+      nodes will reposition themselves until they all fit on screen.</p>
+    <h3 id="tutorial-common-visualization-options" class="linkify"><a href="#tutorial-common-visualization-options">Visualization Options</a></h3>
+    <ul>
+      <li><code>sleep_time</code>: The time, in seconds, between each step in auto solving. Defaults to <code>0.2</code>.
+      </li>
+      <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
+      <li><code>text_size</code>: The fontsize of the text, in pixels. Defaults to <code>15</code>.</li>
+      <li><code>detail_level</code>: The detail level of the information shown on a node. <code>0</code>=showing no text;
+        <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.</li>
+      <li><code>show_edge_costs</code> (only in search related problems): If <code>True</code>, shows the cost of each edge along the line.</li>
+      <li><code>show_node_heuristics</code> (only in search related problems): If <code>True</code>, show the node's heuristic value (h-value) inside the node.</li>
+      <li><code>decimal_place</code> (only in probability related problems): Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
+    </ul>
+  </section>
+
+
+  <section id="tutorial-search" class="column inline">
+    <h2 class="linkify"><a href="#tutorial-search">Search</a></h2>
+    <p>You can explore and investigate famous search algorithms, including depth-first search (DFS), A* search and branch-and-bound search.</p>
+    <ul>
+      <li><a href="#tutorial-search-legend">Legend</a></li>
+      <li><a href="#tutorial-search-supported-classes">Supported Classes</a></li>
+      <li><a href="#tutorial-search-included-problems">Included Problems</a></li>
+      <li><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></li>
+    </ul>
+    <h3 id="tutorial-search-legend" class="linkify"><a href="#tutorial-search-legend">Legend</a></h3>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="orchid" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; The start node is filled in purple.
+    </p>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="gold" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; The goal nodes are filled in yellow.
+    </p>
+    <p>
+      <svg viewBox="0 0 42 32">
+        <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="16"></ellipse>
+      </svg>&mdash; The regular nodes (neither start nor goal) are filled in white.
+    </p>
+    <p>
+      <svg viewBox="0 0 44 34">
+        <ellipse rx="20" ry="15" fill="white" stroke="green" stroke-width="3" cx="22" cy="17"></ellipse>
+      </svg>&mdash; The frontier nodes are the nodes at the end of each path in the frontier. They are outlined in green.
+    </p>
+    <p>
+      <svg viewBox="0 0 220 38">
+        <path data-v-6814c63b="" d="M40,19L80,19" stroke="red" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
+        <path data-v-6814c63b="" d="M125,19L165,19" stroke="red" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(158, 17)" stroke="red" fill="blue" stroke-width="7"></polygon>
+        <ellipse rx="20" ry="15" fill="orchid" stroke="red" stroke-width="3" cx="22" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="white" stroke="red" stroke-width="3" cx="105" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="gold" stroke="red" stroke-width="3" cx="189" cy="19"></ellipse>
+      </svg>
+      &mdash; The current path is the being expanded. It is outlined in red.
+    </p>
+    <p>
+      <svg viewBox="0 0 130 38">
+        <path data-v-6814c63b="" d="M40,19L80,19" stroke="blue" stroke-width="4"></path>
+        <polygon data-v-6814c63b="" points="0 0 4 2 0 4" transform="translate(74, 17)" stroke="blue" fill="blue" stroke-width="7"></polygon>
+        <ellipse rx="20" ry="15" fill="white" stroke="black" stroke-width="1" cx="21" cy="19"></ellipse>
+        <ellipse rx="20" ry="15" fill="gold" stroke="blue" stroke-width="3" cx="105" cy="19"></ellipse>
+      </svg>
+      &mdash; The neighbour nodes are the neighbours of the nodes in the current path. They are outlined in blue.
+    </p>
+    <h3 id="tutorial-search-supported-classes" class="linkify"><a href="#tutorial-search-supported-classes">Supported Classes</a></h3>
+    <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
+    <h3 id="tutorial-search-included-problems" class="linkify"><a href="#tutorial-search-included-problems">Included Problems</a></h3>
+    <p>
+      <figure>
+        <img src="assets/images/problems/search_simple1.png" alt="Simple Search Problem 1" />
+        <figcaption>
+          <code>search_simple1</code>: A simple search problem
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/search_simple2.png" alt="Simple Search Problem 2" />
+        <figcaption>
+          <code>search_simple2</code>: Another simple search problem
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/search_edgeless.png" alt="Edgeless Search Problem" />
+        <figcaption>
+          <code>search_edgeless</code>: A search problem where there are no edges
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
+        <figcaption>
+          <code>search_acyclic_delivery</code>: A robot delivery problem that has no cycles
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/search_cyclic_delivery.png" alt="Cyclic Search Problem" />
+        <figcaption>
+          <code>search_cyclic_delivery</code>: A robot delivery problem that has cycles
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="tutorial-search-construct-yourself" class="linkify"><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></h3>
+    <p>
+      Apart from the included problems, you can also construct various search problems by yourself. The simplest way is to use the search builder in <code>/notebooks/search/search_builder.ipynb</code> to help you generate a search problem visually.
+      Alternatively, you can also use the <code>Search_problem_from_explicit_graph</code>
+      class defined in <code>/aipython/searchProblem.py</code> to construct a search problem, which includes
+    </p>
+    <ul>
+      <li><code>nodes</code>, a list of nodes,</li>
+      <li><code>arcs</code>, a list of arcs,</li>
+      <li><code>start</code>, the start node,</li>
+      <li><code>goals</code>, a list of goals,</li>
+      <li><code>hmap</code> (optional), a dictionary of node heuristic values, and</li>
+      <li><code>positions</code> (optional), a dictionary of node positions.</li>
+    </ul>
+    <p>
+      The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
+      You can refer to the file for a more precise definition and some examples of problem construction.
+      One example of defining <code>search_simple1</code> is illustrated below.
+    </p>
+    <!-- HTML generated using hilite.me -->
+    <pre style="margin: 0; line-height: 125%">search_simple1 <span style="color: #666666">=</span> Search_problem_from_explicit_graph(
         nodes<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>},
         arcs<span style="color: #666666">=</span>[Arc(<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;a&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #666666">3</span>), Arc(<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #666666">1</span>),
               Arc(<span style="color: #BA2121">&#39;b&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #666666">3</span>), Arc(<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;d&#39;</span>,<span style="color: #666666">1</span>), Arc(<span style="color: #BA2121">&#39;c&#39;</span>,<span style="color: #BA2121">&#39;g&#39;</span>,<span style="color: #666666">3</span>),
@@ -271,102 +276,102 @@
 </pre>
 
 
-    </section>
+  </section>
 
 
-    <section id="tutorial-csp" class="column inline">
-      <h2 id="csp" class="linkify"><a href="#tutorial-csp">CSP</a></h2>
-      <p>Three tools are provided for solving constraint satisfaction problems (CSPs): arc consistency algorithm, converting CSP to a search problem, and stochastic local search (SLS).</p>
-      <ul>
-        <li><a href="#tutorial-csp-legend">Legend</a></li>
-        <li><a href="#tutorial-csp-supported-classes">Supported Classes</a></li>
-        <li><a href="#tutorial-csp-included-problems">Included Problems</a></li>
-        <li><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></li>
-      </ul>
-      <h3 id="tutorial-csp-legend" class="linkify"><a href="#tutorial-csp-legend">Legend</a></h3>
-      <p>
-        <svg viewBox="0 0 30 20">
-          <rect width="20" height="20" stroke="blue" fill="blue"></rect>
-        </svg>&mdash; To-do arc: the arc needs to be checked to see whether it is consistent.
-      </p>
-      <p>
-        <svg viewBox="0 0 30 20">
-          <rect width="20" height="20" stroke="green" fill="green"></rect>
-        </svg>&mdash; Consistent arc: the arc is consistent.
-      </p>
-      <p>
-        <svg viewBox="0 0 30 20">
-          <rect width="20" height="20" stroke="red" fill="red"></rect>
-        </svg>&mdash; Inconsistent arc: the arc is not consistent.
-      </p>
-      <p>
-        <svg viewBox="0 0 30 20">
-          <rect width="20" height="20" stroke="purple" fill="purple"></rect>
-        </svg>&mdash; Domain-splittable variable: the variable whose domain can be split is outlined in purple.
-      </p>
-      <p>
-        You can click on any blue or red arc to perform arc consistency algorithm on that arc. When you use Fine Step, Step, Auto Arc Consistency or
-        Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain can be slipt if needed. The domain will be automatically split into half if it is in auto solving mode.
-        If it is not in auto solving mode, you can click on a node to split its domain.
-      </p>
-      <h3 id="tutorial-csp-supported-classes" class="linkify"><a href="#tutorial-csp-supported-classes">Supported Classes</a></h3>
-      <p><code>Con_solver</code>, <code>SLSearcher</code></p>
-      <h3 id="tutorial-csp-included-problems" class="linkify"><a href="#tutorial-csp-included-problems">Included Problems</a></h3>
-      <p>
-        <figure>
-          <img src="assets/images/problems/csp_simple1.png" alt="Simple CSP 1" />
-          <figcaption>
-            <code>csp_simple1</code>: A simple CSP
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/csp_simple2.png" alt="Simple CSP 2" />
-          <figcaption>
-            <code>csp_simple2</code>: Another simple CSP
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/csp_extended.png" alt="Extended CSP" />
-          <figcaption>
-            <code>csp_extended</code>: A more complex CSP
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/csp_crossword1.png" alt="CSP Crossword 1" />
-          <figcaption>
-            <code>csp_crossword1</code>: A crossword that represents word positions as variables
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/csp_crossword2.png" alt="CSP Crossword 2" />
-          <figcaption>
-            <code>csp_crossword2</code>: Another crossword that represents word positions as variables
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/csp_crossword2d.png" alt="CSP Crossword 2d" />
-          <figcaption>
-            <code>csp_crossword2d</code>: A crossword that represents squares as variables
-          </figcaption>
-        </figure>
-      </p>
-      <h3 id="tutorial-csp-construct-yourself" class="linkify"><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></h3>
-      <p>
-        Apart from the included problems, you can also construct various CSP problems by yourself. The simplest way is to use the CSP builder in <code>/notebooks/csp/csp_builder.ipynb</code> to help you generate a CSP problem visually.
-        Alternatively, You can use the <code>CSP</code> class defined in <code>/aipython/cspProblem.py</code> to construct a CSP problem, which includes
-      </p>
-        <ul>
-          <li><code>domains</code>, a dictionary that maps each variable to its domain,</li>
-          <li><code>constraints</code>, a list of <code>Constraint</code>s, and</li>
-          <li><code>positions</code> (optional), a dictionary of variable positions.</li>
-        </ul>
-      <p>
-        The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
-        You can refer to the file for a more precise definition and some examples of problem construction.
-        One example of defining <code>csp_simple2</code> is illustrated below.
-      </p>
-      <!-- HTML generated using hilite.me -->
-      <pre style="margin: 0; line-height: 125%">con1 <span style="color: #666666">=</span> Constraint((<span style="color: #BA2121">&#39;A&#39;</span>,<span style="color: #BA2121">&#39;B&#39;</span>),lt)
+  <section id="tutorial-csp" class="column inline">
+    <h2 id="csp" class="linkify"><a href="#tutorial-csp">CSP</a></h2>
+    <p>Three tools are provided for solving constraint satisfaction problems (CSPs): arc consistency algorithm, converting CSP to a search problem, and stochastic local search (SLS).</p>
+    <ul>
+      <li><a href="#tutorial-csp-legend">Legend</a></li>
+      <li><a href="#tutorial-csp-supported-classes">Supported Classes</a></li>
+      <li><a href="#tutorial-csp-included-problems">Included Problems</a></li>
+      <li><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></li>
+    </ul>
+    <h3 id="tutorial-csp-legend" class="linkify"><a href="#tutorial-csp-legend">Legend</a></h3>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <rect width="20" height="20" stroke="blue" fill="blue"></rect>
+      </svg>&mdash; To-do arc: the arc needs to be checked to see whether it is consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <rect width="20" height="20" stroke="green" fill="green"></rect>
+      </svg>&mdash; Consistent arc: the arc is consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <rect width="20" height="20" stroke="red" fill="red"></rect>
+      </svg>&mdash; Inconsistent arc: the arc is not consistent.
+    </p>
+    <p>
+      <svg viewBox="0 0 30 20">
+        <rect width="20" height="20" stroke="purple" fill="purple"></rect>
+      </svg>&mdash; Domain-splittable variable: the variable whose domain can be split is outlined in purple.
+    </p>
+    <p>
+      You can click on any blue or red arc to perform arc consistency algorithm on that arc. When you use Fine Step, Step, Auto Arc Consistency or
+      Auto Solve buttons, a random arc is chosen. After arc consistency is finished, the domain can be slipt if needed. The domain will be automatically split into half if it is in auto solving mode.
+      If it is not in auto solving mode, you can click on a node to split its domain.
+    </p>
+    <h3 id="tutorial-csp-supported-classes" class="linkify"><a href="#tutorial-csp-supported-classes">Supported Classes</a></h3>
+    <p><code>Con_solver</code>, <code>SLSearcher</code></p>
+    <h3 id="tutorial-csp-included-problems" class="linkify"><a href="#tutorial-csp-included-problems">Included Problems</a></h3>
+    <p>
+      <figure>
+        <img src="assets/images/problems/csp_simple1.png" alt="Simple CSP 1" />
+        <figcaption>
+          <code>csp_simple1</code>: A simple CSP
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_simple2.png" alt="Simple CSP 2" />
+        <figcaption>
+          <code>csp_simple2</code>: Another simple CSP
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_extended.png" alt="Extended CSP" />
+        <figcaption>
+          <code>csp_extended</code>: A more complex CSP
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_crossword1.png" alt="CSP Crossword 1" />
+        <figcaption>
+          <code>csp_crossword1</code>: A crossword that represents word positions as variables
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_crossword2.png" alt="CSP Crossword 2" />
+        <figcaption>
+          <code>csp_crossword2</code>: Another crossword that represents word positions as variables
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/csp_crossword2d.png" alt="CSP Crossword 2d" />
+        <figcaption>
+          <code>csp_crossword2d</code>: A crossword that represents squares as variables
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="tutorial-csp-construct-yourself" class="linkify"><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></h3>
+    <p>
+      Apart from the included problems, you can also construct various CSP problems by yourself. The simplest way is to use the CSP builder in <code>/notebooks/csp/csp_builder.ipynb</code> to help you generate a CSP problem visually.
+      Alternatively, You can use the <code>CSP</code> class defined in <code>/aipython/cspProblem.py</code> to construct a CSP problem, which includes
+    </p>
+    <ul>
+      <li><code>domains</code>, a dictionary that maps each variable to its domain,</li>
+      <li><code>constraints</code>, a list of <code>Constraint</code>s, and</li>
+      <li><code>positions</code> (optional), a dictionary of variable positions.</li>
+    </ul>
+    <p>
+      The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
+      You can refer to the file for a more precise definition and some examples of problem construction.
+      One example of defining <code>csp_simple2</code> is illustrated below.
+    </p>
+    <!-- HTML generated using hilite.me -->
+    <pre style="margin: 0; line-height: 125%">con1 <span style="color: #666666">=</span> Constraint((<span style="color: #BA2121">&#39;A&#39;</span>,<span style="color: #BA2121">&#39;B&#39;</span>),lt)
 con2 <span style="color: #666666">=</span> Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,),ne_(<span style="color: #666666">2</span>))
 con3 <span style="color: #666666">=</span> Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,<span style="color: #BA2121">&#39;C&#39;</span>),lt)
 csp_simple2 <span style="color: #666666">=</span> CSP(
@@ -377,49 +382,49 @@ csp_simple2 <span style="color: #666666">=</span> CSP(
 </pre>
 
 
-    </section>
+  </section>
 
 
-    <section id="tutorial-planning" class="column inline">
-      <h2 id="planning" class="linkify"><a href="#tutorial-planning">Planning</a></h2>
-      <p>Planning problems can be represented in STRIPS form and can be solved either by converting to a search problem or converting to a CSP problem.</p>
-      <ul>
-        <li><a href="#tutorial-planning-supported-classes">Supported Classes</a></li>
-        <li><a href="#tutorial-planning-included-problems">Included Problems</a></li>
-        <li><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></li>
-      </ul>
-      <h3 id="tutorial-planning-supported-classes" class="linkify"><a href="#tutorial-planning-supported-classes">Supported Classes</a></h3>
-      <p><code>Forward_STRIPS</code>, <code>Regression_STRIPS</code></p>
-      <h3 id="tutorial-planning-included-problems" class="linkify"><a href="#tutorial-planning-included-problems">Included Problems</a></h3>
-      <p>
-        We have included 6 planning problems in STRIPS representation. 3 of them model a robot delivery system: <code>strips_simple1</code>, <code>strips_simple2</code>
-        and <code>strips_simple3</code>; the other 3 model a block world: <code>strips_block1</code>, <code>strips_block2</code>
-        and <code>strips_block3</code>. Since it is hard to present the problems as graphs, you may view the details of them in <code>AISpace2/aipython/stripsProblem.py</code>.
-      </p>
-      <h3 id="tutorial-planning-construct-yourself" class="linkify"><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></h3>
-      <p>
-        Apart from the included problems, you can also construct various planning problems by yourself. You can use the <code>Planning_problem</code>
-        class defined in <code>/aipython/stripsProblem.py</code> to construct a planning problem, which includes
-      </p>
-        <ul>
-          <li><code>prob_domain</code>, a <code>STRIPS_domain</code>, which represents a planning domain,</li>
-          <li><code>initial_state</code>, the initial state,</li>
-          <li><code>goal</code>, the goal state, and</li>
-          <li><code>positions</code> (optional), a dictionary of variable positions.</li>
-        </ul>
-        A <code>STRIPS_domain</code> furthur includes
-        <ul>
-          <li><code>feats_vals</code>, a dictionary that maps each feature to its domain, and</li>
-          <li><code>strips_map</code>, a dictionary that maps each action to its <code>Strips</code> representation.</li>
-        </ul>
-      <p>
-        The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
-        You can refer to the file for a more precise definition and some examples of problem construction.
-        One example of defining <code>strips_simple1</code> is illustrated below. This example models a robot delivery system.
-      </p>
+  <section id="tutorial-planning" class="column inline">
+    <h2 id="planning" class="linkify"><a href="#tutorial-planning">Planning</a></h2>
+    <p>Planning problems can be represented in STRIPS form and can be solved either by converting to a search problem or converting to a CSP problem.</p>
+    <ul>
+      <li><a href="#tutorial-planning-supported-classes">Supported Classes</a></li>
+      <li><a href="#tutorial-planning-included-problems">Included Problems</a></li>
+      <li><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></li>
+    </ul>
+    <h3 id="tutorial-planning-supported-classes" class="linkify"><a href="#tutorial-planning-supported-classes">Supported Classes</a></h3>
+    <p><code>Forward_STRIPS</code>, <code>Regression_STRIPS</code></p>
+    <h3 id="tutorial-planning-included-problems" class="linkify"><a href="#tutorial-planning-included-problems">Included Problems</a></h3>
+    <p>
+      We have included 6 planning problems in STRIPS representation. 3 of them model a robot delivery system: <code>strips_simple1</code>, <code>strips_simple2</code>
+      and <code>strips_simple3</code>; the other 3 model a block world: <code>strips_block1</code>, <code>strips_block2</code>
+      and <code>strips_block3</code>. Since it is hard to present the problems as graphs, you may view the details of them in <code>AISpace2/aipython/stripsProblem.py</code>.
+    </p>
+    <h3 id="tutorial-planning-construct-yourself" class="linkify"><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></h3>
+    <p>
+      Apart from the included problems, you can also construct various planning problems by yourself. You can use the <code>Planning_problem</code>
+      class defined in <code>/aipython/stripsProblem.py</code> to construct a planning problem, which includes
+    </p>
+    <ul>
+      <li><code>prob_domain</code>, a <code>STRIPS_domain</code>, which represents a planning domain,</li>
+      <li><code>initial_state</code>, the initial state,</li>
+      <li><code>goal</code>, the goal state, and</li>
+      <li><code>positions</code> (optional), a dictionary of variable positions.</li>
+    </ul>
+    A <code>STRIPS_domain</code> furthur includes
+    <ul>
+      <li><code>feats_vals</code>, a dictionary that maps each feature to its domain, and</li>
+      <li><code>strips_map</code>, a dictionary that maps each action to its <code>Strips</code> representation.</li>
+    </ul>
+    <p>
+      The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
+      You can refer to the file for a more precise definition and some examples of problem construction.
+      One example of defining <code>strips_simple1</code> is illustrated below. This example models a robot delivery system.
+    </p>
 
-      <!-- HTML generated using hilite.me -->
-      <pre style="margin: 0; line-height: 125%">boolean <span style="color: #666666">=</span> {<span style="color: #008000">True</span>, <span style="color: #008000">False</span>}
+    <!-- HTML generated using hilite.me -->
+    <pre style="margin: 0; line-height: 125%">boolean <span style="color: #666666">=</span> {<span style="color: #008000">True</span>, <span style="color: #008000">False</span>}
 
 delivery_domain <span style="color: #666666">=</span> STRIPS_domain(
     feats_vals<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:{<span style="color: #BA2121">&#39;cs&#39;</span>, <span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;lab&#39;</span>, <span style="color: #BA2121">&#39;mr&#39;</span>}, <span style="color: #BA2121">&#39;RHC&#39;</span>:boolean,
@@ -447,63 +452,63 @@ strips_simple1 <span style="color: #666666">=</span> Planning_problem(prob_domai
                        <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>, <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>},
         goal<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>})
 </pre>
-    </section>
+  </section>
 
 
-    <section id="tutorial-bayesian" class="column inline">
-      <h2 id="bayesian" class="linkify"><a href="#tutorial-bayesian">Bayesian Network</a></h2>
-      <p>A Bayesian Network (BN) provides a model of conditional dependence among a set of random variables. You can make observations and query for the probabilities in our BN.</p>
-      <ul>
-        <li><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></li>
-        <li><a href="#tutorial-bayesian-included-problems">Included Problems</a></li>
-        <li><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></li>
-      </ul>
-      <h3 id="tutorial-bayesian-supported-classes" class="linkify"><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></h3>
-      <p><code>Belief_network</code></p>
-      <h3 id="tutorial-bayesian-included-problems" class="linkify"><a href="#tutorial-bayesian-included-problems">Included Problems</a></h3>
-      <p>
-        <figure>
-          <img src="assets/images/problems/bn1.png" alt="BN 1" />
-          <figcaption>
-            <code>bn1</code>: A simple Bayesian Network problem
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/bn2.png" alt="BN 2" />
-          <figcaption>
-            <code>bn2</code>: A Bayesian Network modeling a fire alarm system
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/bn3.png" alt="BN 3" />
-          <figcaption>
-            <code>bn3</code>: A Bayesian Network modeling a sprinkler system
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/problems/bn4.png" alt="BN 4" />
-          <figcaption>
-            <code>bn4</code>: A Bayesian Network where domains have more than 2 values
-          </figcaption>
-        </figure>
-      </p>
-      <h3 id="tutorial-bayesian-construct-yourself" class="linkify"><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></h3>
-      <p>
-        Apart from the included problems, you can also construct various belief network problems by yourself. You can use the <code>Belief_network</code>
-        class defined in <code>/aipython/probGraphicalModels.py</code> to construct a belief network problem, which includes
-      </p>
-        <ul>
-          <li><code></code>, a list of variables,</li>
-          <li><code>factors</code>, a list of factors, and</li>
-          <li><code>positions</code> (optional), a dictionary of variable positions.</li>
-        </ul>
-      <p>
-        The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
-        You can refer to the file for a more precise definition and some examples of problem construction.
-        One example of defining <code>bn2</code> is illustrated below. This example models a fire alarm system.
-      </p>
-      <!-- HTML generated using hilite.me -->
-      <pre style="margin: 0; line-height: 125%">Al <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Alarm&quot;</span>, boolean)
+  <section id="tutorial-bayesian" class="column inline">
+    <h2 id="bayesian" class="linkify"><a href="#tutorial-bayesian">Bayesian Network</a></h2>
+    <p>A Bayesian Network (BN) provides a model of conditional dependence among a set of random variables. You can make observations and query for the probabilities in our BN.</p>
+    <ul>
+      <li><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></li>
+      <li><a href="#tutorial-bayesian-included-problems">Included Problems</a></li>
+      <li><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></li>
+    </ul>
+    <h3 id="tutorial-bayesian-supported-classes" class="linkify"><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></h3>
+    <p><code>Belief_network</code></p>
+    <h3 id="tutorial-bayesian-included-problems" class="linkify"><a href="#tutorial-bayesian-included-problems">Included Problems</a></h3>
+    <p>
+      <figure>
+        <img src="assets/images/problems/bn1.png" alt="BN 1" />
+        <figcaption>
+          <code>bn1</code>: A simple Bayesian Network problem
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/bn2.png" alt="BN 2" />
+        <figcaption>
+          <code>bn2</code>: A Bayesian Network modeling a fire alarm system
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/bn3.png" alt="BN 3" />
+        <figcaption>
+          <code>bn3</code>: A Bayesian Network modeling a sprinkler system
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/problems/bn4.png" alt="BN 4" />
+        <figcaption>
+          <code>bn4</code>: A Bayesian Network where domains have more than 2 values
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="tutorial-bayesian-construct-yourself" class="linkify"><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></h3>
+    <p>
+      Apart from the included problems, you can also construct various belief network problems by yourself. You can use the <code>Belief_network</code>
+      class defined in <code>/aipython/probGraphicalModels.py</code> to construct a belief network problem, which includes
+    </p>
+    <ul>
+      <li><code></code>, a list of variables,</li>
+      <li><code>factors</code>, a list of factors, and</li>
+      <li><code>positions</code> (optional), a dictionary of variable positions.</li>
+    </ul>
+    <p>
+      The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
+      You can refer to the file for a more precise definition and some examples of problem construction.
+      One example of defining <code>bn2</code> is illustrated below. This example models a fire alarm system.
+    </p>
+    <!-- HTML generated using hilite.me -->
+    <pre style="margin: 0; line-height: 125%">Al <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Alarm&quot;</span>, boolean)
 Fi <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Fire&quot;</span>, boolean)
 Le <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Leaving&quot;</span>, boolean)
 Re <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Report&quot;</span>, boolean)
@@ -525,64 +530,65 @@ bn2 <span style="color: #666666">=</span> Belief_network(<span style="color: #00
 </pre>
 
 
-    </section>
+  </section>
 
 
-    <section id="tutorial-faq" class="column inline">
-      <h2 id="faq" class="linkify"><a href="#tutorial-faq">FAQ</a></h2>
-      Here are some frequently asked questions that may help you.
-      <ul>
-        <li><a href="#tutorial-faq-relationship-aispace-aispace2">What's the relationship between AIspace and AISpace2?</a></li>
-        <li><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></li>
-        <li><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></li>
-        <li><a href="#tutorial-faq-why-update-aipython-not-reflect">How can I change Python code?</a></li>
-        <li><a href="#tutorial-faq-why-update-frontend-not-reflect">How can I change frontend?</a></li>
-        <li><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></li>
-      </ul>
-      <h3 id="tutorial-faq-relationship-aispace-aispace2" class="linkify"><a href="#tutorial-faq-relationship-aispace-aispace2">What's the relationship between AIspace and AISpace2?</a></h3>
-      <p>
-        <a href="http://aispace.org" target="_blank">AIspace</a> is a set of Java applets for learning and exploring concepts in artificial intelligence. They can be downloaded and
-        run locally. AISpace2, an open source project and the next generation of AIspace, is an extension for <a href="http://jupyter.org/" target="_blank">Jupyter</a> and contains a set of Jupyter notebooks,
-        which can be run in the browser.
-      </p>
-      <p>
-        Both AIspace and AISpace2 use similar visualizations, but in AIspace the user was not able to see the code and might have hard time understanding
-        what is going on in the background. AISpace2 aims to integrate the code with interactive visualizations that are easy for students to extend and allow students to modify the AI algorithms.
-        In order to make this process more smoothly, in AISpace2 we separate the algorithms (inside <code>/aipython/</code>) from visualizations  (inside <code>/aispace2/</code> and <code>/js/</code>) and
-        the user can refer to and change the algorithms when they want to.
-      </p>
-      <p>
-        <figure>
-          <img src="assets/images/tutorial/faq-relationship-aispace.png" alt="AIspace" />
-          <figcaption>
-            AIspace: Java applets
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/tutorial/faq-relationship-aispace2.png" alt="AISpace2" />
-          <figcaption>
-            AISpace2: Jupyter notebooks
-          </figcaption>
-        </figure>
-      </p>
-      <h3 id="tutorial-faq-relationship-aispace2-aipython" class="linkify"><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></h3>
-      <p><a href="http://artint.info/AIPython/" target="_blank">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/" target="_blank">accompanying textbook</a>;
-        it can run independently without AISpace2 and Jupyter. AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for a more
-        easily understandable and friendly user interface and rich visualizations to accompany code.
-      </p>
-      <p>
-        In order to make this possible, 2 major modifications have to be made in AIPython, which make the source code you find in AISpace2 not exactly the same as AIPython.
-        The 2 changes are summarized below. Apart from these 2 modifications, other things are almost identical.
-      </p>
-      <ol>
-        <li>
-          <p>
-            The addition of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
-            to be visualized in Jupyter Notebook must have their definitions annotated with <code>@visualize</code>. For example,
-            if we had the following class:
-          </p>
+  <section id="tutorial-faq" class="column inline">
+    <h2 id="faq" class="linkify"><a href="#tutorial-faq">FAQ</a></h2>
+    Here are some frequently asked questions that may help you.
+    <ul>
+      <li><a href="#tutorial-faq-relationship-aispace-aispace2">What's the relationship between AIspace and AISpace2?</a></li>
+      <li><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></li>
+      <li><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></li>
+      <li><a href="#tutorial-faq-why-update-aipython-not-reflect">How can I change Python code?</a></li>
+      <li><a href="#tutorial-faq-why-update-frontend-not-reflect">How can I change frontend?</a></li>
+      <li><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></li>
+    </ul>
+    <h3 id="tutorial-faq-relationship-aispace-aispace2" class="linkify"><a href="#tutorial-faq-relationship-aispace-aispace2">What's the relationship between AIspace and AISpace2?</a></h3>
+    <p>
+      <a href="http://aispace.org" target="_blank">AIspace</a> is a set of Java applets for learning and exploring concepts in artificial intelligence. They can be downloaded and
+      run locally. AISpace2, an open source project and the next generation of AIspace, is an extension for <a href="http://jupyter.org/" target="_blank">Jupyter</a> and contains a set of Jupyter notebooks,
+      which can be run in the browser.
+    </p>
+    <p>
+      Both AIspace and AISpace2 use similar visualizations, but in AIspace the user was not able to see the code and might have hard time understanding
+      what is going on in the background. AISpace2 aims to integrate the code with interactive visualizations that are easy for students to extend and allow students to modify the AI algorithms.
+      In order to make this process more smoothly, in AISpace2 we separate the algorithms (inside <code>/aipython/</code>) from visualizations (inside <code>/aispace2/</code> and <code>/js/</code>) and
+      the user can refer to and change the algorithms when they want to.
+    </p>
+    <p>
+      <figure>
+        <img src="assets/images/tutorial/faq-relationship-aispace.png" alt="AIspace" />
+        <figcaption>
+          AIspace: Java applets
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/tutorial/faq-relationship-aispace2.png" alt="AISpace2" />
+        <figcaption>
+          AISpace2: Jupyter notebooks
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="tutorial-faq-relationship-aispace2-aipython" class="linkify"><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></h3>
+    <p><a href="http://artint.info/AIPython/" target="_blank">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/" target="_blank">accompanying textbook</a>;
+      it can run independently without AISpace2 and Jupyter. AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for a more
+      easily understandable and friendly user interface and rich visualizations to accompany code.
+    </p>
+    <p>
+      In order to make this possible, 2 major modifications have to be made in AIPython, which make the source code you find in AISpace2 not exactly the same as AIPython.
+      The 2 changes are summarized below. Apart from these 2 modifications, other things are almost identical.
+    </p>
+    <ol>
+      <li>
+        <p>
+          The addition of the <code>@visualize</code> decorator: All functions that you call <em>directly</em> on the instance
+          to be visualized in Jupyter Notebook must have their definitions annotated with <code>@visualize</code>. For example,
+          if we had the following class:
+        </p>
 
-          <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">class</span> <span style="color: #0000FF; font-weight: bold">Example</span>():
+        <!-- HTML generated using hilite.me -->
+        <pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">class</span> <span style="color: #0000FF; font-weight: bold">Example</span>():
   <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">bar</span>(<span style="color: #008000">self</span>):
     <span style="color: #008000; font-weight: bold">print</span>(<span style="color: #BA2121">&#39;bar&#39;</span>)
 
@@ -591,108 +597,113 @@ bn2 <span style="color: #666666">=</span> Belief_network(<span style="color: #00
     <span style="color: #008000; font-weight: bold">print</span>(<span style="color: #BA2121">&#39;foo&#39;</span>)
 </pre>
 
-          <p>and there was a cell inside Jupyter Notebook like this:</p>
+        <p>and there was a cell inside Jupyter Notebook like this:</p>
 
-          <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%">e <span style="color: #666666">=</span> Example()
+        <!-- HTML generated using hilite.me -->
+        <pre style="margin: 0; line-height: 125%">e <span style="color: #666666">=</span> Example()
 e<span style="color: #666666">.</span>foo()
 </pre>
 
-          <p>Then <code>foo()</code> would have to be annotated with <code>@visualize</code>, because it is called directly on the instance inside a cell; but
-            <code>bar()</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo()</code>. Annotating
-            <code>foo()</code> is as simple as adding a single line right above the declaration:</p>
+        <p>Then <code>foo()</code> would have to be annotated with <code>@visualize</code>, because it is called directly on the instance inside a cell; but
+          <code>bar()</code> wouldn't need to be annotated, because it is only called indirectly by <code>foo()</code>. Annotating
+          <code>foo()</code> is as simple as adding a single line right above the declaration:</p>
 
-          <!-- HTML generated using hilite.me --><pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF">@visualize</span>
+        <!-- HTML generated using hilite.me -->
+        <pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF">@visualize</span>
   <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">foo</span>(<span style="color: #008000">self</span>):
     <span style="color: #008000">self</span><span style="color: #666666">.</span>bar()
     <span style="color: #008000; font-weight: bold">print</span>(<span style="color: #BA2121">&#39;foo&#39;</span>)
 </pre>
 
-          <p>On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
-            you would have to also add <code>@visualize</code> to <code>bar()</code> as well.</p>
+        <p>On the other hand, if you also wanted to call <code>e.bar()</code> directly (either in the same cell or another),
+          you would have to also add <code>@visualize</code> to <code>bar()</code> as well.</p>
 
-          <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
-            will drive the visualization, so that it can set things up correctly.</p>
-        </li>
-        <li>
-          <p>
-            Change in imports: <code>Displayable</code> subclasses are imported from <code>aipython.utilities</code> in
-            AIPython, but are inherited from <code>aispace2.jupyter.*</code> inside AISpace2, where <code>*</code> depends on the
-            algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
-            The <code>@visualize</code> decorator is also imported from <code>aispace2.jupyter.*</code>.
-          </p>
-          <p>
-            The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
-            allow it to be displayed inside Jupyter.
-          </p>
-        </li>
-      </ol>
-      <h3 id="tutorial-faq-relationship-notebook-lab" class="linkify"><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></h3>
-      <p>
-        <a href="https://jupyter-notebook.readthedocs.io/en/stable/" target="_blank">Jupyter Notebook</a> is a web application for interactive <a href="https://nbformat.readthedocs.io/en/latest/" target="_blank">notebook document format</a>
-        which combine explanatory text, mathematics, computations and their rich media output. <a href="https://jupyterlab.readthedocs.io/en/stable/" target="_blank">JupyterLab</a>
-        is the next generation of Jupyter Notebook, and it is served from the same server and uses the same notebook document format as the classic Jupyter Notebook.
-      </p>
-      <p>
-        JupyterLab enables you to work with documents and activities such as Jupyter notebooks, text editors, terminals, and custom components in a more flexible, integrated, and extensible manner.
-        Moreover, JupyterLab has a side file explorer and you can arrange multiple documents and activities side by side in the work area using tabs and splitters.
-        Given these convenience functionalities in JupyterLab, <strong>we will only provide the support for JupyterLab</strong> and you might encounter unexpected behaviors if you use AISpace2 in Jupyter Notebook.
-        According to the documentation, JupyterLab will eventually replace the classic Jupyter Notebook (see <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html#releases" target="_blank">here</a>).
-        For more information, please refer to the official documentations.
-      </p>
-      <p>
-        <figure>
-          <img src="assets/images/tutorial/faq-relationship-notebook.png" alt="Jupyter Notebook Interface" />
-          <figcaption>
-            Jupyter Notebook Interface
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="assets/images/tutorial/faq-relationship-lab.png" alt="JupyterLab Interface" />
-          <figcaption>
-            JupyterLab Interface
-          </figcaption>
-        </figure>
-      </p>
-      <h3 id="tutorial-faq-why-update-aipython-not-reflect" class="linkify"><a href="#tutorial-faq-why-update-aipython-not-reflect">How can I change Python code?</a></h3>
-      <p>
-        Most Python code that is imported in the notebooks is located in <code>/aipython/</code> directory. Whenever you make a change to the Python files in it, you need to restart the kernel to let the change take effect.
-        <figure>
-          <img src="assets/images/tutorial/faq-why-update-aipython-not-reflect.png" alt="Location of Stop Kernel button" />
-          <figcaption>
-            Click the button to restart the kernel in JupyterLab
-          </figcaption>
-        </figure>
-      </p>
-      <h3 id="tutorial-faq-why-update-frontend-not-reflect" class="linkify"><a href="#tutorial-faq-why-update-frontend-not-reflect">How can I change frontend?</a></h3>
-      <p>
-        Code controlling frontend behavior is located in <code>/js/</code> directory. Whenever you make a change to the files in it, you need to recompile them by running:
-        <pre>npm update-lab-extension
+        <p>The reason why this is necessary is to support interacting with visualizations. AISpace2 needs to know which functions
+          will drive the visualization, so that it can set things up correctly.</p>
+      </li>
+      <li>
+        <p>
+          Change in imports: <code>Displayable</code> subclasses are imported from <code>aipython.utilities</code> in
+          AIPython, but are inherited from <code>aispace2.jupyter.*</code> inside AISpace2, where <code>*</code> depends on the
+          algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
+          The <code>@visualize</code> decorator is also imported from <code>aispace2.jupyter.*</code>.
+        </p>
+        <p>
+          The reason why this change is necessary is that these specialized <code>Displayable</code> classes have hooks that
+          allow it to be displayed inside Jupyter.
+        </p>
+      </li>
+    </ol>
+    <h3 id="tutorial-faq-relationship-notebook-lab" class="linkify"><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></h3>
+    <p>
+      <a href="https://jupyter-notebook.readthedocs.io/en/stable/" target="_blank">Jupyter Notebook</a> is a web application for interactive <a href="https://nbformat.readthedocs.io/en/latest/" target="_blank">notebook document format</a>
+      which combine explanatory text, mathematics, computations and their rich media output. <a href="https://jupyterlab.readthedocs.io/en/stable/" target="_blank">JupyterLab</a>
+      is the next generation of Jupyter Notebook, and it is served from the same server and uses the same notebook document format as the classic Jupyter Notebook.
+    </p>
+    <p>
+      JupyterLab enables you to work with documents and activities such as Jupyter notebooks, text editors, terminals, and custom components in a more flexible, integrated, and extensible manner.
+      Moreover, JupyterLab has a side file explorer and you can arrange multiple documents and activities side by side in the work area using tabs and splitters.
+      Given these convenience functionalities in JupyterLab, <strong>we will only provide the support for JupyterLab</strong> and you might encounter unexpected behaviors if you use AISpace2 in Jupyter Notebook.
+      According to the documentation, JupyterLab will eventually replace the classic Jupyter Notebook (see <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html#releases" target="_blank">here</a>).
+      For more information, please refer to the official documentations.
+    </p>
+    <p>
+      <figure>
+        <img src="assets/images/tutorial/faq-relationship-notebook.png" alt="Jupyter Notebook Interface" />
+        <figcaption>
+          Jupyter Notebook Interface
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/images/tutorial/faq-relationship-lab.png" alt="JupyterLab Interface" />
+        <figcaption>
+          JupyterLab Interface
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="tutorial-faq-why-update-aipython-not-reflect" class="linkify"><a href="#tutorial-faq-why-update-aipython-not-reflect">How can I change Python code?</a></h3>
+    <p>
+      Most Python code that is imported in the notebooks is located in <code>/aipython/</code> directory. Whenever you make a change to the Python files in it, you need to restart the kernel to let the change take effect.
+      <figure>
+        <img src="assets/images/tutorial/faq-why-update-aipython-not-reflect.png" alt="Location of Stop Kernel button" />
+        <figcaption>
+          Click the button to restart the kernel in JupyterLab
+        </figcaption>
+      </figure>
+    </p>
+    <h3 id="tutorial-faq-why-update-frontend-not-reflect" class="linkify"><a href="#tutorial-faq-why-update-frontend-not-reflect">How can I change frontend?</a></h3>
+    <p>
+      Code controlling frontend behavior is located in <code>/js/</code> directory. Whenever you make a change to the files in it, you need to recompile them by running:
+      <pre>npm update-lab-extension
 jupyter labextension install</pre>
-        in <code>/js/</code> directory. After recompiling, you need to refresh the page.
-      </p>
-      <h3 id="tutorial-faq-what-how-display" class="linkify"><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></h3>
-      <p>
-        In short, <code>display()</code> is a function that works like a print statement but with the first argument, <code>level</code>, representing a display level.
-        <code>display()</code> sends the message, which consists of the rest parameters after <code>level</code>, to the Jupyter widget and displays it.
-        It will also pause the execution if needed.
-      </p>
-      <p>
-        The <code>level</code> of each <code>display()</code> call is either <code>1</code>, <code>2</code>, <code>3</code> or <code>4</code>, specifying how "important" the message is.
-        It may also be interpreted as a level of "specificity": <code>1</code> means very general, such as the algorithm has finished, and
-        <code>4</code> means very specific, such as some very minor algorithmic detail. <code>level</code>, together with the botton you clicked, controls whether the execution should pause at this <code>display()</code> call.
-        Fine Step button makes the execution pause each time a <code>display()</code> call is encountered;
-        Step button makes the execution pause each time a <code>display()</code> call with <code>level</code>=<code>2</code> or lower is encoutered;
-        Auto Solve button makes the exectution not pause at all.
-      </p>
-      <p>
-        You can safely change the <code>level</code> of pre-defined <code>display()</code> calls to adjust the amount of detail you receive.
-        However, keep in mind that the visualization is entirely driven by the remaining parameters of the <code>display()</code> call (see corresponding <code>Displayable</code> classes), so modifying
-        them may break the visualization. For example, when running search algorithms usieng Step button, the execution will not pause they it is exporing a node's neighbours. This is because the corresponding <code>display()</code> call (line 18) in <code>search()</code> in the class <code>Searcher</code>
-        defined in <code>/aipython/searchGeneric.py</code> has <code>level</code>=<code>3</code>:
-      </p>
+      in <code>/js/</code> directory. After recompiling, you need to refresh the page.
+    </p>
+    <h3 id="tutorial-faq-what-how-display" class="linkify"><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></h3>
+    <p>
+      In short, <code>display()</code> is a function that works like a print statement but with the first argument, <code>level</code>, representing a display level.
+      <code>display()</code> sends the message, which consists of the rest parameters after <code>level</code>, to the Jupyter widget and displays it.
+      It will also pause the execution if needed.
+    </p>
+    <p>
+      The <code>level</code> of each <code>display()</code> call is either <code>1</code>, <code>2</code>, <code>3</code> or <code>4</code>, specifying how "important" the message is.
+      It may also be interpreted as a level of "specificity": <code>1</code> means very general, such as the algorithm has finished, and
+      <code>4</code> means very specific, such as some very minor algorithmic detail. <code>level</code>, together with the botton you clicked, controls whether the execution should pause at this <code>display()</code> call.
+      Fine Step button makes the execution pause each time a <code>display()</code> call is encountered;
+      Step button makes the execution pause each time a <code>display()</code> call with <code>level</code>=<code>2</code> or lower is encoutered;
+      Auto Solve button makes the exectution not pause at all.
+    </p>
+    <p>
+      You can safely change the <code>level</code> of pre-defined <code>display()</code> calls to adjust the amount of detail you receive.
+      However, keep in mind that the visualization is entirely driven by the remaining parameters of the <code>display()</code> call (see corresponding <code>Displayable</code> classes), so modifying
+      them may break the visualization. For example, when running search algorithms usieng Step button, the execution will not pause they it is exporing a node's neighbours. This is because the corresponding <code>display()</code> call (line 18) in <code>search()</code> in the class <code>Searcher</code>
+      defined in <code>/aipython/searchGeneric.py</code> has <code>level</code>=<code>3</code>:
+    </p>
 
-        <!-- HTML generated using hilite.me -->
-        <table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+    <!-- HTML generated using hilite.me -->
+    <table>
+      <tr>
+        <td>
+          <pre style="margin: 0; line-height: 125%"> 1
  2
  3
  4
@@ -714,7 +725,10 @@ jupyter labextension install</pre>
 20
 21
 22
-23</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF">@visualize</span>
+23</pre>
+        </td>
+        <td>
+          <pre style="margin: 0; line-height: 125%"><span style="color: #AA22FF">@visualize</span>
 <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">search</span>(<span style="color: #008000">self</span>):
     <span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;returns (next) path from the problem&#39;s start node</span>
 <span style="color: #BA2121; font-style: italic">    to a goal node.</span>
@@ -737,49 +751,64 @@ jupyter labextension install</pre>
             <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">3</span>, <span style="color: #BA2121">&quot;Frontier: &quot;</span>, <span style="color: #008000">self</span><span style="color: #666666">.</span>frontier)
     <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">1</span>, <span style="color: #BA2121">&quot;No more solutions. Total of&quot;</span>,
                     <span style="color: #008000">self</span><span style="color: #666666">.</span>num_expanded, <span style="color: #BA2121">&quot;paths expanded.&quot;</span>)
-</pre></td></tr></table></p>
+</pre>
+        </td>
+      </tr>
+    </table>
+    </p>
 
-      <p>
-        You can change it to <code>2</code> and now you can see the execution pause, showing the neighbours, when you click the Step button. However, you should not change anything following the <code>level</code> parameter (<code>"Neighbors are", neighs</code> in this case).
-      </p>
-      <p>
-        You can also add your own <code>display()</code> calls to print out some information you want. If you are creating your own <code>display()</code> call, feel free to edit the rest parameters after <code>level</code>. You can pass in an object or a string, just like normal print statements.
-        The <code>display()</code> will print out all the rest parameters connected by a whitespace. For example, lines 19 and 20 in <code>search()</code> add new paths to the frontier.
-        If you want to see which arcs are exactly iterated in the loop, you can add a <code>display()</code> call after line 19:
+    <p>
+      You can change it to <code>2</code> and now you can see the execution pause, showing the neighbours, when you click the Step button. However, you should not change anything following the <code>level</code> parameter (<code>"Neighbors are", neighs</code> in this case).
+    </p>
+    <p>
+      You can also add your own <code>display()</code> calls to print out some information you want. If you are creating your own <code>display()</code> call, feel free to edit the rest parameters after <code>level</code>. You can pass in an object or a string, just like normal print statements.
+      The <code>display()</code> will print out all the rest parameters connected by a whitespace. For example, lines 19 and 20 in <code>search()</code> add new paths to the frontier.
+      If you want to see which arcs are exactly iterated in the loop, you can add a <code>display()</code> call after line 19:
 
-        <!-- HTML generated using hilite.me -->
-        <table><tr><td><pre style="margin: 0; line-height: 125%">19
+      <!-- HTML generated using hilite.me -->
+      <table>
+        <tr>
+          <td>
+            <pre style="margin: 0; line-height: 125%">19
 20
-21</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">for</span> arc <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">reversed</span>(neighs):
+21</pre>
+          </td>
+          <td>
+            <pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">for</span> arc <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">reversed</span>(neighs):
     <span style="color: #008000">self</span><span style="color: #666666">.</span>display(<span style="color: #666666">2</span>, <span style="color: #BA2121">&quot;The arc being explored is: &quot;</span>, arc)
     <span style="color: #008000">self</span><span style="color: #666666">.</span>add_to_frontier(Path(path, arc))
-</pre></td></tr></table></p>
+</pre>
+          </td>
+        </tr>
+      </table>
+    </p>
 
-      <p>
-        Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button:
-      </p>
-      <figure>
-        <img src="assets/images/tutorial/faq-what-how-display.png" alt="display() prints new information" />
-        <figcaption>
-          The arc added is printed
-        </figcaption>
-      </figure>
-      <p>
-        If you want to modify <code>display()</code>, it is a member function of the class <code>StepDOMWidget</code> defined in <code>/aispace2/jupyter/stepdomwidget.py</code>.
-        <code>StepDOMWidget</code> inherits from the class <code>DOMWidget</code> and controls the Jupyter widget for visualizations that you can step through.
-        <code>display()</code> is overwritten in its various subclasses <code>Displayable</code> defined in <code>/aispace2/jupyter/*.py</code>, where <code>*</code> depends on the
-        algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
-      </p>
-    </section>
+    <p>
+      Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button:
+    </p>
+    <figure>
+      <img src="assets/images/tutorial/faq-what-how-display.png" alt="display() prints new information" />
+      <figcaption>
+        The arc added is printed
+      </figcaption>
+    </figure>
+    <p>
+      If you want to modify <code>display()</code>, it is a member function of the class <code>StepDOMWidget</code> defined in <code>/aispace2/jupyter/stepdomwidget.py</code>.
+      <code>StepDOMWidget</code> inherits from the class <code>DOMWidget</code> and controls the Jupyter widget for visualizations that you can step through.
+      <code>display()</code> is overwritten in its various subclasses <code>Displayable</code> defined in <code>/aispace2/jupyter/*.py</code>, where <code>*</code> depends on the
+      algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
+    </p>
+  </section>
 
-    <script>
-      date = new Date(document.lastModified)
-      month = date.getMonth() + 1
-      year = date.getFullYear()
-      day = date.getDate()
-      document.writeln("<br><br><br><center>");
-      document.write("This website was last updated on " + year + "-" + month + "-" + day);
-      document.writeln("</center><br><br><br><br>");
-    </script>
-  </body>
+  <script>
+    date = new Date(document.lastModified)
+    month = date.getMonth() + 1
+    year = date.getFullYear()
+    day = date.getDate()
+    document.writeln("<br><br><br><center>");
+    document.write("This website was last updated on " + year + "-" + month + "-" + day);
+    document.writeln("</center><br><br><br><br>");
+  </script>
+</body>
+
 </html>
