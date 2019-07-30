@@ -135,7 +135,11 @@
       } else {
         this.FocusNode.domain = node.domain;
         this.FocusNode.nodeName = node.name;
-        this.FocusNode.checkedNames = '';
+        if (node.domain) {
+            this.FocusNode.checkedNames = node.domain[0];
+        } else {
+            this.FocusNode.checkedNames = '';
+        }
       }
     }
 
