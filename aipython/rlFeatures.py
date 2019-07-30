@@ -9,8 +9,10 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 import random
+
 from rlQLearner import RL_agent
 from utilities import Displayable, argmax, flip
+
 
 class SARSA_LFA_learner(RL_agent):
     """A SARSA_LFA learning agent has
@@ -22,6 +24,7 @@ class SARSA_LFA_learner(RL_agent):
 
     it observes (s, r) for some world-state s and real reward r
     """
+
     def __init__(self, env, get_features, discount, explore=0.2, step_size=0.01,
                  winit=0, label="SARSA_LFA"):
         """env is the feature environment to interact with
@@ -52,20 +55,20 @@ class SARSA_LFA_learner(RL_agent):
         self.weights = [self.winit for f in self.features]
         self.action = self.select_action(self.state)
 
-    def do(self,num_steps=100):
+    def do(self, num_steps=100):
         """do num_steps of interaction with the environment"""
-        self.display(2,"s\ta\tr\ts'\tQ\tdelta")
+        self.display(2, "s\ta\tr\ts'\tQ\tdelta")
         for i in range(num_steps):
-            next_state,reward = self.env.do(self.action)
+            next_state, reward = self.env.do(self.action)
             self.acc_rewards += reward
             next_action = self.select_action(next_state)
-            feature_values = self.get_features(self.state,self.action)
+            feature_values = self.get_features(self.state, self.action)
             oldQ = dot_product(self.weights, feature_values)
-            nextQ = dot_product(self.weights, self.get_features(next_state,next_action))
+            nextQ = dot_product(self.weights, self.get_features(next_state, next_action))
             delta = reward + self.discount * nextQ - oldQ
             for i in range(len(self.weights)):
                 self.weights[i] += self.step_size * delta * feature_values[i]
-            self.display(2,self.state, self.action, reward, next_state,
+            self.display(2, self.state, self.action, reward, next_state,
                          dot_product(self.weights, feature_values), delta, sep='\t')
             self.state = next_state
             self.action = next_action
@@ -80,20 +83,21 @@ class SARSA_LFA_learner(RL_agent):
             return random.choice(self.actions)
         else:
             return argmax((next_act, dot_product(self.weights,
-                                                 self.get_features(state,next_act)))
-                                  for next_act in self.actions)
+                                                 self.get_features(state, next_act)))
+                          for next_act in self.actions)
 
-    def show_actions(self,state=None):
+    def show_actions(self, state=None):
         """prints the value for each action in a state.
         This may be useful for debugging.
         """
         if state is None:
             state = self.state
         for next_act in self.actions:
-            print(next_act,dot_product(self.weights, self.get_features(state,next_act)))
+            print(next_act, dot_product(self.weights, self.get_features(state, next_act)))
 
-def dot_product(l1,l2):
-    return sum(e1*e2 for (e1,e2) in zip(l1,l2))
+
+def dot_product(l1, l2):
+    return sum(e1 * e2 for (e1, e2) in zip(l1, l2))
 
 
 # from rlQTest import senv    # simple game environment

@@ -8,14 +8,19 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+import heapq  # part of the Python standard library
+
+from aipython import searchProblem
+from aipython.searchProblem import Path, Search_problem_from_explicit_graph
 from aispace2.jupyter.search import Displayable, visualize
-from aipython.searchProblem import Search_problem_from_explicit_graph
+
 
 class Searcher(Displayable):
     """returns a searcher for a problem.
     Paths can be found by repeatedly calling search().
     This does depth-first search unless overridden
     """
+
     def __init__(self, problem):
         """creates a searcher from a problem
         """
@@ -23,7 +28,7 @@ class Searcher(Displayable):
         self.initialize_frontier()
         self.num_expanded = 0
         self.add_to_frontier(Path(problem.start_node()))
-        self.layout_method = "force"  if isinstance(problem, Search_problem_from_explicit_graph) else "tree"
+        self.layout_method = "force" if isinstance(problem, Search_problem_from_explicit_graph) else "tree"
         super().__init__()
 
     def initialize_frontier(self):
@@ -44,7 +49,7 @@ class Searcher(Displayable):
         self.display(2, "Ready")
         while not self.empty_frontier():
             path = self.frontier.pop()
-            self.display(2, "Expanding: ", path, "(cost:", path.cost,")")
+            self.display(2, "Expanding: ", path, "(cost:", path.cost, ")")
             self.num_expanded += 1
             if self.problem.is_goal(path.end()):    # solution found
                 # self.display(1, self.num_expanded, "paths have been expanded and", len(self.frontier), "paths remain in the frontier", "\nPath found: ", path)
@@ -58,8 +63,6 @@ class Searcher(Displayable):
                 self.display(3, "Frontier:", self.frontier)
         self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded, "paths expanded.")
 
-import heapq        # part of the Python standard library
-from aipython.searchProblem import Path
 
 class Frontier(object):
     """A frontier consists of a priority queue (heap), frontierpq, of
@@ -84,7 +87,7 @@ class Frontier(object):
         """add a path to the priority queue
         value is the value to be minimized"""
         self.frontier_index += 1    # get a new unique index
-        heapq.heappush(self.frontierpq,(value, -self.frontier_index, path))
+        heapq.heappush(self.frontierpq, (value, -self.frontier_index, path))
 
     def pop(self):
         """returns and removes the path of the frontier with minimum value.
@@ -92,13 +95,13 @@ class Frontier(object):
         """
         return heapq.heappop(self.frontierpq)[2]
 
-    def count(self,val):
+    def count(self, val):
         """returns the number of elements of the frontier with value=val"""
-        return sum(1 for e in self.frontierpq if e[0]==val)
+        return sum(1 for e in self.frontierpq if e[0] == val)
 
     def __repr__(self):
         """string representation of the frontier"""
-        return "\n".join("".join(str(["{} ({})".format(p, n) for (n,c,p) in self.frontierpq])).split("\\n"))
+        return "\n".join("".join(str(["{} ({})".format(p, n) for (n, c, p) in self.frontierpq])).split("\\n"))
 
     def __len__(self):
         return len(self.frontierpq)
@@ -106,6 +109,7 @@ class Frontier(object):
     def __iter__(self):
         for (_, _, p) in self.frontierpq:
             yield p
+
 
 class AStarSearcher(Searcher):
     """returns a searcher for a problem.
@@ -126,17 +130,18 @@ class AStarSearcher(Searcher):
         value = path.cost + self.problem.heuristic(path.end())
         self.frontier.add(path, value)
 
-from aipython import searchProblem
+
 def test(SearchClass):
     print("Testing problem 1:")
     schr1 = SearchClass(searchProblem.search_simple1)
     path1 = schr1.search()
-    print("Path found: ",path1)
-    assert list(path1.nodes()) == ['g','d','c','b','a'], "Shortest path not found in search_simple1"
+    print("Path found: ", path1)
+    assert list(path1.nodes()) == ['g', 'd', 'c', 'b', 'a'], "Shortest path not found in search_simple1"
     print("Passed unit test")
 
+
 if __name__ == "__main__":
-    #test(Searcher)
+    # test(Searcher)
     test(AStarSearcher)
 
 # example queries:

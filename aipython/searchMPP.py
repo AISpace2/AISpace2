@@ -8,14 +8,16 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from aipython.searchGeneric import AStarSearcher
+from aipython.searchGeneric import AStarSearcher, test
 from aipython.searchProblem import Path
 from aispace2.jupyter.search import visualize
+
 
 class SearcherMPP(AStarSearcher):
     """returns a searcher for a problem.
     Paths can be found by repeatedly calling search().
     """
+
     def __init__(self, problem):
         super().__init__(problem)
         self.explored = set()
@@ -46,9 +48,9 @@ class SearcherMPP(AStarSearcher):
             else:
                 self.display(3, "The end of this path (", path.end(), ") has already been explored, so prune it")
             self.display(3, "Frontier:", self.frontier)
-        self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded,"paths expanded")
+        self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded, "paths expanded")
 
-from aipython.searchGeneric import test
+
 if __name__ == "__main__":
     test(SearcherMPP)
 

@@ -8,6 +8,7 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+
 def heuristic_fun(state, goal):
     """An (under)estimate of the cost of solving goal from state.
     Both state and goal are variable:value dictionaries.
@@ -17,6 +18,7 @@ def heuristic_fun(state, goal):
     """
     return max(h1(state, goal), h2(state, goal))
 
+
 def h1(state, goal):
     """ the distance to the goal location, if there is one"""
     if 'RLoc' in goal:
@@ -24,21 +26,23 @@ def h1(state, goal):
     else:
         return 0
 
+
 def h2(state, goal):
     """ the distance to the coffee shop plus getting coffee and delivering it
     if the goal has SWC=False, node has SWC=True and RHC=False
     """
     if 'SWC' in goal and goal['SWC'] == False and state['SWC'] == True and state['RHC'] == False:
-        return dist(state['RLoc'], 'cs')+3
+        return dist(state['RLoc'], 'cs') + 3
     else:
         return 0
+
 
 def dist(loc1, loc2):
     """returns the distance from location loc1 to loc2
     """
-    if loc1==loc2:
+    if loc1 == loc2:
         return 0
-    if {loc1,loc2} in [{'cs','lab'},{'mr','off'}]:
+    if {loc1, loc2} in [{'cs', 'lab'}, {'mr', 'off'}]:
         return 2
     else:
         return 1
@@ -51,16 +55,16 @@ def dist(loc1, loc2):
 #thisproblem = strips_simple1
 
 #print("\n***** FORWARD NO HEURISTIC")
-#print(SearcherMPP(Forward_STRIPS(thisproblem)).search())
+# print(SearcherMPP(Forward_STRIPS(thisproblem)).search())
 
 #print("\n***** FORWARD WITH HEURISTIC")
 #print(SearcherMPP(Forward_STRIPS(thisproblem, heuristic_fun)).search())
 
-#####  Regression Planner
+# Regression Planner
 #from aipython.stripsRegressionPlanner import Regression_STRIPS
 
 #print("\n***** REGRESSION NO HEURISTIC")
-#print(SearcherMPP(Regression_STRIPS(thisproblem)).search())
+# print(SearcherMPP(Regression_STRIPS(thisproblem)).search())
 
 #print("\n***** REGRESSION WITH HEURISTIC")
 #print(SearcherMPP(Regression_STRIPS(thisproblem, heuristic_fun)).search())

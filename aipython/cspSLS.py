@@ -8,19 +8,22 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+import heapq
+import random
+
+from traitlets import Bool
+
 from aipython.cspProblem import CSP, Constraint
 from aipython.searchProblem import Arc, Search_problem
 from aispace2.jupyter.csp import Displayable, visualize
-from traitlets import Bool
-import random
-import heapq
+
 
 class SLSearcher(Displayable):
     """A search problem directly from the CSP..
     A node is a variable:value dictionary"""
 
     # Constrols whether the auto arc consistency button will show up in the widget (will not in SLS)
-    need_AC_button = Bool(False).tag(sync=True) # don't need auto arc consistency button for SLS
+    need_AC_button = Bool(False).tag(sync=True)  # don't need auto arc consistency button for SLS
 
     def __init__(self, csp):
         self.csp = csp
@@ -167,9 +170,11 @@ class SLSearcher(Displayable):
             if num > 0:
                 self.variable_pq.add(var, -num)
 
+
 def random_sample(st):
     """selects a random element from set st"""
-    return random.sample(st,1)[0]
+    return random.sample(st, 1)[0]
+
 
 class Updatable_priority_queue(object):
     """A priority queue where the values can be updated.
@@ -180,38 +185,39 @@ class Updatable_priority_queue(object):
     It could probably be done more efficiently by
     shuffling the modified element in the heap.
     """
+
     def __init__(self):
         self.pq = []   # priority queue of [val,rand,elt] triples
         self.elt_map = {}  # map from elt to [val,rand,elt] triple in pq
         self.REMOVED = "*removed*"  # a string that won't be a legal element
-        self.max_size=0
+        self.max_size = 0
 
-    def add(self,elt,val):
+    def add(self, elt, val):
         """adds elt to the priority queue with priority=val.
         """
-        assert val <= 0,val
+        assert val <= 0, val
         assert elt not in self.elt_map, elt
-        new_triple = [val, random.random(),elt]
+        new_triple = [val, random.random(), elt]
         heapq.heappush(self.pq, new_triple)
         self.elt_map[elt] = new_triple
 
-    def remove(self,elt):
+    def remove(self, elt):
         """remove the element from the priority queue"""
         if elt in self.elt_map:
             self.elt_map[elt][2] = self.REMOVED
             del self.elt_map[elt]
 
-    def update_each_priority(self,update_dict):
+    def update_each_priority(self, update_dict):
         """update values in the priority queue by subtracting the values in
         update_dict from the priority of those elements in priority queue.
         """
-        for elt,incr in update_dict.items():
+        for elt, incr in update_dict.items():
             if incr != 0:
-                newval = self.elt_map.get(elt,[0])[0] - incr
-                assert newval <= 0, str(elt)+":"+str(newval+incr)+"-"+str(incr)
+                newval = self.elt_map.get(elt, [0])[0] - incr
+                assert newval <= 0, str(elt) + ":" + str(newval + incr) + "-" + str(incr)
                 self.remove(elt)
                 if newval != 0:
-                    self.add(elt,newval)
+                    self.add(elt, newval)
 
     def pop(self):
         """Removes and returns the (elt,value) pair with minimal value.
@@ -253,7 +259,7 @@ class Updatable_priority_queue(object):
 #     test(sls_solver)
 #     test(any_conflict_solver)
 #
-## Test Solving CSPs with Search:
+# Test Solving CSPs with Search:
 # from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
 # se1 = SLSearcher(simple_csp2); print(se1.search(100))
 # se2 = SLSearcher(extended_csp); print(se2.search(1000,1.0)) # greedy

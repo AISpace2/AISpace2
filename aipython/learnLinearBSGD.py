@@ -8,30 +8,33 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+import math
+import random
+
 from learnLinear import Linear_learner
-import random, math
+
 
 class Linear_learner_bsgd(Linear_learner):
     def __init__(self, *args, batch_size=10, **kargs):
         Linear_learner.__init__(self, *args, **kargs)
         self.batch_size = batch_size
 
-    def learn(self,num_iter=None):
+    def learn(self, num_iter=None):
         if num_iter is None:
             num_iter = self.number_iterations
         batch_size = min(self.batch_size, len(self.train))
-        d = {feat:0 for feat in self.weights}
+        d = {feat: 0 for feat in self.weights}
         for it in range(num_iter):
-            self.display(2,"prediction=",self.predictor_string())
+            self.display(2, "prediction=", self.predictor_string())
             for e in random.sample(self.train, batch_size):
                 predicted = self.predictor(e)
                 error = self.target(e) - predicted
-                update = self.learning_rate*error
+                update = self.learning_rate * error
                 for feat in self.weights:
-                    d[feat] +=  update*feat(e)
+                    d[feat] += update * feat(e)
             for feat in self.weights:
-                self.weights[feat] +=  d[feat]
-                d[feat]=0
+                self.weights[feat] += d[feat]
+                d[feat] = 0
 
 # from learnLinear import plot_steps
 # from learnProblem import Data_from_file
@@ -42,4 +45,3 @@ class Linear_learner_bsgd(Linear_learner):
 # to plot polynomials with batching (compare to SGD)
 # from learnLinear import plot_polynomials
 # plot_polynomials(learner_class = Linear_learner_bsgd)
-

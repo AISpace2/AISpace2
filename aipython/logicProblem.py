@@ -8,12 +8,16 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+
+from utilities import Displayable
+
+
 class Clause(object):
     """A definite clause"""
 
-    def __init__(self,head,body=[]):
+    def __init__(self, head, body=[]):
         """clause with atom head and lost of atoms body"""
-        self.head=head
+        self.head = head
         self.body = body
 
     def __str__(self):
@@ -24,27 +28,29 @@ class Clause(object):
         else:
             return self.head + "."
 
+
 class Askable(object):
     """An askable atom"""
 
-    def __init__(self,atom):
+    def __init__(self, atom):
         """clause with atom head and lost of atoms body"""
-        self.atom=atom
+        self.atom = atom
 
     def __str__(self):
         """returns the string representation of a clause."""
         return "askable " + self.atom + "."
 
+
 def yes(ans):
     """returns true if the answer is yes in some form"""
     return ans.lower() in ['yes', 'yes.', 'oui', 'oui.', 'y', 'y.']    # bilingual
 
-from utilities import Displayable
-        
+
 class KB(Displayable):
     """A knowledge base consists of a set of clauses.
     This also creates a dictionary to give fast access to the clauses with an atom in head.
     """
+
     def __init__(self, statements=[]):
         self.statements = statements
         self.clauses = [c for c in statements if isinstance(c, Clause)]
@@ -56,10 +62,10 @@ class KB(Displayable):
             else:
                 self.atom_to_clauses[c.head] = {c}
 
-    def clauses_for_atom(self,a):
+    def clauses_for_atom(self, a):
         """returns set of clauses with atom a as the head"""
         if a in self.atom_to_clauses:
-            return  self.atom_to_clauses[a]
+            return self.atom_to_clauses[a]
         else:
             return set()
 
@@ -68,11 +74,12 @@ class KB(Displayable):
         """
         return '\n'.join([str(c) for c in self.statements])
 
+
 triv_KB = KB([
     Clause('i_am', ['i_think']),
     Clause('i_think'),
     Clause('i_smell', ['i_exist'])
-    ])
+])
 
 elect = KB([
     Clause('light_l1'),
@@ -83,12 +90,12 @@ elect = KB([
     Clause('ok_cb2'),
     Clause('live_outside'),
     Clause('live_l1', ['live_w0']),
-    Clause('live_w0', ['up_s2','live_w1']),
-    Clause('live_w0', ['down_s2','live_w2']),
+    Clause('live_w0', ['up_s2', 'live_w1']),
+    Clause('live_w0', ['down_s2', 'live_w2']),
     Clause('live_w1', ['up_s1', 'live_w3']),
-    Clause('live_w2', ['down_s1','live_w3' ]),
+    Clause('live_w2', ['down_s1', 'live_w3']),
     Clause('live_l2', ['live_w4']),
-    Clause('live_w4', ['up_s3','live_w3' ]),
+    Clause('live_w4', ['up_s3', 'live_w3']),
     Clause('live_p_1', ['live_w3']),
     Clause('live_w3', ['live_w5', 'ok_cb1']),
     Clause('live_p_2', ['live_w6']),
@@ -102,6 +109,6 @@ elect = KB([
     Askable('down_s2'),
     Askable('up_s3'),
     Askable('down_s2')
-    ])
+])
 
 # print(kb)

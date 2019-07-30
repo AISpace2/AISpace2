@@ -11,28 +11,35 @@
 from aipython.searchProblem import Arc, Search_problem
 from aipython.stripsProblem import Strips, STRIPS_domain
 
+
 class State(object):
-    def __init__(self,assignment):
+    def __init__(self, assignment):
         self.assignment = assignment
         self.hash_value = None
+
     def __hash__(self):
         if self.hash_value is None:
             self.hash_value = hash(frozenset(self.assignment.items()))
         return self.hash_value
-    def __eq__(self,st):
+
+    def __eq__(self, st):
         return self.assignment == st.assignment
+
     def __str__(self):
         return str(self.assignment)
 
-def zero(*args,**nargs):
+
+def zero(*args, **nargs):
     """always returns 0"""
     return 0
+
 
 class Forward_STRIPS(Search_problem):
     """A search problem from a planning problem where:
     * a node is a state object.
     * the dynamics are specified by the STRIPS representation of actions
     """
+
     def __init__(self, planning_problem, heur=zero):
         """creates a forward seach space from a planning problem.
         heur(state,goal) is a heuristic function,
@@ -85,7 +92,7 @@ class Forward_STRIPS(Search_problem):
         """
         return self.heur(state.assignment, self.goal)
 
-## Test
+# Test
 #from aipython.searchBranchAndBound import DF_branch_and_bound
 #from aipython.searchGeneric import AStarSearcher
 #from aipython.searchMPP import SearcherMPP

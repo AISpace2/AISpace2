@@ -8,7 +8,9 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+from aipython.searchProblem import Arc, Search_problem
 from aispace2.jupyter.csp import Displayable, visualize
+
 
 class Con_solver(Displayable):
     def __init__(self, csp, **kwargs):
@@ -123,6 +125,7 @@ class Con_solver(Displayable):
         """
         return self.visualizer.choose_domain_partition(dom, var)
 
+
 def copy_with_assign(domains, var=None, new_domain={True, False}):
     """create a copy of the domains with an assignment var=new_domain
     if var==None then it is just a copy.
@@ -131,6 +134,7 @@ def copy_with_assign(domains, var=None, new_domain={True, False}):
     if var is not None:
         newdoms[var] = new_domain
     return newdoms
+
 
 def select(iterable):
     """select an element of iterable. Returns None if there is no such element.
@@ -149,40 +153,40 @@ def select(iterable):
 # if __name__ == "__main__":
 #     test(ac_solver)
 
-from aipython.searchProblem import Arc, Search_problem
 
-class Search_with_AC_from_CSP(Search_problem,Displayable):
+class Search_with_AC_from_CSP(Search_problem, Displayable):
     """A search problem with arc consistency and domain splitting
 
     A node is a CSP """
+
     def __init__(self, csp):
-        self.cons = Con_solver(csp)  #copy of the CSP
+        self.cons = Con_solver(csp)  # copy of the CSP
         self.domains = self.cons.make_arc_consistent()
 
     def is_goal(self, node):
         """node is a goal if all domains have 1 element"""
-        return all(len(node[var])==1 for var in node)
+        return all(len(node[var]) == 1 for var in node)
 
     def start_node(self):
         return self.domains
 
-    def neighbors(self,node):
+    def neighbors(self, node):
         """returns the neighboring nodes of node.
         """
         neighs = []
-        var = select(x for x in node if len(node[x])>1)
+        var = select(x for x in node if len(node[x]) > 1)
         if var:
             dom1, dom2 = partition_domain(node[var])
             self.display(2, "Splitting", var, "into", dom1, "and", dom2)
-            to_do = self.cons.new_to_do(var,None)
-            for dom in [dom1,dom2]:
-                newdoms = copy_with_assign(node,var,dom)
-                cons_doms = self.cons.make_arc_consistent(newdoms,to_do)
-                if all(len(cons_doms[v])>0 for v in cons_doms):
+            to_do = self.cons.new_to_do(var, None)
+            for dom in [dom1, dom2]:
+                newdoms = copy_with_assign(node, var, dom)
+                cons_doms = self.cons.make_arc_consistent(newdoms, to_do)
+                if all(len(cons_doms[v]) > 0 for v in cons_doms):
                     # all domains are non-empty
-                    neighs.append(Arc(node,cons_doms))
+                    neighs.append(Arc(node, cons_doms))
                 else:
-                    self.display(2, "...",var,"in",dom,"has no solution")
+                    self.display(2, "...", var, "in", dom, "has no solution")
         return neighs
 
 # from aipython.cspProblem import test
@@ -197,7 +201,7 @@ class Search_with_AC_from_CSP(Search_problem,Displayable):
 # if __name__ == "__main__":
 #     test(ac_search_solver)
 #
-## Test Solving CSPs with Arc consistency and domain splitting:
+# Test Solving CSPs with Arc consistency and domain splitting:
 # from aipython.cspProblem import csp_simple1, csp_simple2, csp_extended, csp_crossword1, csp_crossword2, csp_crossword2d
 # Con_solver(simple_csp2).solve_one()
 # searcher1d = Searcher(Search_with_AC_from_CSP(simple_csp2))

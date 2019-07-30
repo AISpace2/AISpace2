@@ -8,14 +8,16 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+from aipython.searchGeneric import Searcher, test
 from aipython.searchProblem import Path
-from aipython.searchGeneric import Searcher
 from aispace2.jupyter.search import Displayable, visualize
+
 
 class DF_branch_and_bound(Searcher):
     """returns a branch-and-bound searcher for a problem.
     An optimal path with cost less than bound can be found by calling search()
     """
+
     def __init__(self, problem, bound=float("inf")):
         """creates a searcher than can be used with search() to find an optimal path.
         bound gives the initial bound. By default this is infinite - meaning there
@@ -54,7 +56,7 @@ class DF_branch_and_bound(Searcher):
         self.display(1, "No more solutions since the frontier is empty. Total of", self.num_expanded, "paths expanded.")
         # self.display(1, "Number of paths expanded:", self.num_expanded, "\nBest path so far:", self.solution)
 
-from aipython.searchGeneric import test
+
 if __name__ == "__main__":
     test(DF_branch_and_bound)
 
