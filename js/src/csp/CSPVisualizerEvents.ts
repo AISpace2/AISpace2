@@ -28,11 +28,14 @@ export interface ICSPHighlightNodesEvent extends IEvent {
   colour: string;
 }
 
+export interface ICSPHighlightSplittableNodesEvent extends IEvent {
+  action: "highlightSplittableNodes";
+  // The IDs of the nodes to highlight
+  nodeIds: string[];
+}
+
 export interface ICSPChooseDomainSplitEvent extends IEvent {
   action: "chooseDomainSplit";
-  // The domain to choose a split from
-  domain: string[];
-  var: string;
 }
 
 export interface ICSPChooseDomainSplitBeforeACEvent extends IEvent {
@@ -78,6 +81,7 @@ export type Events =
   | ICSPHighlightArcsEvent
   | ICSPSetDomainsEvent
   | ICSPHighlightNodesEvent
+  | ICSPHighlightSplittableNodesEvent
   | ICSPChooseDomainSplitEvent
   | ICSPChooseDomainSplitBeforeACEvent
   | ICSPSetPreSolutionEvent

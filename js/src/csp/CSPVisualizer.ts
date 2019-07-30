@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import * as Analytics from "../Analytics";
 import { ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
-import { cspLabelText, cspLabelColor } from "../labelDictionary";
+import { cspLegend, cspLabelText, cspLabelColor } from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
 import * as CSPEvents from "./CSPVisualizerEvents";
@@ -35,6 +35,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           return this.setDomains(event);
         case "highlightNodes":
           return this.highlightNodes(event);
+        case "highlightSplittableNodes":
+          return this.highlightSplittableNodes(event);
         case "chooseDomainSplit":
           this.vue.needSplit = true;
           break;
@@ -67,6 +69,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           width: 0,
           height: 0,
           output: null,
+          warningMessage: null,
           preSolution: "",
           positions: null,
           textSize: this.model.textSize,
@@ -211,26 +214,40 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   }
 
   /**
+   * Highlights splittable nodes, as described by the event object.
+   */
+  private highlightSplittableNodes(event: CSPEvents.ICSPHighlightSplittableNodesEvent) {
+    for (const nodeId of event.nodeIds) {
+      this.vue.$set(
+        this.model.graph.idMap[nodeId].styles,
+        "stroke",
+        cspLegend["Domain-splittable variable"]
+      );
+      this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 4);
+    }
+  }
+    
+  /**
    * Requests the user choose a domain for one side of the split.
    */
   private chooseDomainSplit() {
     if (this.vue.FocusNode.checkedNames.length == 0) {
-      alert("Choose at least one value to split.");
+      this.vue.warningMessage = "Choose at least one value to split.";
       return;
     }
 
     if (this.vue.FocusNode.checkedNames.length == this.vue.FocusNode.domain.length) {
-      alert("Do not choose all values to split.");
-      this.vue.checkedNames = [];
+      this.vue.warningMessage = "Do not choose all values to split.";
+      this.vue.FocusNode.checkedNames = [];
       return;
     }
 
     const newDomain = this.vue.FocusNode.checkedNames;
-    this.send({ event: "domain_split", domain: newDomain });
+    this.send({ event: "domain_split", domain: newDomain, var: this.vue.FocusNode.nodeName });
     this.vue.needSplit = false;
     this.vue.FocusNode.checkedNames = [];
     this.vue.FocusNode.domain = [];
-    this.vue.FocusNode.nodeName = "";
+    this.vue.FocusNode.nodeName = "";  
   }
 
   /**
@@ -238,7 +255,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private chooseDomainSplitBeforeAC(event: CSPEvents.ICSPChooseDomainSplitBeforeACEvent) {
     if (!this.vue.needSplit) {
-      window.alert("Arc consistency needs to be finished before the domain can be split.");
+      this.vue.warningMessage = "Arc consistency needs to be finished before the domain can be split.";
     }
   }
 
@@ -254,6 +271,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     lines[this.vue.ind] += '●';
     this.vue.preSolution = lines.join('\n');
     this.vue.ind += 1;
+    this.model.graph.nodes.map((variableNode: ICSPGraphNode) => {
+          this.vue.$set(variableNode.styles, "stroke", "black");
+          this.vue.$set(variableNode.styles, "strokeWidth", 0);
+        });      
   }
 
   /**

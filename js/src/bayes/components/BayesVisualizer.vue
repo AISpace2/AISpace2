@@ -38,15 +38,16 @@
       </div>
       <div class="output">{{output}}</div>
       <div v-if="FocusNode.domain.length > 0 && !isQuerying">
-        <div>Current variable: {{FocusNode.nodeName}}</div>
+        <div>Current variable: <span class="nodeText">{{FocusNode.nodeName}}</span>.</div>
         <div>Choose a value to observe:</div>
-        <div v-for="key in FocusNode.domain" :key = "key">
-        <input type="radio" :id="key" :value= "key" v-model="FocusNode.checkedNames">
-        <label :for = "key">{{key}}</label>
+        <div v-for="(key, index) in FocusNode.domain" :key = "key">
+          <input type="radio" :id="key" :value= "key" v-model="FocusNode.checkedNames" :checked="index==0">
+          <label :for="key">{{key}}</label>
         </div>
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
       </div>
-        <div class="output">{{positions}}</div>
+      <div v-if="warningMessage" class="warningText">{{warningMessage}}</div>
+      <div class="output">{{positions}}</div>
     </div>
   </div>
 </template>
@@ -87,6 +88,8 @@
     graph: Graph;
     // Text describing what is currently happening
     output: string;
+    // Text descrbing warnings
+    warningMessage: string;
     // The text representing the positions for nodes
     positions: string;
     // Layout object that controls where nodes are drawn
@@ -104,16 +107,20 @@
     data() {
       return {
         FocusNode:{
-        domain:[],
-        checkedNames: '',
-        nodeName: String
+          domain:[],
+          checkedNames: '',
+          nodeName: String
         }
      }
     }
 
-    changemode(e:String){
-        if(e === "query"){this.isQuerying = true;}
-        else {this.isQuerying =false;}
+    changemode(e:String) {
+        if (e === "query") {
+            this.isQuerying = true;
+        }
+        else {
+            this.isQuerying =false;
+        }
         this.FocusNode.domain = [];
     }
 
@@ -128,7 +135,11 @@
       } else {
         this.FocusNode.domain = node.domain;
         this.FocusNode.nodeName = node.name;
-        this.FocusNode.checkedNames = '';
+        if (node.domain) {
+            this.FocusNode.checkedNames = node.domain[0];
+        } else {
+            this.FocusNode.checkedNames = '';
+        }
       }
     }
 

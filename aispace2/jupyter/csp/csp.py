@@ -119,9 +119,17 @@ class Displayable(StepDOMWidget):
         if self.max_display_level == 1:
             return list(iter_var)[0]
 
+        # Running in Auto Arc Consistency mode. Change to normal!
+        if self.max_display_level == 0:
+            self.max_display_level = 2
+
+        iter_var = list(iter_var)
+        self._send_highlight_splittable_nodes_action(iter_var)
         self._is_waiting_for_var_selection = True
         self._block_for_user_input.wait()
-        iter_var = list(iter_var)
+
+        while (self.max_display_level != 1 and not self._has_user_selected_var):
+            self._block_for_user_input.wait()
 
         if self._has_user_selected_var:
             self._has_user_selected_var = False
@@ -130,6 +138,7 @@ class Displayable(StepDOMWidget):
             else:
                 return self.wait_for_var_selection(iter_var)
 
+        self._is_waiting_for_var_selection = False
         return iter_var[0]
 
     def choose_domain_partition(self, domain, var):
@@ -144,19 +153,12 @@ class Displayable(StepDOMWidget):
         Returns:
             (set): A subset of the domain to be split on first.
         """
-        # Running in Auto Arc Consistency mode. Change to normal!
-        if self.max_display_level == 0:
-            self.max_display_level = 2
-
         # Running in Auto mode. Split in half!
         if self.max_display_level == 1:
             split = len(domain) // 2
             dom1 = set(list(domain)[:split])
             dom2 = domain - dom1
             return dom1, dom2
-
-        self.send({'action': 'chooseDomainSplit', 'domain': domain, 'var': var})
-        self._block_for_user_input.wait()
 
         if self._domain_split is None:
             # Split in half
@@ -202,14 +204,7 @@ class Displayable(StepDOMWidget):
             Expects a dictionary containing:
                 varName (string): The name of the variable to split on.
             """
-            if self._is_waiting_for_var_selection:
-                var_name = content.get('varName')
-                self._selected_var = var_name
-                self._has_user_selected_var = True
-                self._block_for_user_input.set()
-                self._block_for_user_input.clear()
-                self._is_waiting_for_var_selection = False
-            elif content.get('varType') == 'csp:variable':
+            if not self._is_waiting_for_var_selection and content.get('varType') == 'csp:variable':
                 self.send({'action': 'chooseDomainSplitBeforeAC'})
 
         elif event == 'domain_split':
@@ -220,9 +215,13 @@ class Displayable(StepDOMWidget):
                     In this case, splits the domain in half as a default.
             """
             domain = content.get('domain')
+            var_name = content.get('var')
+            self._selected_var = var_name
             self._domain_split = domain
+            self._has_user_selected_var = True
             self._block_for_user_input.set()
             self._block_for_user_input.clear()
+            self._is_waiting_for_var_selection = False
 
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
@@ -287,6 +286,9 @@ class Displayable(StepDOMWidget):
 
                 self._send_highlight_arcs_action(arcs_to_highlight, style='normal', colour='blue')
 
+        elif args[0] == "You can now split domain. Click on a variable whose domain has more than 1 value.":
+            self.send({'action': 'chooseDomainSplit'})
+
         elif args[0] == "... splitting":
             self.send({'action': 'setOrder', 'var':args[1], 'domain': args[3], 'other':args[5]})
 
@@ -306,7 +308,7 @@ class Displayable(StepDOMWidget):
         elif args[0] == "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.":
             if self.max_display_level == 0:
                 self.max_display_level = 2
-            self.send({'action': 'noSolution'})          
+            self.send({'action': 'noSolution'})
 
         #############################
         ### SLS-specific displays ###
@@ -434,6 +436,26 @@ class Displayable(StepDOMWidget):
             'action': 'highlightNodes',
             'nodeIds': nodeIds,
             'colour': colour
+        })
+
+    def _send_highlight_splittable_nodes_action(self, vars):
+        """Sends a message to the front-end visualization to highlight Splittable nodes when users can split domain.
+
+        Args:
+            vars (string|string[]): The name(s) of the splittable variables to highlight.
+        """
+
+        # We don't want to check if it is iterable because a string is iterable
+        if not isinstance(vars, list) and not isinstance(vars, set):
+            vars = [vars]
+
+        nodeIds = []
+        for var in vars:
+            nodeIds.append(self._domain_map[var])
+
+        self.send({
+            'action': 'highlightSplittableNodes',
+            'nodeIds': nodeIds,
         })
 
     def _send_highlight_arcs_action(self, arcs, style='normal', colour=None):
