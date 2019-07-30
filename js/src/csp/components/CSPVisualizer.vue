@@ -42,10 +42,10 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" v-bind:class="chooseClass()">{{output}}</div>
-      <div v-if= warningMessage class="warningText">{{warningMessage}}</div>
+      <div v-if="warningMessage" class="warningText">{{warningMessage}}</div>
       <div v-if="preSolution" class="output">Solution history:<br><span class="solutionText">{{preSolution}}</span></div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
-        <div>Current variable: {{FocusNode.nodeName}}</div>
+        <div>Current variable: <span class="nodeText">{{FocusNode.nodeName}}</span>.</div>
         <div>You can split the domain. Choose the values in one domain:</div>
         <div v-for="key in FocusNode.domain" :key = "key">
           <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames">
@@ -101,7 +101,7 @@ export default class CSPGraphInteractor extends Vue {
   graph: Graph<ICSPGraphNode>;
   // Text describing what is currently happening
   output: string;
-  // Text descrbing warns users' actions
+  // Text descrbing warnings
   warningMessage: string;
   // The text representing the solutions found so far
   preSolution: string;
@@ -182,10 +182,10 @@ export default class CSPGraphInteractor extends Vue {
       this.FocusNode.nodeName = node.name;
       this.FocusNode.checkedNames = [];
       if (node.type == "csp:constraint") {
-          this.warningMessage = "You can not perform domain splitting in constraint nodes." + "\nPlease select other splittable nodes.";
+          this.warningMessage = "Can not split on constraints.";
           this.FocusNode.domain = [];
       } else if (node.domain.length == 1) {
-          this.warningMessage = "You can only split variable whose domain has more than 1 value." + "\nPlease select other splittable nodes.";
+          this.warningMessage = "Can only split on variable whose domain has more than 1 value."
       } else {
          //this.output = "Please choose the values in the selected domain."
           this.warningMessage = null;

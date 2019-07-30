@@ -36,18 +36,18 @@
         <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output" v-bind:class="chooseClass()">{{output}}</div>
-      <div v-if= warningMessage class="warningText">{{warningMessage}}</div>  
+      <div class="output">{{output}}</div>
       <div v-if="FocusNode.domain.length > 0 && !isQuerying">
-        <div>Current variable: {{FocusNode.nodeName}}</div>
+        <div>Current variable: <span class="nodeText">{{FocusNode.nodeName}}</span>.</div>
         <div>Choose a value to observe:</div>
-        <div v-for="key in FocusNode.domain" :key = "key">
-        <input type="radio" :id="key" :value= "key" v-model="FocusNode.checkedNames">
-        <label :for = "key">{{key}}</label>
+        <div v-for="(key, index) in FocusNode.domain" :key = "key">
+          <input type="radio" :id="key" :value= "key" v-model="FocusNode.checkedNames" :checked="index==0">
+          <label :for="key">{{key}}</label>
         </div>
         <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
       </div>
-        <div class="output">{{positions}}</div>
+      <div v-if="warningMessage" class="warningText">{{warningMessage}}</div>
+      <div class="output">{{positions}}</div>
     </div>
   </div>
 </template>
@@ -88,7 +88,7 @@
     graph: Graph;
     // Text describing what is currently happening
     output: string;
-    // Text descrbing warns users' actions
+    // Text descrbing warnings
     warningMessage: string;
     // The text representing the positions for nodes
     positions: string;
@@ -107,9 +107,9 @@
     data() {
       return {
         FocusNode:{
-        domain:[],
-        checkedNames: '',
-        nodeName: String
+          domain:[],
+          checkedNames: '',
+          nodeName: String
         }
      }
     }
@@ -122,14 +122,6 @@
             this.isQuerying =false;
         }
         this.FocusNode.domain = [];
-    }
-
-    chooseClass() {
-        var warning: boolean = false;
-        if (this.output) {
-            //warning = this.output.includes("Please choose one value before submit");
-        }
-        return {'warningText': warning}
     }
 
     edgeClicked(edge: IGraphEdge) {

@@ -116,7 +116,7 @@ export default class BayesVisualizer extends DOMWidgetView {
 
   private chooseObservation() {
       if (this.vue.FocusNode.checkedNames === '') {
-          this.vue.warningMessage = "Please choose one value before submit";
+          this.vue.warningMessage = "Choose one value to observe.";
           return;
       }
       const nodes =  this.model.graph.nodes.filter(node => node.name === this.vue.FocusNode.nodeName);

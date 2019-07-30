@@ -288,7 +288,6 @@ class Displayable(StepDOMWidget):
 
         elif args[0] == "You can now split domain. Click on a variable whose domain has more than 1 value.":
             self.send({'action': 'chooseDomainSplit'})
-            args += ("\nOr click Auto Solve to automatically splitting domain.", )
 
         elif args[0] == "... splitting":
             self.send({'action': 'setOrder', 'var':args[1], 'domain': args[3], 'other':args[5]})
@@ -309,7 +308,7 @@ class Displayable(StepDOMWidget):
         elif args[0] == "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.":
             if self.max_display_level == 0:
                 self.max_display_level = 2
-            self.send({'action': 'noSolution'})          
+            self.send({'action': 'noSolution'})
 
         #############################
         ### SLS-specific displays ###
