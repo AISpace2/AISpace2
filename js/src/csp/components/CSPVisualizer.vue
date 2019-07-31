@@ -42,11 +42,10 @@
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output" v-bind:class="chooseClass()">{{output}}</div>
-      <div v-if="warningMessage" class="warningText">{{warningMessage}}</div>
       <div v-if="preSolution" class="output">Solution history:<br><span class="solutionText">{{preSolution}}</span></div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
         <div>Current variable: <span class="nodeText">{{FocusNode.nodeName}}</span>.</div>
-        <div>You can split the domain. Choose the values in one domain:</div>
+        <div>Choose value(s) to split:</div>
         <div v-for="key in FocusNode.domain" :key = "key">
           <input type="checkbox" :id="key" :value= "key" v-model="FocusNode.checkedNames">
           <label :for = "key">{{key}}</label>
@@ -59,6 +58,7 @@
           <button id="submitCheckBox" class = "btn btn-default" @click="$emit('click:submit')">Submit</button>
         </div>
       </div>
+      <div v-if="warningMessage" class="warningText">{{warningMessage}}</div>
 	    <div class="output">{{positions}}</div>
     </div>
   </div>
