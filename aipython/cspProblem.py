@@ -106,15 +106,6 @@ def FALSE(*args, **kwargs):
 # Uniary constraints
 
 
-def StringEquals(str1, str2=None):
-    if str2 is None:
-        def toReturn(x):
-            return x == str1
-        toReturn.__name__ = "StringEquals('" + str1 + "')"
-        return toReturn
-    return str == str2  # binary constraint
-
-
 def LessThan(num1, num2=None):
     if num2 is None:
         def toReturn(x):
@@ -124,13 +115,13 @@ def LessThan(num1, num2=None):
     return num1 < num2  # binary constraint
 
 
-def Equals(num1, num2=None):
-    if num2 is None:
+def Equals(val1, val2=None):
+    if val2 is None:
         def toReturn(x):
-            return x == num1
-        toReturn.__name__ = "Equals(" + str(num1) + ")"
+            return str(x) == str(val1)
+        toReturn.__name__ = "Equals(" + str(val1) + ")"
         return toReturn
-    return num1 == num2  # binary constraint
+    return val1 == val2  # binary constraint
 
 
 def GreaterThan(num1, num2=None):
