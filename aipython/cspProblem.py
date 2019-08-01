@@ -96,7 +96,7 @@ class CSP(Displayable):
         for combination in itertools.product(*ordered_domains):
             assignment = dict(zip(ordered_vars, list(combination)))
             if cons.holds(assignment):
-                combinationsForTrue.append(combination)
+                combinationsForTrue.append(assignment)
         return combinationsForTrue
 
 # Constraint Functions:
