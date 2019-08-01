@@ -43,7 +43,7 @@
           <label for="query">Query</label>
         </span>
       </span>
-    </div>    
+    </div>
     <div>
       <div id="controls" class="btn-group">
         <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
@@ -213,7 +213,7 @@
     onModeChange(newVal: string) {
         if (newVal === "query") {
             this.isQuerying = true;
-        }else {
+        } else {
             this.isQuerying = false;
         }
         this.FocusNode.domain = [];

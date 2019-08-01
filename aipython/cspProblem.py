@@ -8,6 +8,8 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+import itertools
+
 from aipython.utilities import Displayable, dict_union
 
 
@@ -82,6 +84,21 @@ class CSP(Displayable):
                    for con in self.constraints
                    if all(v in assignment for v in con.scope))
 
+    # return the combinations of variables where the constraint cons holds
+    def get_combinations_for_true(self, cons):
+        combinationsForTrue = []
+        ordered_vars = []
+        ordered_domains = []
+        for var, domain in self.domains.items():
+            if var in cons.scope:
+                ordered_vars.append(var)
+                ordered_domains.append(list(domain))
+        for combination in itertools.product(*ordered_domains):
+            assignment = dict(zip(ordered_vars, list(combination)))
+            if cons.holds(assignment):
+                combinationsForTrue.append(assignment)
+        return combinationsForTrue
+
 # Constraint Functions:
 
 # Negate the input function
@@ -106,15 +123,6 @@ def FALSE(*args, **kwargs):
 # Uniary constraints
 
 
-def StringEquals(str1, str2=None):
-    if str2 is None:
-        def toReturn(x):
-            return x == str1
-        toReturn.__name__ = "StringEquals('" + str1 + "')"
-        return toReturn
-    return str == str2  # binary constraint
-
-
 def LessThan(num1, num2=None):
     if num2 is None:
         def toReturn(x):
@@ -124,13 +132,13 @@ def LessThan(num1, num2=None):
     return num1 < num2  # binary constraint
 
 
-def Equals(num1, num2=None):
-    if num2 is None:
+def Equals(val1, val2=None):
+    if val2 is None:
         def toReturn(x):
-            return x == num1
-        toReturn.__name__ = "Equals(" + str(num1) + ")"
+            return str(x) == str(val1)
+        toReturn.__name__ = "Equals(" + str(val1) + ")"
         return toReturn
-    return num1 == num2  # binary constraint
+    return val1 == val2  # binary constraint
 
 
 def GreaterThan(num1, num2=None):
