@@ -10,18 +10,23 @@
 
 from aipython.searchProblem import Arc, Search_problem
 
+
 class Subgoal(object):
-    def __init__(self,assignment):
+    def __init__(self, assignment):
         self.assignment = assignment
         self.hash_value = None
+
     def __hash__(self):
         if self.hash_value is None:
             self.hash_value = hash(frozenset(self.assignment.items()))
         return self.hash_value
-    def __eq__(self,st):
+
+    def __eq__(self, st):
         return self.assignment == st.assignment
+
     def __str__(self):
         return str(self.assignment)
+
 
 class Regression_STRIPS(Search_problem):
     """A search problem where:
@@ -73,7 +78,8 @@ class Regression_STRIPS(Search_problem):
         """returns the subgoal that must be true so goal_asst holds after act"""
         new_asst = self.prob_domain.strips_map[act].preconditions.copy()
         for g in goal_asst:
-            if g not in self.prob_domain.strips_map[act].effects: new_asst[g] = goal_asst[g]
+            if g not in self.prob_domain.strips_map[act].effects:
+                new_asst[g] = goal_asst[g]
         return Subgoal(new_asst)
 
     def heuristic(self, subgoal):
@@ -82,7 +88,7 @@ class Regression_STRIPS(Search_problem):
         """
         return self.heur(self.initial_state, subgoal.assignment)
 
-## Test
+# Test
 # from aipython.searchBranchAndBound import DF_branch_and_bound
 # from aipython.searchGeneric import AStarSearcher
 # from aipython.searchMPP import SearcherMPP

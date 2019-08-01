@@ -9,10 +9,12 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 import random
+
 from utilities import Displayable, flip
 
+
 class RL_env(Displayable):
-    def __init__(self,actions,state):
+    def __init__(self, actions, state):
         self.actions = actions   # set of actions
         self.state = state       # initial state
 
@@ -21,38 +23,40 @@ class RL_env(Displayable):
         returns state,reward
         """
         raise NotImplementedError("RL_env.do")   # abstract method
-        
+
+
 class Healthy_env(RL_env):
     def __init__(self):
-        RL_env.__init__(self,["party","relax"], "healthy")
+        RL_env.__init__(self, ["party", "relax"], "healthy")
 
     def do(self, action):
         """updates the state based on the agent doing action.
         returns state,reward
         """
-        if self.state=="healthy":
-            if action=="party":
+        if self.state == "healthy":
+            if action == "party":
                 self.state = "healthy" if flip(0.7) else "sick"
                 reward = 10
             else:  # action=="relax"
                 self.state = "healthy" if flip(0.95) else "sick"
                 reward = 7
         else:  # self.state=="sick"
-            if action=="party":
+            if action == "party":
                 self.state = "healthy" if flip(0.1) else "sick"
                 reward = 2
             else:
                 self.state = "healthy" if flip(0.5) else "sick"
                 reward = 0
-        return self.state,reward
+        return self.state, reward
+
 
 class Env_from_MDP(RL_env):
     def __init__(self, mdp):
         initial_state = mdp.states[0]
-        RL_env.__init__(self,mdp.actions, initial_state)
+        RL_env.__init__(self, mdp.actions, initial_state)
         self.mdp = mdp
-        self.action_index = {action:index for (index,action) in enumerate(mdp.actions)}
-        self.state_index = {state:index for (index,state) in enumerate(mdp.states)}
+        self.action_index = {action: index for (index, action) in enumerate(mdp.actions)}
+        self.state_index = {state: index for (index, state) in enumerate(mdp.states)}
 
     def do(self, action):
         """updates the state based on the agent doing action.
@@ -64,14 +68,14 @@ class Env_from_MDP(RL_env):
         reward = self.mdp.reward[state_ind][action_ind]
         return self.state, reward
 
-def pick_from_dist(dist,values):
+
+def pick_from_dist(dist, values):
     """
     e.g. pick_from_dist([0.3,0.5,0.2],['a','b','c']) should pick 'a' with probability 0.3, etc.
     """
     ran = random.random()
-    i=0
-    while ran>dist[i]:
+    i = 0
+    while ran > dist[i]:
         ran -= dist[i]
         i += 1
     return values[i]
-

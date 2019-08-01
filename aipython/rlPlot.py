@@ -10,7 +10,8 @@
 
 import matplotlib.pyplot as plt
 
-def plot_rl(ag, label=None, yplot='Total', step_size=None, 
+
+def plot_rl(ag, label=None, yplot='Total', step_size=None,
             steps_explore=1000, steps_exploit=1000, xscale='linear'):
     """
     plots the agent ag
@@ -23,16 +24,16 @@ def plot_rl(ag, label=None, yplot='Total', step_size=None,
 
     returns total reward when exploring, total reward when exploiting
     """
-    assert yplot in ['Average','Total']
+    assert yplot in ['Average', 'Total']
     if step_size is None:
-        step_size = max(1,(steps_explore+steps_exploit)//500)
+        step_size = max(1, (steps_explore + steps_exploit) // 500)
     if label is None:
         label = ag.label
-    ag.max_display_level,old_mdl =  1,ag.max_display_level
+    ag.max_display_level, old_mdl = 1, ag.max_display_level
     plt.ion()
     plt.xscale(xscale)
     plt.xlabel("step")
-    plt.ylabel(yplot+" reward")
+    plt.ylabel(yplot + " reward")
     steps = []         # steps
     rewards = []       # return
     ag.restart()
@@ -42,23 +43,22 @@ def plot_rl(ag, label=None, yplot='Total', step_size=None,
         step += step_size
         steps.append(step)
         if yplot == "Average":
-            rewards.append(ag.acc_rewards/step)
+            rewards.append(ag.acc_rewards / step)
         else:
             rewards.append(ag.acc_rewards)
     acc_rewards_exploring = ag.acc_rewards
-    ag.explore,explore_save = 0,ag.explore
-    while step < steps_explore+steps_exploit:
+    ag.explore, explore_save = 0, ag.explore
+    while step < steps_explore + steps_exploit:
         ag.do(step_size)
         step += step_size
         steps.append(step)
         if yplot == "Average":
-            rewards.append(ag.acc_rewards/step)
+            rewards.append(ag.acc_rewards / step)
         else:
             rewards.append(ag.acc_rewards)
-    plt.plot(steps,rewards,label=label)
+    plt.plot(steps, rewards, label=label)
     plt.legend(loc="upper left")
     plt.draw()
-    ag.max_display_level = old_mdl 
-    ag.explore=explore_save 
-    return acc_rewards_exploring, ag.acc_rewards-acc_rewards_exploring
-
+    ag.max_display_level = old_mdl
+    ag.explore = explore_save
+    return acc_rewards_exploring, ag.acc_rewards - acc_rewards_exploring

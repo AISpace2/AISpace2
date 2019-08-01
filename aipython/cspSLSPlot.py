@@ -8,15 +8,20 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
-from aipython.cspProblem import CSP, Constraint
+import heapq
+import random
+
+import matplotlib.pyplot as plt
+
+from aipython.cspProblem import CSP, Constraint, test
 from aipython.searchProblem import Arc, Search_problem
 from aipython.utilities import Displayable
-import random
-import heapq
+
 
 class SLSearcher(Displayable):
     """A search problem directly from the CSP..
     A node is a variable:value dictionary"""
+
     def __init__(self, csp):
         self.csp = csp
         self.variables_to_select = {var for var in self.csp.variables
@@ -34,7 +39,7 @@ class SLSearcher(Displayable):
         self.conflicts = set()
         for con in self.csp.constraints:
             if not con.holds(self.current_assignment):
-                self.conflicts.add(con)        
+                self.conflicts.add(con)
         self.display(2, "Conflicts:", self.conflicts)
         self.variable_pq = None
 
@@ -161,9 +166,11 @@ class SLSearcher(Displayable):
             if num > 0:
                 self.variable_pq.add(var, -num)
 
+
 def random_sample(st):
     """selects a random element from set st"""
-    return random.sample(st,1)[0]
+    return random.sample(st, 1)[0]
+
 
 class Updatable_priority_queue(object):
     """A priority queue where the values can be updated.
@@ -174,38 +181,39 @@ class Updatable_priority_queue(object):
     It could probably be done more efficiently by
     shuffling the modified element in the heap.
     """
+
     def __init__(self):
         self.pq = []   # priority queue of [val,rand,elt] triples
         self.elt_map = {}  # map from elt to [val,rand,elt] triple in pq
         self.REMOVED = "*removed*"  # a string that won't be a legal element
-        self.max_size=0
+        self.max_size = 0
 
-    def add(self,elt,val):
+    def add(self, elt, val):
         """adds elt to the priority queue with priority=val.
         """
-        assert val <= 0,val
+        assert val <= 0, val
         assert elt not in self.elt_map, elt
-        new_triple = [val, random.random(),elt]
+        new_triple = [val, random.random(), elt]
         heapq.heappush(self.pq, new_triple)
         self.elt_map[elt] = new_triple
 
-    def remove(self,elt):
+    def remove(self, elt):
         """remove the element from the priority queue"""
         if elt in self.elt_map:
             self.elt_map[elt][2] = self.REMOVED
             del self.elt_map[elt]
 
-    def update_each_priority(self,update_dict):
+    def update_each_priority(self, update_dict):
         """update values in the priority queue by subtracting the values in
         update_dict from the priority of those elements in priority queue.
         """
-        for elt,incr in update_dict.items():
+        for elt, incr in update_dict.items():
             if incr != 0:
-                newval = self.elt_map.get(elt,[0])[0] - incr
-                assert newval <= 0, str(elt)+":"+str(newval+incr)+"-"+str(incr)
+                newval = self.elt_map.get(elt, [0])[0] - incr
+                assert newval <= 0, str(elt) + ":" + str(newval + incr) + "-" + str(incr)
                 self.remove(elt)
                 if newval != 0:
-                    self.add(elt,newval)
+                    self.add(elt, newval)
 
     def pop(self):
         """Removes and returns the (elt,value) pair with minimal value.
@@ -233,7 +241,6 @@ class Updatable_priority_queue(object):
         """returns True iff the priority queue is empty"""
         return all(triple[2] == self.REMOVED for triple in self.pq)
 
-import matplotlib.pyplot as plt
 
 class Runtime_distribution(object):
     def __init__(self, csp, xscale='log'):
@@ -248,40 +255,43 @@ class Runtime_distribution(object):
 
     def plot_run(self, num_runs=100, max_steps=1000, prob_best=1.0, prob_anycon=1.0):
         stats = []
-        SLSearcher.max_display_level, temp_mdl = 0, SLSearcher.max_display_level # no display
+        SLSearcher.max_display_level, temp_mdl = 0, SLSearcher.max_display_level  # no display
         for i in range(num_runs):
             searcher = SLSearcher(self.csp)
-            num_steps = searcher.search(max_steps, prob_best, prob_anycon) 
+            num_steps = searcher.search(max_steps, prob_best, prob_anycon)
             if num_steps:
                 stats.append(num_steps)
-            searcher.max_display_level= temp_mdl  #restore display
+            searcher.max_display_level = temp_mdl  # restore display
         stats.sort()
         if prob_best >= 1.0:
             label = "P(best)=1.0"
         else:
-            p_ac =  min(prob_anycon, 1-prob_best)
+            p_ac = min(prob_anycon, 1 - prob_best)
             label = "P(best)=%.2f, P(ac)=%.2f" % (prob_best, p_ac)
         plt.plot(stats, range(len(stats)), label=label)
         plt.legend(loc="upper left")
-        #plt.draw()
-        SLSearcher.max_display_level= temp_mdl  #restore display
+        # plt.draw()
+        SLSearcher.max_display_level = temp_mdl  # restore display
 
-from aipython.cspProblem import test
-def sls_solver(csp,prob_best=0.7):
+
+def sls_solver(csp, prob_best=0.7):
     """stochastic local searcher"""
     se0 = SLSearcher(csp)
-    se0.search(1000,prob_best)
+    se0.search(1000, prob_best)
     return se0.current_assignment
+
+
 def any_conflict_solver(csp):
     """stochastic local searcher (any-conflict)"""
-    return sls_solver(csp,0)
+    return sls_solver(csp, 0)
+
 
 if __name__ == "__main__":
     test(sls_solver)
     test(any_conflict_solver)
 
-## Test
+# Test
 #p = Runtime_distribution(extended_csp)
-#p.plot_run(100,1000,0)
-#p.plot_run(100,1000,1.0)
-#p.plot_run(100,1000,0.7)
+# p.plot_run(100,1000,0)
+# p.plot_run(100,1000,1.0)
+# p.plot_run(100,1000,0.7)

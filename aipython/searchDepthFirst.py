@@ -11,46 +11,49 @@
 from searchProblem import Path
 from utilities import Displayable
 
+
 class Depth_first_search(Displayable):
     """returns a depth-first searcher for a problem.
 
     This uses a list of iterators of nodes. "top" is the top-level iterator.
     The frontier contains iterators that may be needed to solve the problem.
     """
+
     def __init__(self, problem, bound=100000):
         self.problem = problem
         self.bound = bound  # default bound unless overridden in search
         self.top = iter([self.problem.start_node()])
         self.frontier = []    # list of iterators that generare all unexplored paths
-        self.num_expanded = 0 # number of paths expanded
-        self.hit_depth_bound = False # true when some paths hit the depth-bound
+        self.num_expanded = 0  # number of paths expanded
+        self.hit_depth_bound = False  # true when some paths hit the depth-bound
 
-    def search(self, bound = None):
+    def search(self, bound=None):
         """finds a goal with number of arcs less than bound if there is one.
         returns None if there is no path to a goal"""
-        if bound is None: bound = self.bound
+        if bound is None:
+            bound = self.bound
         while True:
             try:
-                node = next(self.top)   #current path
+                node = next(self.top)  # current path
                 self.num_expanded += 1
                 if self.problem.is_goal(node):
-                    self.display(1,"DFS found goal",node,"There were",
-                               self.num_expanded,"paths expanded")
+                    self.display(1, "DFS found goal", node, "There were",
+                                 self.num_expanded, "paths expanded")
                     return node
                 elif len(self.frontier) < bound:
                     self.frontier.append(self.top)
-                    self.display(2,"DFS expanding node",node)
+                    self.display(2, "DFS expanding node", node)
                     self.top = self.problem.neighbor_nodes(node)
                 else:
                     self.hit_depth_bound = True
-                    self.display(2,"DFS hit depth bound at node",node)
-            except StopIteration:  #top has no more elements
-                self.display(2,"popping off frontier")
+                    self.display(2, "DFS hit depth bound at node", node)
+            except StopIteration:  # top has no more elements
+                self.display(2, "popping off frontier")
                 if self.frontier:
                     self.top = self.frontier.pop()
                 else:
-                    self.display(1,"No path found. There were",
-                              self.num_expanded,"paths expanded")
+                    self.display(1, "No path found. There were",
+                                 self.num_expanded, "paths expanded")
                     return None
 
 # example queries:

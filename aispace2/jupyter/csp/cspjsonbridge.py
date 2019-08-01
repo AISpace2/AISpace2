@@ -3,7 +3,7 @@ Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP)
 and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 """
 
-from operator import lt
+from operator import lt # should be deleted after fixing
 from string import Template
 
 from aipython.cspProblem import CSP, Constraint
@@ -182,11 +182,10 @@ def csp_to_python_code(csp, need_positions=False):
         constraint_strings.append("Constraint({}, {})".format(scope, name))
     positions = csp.positions if need_positions else {}
 
-    template = """from aipython.cspProblem import CSP, Constraint
-from operator import lt\n
+    template = """from aipython.cspProblem import CSP, Constraint\n
 csp = CSP(
     domains=$domains,
-    constraints=[$constraints]
+    constraints=[$constraints],
     positions=$positions)"""
 
     return Template(template).substitute(

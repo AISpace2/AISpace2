@@ -9,13 +9,9 @@ strong {
   font-weight: bold;
 }
 
-input[type=text] {
+input[type="text"] {
   width: 100px;
   background-color: yellow;
-}
-
-.text_input_box_invalid {
-  background-color: pink;
 }
 
 .text_input_box_container {
