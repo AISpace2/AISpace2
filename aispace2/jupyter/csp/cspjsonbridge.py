@@ -3,7 +3,7 @@ Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP)
 and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 """
 
-from operator import lt # should be deleted after fixing
+from operator import lt  # should be deleted after fixing
 from string import Template
 
 from aipython.cspProblem import CSP, Constraint
@@ -35,16 +35,16 @@ def csp_to_json(csp, widget_model=None):
     edge_map = {}
 
     for i, (var, value) in enumerate(csp.domains.items()):
-       csp_json['nodes'].append({
+        csp_json['nodes'].append({
             'id': node_map[var],
             'name': var,
             'type': 'csp:variable',
             'idx': i,
             'domain': list(value)
-       })
-       if var in csp.positions:
-           csp_json['nodes'][-1]['x'] = csp.positions[var][0]
-           csp_json['nodes'][-1]['y'] = csp.positions[var][1]
+        })
+        if var in csp.positions:
+            csp_json['nodes'][-1]['x'] = csp.positions[var][0]
+            csp_json['nodes'][-1]['y'] = csp.positions[var][1]
 
     for (i, constraint) in enumerate(csp.constraints):
         constraint_id = str(hash(constraint))
@@ -53,7 +53,8 @@ def csp_to_json(csp, widget_model=None):
             'id': constraint_id,
             'name': constraint_name,
             'type': 'csp:constraint',
-            'idx': i
+            'idx': i,
+            'combinations_for_true': csp.get_combinations_for_true(constraint)
         })
         if constraint_name in csp.positions:
             csp_json['nodes'][-1]['x'] = csp.positions[constraint_name][0]
@@ -154,9 +155,10 @@ def json_to_csp(graph_json, widget_model=None):
             if scope:
                 constraints.append(Constraint(tuple(scope), lt))
 
-    positions = { node['name']: (int(node['x']), int(node['y'])) for node in graph_json['nodes'] }
+    positions = {node['name']: (int(node['x']), int(node['y'])) for node in graph_json['nodes']}
 
     return CSP(domains, constraints, positions)
+
 
 def csp_to_python_code(csp, need_positions=False):
     """Converts a CSP into Python code that, when executed, creates the CSP.

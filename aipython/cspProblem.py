@@ -8,6 +8,8 @@
 # Attribution-NonCommercial-ShareAlike 4.0 International License.
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
+import itertools
+
 from aipython.utilities import Displayable, dict_union
 
 
@@ -81,6 +83,21 @@ class CSP(Displayable):
         return all(con.holds(assignment)
                    for con in self.constraints
                    if all(v in assignment for v in con.scope))
+
+    # return the combinations of variables where the constraint cons holds
+    def get_combinations_for_true(self, cons):
+        combinationsForTrue = []
+        ordered_vars = []
+        ordered_domains = []
+        for var, domain in self.domains.items():
+            if var in cons.scope:
+                ordered_vars.append(var)
+                ordered_domains.append(list(domain))
+        for combination in itertools.product(*ordered_domains):
+            assignment = dict(zip(ordered_vars, list(combination)))
+            if cons.holds(assignment):
+                combinationsForTrue.append(combination)
+        return combinationsForTrue
 
 # Constraint Functions:
 
