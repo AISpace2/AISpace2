@@ -4,6 +4,8 @@ import os
 import re
 import sys
 
+from termcolor import colored
+
 jsonPath = os.path.abspath(os.path.join(os.path.dirname(__file__), 'js', 'package.json'))
 
 if sys.argv[1]:
@@ -29,7 +31,8 @@ except:
     exit()
 
 # confirm
-v = input("Enter y to confirm: ")
+print(colored("DEVELOPMENT USE ONLY. NORMAL USER PLEASE EXIT.", "red", "on_green"))
+v = input("Enter y to confirm, any other key to exit: ")
 if v != 'y':
     print("Exit.")
     exit()
