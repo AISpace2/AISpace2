@@ -40,7 +40,7 @@
   </div>
 
   <header>
-    <h1>Install (In construction)</h1>
+    <h1>Install</h1>
     <h2>Interested in trying out AISpace2? Get started here.</h2>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <polygon fill="#ebf4ee" points="0,100 100,0 100,100" />
@@ -66,7 +66,7 @@
         you can check whether you have them by running
         <pre>python --version
 node --version</pre>
-        If it does not return a version number, that means you don't have the corresponding package installed. Note that you need to have your Python version at least 3.3 and we recommend that Node.js version be 8.
+        If it does not output a version number, that means you don't have the corresponding package installed. Note that you need to have your Python version at least 3.3 and we recommend that Node.js version be 8.
         If your Node.js version is 9 or 10, there might be some unexpected behavior during the installation. In that case you can use Node.js 8 by installing <a href=" https://github.com/creationix/nvm/blob/master/README.md" target="_blank">nvm</a> and running
         <pre>nvm install 8
 nvm use 8</pre> in the same folder as where you will be installing the extension.
@@ -76,11 +76,12 @@ nvm use 8</pre> in the same folder as where you will be installing the extension
       <li>
         <ul>
           <li>
-            <strong>Windows:</strong> Right click on the installation scripts <code>AISpace2/installScripts/installScriptsWindows.bat</code> and choose <strong>Run as administrator</strong> (enter <code>y</code> to confirm if prompted).
+            <strong>Windows:</strong> Right click on the installation scripts <code>installScriptsWindows.bat</code> inside the <code>/installScripts/</code> directory
+            and choose <strong>Run as administrator</strong> (enter <code>y</code> to confirm if prompted).
           </li>
           <li>
             <strong>MacOS or Linux:</strong> Run the following command lines (enter <code>y</code> to confirm if prompted):
-            <pre>sh /PATH/TO/FOLDER/AISpace2/installScripts/installScripts.sh</pre>
+            <pre>sh /PATH/TO/FOLDER/installScripts/installScripts.sh</pre>
           </li>
         </ul>
       </li>
@@ -90,30 +91,27 @@ nvm use 8</pre> in the same folder as where you will be installing the extension
       In the future if you want to run AISpace2, simply run the following command line:
       <pre>jupyter lab</pre>
     </p>
-    <h2 id="jupyterhub" class="linkify"><a href="#jupyterhub">JupyterHub: TODO</a></h2>
+    <!-- TODO
+    <h2 id="jupyterhub" class="linkify"><a href="#jupyterhub">JupyterHub</a></h2>
     <p>
       Are you a <abbr title="University of British Columbia">UBC</abbr> student or have access to a JupyterHub instance (which
       allows you to access Jupyter by going to a URL)? If so, you can use this extension with Jupyter online without installing
       anything on your computer.
     </p>
-
-    <h2 id="upgrade" class="linkify"><a href="#upgrade">Upgrade: TODO</a></h2>
+    -->
+    <h2 id="upgrade" class="linkify"><a href="#upgrade">Upgrade</a></h2>
     <p>
-      Already have AISpace2? No matter which operating system you use, or what method you used to install it,
-      updating AISpace2 is as simple as running the following lines in the Command Prompt or Terminal:
+      The updating process is more like a re-installing. You can always uninstall the old version and re-install the new version.
     </p>
-    <pre>pip3 install aispace2 --user --upgrade
-jupyter labextension update aispace2</pre>
-    <p>Make sure to restart Jupyter after doing this for the changes to take effect.</p>
-    <p>If the command above did not work, you can try uninstalling and reinstalling the extension:</p>
-    <pre>jupyter labextension uninstall aispace2
-jupyter labextension install aispace2</pre>
 
     <h2 id="uninstall" class="linkify"><a href="#uninstall">Uninstall</a></h2>
     <p>
       We are sad to see you go, but uninstalling AISpace2 is as simple as running the following one command line:
     </p>
     <pre>jupyter labextension uninstall aispace2</pre>
+    <p>
+      Of course, you may then choose to delete the whole AISpace2 directory as well.
+    </p>
   </section>
   <script>
     date = new Date(document.lastModified)
