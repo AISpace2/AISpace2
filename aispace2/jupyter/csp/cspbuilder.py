@@ -1,10 +1,11 @@
-from aipython.cspProblem import CSP
 from ipywidgets import DOMWidget, register
-from traitlets import Dict, Instance, Unicode, Integer
+from traitlets import Dict, Instance, Integer, Unicode
 
-from .cspjsonbridge import json_to_csp, csp_to_json, csp_to_python_code
+from aipython.cspProblem import CSP
 
 from ... import __version__
+from .cspjsonbridge import csp_to_json, csp_to_python_code, json_to_csp
+
 
 @register
 class CSPBuilder(DOMWidget):
@@ -31,7 +32,7 @@ class CSPBuilder(DOMWidget):
     # The CSP that is synced as a graph to the frontend.
     graph = Instance(klass=CSP, allow_none=True).tag(sync=True, from_json=json_to_csp, to_json=csp_to_json)
     text_size = Integer(12).tag(sync=True)
-    detail_level = Integer(1).tag(sync=True)
+    detail_level = Integer(2).tag(sync=True)
 
     def __init__(self, csp=None):
         super().__init__()

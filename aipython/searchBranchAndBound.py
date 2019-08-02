@@ -57,8 +57,8 @@ class DF_branch_and_bound(Searcher):
         # self.display(1, "Number of paths expanded:", self.num_expanded, "\nBest path so far:", self.solution)
 
 
-if __name__ == "__main__":
-    test(DF_branch_and_bound)
+# if __name__ == "__main__":
+#     test(DF_branch_and_bound)
 
 # Example queries:
 # import searchProblem

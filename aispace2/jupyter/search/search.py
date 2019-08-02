@@ -3,16 +3,17 @@ import json
 from functools import partial
 from threading import Thread
 
-from aipython.searchProblem import Arc, Search_problem_from_explicit_graph
 from ipywidgets import register
-from traitlets import Bool, Int, Instance, Unicode, observe
+from traitlets import Bool, Instance, Int, Unicode, observe
 
+from aipython.searchProblem import Arc, Search_problem_from_explicit_graph
+
+from ... import __version__
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
 from .searchjsonbridge import (generate_search_graph_mappings,
                                implicit_to_explicit_search_problem,
                                json_to_search_problem, search_problem_to_json)
 
-from ... import __version__
 
 @register
 class Displayable(StepDOMWidget):

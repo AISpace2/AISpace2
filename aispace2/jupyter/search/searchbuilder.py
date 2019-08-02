@@ -1,10 +1,12 @@
-from aipython.searchProblem import Search_problem_from_explicit_graph
 from ipywidgets import DOMWidget, register
-from traitlets import Bool, Dict, Instance, Unicode, observe, Integer
+from traitlets import Bool, Dict, Instance, Integer, Unicode, observe
 
-from .searchjsonbridge import json_to_search_problem, search_problem_to_json, search_problem_to_python_code
+from aipython.searchProblem import Search_problem_from_explicit_graph
 
 from ... import __version__
+from .searchjsonbridge import (json_to_search_problem, search_problem_to_json,
+                               search_problem_to_python_code)
+
 
 @register
 class SearchBuilder(DOMWidget):
@@ -27,7 +29,7 @@ class SearchBuilder(DOMWidget):
     # True if a node's heuristic value should be shown.
     show_node_heuristics = Bool(False).tag(sync=True)
     text_size = Integer(12).tag(sync=True)
-    detail_level = Integer(1).tag(sync=True)
+    detail_level = Integer(2).tag(sync=True)
 
     def __init__(self, search_problem=None):
         super().__init__()

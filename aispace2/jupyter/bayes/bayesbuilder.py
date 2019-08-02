@@ -1,10 +1,13 @@
-from aipython.probGraphicalModels import Belief_network
 from ipywidgets import DOMWidget, register
-from traitlets import Bool, Dict, Instance, Unicode, Integer
+from traitlets import Bool, Dict, Instance, Integer, Unicode
 
-from .bayesjsonbridge import json_to_bayes_problem, bayes_problem_to_json, bayes_problem_to_python_code
+from aipython.probGraphicalModels import Belief_network
 
 from ... import __version__
+from .bayesjsonbridge import (bayes_problem_to_json,
+                              bayes_problem_to_python_code,
+                              json_to_bayes_problem)
+
 
 @register
 class BayesBuilder(DOMWidget):
@@ -21,7 +24,7 @@ class BayesBuilder(DOMWidget):
     # The Bayes problem that is synced as a graph to the frontend.
     graph = Instance(klass=Belief_network, allow_none=True).tag(sync=True, from_json=json_to_bayes_problem, to_json=bayes_problem_to_json)
     text_size = Integer(12).tag(sync=True)
-    detail_level = Integer(1).tag(sync=True)
+    detail_level = Integer(2).tag(sync=True)
     decimal_place = Integer(2).tag(sync=True)
 
     def __init__(self, bayes_problem=None):

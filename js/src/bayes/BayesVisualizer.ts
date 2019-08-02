@@ -3,10 +3,10 @@ import { timeout } from "d3";
 import * as Events from "./BayesVisualizerEvents";
 import BayesVisualizerModel from "./BayesVisualizerModel";
 import BayesNetInteractor from "./components/BayesVisualizer.vue";
-import { IObservation, ObservationManager} from "./Observation";
+import { IObservation, ObservationManager } from "./Observation";
 
 import * as Analytics from "../Analytics";
-import {IBayesGraphNode} from "../Graph";
+import { IBayesGraphNode } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
@@ -80,16 +80,17 @@ export default class BayesVisualizer extends DOMWidgetView {
           event: "node:query",
           name: node.name,
           evidences: dumpData.map((n: IObservation) => {
-            return {"name": n.name, "value": n.value};
-          })});
+            return { "name": n.name, "value": n.value };
+          })
+        });
       });
 
       this.vue.$on('reset', () => {
         this.manager.reset();
         this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
-          this.vue.$set(variableNode,"prob",undefined);
-          this.vue.$set(variableNode,"observed",undefined);
-          this.vue.$set(variableNode,"displaying",undefined);
+          this.vue.$set(variableNode, "prob", undefined);
+          this.vue.$set(variableNode, "observed", undefined);
+          this.vue.$set(variableNode, "displaying", undefined);
           this.vue.$set(variableNode.styles, "strokeWidth", 0);
           this.vue.FocusNode.domain = [];
         });
@@ -102,29 +103,29 @@ export default class BayesVisualizer extends DOMWidgetView {
   }
 
   private parseQueryResult(event: Events.IBayesQueryEvent) {
-    const nodes =  this.model.graph.nodes.filter(node => node.name === event.name);
+    const nodes = this.model.graph.nodes.filter(node => node.name === event.name);
     if (nodes.length === 0) {
       return;
     } else {
       const variableNode = nodes[0] as IBayesGraphNode;
       variableNode.prob = event.prob;
       if (variableNode.displaying) {
-          this.vue.$set(variableNode.styles, "strokeWidth", 2);
+        this.vue.$set(variableNode.styles, "strokeWidth", 2);
       }
     }
   }
 
   private chooseObservation() {
-      if (this.vue.FocusNode.checkedNames === '') {
-          this.vue.warningMessage = "Choose one value to observe.";
-          return;
-      }
-      const nodes =  this.model.graph.nodes.filter(node => node.name === this.vue.FocusNode.nodeName);
-      const variableNode = nodes[0] as IBayesGraphNode;
-      let value: null | string = this.vue.FocusNode.checkedNames;
-      this.manager.add(variableNode.name, value);
-      this.vue.$set(variableNode, "observed", value.toString());
-      this.vue.FocusNode.domain = [];
-      this.vue.warningMessage = null;
+    if (this.vue.FocusNode.checkedNames === '') {
+      this.vue.warningMessage = "Choose one value to observe.";
+      return;
+    }
+    const nodes = this.model.graph.nodes.filter(node => node.name === this.vue.FocusNode.nodeName);
+    const variableNode = nodes[0] as IBayesGraphNode;
+    let value: null | string = this.vue.FocusNode.checkedNames;
+    this.manager.add(variableNode.name, value);
+    this.vue.$set(variableNode, "observed", value.toString());
+    this.vue.FocusNode.domain = [];
+    this.vue.warningMessage = null;
   }
 }

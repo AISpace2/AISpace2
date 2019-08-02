@@ -46,8 +46,8 @@
     </div>
     <div>
       <div id="controls" class="btn-group">
-        <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
+        <button id="reset" class = "btn btn-default" @click="$emit('reset')">Reset</button>
       </div>
       <div class="output">{{output}}</div>
       <div v-if="FocusNode.domain.length > 0 && !isQuerying">

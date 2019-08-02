@@ -183,6 +183,9 @@ def search_problem_to_python_code(problem, need_positions=False):
         (string):
             A string of Python code that, when executed, reconstructs the search problem given.
     """
+    if not problem:
+        return None
+
     nodes = problem.nodes
     arcs = []
     for arc in problem.arcs:

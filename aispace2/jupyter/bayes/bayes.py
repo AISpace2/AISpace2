@@ -1,10 +1,13 @@
+from ipywidgets import register
+from traitlets import Bool, Float, Instance, Integer, Unicode
+
 from aipython.probGraphicalModels import Belief_network
 from aipython.probVE import VE
-from ipywidgets import register
-from traitlets import Instance, Unicode, Float, Integer, Bool
-from .bayesjsonbridge import bayes_problem_to_json, json_to_bayes_problem
-from ..stepdomwidget import ReturnableThread, StepDOMWidget
+
 from ... import __version__
+from ..stepdomwidget import ReturnableThread, StepDOMWidget
+from .bayesjsonbridge import bayes_problem_to_json, json_to_bayes_problem
+
 
 @register
 class Displayable(StepDOMWidget):

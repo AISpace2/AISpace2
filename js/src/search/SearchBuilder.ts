@@ -44,7 +44,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
               this.model.graph = Graph.fromJSON(oldVal.toJSON()) as Graph<
                 ISearchGraphNode,
                 ISearchGraphEdge
-              >;
+                >;
               this.touch();
             },
             deep: true

@@ -45,7 +45,7 @@ version = str(int(listr[0])) + '.' + str(int(listr[1])) + '.' + str(int(listr[2]
 websiteVersionPath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'AISpace2-gh-pages', 'install.html'))
 websiteVersionFile = open(websiteVersionPath)
 for line in fileinput.FileInput(websiteVersionPath, inplace=True):
-    print(re.sub("""span id="install-current-version">Current version: \d+\.\d+\.\d+\.</span>""", """span id="install-current-version">Current version: """ + version + ".</span>", line).rstrip())
+    print(re.sub("""span id="install-current-version"><strong>Current version: \d+\.\d+\.\d+\.</strong></span>""", """span id="install-current-version"><strong>Current version: """ + version + ".</strong></span>", line).rstrip())
 for line in fileinput.FileInput(websiteVersionPath, inplace=True):
     print(re.sub("""li>Download <a href="./assets/AISpace2-\d+\.\d+\.\d+\.zip" download>AISpace2</a> and unzip the file in the directory where you want to store it.</li>""",
                  """li>Download <a href="./assets/AISpace2-""" + version + """.zip" download>AISpace2</a> and unzip the file in the directory where you want to store it.</li>""",
@@ -69,4 +69,4 @@ with open(jsonPath, 'r+') as f:
     f.truncate()
     f.close()
 
-print("Version updated to " + version + ".")
+print("Version updated to " + version + " in /aispace2/_version.py, /js/package.json and /install.html in gh-pages branch.")
