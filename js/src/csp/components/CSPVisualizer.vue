@@ -41,8 +41,17 @@
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
-      <div class="output" v-bind:class="chooseClass()">{{output}}</div>
-      <div v-if="preSolution" class="output">Solution history:<br><span class="solutionText">{{preSolution}}</span></div>
+      <div v-if="output" class="output">
+          <div v-for="sub in output.split('\n')" :key ="sub">
+              <span v-bind:class="chooseClass(sub)">{{sub}}</span>
+          </div>
+      </div>
+      <div v-if="preSolution" class="output">
+          <span>Solution history:</span>
+          <div v-for="subSol in preSolution.split('\n')" :key ="subSol">
+              <span v-bind:class="chooseClass(subSol)">{{subSol}}</span>
+          </div>
+      </div>
       <div v-if="FocusNode.domain.length > 1 && needSplit">
         <div>Current variable: <span class="nodeText">{{FocusNode.nodeName}}</span>.</div>
         <div>Choose value(s) to split:</div>
@@ -59,7 +68,7 @@
         </div>
       </div>
       <div v-if="warningMessage" class="warningText">{{warningMessage}}</div>
-	    <div class="output">{{positions}}</div>
+      <div class="output">{{positions}}</div>
     </div>
   </div>
 </template>
@@ -161,12 +170,12 @@ export default class CSPGraphInteractor extends Vue {
     }
   }
 
-  chooseClass() {
+  chooseClass(sub: string) {
       var solution: boolean = false;
       var warning: boolean = false;
       if (this.output) {
-          solution = this.output.includes('Solution found');
-          warning  = this.output.includes('No more solutions');
+          solution = sub.includes('Solution found') || sub.includes('Solution: ');
+          warning  = sub.includes('No more solutions');
       }
       return { 'solutionText': solution, 'warningText': warning };
   }

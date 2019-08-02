@@ -38,8 +38,17 @@
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
       </div>
       <div class="output">Frontier: {{frontier}}</div>
-      <div class="output" v-bind:class="chooseClass()">{{output}}</div>
-      <div v-if="preSolution" class="output">Solution history: <span class="solutionText">{{preSolution}}</span></div>
+      <div v-if="output" class="output">
+          <div v-for="sub in output.split('\n')" :key ="sub">
+              <span v-bind:class="chooseClass(sub)">{{sub}}</span>
+          </div>
+      </div>
+      <div v-if="preSolution" class="output">
+          <span>Solution history:</span>
+          <div v-for="subSol in preSolution.split('\n')" :key ="subSol">
+              <span class="solutionText">{{subSol}}</span>
+          </div>
+      </div>
       <div class="output">{{positions}}</div>
     </div>
   </div>
@@ -101,12 +110,12 @@
     legendText: string[];
     legendColor: string[];
 
-    chooseClass() {
+    chooseClass(sub: string) {
       var solution: boolean = false;
       var warning: boolean = false;
       if (this.output) {
-          solution = this.output.includes("Solution found") || this.output.includes("New best path");
-          warning  = this.output.includes("No more solutions");
+          solution = sub.includes("Solution found") || sub.includes("New best path");
+          warning  = sub.includes("No more solutions");
       }
       return { 'solutionText': solution, 'warningText': warning };
     }
