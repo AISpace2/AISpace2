@@ -321,12 +321,6 @@ a:focus {
 
 .footnote {
   font-size: .8em;
-  font-style: italic;
-}
-
-.footnote-link {
-  color: #4b97c4;
-  border: none;
 }
 
 figure img {
