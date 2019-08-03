@@ -333,6 +333,7 @@ a:focus {
 
 .no-shadow {
   box-shadow: None;
+  border: 0px;
 }
 
 figure img {
