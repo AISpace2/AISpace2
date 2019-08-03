@@ -189,7 +189,7 @@ section.inline {
   padding-bottom: 15px;
 }
 
-a:not(img) {
+a {
   font-weight: bold;
   line-height: .95em;
   -webkit-transition: border-color .25s ease-in-out;
@@ -321,6 +321,10 @@ a:focus {
 
 .footnote {
   font-size: .8em;
+}
+
+.image-line {
+  border: 0px
 }
 
 figure img {
