@@ -189,7 +189,7 @@ section.inline {
   padding-bottom: 15px;
 }
 
-a {
+a:not(img) {
   font-weight: bold;
   line-height: .95em;
   -webkit-transition: border-color .25s ease-in-out;
