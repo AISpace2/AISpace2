@@ -331,6 +331,10 @@ a:focus {
   border: 0px;
 }
 
+.no-shadow-image {
+  box-sizing: None;
+}
+
 figure img {
   max-height: 300px;
 }
