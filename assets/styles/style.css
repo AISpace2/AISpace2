@@ -332,7 +332,7 @@ a:focus {
 }
 
 .no-shadow {
-  box-sizing: None;
+  box-shadow: None;
 }
 
 figure img {
