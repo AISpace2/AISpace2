@@ -321,6 +321,9 @@ a:focus {
 
 .footnote {
   font-size: .8em;
+  text-align: center;
+  margin-left: auto;
+  margin-right:auto;
 }
 
 .image-link {

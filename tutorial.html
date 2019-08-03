@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="assets/images/icons/favicon-32x32.png" sizes="32x32" />
   <link rel="icon" type="image/png" href="assets/images/icons/favicon-16x16.png" sizes="16x16" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Muli:400,700|Overpass+Mono" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli:400,700%7cOverpass+Mono" rel="stylesheet">
   <link href="assets/styles/style.css" rel="stylesheet">
   <script src="assets/scripts/siema.min.js"></script>
   <script>
@@ -51,7 +51,7 @@
     <h1>TL; DR</h1>
     <p>
       Don't be scared by tons of information here! Basically AISpace2 is designed to be very easy and friendly to use &mdash; you can skip this page and go play with it first
-      and then go back here when you encounter any troubles or questions. If your question is not resolved here, please send it to <a href="mailto:help@aispace.org?subject=AISpace2 Feedback">help@aispace.org</a>.
+      and then go back here when you encounter any troubles or questions. If your question is not resolved here, please send it to <a href="mailto:help@aispace.org?subject=AISpace2+Feedback">help@aispace.org</a>.
     </p>
     <h2 id="tutorial-table-contents" class="linkify"><a href="#tutorial-table-contents">Table of Contents</a></h2>
     <ul>
@@ -212,38 +212,36 @@
     <h3 id="tutorial-search-supported-classes" class="linkify"><a href="#tutorial-search-supported-classes">Supported Classes</a></h3>
     <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
     <h3 id="tutorial-search-included-problems" class="linkify"><a href="#tutorial-search-included-problems">Included Problems</a></h3>
-    <p>
-      <figure>
-        <img src="assets/images/problems/search_simple1.png" alt="Simple Search Problem 1" />
-        <figcaption>
-          <code>search_simple1</code>: A simple search problem
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/search_simple2.png" alt="Simple Search Problem 2" />
-        <figcaption>
-          <code>search_simple2</code>: Another simple search problem
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/search_edgeless.png" alt="Edgeless Search Problem" />
-        <figcaption>
-          <code>search_edgeless</code>: A search problem where there are no edges
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
-        <figcaption>
-          <code>search_acyclic_delivery</code>: A robot delivery problem that has no cycles
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/search_cyclic_delivery.png" alt="Cyclic Search Problem" />
-        <figcaption>
-          <code>search_cyclic_delivery</code>: A robot delivery problem that has cycles
-        </figcaption>
-      </figure>
-    </p>
+    <figure>
+      <img src="assets/images/problems/search_simple1.png" alt="Simple Search Problem 1" />
+      <figcaption>
+        <code>search_simple1</code>: A simple search problem
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/search_simple2.png" alt="Simple Search Problem 2" />
+      <figcaption>
+        <code>search_simple2</code>: Another simple search problem
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/search_edgeless.png" alt="Edgeless Search Problem" />
+      <figcaption>
+        <code>search_edgeless</code>: A search problem where there are no edges
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
+      <figcaption>
+        <code>search_acyclic_delivery</code>: A robot delivery problem that has no cycles
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/search_cyclic_delivery.png" alt="Cyclic Search Problem" />
+      <figcaption>
+        <code>search_cyclic_delivery</code>: A robot delivery problem that has cycles
+      </figcaption>
+    </figure>
     <h3 id="tutorial-search-construct-yourself" class="linkify"><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
       Apart from the included problems, you can also construct various search problems by yourself. The simplest way is to use the search builder in <code>/notebooks/search/search_builder.ipynb</code> to help you generate a search problem visually.
@@ -317,44 +315,42 @@
     <h3 id="tutorial-csp-supported-classes" class="linkify"><a href="#tutorial-csp-supported-classes">Supported Classes</a></h3>
     <p><code>Con_solver</code>, <code>SLSearcher</code></p>
     <h3 id="tutorial-csp-included-problems" class="linkify"><a href="#tutorial-csp-included-problems">Included Problems</a></h3>
-    <p>
-      <figure>
-        <img src="assets/images/problems/csp_simple1.png" alt="Simple CSP 1" />
-        <figcaption>
-          <code>csp_simple1</code>: A simple CSP
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/csp_simple2.png" alt="Simple CSP 2" />
-        <figcaption>
-          <code>csp_simple2</code>: Another simple CSP
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/csp_extended.png" alt="Extended CSP" />
-        <figcaption>
-          <code>csp_extended</code>: A more complex CSP
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/csp_crossword1.png" alt="CSP Crossword 1" />
-        <figcaption>
-          <code>csp_crossword1</code>: A crossword that represents word positions as variables
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/csp_crossword2.png" alt="CSP Crossword 2" />
-        <figcaption>
-          <code>csp_crossword2</code>: Another crossword that represents word positions as variables
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/csp_crossword2d.png" alt="CSP Crossword 2d" />
-        <figcaption>
-          <code>csp_crossword2d</code>: A crossword that represents squares as variables
-        </figcaption>
-      </figure>
-    </p>
+    <figure>
+      <img src="assets/images/problems/csp_simple1.png" alt="Simple CSP 1" />
+      <figcaption>
+        <code>csp_simple1</code>: A simple CSP
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/csp_simple2.png" alt="Simple CSP 2" />
+      <figcaption>
+        <code>csp_simple2</code>: Another simple CSP
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/csp_extended.png" alt="Extended CSP" />
+      <figcaption>
+        <code>csp_extended</code>: A more complex CSP
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/csp_crossword1.png" alt="CSP Crossword 1" />
+      <figcaption>
+        <code>csp_crossword1</code>: A crossword that represents word positions as variables
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/csp_crossword2.png" alt="CSP Crossword 2" />
+      <figcaption>
+        <code>csp_crossword2</code>: Another crossword that represents word positions as variables
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/csp_crossword2d.png" alt="CSP Crossword 2d" />
+      <figcaption>
+        <code>csp_crossword2d</code>: A crossword that represents squares as variables
+      </figcaption>
+    </figure>
     <h3 id="tutorial-csp-construct-yourself" class="linkify"><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
       Apart from the included problems, you can also construct various CSP problems by yourself. The simplest way is to use the CSP builder in <code>/notebooks/csp/csp_builder.ipynb</code> to help you generate a CSP problem visually.
@@ -466,32 +462,30 @@ strips_simple1 <span style="color: #666666">=</span> Planning_problem(prob_domai
     <h3 id="tutorial-bayesian-supported-classes" class="linkify"><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></h3>
     <p><code>Belief_network</code></p>
     <h3 id="tutorial-bayesian-included-problems" class="linkify"><a href="#tutorial-bayesian-included-problems">Included Problems</a></h3>
-    <p>
-      <figure>
-        <img src="assets/images/problems/bn1.png" alt="BN 1" />
-        <figcaption>
-          <code>bn1</code>: A simple Bayesian Network problem
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/bn2.png" alt="BN 2" />
-        <figcaption>
-          <code>bn2</code>: A Bayesian Network modeling a fire alarm system
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/bn3.png" alt="BN 3" />
-        <figcaption>
-          <code>bn3</code>: A Bayesian Network modeling a sprinkler system
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/problems/bn4.png" alt="BN 4" />
-        <figcaption>
-          <code>bn4</code>: A Bayesian Network where domains have more than 2 values
-        </figcaption>
-      </figure>
-    </p>
+    <figure>
+      <img src="assets/images/problems/bn1.png" alt="BN 1" />
+      <figcaption>
+        <code>bn1</code>: A simple Bayesian Network problem
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/bn2.png" alt="BN 2" />
+      <figcaption>
+        <code>bn2</code>: A Bayesian Network modeling a fire alarm system
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/bn3.png" alt="BN 3" />
+      <figcaption>
+        <code>bn3</code>: A Bayesian Network modeling a sprinkler system
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/problems/bn4.png" alt="BN 4" />
+      <figcaption>
+        <code>bn4</code>: A Bayesian Network where domains have more than 2 values
+      </figcaption>
+    </figure>
     <h3 id="tutorial-bayesian-construct-yourself" class="linkify"><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
       Apart from the included problems, you can also construct various belief network problems by yourself. You can use the <code>Belief_network</code>
@@ -556,20 +550,18 @@ bn2 <span style="color: #666666">=</span> Belief_network(<span style="color: #00
       In order to make this process more smoothly, in AISpace2 we separate the algorithms (inside <code>/aipython/</code>) from visualizations (inside <code>/aispace2/</code> and <code>/js/</code>) and
       the user can refer to and change the algorithms when they want to.
     </p>
-    <p>
-      <figure>
-        <img src="assets/images/tutorial/faq-relationship-aispace.png" alt="AIspace" />
-        <figcaption>
-          AIspace: Java applets
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/tutorial/faq-relationship-aispace2.png" alt="AISpace2" />
-        <figcaption>
-          AISpace2: Jupyter notebooks
-        </figcaption>
-      </figure>
-    </p>
+    <figure>
+      <img src="assets/images/tutorial/faq-relationship-aispace.png" alt="AIspace" />
+      <figcaption>
+        AIspace: Java applets
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/tutorial/faq-relationship-aispace2.png" alt="AISpace2" />
+      <figcaption>
+        AISpace2: Jupyter notebooks
+      </figcaption>
+    </figure>
     <h3 id="tutorial-faq-relationship-aispace2-aipython" class="linkify"><a href="#tutorial-faq-relationship-aispace2-aipython">What's the relationship between AISpace2 and AIPython?</a></h3>
     <p><a href="http://artint.info/AIPython/" target="_blank">AIPython</a> is the Python code for the pseudocode found inside the <a href="http://artint.info/" target="_blank">accompanying textbook</a>;
       it can run independently without AISpace2 and Jupyter. AISpace2 takes the code from AIPython and enhances it to work inside Jupyter, allowing for a more
@@ -647,35 +639,35 @@ e<span style="color: #666666">.</span>foo()
       According to the documentation, JupyterLab will eventually replace the classic Jupyter Notebook (see <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html#releases" target="_blank">here</a>).
       For more information, please refer to the official documentations.
     </p>
-    <p>
-      <figure>
-        <img src="assets/images/tutorial/faq-relationship-notebook.png" alt="Jupyter Notebook Interface" />
-        <figcaption>
-          Jupyter Notebook Interface
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="assets/images/tutorial/faq-relationship-lab.png" alt="JupyterLab Interface" />
-        <figcaption>
-          JupyterLab Interface
-        </figcaption>
-      </figure>
-    </p>
+    <figure>
+      <img src="assets/images/tutorial/faq-relationship-notebook.png" alt="Jupyter Notebook Interface" />
+      <figcaption>
+        Jupyter Notebook Interface
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="assets/images/tutorial/faq-relationship-lab.png" alt="JupyterLab Interface" />
+      <figcaption>
+        JupyterLab Interface
+      </figcaption>
+    </figure>
     <h3 id="tutorial-faq-why-update-aipython-not-reflect" class="linkify"><a href="#tutorial-faq-why-update-aipython-not-reflect">How can I change Python code?</a></h3>
     <p>
       Most Python code that is imported in the notebooks is located in <code>/aipython/</code> directory. Whenever you make a change to the Python files in it, you need to restart the kernel to let the change take effect.
-      <figure>
-        <img src="assets/images/tutorial/faq-why-update-aipython-not-reflect.png" alt="Location of Stop Kernel button" />
-        <figcaption>
-          Click the button to restart the kernel in JupyterLab
-        </figcaption>
-      </figure>
     </p>
+    <figure>
+      <img src="assets/images/tutorial/faq-why-update-aipython-not-reflect.png" alt="Location of Stop Kernel button" />
+      <figcaption>
+        Click the button to restart the kernel in JupyterLab
+      </figcaption>
+    </figure>
     <h3 id="tutorial-faq-why-update-frontend-not-reflect" class="linkify"><a href="#tutorial-faq-why-update-frontend-not-reflect">How can I change frontend?</a></h3>
     <p>
       Code controlling frontend behavior is located in <code>/js/</code> directory. Whenever you make a change to the files in it, you need to recompile them by running:
-      <pre>npm update-lab-extension
+    </p>
+    <pre>npm update-lab-extension
 jupyter labextension install</pre>
+    <p>
       in <code>/js/</code> directory. After recompiling, you need to refresh the page.
     </p>
     <h3 id="tutorial-faq-what-how-display" class="linkify"><a href="#tutorial-faq-what-how-display">What's and how to use <code>display()</code>?</a></h3>
@@ -755,7 +747,6 @@ jupyter labextension install</pre>
         </td>
       </tr>
     </table>
-    </p>
 
     <p>
       You can change it to <code>2</code> and now you can see the execution pause, showing the neighbours, when you click the Step button. However, you should not change anything following the <code>level</code> parameter (<code>"Neighbors are", neighs</code> in this case).
@@ -781,23 +772,22 @@ jupyter labextension install</pre>
           </td>
         </tr>
       </table>
-    </p>
 
-    <p>
-      Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button:
-    </p>
-    <figure>
-      <img src="assets/images/tutorial/faq-what-how-display.png" alt="display() prints new information" />
-      <figcaption>
-        The arc added is printed
-      </figcaption>
-    </figure>
-    <p>
-      If you want to modify <code>display()</code>, it is a member function of the class <code>StepDOMWidget</code> defined in <code>/aispace2/jupyter/stepdomwidget.py</code>.
-      <code>StepDOMWidget</code> inherits from the class <code>DOMWidget</code> and controls the Jupyter widget for visualizations that you can step through.
-      <code>display()</code> is overwritten in its various subclasses <code>Displayable</code> defined in <code>/aispace2/jupyter/*.py</code>, where <code>*</code> depends on the
-      algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
-    </p>
+      <p>
+        Now you can see the widget print the arc information each time it adds a new arc into frontier when you click the Step button:
+      </p>
+      <figure>
+        <img src="assets/images/tutorial/faq-what-how-display.png" alt="display() prints new information" />
+        <figcaption>
+          The arc added is printed
+        </figcaption>
+      </figure>
+      <p>
+        If you want to modify <code>display()</code>, it is a member function of the class <code>StepDOMWidget</code> defined in <code>/aispace2/jupyter/stepdomwidget.py</code>.
+        <code>StepDOMWidget</code> inherits from the class <code>DOMWidget</code> and controls the Jupyter widget for visualizations that you can step through.
+        <code>display()</code> is overwritten in its various subclasses <code>Displayable</code> defined in <code>/aispace2/jupyter/*.py</code>, where <code>*</code> depends on the
+        algorithm being visualized (e.g. <code>*</code> can be <code>search</code> or <code>csp</code>).
+      </p>
   </section>
 
   <script>
@@ -805,16 +795,16 @@ jupyter labextension install</pre>
     month = date.getMonth() + 1
     year = date.getFullYear()
     day = date.getDate()
-    document.writeln("<br><br><br><center class='footnote'>");
+    document.writeln("<br><br><br><div class='footnote'>");
     document.write("This website was last updated on " + year + "-" + month + "-" + day + ".");
-    document.writeln("</center>");
+    document.writeln("</div>");
   </script>
 
-  <center class="footnote">
+  <div class="footnote">
     <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" class="image-link" target="_blank"><img alt="Creative Commons License" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
     <a href="http://validator.w3.org/check?uri=" onclick="this.href += document.URL" class="image-link" target="_blank"><img src="http://www.w3.org/Icons/valid-html401-blue" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a>
-    <a href="http://jigsaw.w3.org/css-validator/check/" onclick="this.href += document.URL" class="image-link" target="_blank"><img style="border:0;width:88px;height:31px" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!" /></a>
-  </center>
+    <a href="http://jigsaw.w3.org/css-validator/check/referer" class="image-link" target="_blank"><img style="border:0;width:88px;height:31px" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!" /></a>
+  </div>
   <br><br><br><br>
 </body>
 
