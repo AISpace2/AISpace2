@@ -30,7 +30,7 @@
       <span>
         <b>Mode: </b>
       </span>
-      <CSPToolbar @modechanged="setMode"></CSPToolbar>
+      <CSPToolbar @modechanged="setMode" @showPythonCode = "toggleCode"></CSPToolbar>
       <div v-if="mode == 'variable' || mode == 'constraint' ">
         <span>Double click on the graph to create a new {{mode}}.</span>
       </div>
@@ -55,6 +55,9 @@
           <option value="eq">Equal to (=)</option>
           <option value="undefined" v-if="selection.constraint == null">Python Constraint</option>
         </select>
+      </div>
+      <div v-if = "showPythonCode">
+        Test Test Test Test
       </div>
     </div>
   </div>
@@ -107,6 +110,14 @@ export default class CSPGraphBuilder extends Vue {
   first: ICSPGraphNode | null = null;
   textSize: number;
   detailLevel: number;
+
+  showPythonCode:boolean = false;
+
+  /*Toggle the Visibility of the code*/
+  toggleCode(){
+    this.showPythonCode = !this.showPythonCode;
+  }
+
 
   /** Switches to a new mode. */
   setMode(mode: Mode) {
