@@ -57,7 +57,7 @@
         </select>
       </div>
       <div v-if = "showPythonCode">
-        Test Test Test Test
+        from aipython.cspProblem import CSP, Constraint, LessThan <br>{{pythonCode}}
       </div>
     </div>
   </div>
@@ -111,11 +111,63 @@ export default class CSPGraphBuilder extends Vue {
   textSize: number;
   detailLevel: number;
 
+  pythonCode : string;
   showPythonCode:boolean = false;
 
   /*Toggle the Visibility of the code*/
   toggleCode(){
     this.showPythonCode = !this.showPythonCode;
+    console.log(this.graph);
+    this.pythonCode = "csp = CSP( "+"domains = {";
+    this.graph.nodes.forEach(node => {
+      if(node.type === "csp:variable"){
+      this.pythonCode += "'"+ node.name + "':{";
+      this.pythonCode += node.domain +"},";
+      }
+    });
+    this.pythonCode += "}, constraints=[";
+
+    this.graph.nodes.forEach(node => {
+      var scope:string[] = [];
+      if(node.type == 'csp:constraint')
+      {
+        //Find the links with the target as this constraint
+        this.graph.edges.forEach(edge => {
+          if(edge.target.id == node.id){
+            var p:ICSPGraphNode;
+            for (let n of this.graph.nodes) {
+              if (n.id == edge.source.id){
+                  p = n;
+                  break;
+              }
+            } 
+            scope.push(p.name);
+          }
+          else if(edge.source.id == node.id){
+             var p:ICSPGraphNode ;
+            for (let n of this.graph.nodes) {
+              if (n.id == edge.target.id){
+                  p = n;
+                  break;
+              }
+            } 
+            scope.push(p.name);
+          }
+        });
+        if(scope.length>0){
+          this.pythonCode += "Constraint((";
+          scope.forEach(s => {
+            this.pythonCode += "'"+s+"',";
+          }); 
+          this.pythonCode+= "),LessThan),";
+        }
+        
+      }
+      
+    });
+    this.pythonCode += "], positions={})";
+
+    console.log(this.pythonCode);
   }
 
 
