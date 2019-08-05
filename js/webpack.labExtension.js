@@ -27,7 +27,7 @@ module.exports = {
      * This bundle contains the implementation for the custom widget views and custom widget.
      * It must be an AMD module to work with Jupyter.
      */
-    mode: "production",
+    mode: "development",
     entry: ["babel-polyfill", "./src/index.ts"],
     output: {
       filename: "labExtension.js",

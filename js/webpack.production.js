@@ -10,10 +10,10 @@ const commonConfig = require("./webpack.common.js");
 
 module.exports = merge.multiple(commonConfig, {
   mode: "production",
+  devtool: "source-map",
   main: {
-    devtool: "source-map",
     optimization: {
-        minimize: true
+      minimize: true
     },
     plugins: [
       new webpack.LoaderOptionsPlugin({
