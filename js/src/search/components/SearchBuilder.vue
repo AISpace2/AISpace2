@@ -31,6 +31,9 @@
         <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
       </template>
     </GraphVisualizerBase>
+    <div class = "ShowPycode">
+      <button id="showPythonCode" class="btn btn-default" @click="pyCode()">Show Python Code</button>
+    </div>
     <div>
       <div v-if="selection && selection.type !== 'edge'">
         <label for="node-name">Name</label>
@@ -48,8 +51,14 @@
         <label for="edge-cost">Edge Cost</label>
         <input type="number" v-model.number="selection.cost">
       </div>
-    </div>
+      <div v-if = "showPythonCode">
+       from aipython.searchProblem import Search_problem_from_explicit_graph, Arc <br>
+       search_problem = Search_problem_from_explicit_graph( {{pythonCode}})
   </div>
+    </div>
+    
+  </div>
+  
 </template>
 
 <script lang="ts">
@@ -90,6 +99,8 @@ export default class SearchGraphBuilder extends Vue {
   /** The current node or edge being selected. */
   selection: ISearchGraphNode | ISearchGraphEdge | null = null;
 
+  showPythonCode:boolean = false;
+  pythonCode:string = "";
   strokeColour(selection: ISearchGraphNode | ISearchGraphEdge) {
     if (this.selection === selection) {
       return "blue";
@@ -130,6 +141,51 @@ export default class SearchGraphBuilder extends Vue {
     node.styles.width = bounds.width;
     node.styles.height = bounds.height;
   }
+
+  pyCode(){
+    this.showPythonCode = !this.showPythonCode;
+    this.updatePythonCode();
+  }
+
+  updatePythonCode(){
+    var nodes:string[] = [];
+    var node_map ={};
+    var start = "None";
+    var goals = [];
+    var hmap = [];
+    var positions = [];
+
+    for(let node of this.graph.nodes){
+      nodes.push("'"+ node.name+"'");
+      node_map[node.id] = node;
+      if(node.type === 'search:start'){
+        start = "'" + node.name+ "'";
+      }
+      else if(node.type == 'search.goal'){
+        goals.push("'" + node.name + "'");
+      }
+      if (node.h !== 0){
+        hmap.push("'"+node.name+"' :" +  node.h.tostring());
+      }
+      positions.push("'" + node.name + "' : (" + node.x.toString() + "," + node.y.toString() + ")");
+    }
+
+    var arcs = [];
+    //console.log(node_map);
+    for(let edge of this.graph.edges){
+      var cost = edge.cost;
+     // console.log(this.graph);
+      //console.log(edge.source);
+      var arc = "Arc('" + node_map[edge.source.id].name+"','" + node_map[edge.target.id].name + "' ,cost =" + cost.toString() + ")";
+      arcs.push(arc);
+    }
+
+
+    this.pythonCode = "nodes={" + nodes + "} ,arcs = [" + arcs + '] ,start= ' + start + ',goals = {' 
+    + goals + "},hmap = {" + hmap + "}, positions = {" + positions + "}";
+
+  }
+
 }
 
 </script>
