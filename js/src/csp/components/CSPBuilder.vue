@@ -117,7 +117,9 @@ export default class CSPGraphBuilder extends Vue {
   /*Toggle the Visibility of the code*/
   toggleCode(){
     this.showPythonCode = !this.showPythonCode;
-    console.log(this.graph);
+    this.updateCode();
+  }
+  updateCode(){
     this.pythonCode = "csp = CSP( "+"domains = {";
     this.graph.nodes.forEach(node => {
       if(node.type === "csp:variable"){
@@ -199,6 +201,7 @@ export default class CSPGraphBuilder extends Vue {
         constraint: "gt"
       });
     }
+    this.updateCode();
   }
 
   /** Adds a new edge to the graph. */
@@ -224,6 +227,7 @@ export default class CSPGraphBuilder extends Vue {
       this.first = null;
       this.selection = null;
     }
+     this.updateCode();
   }
 
   strokeColour(edge: IGraphEdge) {
@@ -261,6 +265,7 @@ export default class CSPGraphBuilder extends Vue {
       }
       this.selection = null;
     }
+     this.updateCode();
   }
 
   @Watch("selection")

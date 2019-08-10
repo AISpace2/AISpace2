@@ -8,7 +8,7 @@
         <label for="two">Constraint</label>
         <input type="radio" id="three" value="edge" v-model="picked">
         <label for="three">Edge</label>
-        <button id="fine-step" class="btn btn-default" @click="$emit(pyCode())">Show Python Code</button>
+        <button id="showPythonCode" class="btn btn-default" @click="$emit(pyCode())">Show Python Code</button>
     </span>
 </template>
 
