@@ -90,21 +90,32 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       this.vue.$on(StepEvents.FINE_STEP_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Fine Step");
         this.send({ event: StepEvents.FINE_STEP_CLICK });
+        if (this.vue.needSplit) {
+            this.randomSelect();
+            this.vue.warningMessage = null;
+        }
       });
 
       this.vue.$on(StepEvents.STEP_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Step");
         this.send({ event: StepEvents.STEP_CLICK });
+        if (this.vue.needSplit) {
+            this.randomSelect();
+            this.vue.warningMessage = null;
+        }
       });
 
       this.vue.$on(StepEvents.AUTO_ARC_CONSISTENCY_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Auto Arc Consistency");
         this.send({ event: StepEvents.AUTO_ARC_CONSISTENCY_CLICK });
+        if (this.vue.needSplit) {
+            this.vue.warningMessage = "Arc consistency is finished. Please select a variable to split.";
+        }
       });
 
       this.vue.$on(StepEvents.AUTO_SOLVE_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Auto Solve");
-        this.send({ event: StepEvents.AUTO_SOLVE_CLICK });
+        this.send({ event: StepEvents.AUTO_SOLVE_CLICK });   
       });
 
       this.vue.$on(StepEvents.PAUSE_CLICK, () => {
@@ -324,5 +335,22 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     lines.splice(this.vue.ind, 0, str);
     this.vue.preSolution = lines.join('\n');
     this.vue.ind += 1;
+  }
+
+  /**
+   * randomly select a node to split when user clicked step or fine step in domain splitting statge
+   */
+  private randomSelect() {
+    let rand = Math.floor(Math.random() * this.vue.graph.nodes.length);
+    let node: ICSPGraphNode = this.vue.graph.nodes[rand];
+
+    while (node.type === "csp:constraint" || !node.domain || node.domain.length === 1) {
+        rand = Math.floor(Math.random() * this.vue.graph.nodes.length);
+        node = this.vue.graph.nodes[rand];
+    }
+
+    this.vue.FocusNode.checkedNames = [];
+    this.vue.FocusNode.domain = node.domain;
+    this.vue.FocusNode.nodeName = node.name;
   }
 }

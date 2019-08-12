@@ -1,7 +1,7 @@
 <template>
   <div class="csp_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
-      @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection">
+      @dblclick="createNode" @click:edge="updateSelection" @click:node="updateSelection" @delete="deleteSelection" :textSize="textSize">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"
                                    :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover"

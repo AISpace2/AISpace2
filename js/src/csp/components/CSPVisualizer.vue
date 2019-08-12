@@ -1,7 +1,7 @@
 <template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
-        :legendColor="legendColor" :legendText="legendText">
+        :legendColor="legendColor" :legendText="legendText" :textSize="textSize">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name"
                          :subtext="domainText(props.node)" :textSize="textSize"

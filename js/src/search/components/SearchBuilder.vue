@@ -2,7 +2,7 @@
   <div tabindex="0" @keydown.stop class="search_builder">
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout"
                          @click:node="updateSelection" @click:edge="updateSelection"
-                         :legendColor="legendColor" :legendText="legendText">
+                         :legendColor="legendColor" :legendText="legendText" :textSize="textSize">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :text="props.node.name"
                           :subtext="nodeHText(props.node)"
