@@ -274,3 +274,57 @@ csp_crossword2d = CSP({'p00': letters, 'p01': letters, 'p02': letters,
 #     print("Solution found:", sol0)
 #     assert sol0 in solutions, "Solution not found for " + str(csp)
 #     print("Passed unit test")
+
+sample_problem_1 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
+                  [Constraint(('A', 'B'), LessThan),
+                   Constraint(('B', 'C'), LessThan)])
+
+sample_problem_2 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
+                  [Constraint(('A', 'B'), Equals),
+                   Constraint(('B', 'C'), Equals),
+                  Constraint(('A', 'C'), NOT(Equals))])
+
+scheduling_problem_1 = CSP({'A': {1, 2, 3, 4},
+                            'B': {1, 2, 4},
+                            'C': {1, 3, 4},
+                            'D': {1, 2, 3, 4},
+                            'E': {1, 2, 3, 4},},
+                  [Constraint(('A', 'B'), NOT(Equals)),
+                   Constraint(('A', 'D'), Equals),
+                  Constraint(('B', 'D'), NOT(Equals)),
+                  Constraint(('B', 'C'), NOT(Equals)),
+                   Constraint(('C', 'D'), LessThan),
+                   Constraint(('E', 'A'), LessThan),
+                   Constraint(('E', 'D'), LessThan),
+                   Constraint(('E', 'C'), LessThan),
+                   Constraint(('E', 'B'), LessThan)])
+
+def scheduling_problem_1_Custom(num1, num2):
+    trueTable = {(1,2),(1,4),(2,1),(2,3),(3,2),(3,4),(4,1),(4,3)}
+    return (num1,num2) in trueTable 
+
+scheduling_problem_2 = CSP({'A': {1, 2, 3, 4},
+                            'B': {1, 2, 3, 4},
+                            'C': {1, 2, 3, 4},
+                            'D': {1, 2, 3, 4},
+                            'E': {1, 2, 3, 4},},
+                  [Constraint(('A', 'B'), NOT(Equals)),
+                   Constraint(('A', 'D'), LessThan),
+                   Constraint(('D', 'C'), LessThan),
+                   Constraint(('E', 'D'), NOT(Equals)),
+                   Constraint(('E', 'C'),  NOT(Equals)),
+                   Constraint(('E', 'B'), GreaterThan),
+                  Constraint(('E','A'),scheduling_problem_1_Custom)])
+
+crossword_problem_1 = CSP({'A1': words2, 'A2': words2, 'A3': words2,
+                      'D1': words2, 'D2': words2, 'D3': words2},
+                     [Constraint(('A2', 'D2'), meet_at(1, 1)), 
+                      Constraint(('A2', 'D1'), meet_at(0, 1)), 
+                      Constraint(('A1', 'D2'), meet_at(1, 0)),
+                      Constraint(('A2', 'D3'), meet_at(2, 1)),
+                      Constraint(('A1', 'D1'), meet_at(0, 0)),
+                      Constraint(('A3', 'D2'), meet_at(1, 2)),
+                      Constraint(('A1', 'D3'), meet_at(2, 0)),
+                      Constraint(('A3', 'D1'), meet_at(0, 2)),
+                      Constraint(('A3', 'D3'), meet_at(2, 2))
+                      ])
