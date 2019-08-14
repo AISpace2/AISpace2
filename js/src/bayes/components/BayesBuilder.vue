@@ -4,6 +4,7 @@
       :graph="graph"
       :transitions="true"
       :layout="layout"
+      :textSize="textSize"
       @dblclick="createNode"
       @click:edge="updateSelection"
       @click:node="updateSelection"

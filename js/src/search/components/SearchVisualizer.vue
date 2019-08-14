@@ -1,6 +1,6 @@
 <template>
   <div class="search_visualizer">
-    <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText">
+    <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText" :textSize="textSize">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :id="props.node.id" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
                                    :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :detailLevel="detailLevel"

@@ -1,7 +1,6 @@
 <template>
   <div tabindex="0" @keydown.stop class="csp_visualizer">
-    <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true"
-    >
+    <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true" :textSize="textSize">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext= "probGraph(props.node)"
                                    :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"

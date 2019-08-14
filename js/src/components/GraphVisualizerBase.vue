@@ -90,6 +90,7 @@
     layout: GraphLayout;
     @Prop() legendText: string[];
     @Prop() legendColor: string[];
+    @Prop() textSize: number;
 
     /** The node or edge currently being dragged. */
     dragTarget: IGraphNode | IGraphEdge | null = null;
@@ -265,8 +266,8 @@
     // http://www.competa.com/blog/d3-js-part-7-of-9-adding-a-legend-to-explain-the-data/
     /** Adds legend box to the graph */
     addLegend() {
-      let legendRectSize = 10;
-      let legendSpacing = 3;
+      let legendRectSize = 10 * this.textSize / 15;
+      let legendSpacing = 3 * this.textSize / 15;
       let position = {
         // x and y of the first element in the legend
         x: 10,
@@ -298,6 +299,7 @@
       legend.append('text')
         .attr('x', legendRectSize + legendSpacing)
         .attr('y', legendRectSize - legendSpacing)
+        .attr('font-size', this.textSize)
         .text(function(d) { return d; });
     }
 
@@ -334,6 +336,24 @@
         height: this.height
       });
     }
+    
+    @Watch("textSize")
+    onTextSizeChanged(newVal: number) {
+      let legendRectSize = 10 * newVal / 15;
+      let legendSpacing = 3 * newVal / 15;
+      let legend = d3.selectAll(".legend");
+
+      legend.select('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+
+      legend.select('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .attr('font-size', newVal)
+        .text(function(d) { return d; });
+    }
+
   }
 
 </script>
