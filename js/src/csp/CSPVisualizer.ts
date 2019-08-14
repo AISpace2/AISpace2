@@ -91,8 +91,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         Analytics.trackEvent("CSP Visualizer", "Fine Step");
         this.send({ event: StepEvents.FINE_STEP_CLICK });
         if (this.vue.needSplit) {
-            this.randomSelect();
-            this.vue.warningMessage = null;
+          this.randomSelect();
+          this.vue.warningMessage = null;
         }
       });
 
@@ -100,8 +100,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         Analytics.trackEvent("CSP Visualizer", "Step");
         this.send({ event: StepEvents.STEP_CLICK });
         if (this.vue.needSplit) {
-            this.randomSelect();
-            this.vue.warningMessage = null;
+          this.randomSelect();
+          this.vue.warningMessage = null;
         }
       });
 
@@ -109,13 +109,13 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         Analytics.trackEvent("CSP Visualizer", "Auto Arc Consistency");
         this.send({ event: StepEvents.AUTO_ARC_CONSISTENCY_CLICK });
         if (this.vue.needSplit) {
-            this.vue.warningMessage = "Arc consistency is finished. Please select a variable to split.";
+          this.vue.warningMessage = "Arc consistency was finished. Select a variable to split.";
         }
       });
 
       this.vue.$on(StepEvents.AUTO_SOLVE_CLICK, () => {
         Analytics.trackEvent("CSP Visualizer", "Auto Solve");
-        this.send({ event: StepEvents.AUTO_SOLVE_CLICK });   
+        this.send({ event: StepEvents.AUTO_SOLVE_CLICK });
       });
 
       this.vue.$on(StepEvents.PAUSE_CLICK, () => {
@@ -237,7 +237,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       this.vue.$set(this.model.graph.idMap[nodeId].styles, "strokeWidth", 4);
     }
   }
-    
+
   /**
    * Requests the user choose a domain for one side of the split.
    */
@@ -258,7 +258,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     this.vue.needSplit = false;
     this.vue.FocusNode.checkedNames = [];
     this.vue.FocusNode.domain = [];
-    this.vue.FocusNode.nodeName = "";  
+    this.vue.FocusNode.nodeName = "";
   }
 
   /**
@@ -275,17 +275,17 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private setSplit(event: CSPEvents.ICSPSetSplitEvent) {
     if (event.domain.length === 0) {
-        return;
+      return;
     }
-    this.vue.preSolution = this.vue.preSolution.replace('●','');
+    this.vue.preSolution = this.vue.preSolution.replace('●', '');
     var lines = this.vue.preSolution.split('\n');
     lines[this.vue.ind] += '●';
     this.vue.preSolution = lines.join('\n');
     this.vue.ind += 1;
     this.model.graph.nodes.map((variableNode: ICSPGraphNode) => {
-          this.vue.$set(variableNode.styles, "stroke", "black");
-          this.vue.$set(variableNode.styles, "strokeWidth", 0);
-        });      
+      this.vue.$set(variableNode.styles, "stroke", "black");
+      this.vue.$set(variableNode.styles, "strokeWidth", 0);
+    });
   }
 
   /**
@@ -293,10 +293,10 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private setOrder(event: CSPEvents.ICSPSetOrderEvent) {
     if (!this.vue.history) {
-       this.vue.history = {};
+      this.vue.history = {};
     }
     if (!this.vue.history[event.var]) {
-       this.vue.history[event.var] = {};
+      this.vue.history[event.var] = {};
     }
     this.vue.history[event.var][event.domain] = this.vue.doOrder;
     this.vue.history[event.var][event.other] = this.vue.doOrder;
@@ -304,14 +304,14 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     var lines = this.vue.preSolution.split('\n');
     var str = " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.domain + "}";
     var str1 = " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.other + "}";
-    lines.splice(this.vue.ind, 0, str,str1);
+    lines.splice(this.vue.ind, 0, str, str1);
     this.vue.preSolution = lines.join('\n');
     this.vue.needSplit = false;
     this.vue.spaces += this.vue.indent;
     this.vue.doOrder += 1;
     if (this.vue.FocusNode) {
-        this.vue.FocusNode.domain = [];
-        this.vue.FocusNode.checkedNames = [];
+      this.vue.FocusNode.domain = [];
+      this.vue.FocusNode.checkedNames = [];
     }
   }
 
@@ -320,7 +320,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private setPreSolution(event: CSPEvents.ICSPSetPreSolutionEvent) {
     var lines = this.vue.preSolution.split('\n');
-    var str = " ".repeat(this.vue.spaces) + "Solution: "+ event.solution;
+    var str = " ".repeat(this.vue.spaces) + "Solution: " + event.solution;
     lines.splice(this.vue.ind, 0, str);
     this.vue.preSolution = lines.join('\n');
     this.vue.ind += 1;
@@ -345,8 +345,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     let node: ICSPGraphNode = this.vue.graph.nodes[rand];
 
     while (node.type === "csp:constraint" || !node.domain || node.domain.length === 1) {
-        rand = Math.floor(Math.random() * this.vue.graph.nodes.length);
-        node = this.vue.graph.nodes[rand];
+      rand = Math.floor(Math.random() * this.vue.graph.nodes.length);
+      node = this.vue.graph.nodes[rand];
     }
 
     this.vue.FocusNode.checkedNames = [];
