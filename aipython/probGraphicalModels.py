@@ -111,3 +111,20 @@ f_c200 = Prob(C200, [C100], [0.5, 0.5, 0.8, 0.2, 0.2, 0.8])
 f_c300 = Prob(C300, [C200, M200], [0.25, 0.25, 0.25, 0.25, 0.30, 0.30, 0.10, 0.30, 0.20, 0.20, 0.40, 0.20, 0.10, 0.10, 0.70, 0.10])
 
 bn4 = Belief_network([C100, M200, C200, C300], [f_c100, f_m200, f_c200, f_c300])
+
+report = Variable('report', ['T', 'F'])
+tampering = Variable('tampering', ['T', 'F'])
+alarm = Variable('alarm', ['T', 'F'])
+fire = Variable('fire', ['T', 'F'])
+smoke = Variable('smoke', ['T', 'F'])
+leaving = Variable('leaving', ['T', 'F']) 
+f_report = Prob(report,[leaving],[0.75,0.25,0.01,0.99])
+f_tampering = Prob(tampering,[],[0.02,0.98])
+f_alarm = Prob(alarm,[tampering,fire],[0.5,0.5,0.85,0.15,0.99,0.01,0.0,1.0])
+f_fire = Prob(fire,[],[0.01,0.99])
+f_smoke = Prob(smoke,[fire],[0.9,0.1,0.01,0.99])
+f_leaving = Prob(leaving,[alarm],[0.88,0.12,0.0,1.0])
+Fire_Alarm_Belief_Network = Belief_network(
+    vars=[report,tampering,alarm,fire,smoke,leaving],
+    factors=[f_report,f_tampering,f_alarm,f_fire,f_smoke,f_leaving],
+    positions=[])
