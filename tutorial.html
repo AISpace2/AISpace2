@@ -148,12 +148,12 @@
       <li><code>sleep_time</code>: The time, in seconds, between each step in auto solving. Defaults to <code>0.2</code>.
       </li>
       <li><code>line_width</code>: The thickness of edges, in pixels. Defaults to <code>4.0</code>.</li>
-      <li><code>text_size</code>: The fontsize of the text, in pixels. Defaults to <code>15</code>.</li>
+      <li><code>text_size</code>: The font size of the text, in pixels. Defaults to <code>15</code>.</li>
       <li><code>detail_level</code>: The detail level of the information shown on a node. <code>0</code>=showing no text;
         <code>1</code>=showing truncated text when the space is not enough; <code>2</code>=always showing full text.</li>
-      <li><code>show_edge_costs</code> (only in search related problems): If <code>True</code>, shows the cost of each edge along the line.</li>
-      <li><code>show_node_heuristics</code> (only in search related problems): If <code>True</code>, show the node's heuristic value (h-value) inside the node.</li>
-      <li><code>decimal_place</code> (only in probability related problems): Controls the decimal place of the query result. Defaults to <code>2</code>.</li>
+      <li><code>show_edge_costs</code> (only in search related problems): If <code>True</code>, shows the cost of each edge.</li>
+      <li><code>show_node_heuristics</code> (only in search related problems): If <code>True</code>, show the heuristic value (h-value) inside the node.</li>
+      <li><code>decimal_place</code> (only in probability related problems): The decimal place of the query result. Defaults to <code>2</code>.</li>
     </ul>
   </section>
 
@@ -629,7 +629,7 @@ e<span style="color: #666666">.</span>foo()
     <h3 id="tutorial-faq-relationship-notebook-lab" class="linkify"><a href="#tutorial-faq-relationship-notebook-lab">What's the relationship between Jupyter Notebook and JupyterLab?</a></h3>
     <p>
       <a href="https://jupyter-notebook.readthedocs.io/en/stable/" target="_blank">Jupyter Notebook</a> is a web application for interactive <a href="https://nbformat.readthedocs.io/en/latest/" target="_blank">notebook document format</a>
-      which combine explanatory text, mathematics, computations and their rich media output. <a href="https://jupyterlab.readthedocs.io/en/stable/" target="_blank">JupyterLab</a>
+      which combines explanatory text, mathematics, computations and their rich media output. <a href="https://jupyterlab.readthedocs.io/en/stable/" target="_blank">JupyterLab</a>
       is the next generation of Jupyter Notebook, and it is served from the same server and uses the same notebook document format as the classic Jupyter Notebook.
     </p>
     <p>
@@ -665,7 +665,7 @@ e<span style="color: #666666">.</span>foo()
     <p>
       Code controlling frontend behavior is located in <code>/js/</code> directory. Whenever you make a change to the files in it, you need to recompile them by running:
     </p>
-    <pre>npm update-lab-extension
+    <pre>npm run update-lab-extension
 jupyter labextension install</pre>
     <p>
       in <code>/js/</code> directory. After recompiling, you need to refresh the page.
