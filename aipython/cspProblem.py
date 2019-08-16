@@ -187,19 +187,53 @@ csp_simple2 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
                    Constraint(('B',), NOT(Equals(2))),
                    Constraint(('B', 'C'), LessThan)])
 
-csp_extended = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4},
-                    'D': {1, 2, 3, 4}, 'E': {1, 2, 3, 4}},
-                   [Constraint(('B',), NOT(Equals(3))),
-                    Constraint(('C',), NOT(Equals(2))),
-                    Constraint(('A', 'B'), NOT(Equals)),
-                    Constraint(('B', 'C'), NOT(Equals)),
-                    Constraint(('C', 'D'), LessThan),
-                    Constraint(('A', 'D'), Equals),
-                    Constraint(('A', 'E'), GreaterThan),
-                    Constraint(('B', 'E'), GreaterThan),
-                    Constraint(('C', 'E'), GreaterThan),
-                    Constraint(('D', 'E'), GreaterThan),
-                    Constraint(('B', 'D'), NOT(Equals))])
+csp_simple3 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
+                  [Constraint(('A', 'B'), Equals),
+                   Constraint(('B', 'C'), Equals),
+                   Constraint(('A', 'C'), NOT(Equals))])
+
+csp_extended1 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4},
+                     'D': {1, 2, 3, 4}, 'E': {1, 2, 3, 4}},
+                    [Constraint(('B',), NOT(Equals(3))),
+                     Constraint(('C',), NOT(Equals(2))),
+                     Constraint(('A', 'B'), NOT(Equals)),
+                     Constraint(('B', 'C'), NOT(Equals)),
+                     Constraint(('C', 'D'), LessThan),
+                     Constraint(('A', 'D'), Equals),
+                     Constraint(('A', 'E'), GreaterThan),
+                     Constraint(('B', 'E'), GreaterThan),
+                     Constraint(('C', 'E'), GreaterThan),
+                     Constraint(('D', 'E'), GreaterThan),
+                     Constraint(('B', 'D'), NOT(Equals))])
+
+
+csp_extended2 = CSP({'A': {1, 2, 3, 4},
+                     'B': {1, 2, 4},
+                     'C': {1, 3, 4},
+                     'D': {1, 2, 3, 4},
+                     'E': {1, 2, 3, 4}, },
+                    [Constraint(('A', 'B'), NOT(Equals)),
+                     Constraint(('A', 'D'), Equals),
+                     Constraint(('B', 'D'), NOT(Equals)),
+                     Constraint(('B', 'C'), NOT(Equals)),
+                     Constraint(('C', 'D'), LessThan),
+                     Constraint(('E', 'A'), LessThan),
+                     Constraint(('E', 'D'), LessThan),
+                     Constraint(('E', 'C'), LessThan),
+                     Constraint(('E', 'B'), LessThan)])
+
+csp_extended3 = CSP({'A': {1, 2, 3, 4},
+                     'B': {1, 2, 3, 4},
+                     'C': {1, 2, 3, 4},
+                     'D': {1, 2, 3, 4},
+                     'E': {1, 2, 3, 4}, },
+                    [Constraint(('A', 'B'), NOT(Equals)),
+                     Constraint(('A', 'D'), LessThan),
+                     Constraint(('D', 'C'), LessThan),
+                     Constraint(('E', 'D'), NOT(Equals)),
+                     Constraint(('E', 'C'),  NOT(Equals)),
+                     Constraint(('E', 'B'), GreaterThan),
+                     Constraint(('E', 'A'), lambda x, y: (x, y) in [(1, 2), (1, 4), (2, 1), (2, 3), (3, 2), (3, 4), (4, 1), (4, 3)])])
 
 
 def meet_at(p1, p2):
@@ -225,12 +259,6 @@ csp_crossword1 = CSP({'one_across': {'ant', 'big', 'bus', 'car', 'has'},
 words1 = {"add", "age", "aid", "aim", "air", "are", "arm", "art",
           "bad", "bat", "bee", "boa", "dim", "ear", "eel", "eft", "lee", "oaf"}
 
-words2 = {"add", "ado", "age", "ago", "aid", "ail", "aim", "air",
-          "and", "any", "ape", "apt", "arc", "are", "ark", "arm", "art", "ash",
-          "ask", "auk", "awe", "awl", "aye", "bad", "bag", "ban", "bat", "bee",
-          "boa", "dim", "ear", "eel", "eft", "far", "fat", "fit", "lee", "oaf",
-          "rat", "tar", "tie"}
-
 csp_crossword2 = CSP({'1_down': words1, '2_down': words1, '3_down': words1,
                       '1_across': words1, '4_across': words1, '5_across': words1},
                      [Constraint(('1_down', '1_across'), meet_at(0, 0)),  # 1_down[0]=1_across[0]
@@ -244,6 +272,25 @@ csp_crossword2 = CSP({'1_down': words1, '2_down': words1, '3_down': words1,
                       Constraint(('3_down', '5_across'), meet_at(2, 2))
                       ])
 
+words2 = {"add", "ado", "age", "ago", "aid", "ail", "aim", "air",
+          "and", "any", "ape", "apt", "arc", "are", "ark", "arm", "art", "ash",
+          "ask", "auk", "awe", "awl", "aye", "bad", "bag", "ban", "bat", "bee",
+          "boa", "dim", "ear", "eel", "eft", "far", "fat", "fit", "lee", "oaf",
+          "rat", "tar", "tie"}
+
+csp_crossword3 = CSP({'A1': words2, 'A2': words2, 'A3': words2,
+                      'D1': words2, 'D2': words2, 'D3': words2},
+                     [Constraint(('A2', 'D2'), meet_at(1, 1)),
+                      Constraint(('A2', 'D1'), meet_at(0, 1)),
+                      Constraint(('A1', 'D2'), meet_at(1, 0)),
+                      Constraint(('A2', 'D3'), meet_at(2, 1)),
+                      Constraint(('A1', 'D1'), meet_at(0, 0)),
+                      Constraint(('A3', 'D2'), meet_at(1, 2)),
+                      Constraint(('A1', 'D3'), meet_at(2, 0)),
+                      Constraint(('A3', 'D1'), meet_at(0, 2)),
+                      Constraint(('A3', 'D3'), meet_at(2, 2))
+                      ])
+
 
 def is_word(*letters, words=words1):
     """is true if the letters concatenated form a word in words"""
@@ -253,6 +300,7 @@ def is_word(*letters, words=words1):
 letters = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
            "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y",
            "z"}
+
 csp_crossword2d = CSP({'p00': letters, 'p01': letters, 'p02': letters,
                        'p10': letters, 'p11': letters, 'p12': letters,
                        'p20': letters, 'p21': letters, 'p22': letters},
@@ -262,6 +310,7 @@ csp_crossword2d = CSP({'p00': letters, 'p01': letters, 'p02': letters,
                        Constraint(('p00', 'p10', 'p20'), is_word),
                        Constraint(('p01', 'p11', 'p21'), is_word),
                        Constraint(('p02', 'p12', 'p22'), is_word)])
+
 
 # def test(CSP_solver, csp=csp_simple2, solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
 #     """CSP_solver is a solver that finds a solution to a CSP.
@@ -274,57 +323,3 @@ csp_crossword2d = CSP({'p00': letters, 'p01': letters, 'p02': letters,
 #     print("Solution found:", sol0)
 #     assert sol0 in solutions, "Solution not found for " + str(csp)
 #     print("Passed unit test")
-
-sample_problem_1 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
-                  [Constraint(('A', 'B'), LessThan),
-                   Constraint(('B', 'C'), LessThan)])
-
-sample_problem_2 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
-                  [Constraint(('A', 'B'), Equals),
-                   Constraint(('B', 'C'), Equals),
-                  Constraint(('A', 'C'), NOT(Equals))])
-
-scheduling_problem_1 = CSP({'A': {1, 2, 3, 4},
-                            'B': {1, 2, 4},
-                            'C': {1, 3, 4},
-                            'D': {1, 2, 3, 4},
-                            'E': {1, 2, 3, 4},},
-                  [Constraint(('A', 'B'), NOT(Equals)),
-                   Constraint(('A', 'D'), Equals),
-                  Constraint(('B', 'D'), NOT(Equals)),
-                  Constraint(('B', 'C'), NOT(Equals)),
-                   Constraint(('C', 'D'), LessThan),
-                   Constraint(('E', 'A'), LessThan),
-                   Constraint(('E', 'D'), LessThan),
-                   Constraint(('E', 'C'), LessThan),
-                   Constraint(('E', 'B'), LessThan)])
-
-def scheduling_problem_1_Custom(num1, num2):
-    trueTable = {(1,2),(1,4),(2,1),(2,3),(3,2),(3,4),(4,1),(4,3)}
-    return (num1,num2) in trueTable 
-
-scheduling_problem_2 = CSP({'A': {1, 2, 3, 4},
-                            'B': {1, 2, 3, 4},
-                            'C': {1, 2, 3, 4},
-                            'D': {1, 2, 3, 4},
-                            'E': {1, 2, 3, 4},},
-                  [Constraint(('A', 'B'), NOT(Equals)),
-                   Constraint(('A', 'D'), LessThan),
-                   Constraint(('D', 'C'), LessThan),
-                   Constraint(('E', 'D'), NOT(Equals)),
-                   Constraint(('E', 'C'),  NOT(Equals)),
-                   Constraint(('E', 'B'), GreaterThan),
-                  Constraint(('E','A'),scheduling_problem_1_Custom)])
-
-crossword_problem_1 = CSP({'A1': words2, 'A2': words2, 'A3': words2,
-                      'D1': words2, 'D2': words2, 'D3': words2},
-                     [Constraint(('A2', 'D2'), meet_at(1, 1)), 
-                      Constraint(('A2', 'D1'), meet_at(0, 1)), 
-                      Constraint(('A1', 'D2'), meet_at(1, 0)),
-                      Constraint(('A2', 'D3'), meet_at(2, 1)),
-                      Constraint(('A1', 'D1'), meet_at(0, 0)),
-                      Constraint(('A3', 'D2'), meet_at(1, 2)),
-                      Constraint(('A1', 'D3'), meet_at(2, 0)),
-                      Constraint(('A3', 'D1'), meet_at(0, 2)),
-                      Constraint(('A3', 'D3'), meet_at(2, 2))
-                      ])

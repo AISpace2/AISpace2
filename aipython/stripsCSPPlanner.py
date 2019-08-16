@@ -117,13 +117,13 @@ def con_plan(prob, horizon):
 # con_plan(strips_simple3,7)  # should succeed???
 
 # Example 6.13
-strips_edgeless = Planning_problem(delivery_domain,
-                                   {'SWC': True, 'RHC': False}, {'SWC': False})
+# strips_edgeless = Planning_problem(delivery_domain,
+#                                    {'SWC': True, 'RHC': False}, {'SWC': False})
 # con_plan(strips_edgeless,2)  # Horizon of 2
 # con_plan(strips_edgeless,3)  # Horizon of 3
 
-strips_simple4 = Planning_problem(delivery_domain, {'SWC': True},
-                                  {'SWC': False, 'MW': False, 'RHM': False})
+# strips_simple4 = Planning_problem(delivery_domain, {'SWC': True},
+#                                   {'SWC': False, 'MW': False, 'RHM': False})
 
 # For the stochastic local search:
 #from cspSLS import SLSearcher, Runtime_distribution
