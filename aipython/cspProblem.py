@@ -51,20 +51,21 @@ class CSP(Displayable):
         self.domains = domains
         self.constraints = sorted(constraints, key=lambda con: con.__repr__())
         self.var_to_const = {var: set() for var in self.variables}
-        for con in constraints:
+        for con in self.constraints:
             for var in con.scope:
                 self.var_to_const[var].add(con)
         self.positions = positions
 
         # Numbering the conditions with the same names:
-        conditions = list(map(lambda con: con.__repr__(), constraints))
-        for i in range(len(constraints)):
-            occurence = conditions.count(constraints[i].__repr__())
-            if occurence == 1:  # only appear once
-                continue
-            for j in range(occurence):
-                # start numbering
-                constraints[i + j].repr += str(j)
+        constraint_strings = list(
+            map(lambda con: con.__repr__(), self.constraints))
+        i = 0
+        while i < len(constraint_strings):
+            occurence = constraint_strings.count(constraint_strings[i])
+            if occurence > 1:
+                for j in range(occurence):
+                    # start numbering
+                    self.constraints[i + j].repr += str(j)
             i += occurence
 
     def __str__(self):
@@ -234,7 +235,8 @@ words2 = {"add", "ado", "age", "ago", "aid", "ail", "aim", "air",
 csp_crossword2 = CSP({'1_down': words1, '2_down': words1, '3_down': words1,
                       '1_across': words1, '4_across': words1, '5_across': words1},
                      [Constraint(('1_down', '1_across'), meet_at(0, 0)),  # 1_down[0]=1_across[0]
-                      Constraint(('1_down', '4_across'), meet_at(1, 0)),  # 1_down[1]=4_across[0]
+                      # 1_down[1]=4_across[0]
+                      Constraint(('1_down', '4_across'), meet_at(1, 0)),
                       Constraint(('1_down', '5_across'), meet_at(2, 0)),
                       Constraint(('2_down', '1_across'), meet_at(0, 1)),
                       Constraint(('2_down', '4_across'), meet_at(1, 1)),

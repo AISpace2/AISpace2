@@ -30,6 +30,9 @@ class CSP_from_STRIPS(CSP):
         domains.update({st(var, stage): dom
                         for (var, dom) in prob_domain.feats_vals.items()
                         for stage in range(horizon + 1)})
+
+        # TODO: Change constraint names
+
         # intial state constraints:
         constraints = [Constraint((st(var, 0),), is_(val))
                        for (var, val) in initial_state.items()]
@@ -55,7 +58,11 @@ class CSP_from_STRIPS(CSP):
                                                   if var in prob_domain.strips_map[act].effects}))
                         for var in prob_domain.feats_vals
                         for stage in range(horizon)]
-        CSP.__init__(self, domains, constraints)
+
+        # TODO: set positions using domains, constraints and horizon
+        positions = {}
+
+        CSP.__init__(self, domains, constraints, positions)
 
     def extract_plan(self, soln):
         return [soln[a] for a in self.act_vars]
