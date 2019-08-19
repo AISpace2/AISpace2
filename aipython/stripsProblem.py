@@ -136,3 +136,19 @@ strips_blocks2 = Planning_problem(blocks2dom,
 strips_blocks3 = Planning_problem(blocks2dom,
                                   tower4,  # initial state
                                   {on('d', 'a'): True, on('a', 'b'): True, on('b', 'c'): True})  # goal
+
+
+dilivery_problem_domain = STRIPS_domain({'hasCoffee':boolean,'location':{'cs','office','hallway'}},
+                                       {'PUC':Strips({'hasCoffee':False,'location':'cs'},{'hasCoffee':True}),
+                                       'DelC':Strips({'hasCoffee':True,'location':'office'},{'hasCoffee':False}),
+                                        'cs_move_to_hallway':Strips({'location':'cs'},{'location':'hallway'}),
+                                        'move_to_cs':Strips({'location':'hallway'},{'location':'cs'}),
+                                        'move_to_office':Strips({'location':'hallway'},{'location':'office'}),
+                                        'office_move_to_hallway':Strips({'location':'office'},{'location':'hallway'}),
+                                       })
+
+delivery_problem=Planning_problem(dilivery_problem_domain,
+                                 {'hasCoffee':False,'location':'office'},
+                                 {'hasCoffee':True,'location':'office'})
+
+
