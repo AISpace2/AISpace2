@@ -151,4 +151,15 @@ delivery_problem=Planning_problem(dilivery_problem_domain,
                                  {'hasCoffee':False,'location':'office'},
                                  {'hasCoffee':True,'location':'office'})
 
+elevator_domain = STRIPS_domain({'Elevator':{'B',1,2,3,4}, 'Passenger':{'B',1,2,3,4,'E'}},
+                                {'Goto1':Strips({},{'Elevator':1}),
+                                'Goto2':Strips({},{'Elevator':2}),
+                                'Goto3':Strips({},{'Elevator':3}),
+                                'Goto4':Strips({},{'Elevator':4}),
+                                'PickUp':Strips({'Elevator':1,'Passenger':1},{'Passenger':'E'}),
+                                'DeopOff':Strips({'Elevator':4,'Passenger':'E'},{'Passenger':4})})
+
+elevator_problem = Planning_problem(elevator_domain,
+                                 {'Elevator':'B', 'Passenger':1},
+                                 {'Passenger':4})
 
