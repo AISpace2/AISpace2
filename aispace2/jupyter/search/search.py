@@ -6,7 +6,7 @@ from threading import Thread
 from ipywidgets import register
 from traitlets import Bool, Instance, Int, Unicode, observe
 
-from aipython.searchProblem import Arc, Search_problem_from_explicit_graph
+from aipython.searchProblem import Frontier, Path, Arc, Search_problem_from_explicit_graph
 
 from ... import __version__
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
@@ -87,6 +87,57 @@ class Displayable(StepDOMWidget):
     def handle_custom_msgs(self, _, content, buffers=None):
         super().handle_custom_msgs(None, content, buffers)
         event = content.get('event', '')
+
+        if event == 'reset':
+            """
+            Reset the algorithm and graph
+            """
+            super().__init__()
+            self.graph = None
+            self._implicit_neighbours_added = set()
+            if not isinstance(self.problem, Search_problem_from_explicit_graph):
+                self.graph = implicit_to_explicit_search_problem(self.problem)
+                self._is_problem_explicit = False
+            else:
+                self.graph = self.problem
+                self._is_problem_explicit = True
+            (self.node_map,
+         self.edge_map) = generate_search_graph_mappings(self.graph)
+            self._frontier = []
+
+            #DFS search variables
+            if getattr(self, 'num_expanded', None) and getattr(self, 'a_star', None) == None:
+                self.frontier = []
+                self.num_expanded = 0
+                self.frontier.append(Path(self.problem.start_node()))
+
+            #A* search variables
+            if getattr(self, 'a_star', None):
+                self.frontier = Frontier()
+                self.frontier.empty()
+                self.num_expanded = 0
+                path = Path(self.problem.start_node())
+                value = path.cost + self.problem.heuristic(path.end())
+                self.frontier.add(path, value)
+
+            #MPP search variables    
+            if getattr(self, 'explored', None):
+                self.explored = set()
+
+            #B&B search variables    
+            if getattr(self, 'best_path', None):  
+                self.best_path = None
+                self.bound = float("inf")
+
+            self._layout_root_id = self.node_map[str(self.graph.start)]
+            queued_func = getattr(self, '_queued_func', None)
+            if queued_func:
+                func = queued_func['func']
+                args = queued_func['args']
+                kwargs = queued_func['kwargs']
+                self._thread = ReturnableThread(
+                    target=func, args=args, kwargs=kwargs)
+                self._thread.start()
 
         if event == 'initial_render':
             self._previously_rendered = True

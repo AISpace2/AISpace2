@@ -101,6 +101,22 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         });
       });
 
+      this.vue.$on('reset', () => {
+          this.model.graph = this.vue.iniGraph;
+          this.vue.graph = this.model.graph;
+          Analytics.trackEvent("Search Visualizer", "Reset");
+          this.send({event: "reset"});
+          this.vue.output = null;
+          this.vue.preSolution = "";
+          this.vue.positions = null;
+          this.vue.showEdgeCosts = this.model.showEdgeCosts;
+          this.vue.showNodeHeuristics = this.model.showNodeHeuristics;
+          this.vue.textSize = this.model.textSize;
+          this.vue.detailLevel = this.model.detailLevel;
+          this.vue.frontier = [];
+          this.clearStyling();
+      });
+
       this.vue.$on("toggle:showFullDomain", () => {
         this.showFullDomainFlag = !this.showFullDomainFlag;
         // Nodes/edges have been added to the graph from the backend.
@@ -113,6 +129,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
 
       if (!this.model.previouslyRendered) {
         this.send({ event: "initial_render" });
+        this.vue.iniGraph = cloneDeep(this.model.graph);
       }
     });
   }

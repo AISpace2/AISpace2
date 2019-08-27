@@ -81,6 +81,10 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("graph");
   }
 
+  set graph(val: Graph<ICSPGraphNode>) {
+    this.set("graph", val);
+  }
+
   // Whether the auto arc consistency button will show up
   get needACButton(): boolean {
     return this.get("need_AC_button");

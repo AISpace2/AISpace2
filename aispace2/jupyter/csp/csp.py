@@ -223,6 +223,29 @@ class Displayable(StepDOMWidget):
             self._block_for_user_input.clear()
             self._is_waiting_for_var_selection = False
 
+        elif event == 'reset':
+            """
+            Reset the algorithm and graph
+            """
+            super().__init__()
+            self.visualizer = self
+            self._sls_first_conflict = True
+            self._selected_arc = None
+            self._has_user_selected_arc = False
+            self._is_waiting_for_arc_selection = False
+            self._selected_var = None
+            self._has_user_selected_var = False
+            self._is_waiting_for_var_selection = False
+            self._domain_split = None
+            queued_func = getattr(self, '_queued_func', None)
+            if queued_func:
+                func = queued_func['func']
+                args = queued_func['args']
+                kwargs = queued_func['kwargs']
+                self._previously_rendered = True
+                self._thread = ReturnableThread(target=func, args=args, kwargs=kwargs)
+                self._thread.start()
+
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
 

@@ -17,6 +17,7 @@ import CSPViewerModel from "./CSPVisualizerModel";
 export default class CSPViewer extends widgets.DOMWidgetView {
   private static readonly ARC_CLICK = "arc:click";
   private static readonly VAR_CLICK = "var:click";
+  private static readonly RESET = "reset";
 
   public model: CSPViewerModel;
   private vue: any;
@@ -153,6 +154,42 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.chooseDomainSplit();
       });
 
+      this.vue.$on('reset', () => {
+          Analytics.trackEvent("CSP Visualizer", "Reset");
+          this.send({event: CSPViewer.RESET});
+          if (this.vue.iniGraph) {
+          this.vue.model.graph = this.vue.iniGraph;
+          }
+          this.vue.graph = this.model.graph;
+          this.vue.output = null;
+          this.vue.warningMessage = null;
+          this.vue.preSolution = "";
+          this.vue.positions = null;
+          this.vue.needACButton = this.model.needACButton;
+          this.vue.spaces = 4;
+          this.vue.history = {};
+          this.vue.doOrder = 1;
+          this.vue.origin = 4;
+          this.vue.ind =  0;
+          this.vue.indent = 8;
+          this.vue.needSplit = false;
+          this.model.graph.nodes.map((variableNode: ICSPGraphNode) => {
+          this.vue.$set(variableNode.styles, "strokeWidth", 0);
+          this.vue.$set(variableNode.styles, "stroke", "black");
+          this.vue.FocusNode.domain = [];
+        });
+          for (const edge of this.model.graph.edges) {
+              this.vue.$set(edge.styles, "stroke", "black");
+              this.vue.$set(edge.styles, "strokeWidth", 0);
+          }
+          this.highlightArcs({
+              action: "highlightArcs",
+              arcIds: null,
+              colour: "blue",
+              style: "normal"
+          });
+      });
+
       // Functions called on the Python backend are queued until first render
       if (!this.model.previouslyRendered && this.model.waitForRender) {
         this.send({ event: "initial_render" });
@@ -162,6 +199,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           colour: "blue",
           style: "normal"
         });
+        this.vue.iniGraph = cloneDeep(this.model.graph);
       }
     });
 
