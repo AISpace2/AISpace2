@@ -7,6 +7,8 @@ Created on Tue Aug 13 20:13:50 2019
 """
 
 import xml.etree.ElementTree as ET
+
+
 def XML_to_Python(path):
     try:
         tree = ET.parse(path)
@@ -16,11 +18,11 @@ def XML_to_Python(path):
     root = tree.getroot()
     graph = root[0]
 
-    result = 'Search_problem_from_explicit_graph(';
+    result = 'Search_problem_from_explicit_graph('
     nodes = set()
     nodemap = {}
-    start = '';
-    goal = set();
+    start = ''
+    goal = set()
     hmap = {}
     Edges = []
     positions = {}
@@ -33,9 +35,9 @@ def XML_to_Python(path):
             heuristic = float(element.find('HEURISTICVALUE').text)
             xpos = float(element.find('XPOS').text)
             ypos = float(element.find('YPOS').text)
-            positions[name] = (xpos,ypos)
-            nodes.add(name);
-            nodemap[index] = name;
+            positions[name] = (xpos, ypos)
+            nodes.add(name)
+            nodemap[index] = name
             hmap[name] = heuristic
             if(nodetype == 'START'):
                 start = name
@@ -46,9 +48,8 @@ def XML_to_Python(path):
             endIndex = element.find('ENDINDEX').text
             cost = float(element.find('COST').text)
             temp = 'Arc'
-            temp+= str((nodemap[startIndex],nodemap[endIndex],cost))
+            temp += str((nodemap[startIndex], nodemap[endIndex], cost))
             Edges.append(temp)
-
 
     from string import Template
 
@@ -61,9 +62,9 @@ def XML_to_Python(path):
         positions=$positions)"""
 
     print(Template(template).substitute(
-            nodes=nodes,
-            arcs=', '.join(Edges),
-            start=start.__repr__(),
-            goals=goal,
-            hmap=hmap,
-            positions = positions))
+        nodes=nodes,
+        arcs=', '.join(Edges),
+        start=start.__repr__(),
+        goals=goal,
+        hmap=hmap,
+        positions=positions))
