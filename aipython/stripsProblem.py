@@ -137,29 +137,14 @@ strips_blocks3 = Planning_problem(blocks2dom,
                                   tower4,  # initial state
                                   {on('d', 'a'): True, on('a', 'b'): True, on('b', 'c'): True})  # goal
 
+elevator_domain = STRIPS_domain({'Elevator': {'B', 1, 2, 3, 4}, 'Passenger': {'B', 1, 2, 3, 4, 'E'}},
+                                {'Goto1': Strips({}, {'Elevator': 1}),
+                                 'Goto2': Strips({}, {'Elevator': 2}),
+                                 'Goto3': Strips({}, {'Elevator': 3}),
+                                 'Goto4': Strips({}, {'Elevator': 4}),
+                                 'PickUp': Strips({'Elevator': 1, 'Passenger': 1}, {'Passenger': 'E'}),
+                                 'DeopOff': Strips({'Elevator': 4, 'Passenger': 'E'}, {'Passenger': 4})})
 
-dilivery_problem_domain = STRIPS_domain({'hasCoffee':boolean,'location':{'cs','office','hallway'}},
-                                       {'PUC':Strips({'hasCoffee':False,'location':'cs'},{'hasCoffee':True}),
-                                       'DelC':Strips({'hasCoffee':True,'location':'office'},{'hasCoffee':False}),
-                                        'cs_move_to_hallway':Strips({'location':'cs'},{'location':'hallway'}),
-                                        'move_to_cs':Strips({'location':'hallway'},{'location':'cs'}),
-                                        'move_to_office':Strips({'location':'hallway'},{'location':'office'}),
-                                        'office_move_to_hallway':Strips({'location':'office'},{'location':'hallway'}),
-                                       })
-
-delivery_problem=Planning_problem(dilivery_problem_domain,
-                                 {'hasCoffee':False,'location':'office'},
-                                 {'hasCoffee':True,'location':'office'})
-
-elevator_domain = STRIPS_domain({'Elevator':{'B',1,2,3,4}, 'Passenger':{'B',1,2,3,4,'E'}},
-                                {'Goto1':Strips({},{'Elevator':1}),
-                                'Goto2':Strips({},{'Elevator':2}),
-                                'Goto3':Strips({},{'Elevator':3}),
-                                'Goto4':Strips({},{'Elevator':4}),
-                                'PickUp':Strips({'Elevator':1,'Passenger':1},{'Passenger':'E'}),
-                                'DeopOff':Strips({'Elevator':4,'Passenger':'E'},{'Passenger':4})})
-
-elevator_problem = Planning_problem(elevator_domain,
-                                 {'Elevator':'B', 'Passenger':1},
-                                 {'Passenger':4})
-
+strips_elevator = Planning_problem(elevator_domain,
+                                   {'Elevator': 'B', 'Passenger': 1},
+                                   {'Passenger': 4})
