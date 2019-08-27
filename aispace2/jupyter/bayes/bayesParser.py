@@ -45,11 +45,11 @@ def XML_to_Python(path):
             probname = findcontain(prob, 'NAME').text.replace(' ', '_')
         elif 'VARIABLE' in element.tag:
             temp = findallcontain(element, 'OUTCOME')
-            name = findcontain(element, 'NAME').text
+            name = findcontain(element, 'NAME').text.lower().capitalize()
             names.add(name)
             domain[name] = temp
         elif 'DEFINITION' in element.tag:
-            name = findcontain(element, 'FOR').text
+            name = findcontain(element, 'FOR').text.lower().capitalize()
             given = findallcontain(element, 'GIVEN')
             probs = findcontain(element, 'TABLE').text
             probTable[name] = probs.split(' ')
@@ -68,8 +68,7 @@ def XML_to_Python(path):
     for i in names:
         probability = '[' + ','.join(probTable[i]) + ']'
         given = '[' + ','.join(givenTable[i]) + ']'
-        factor = "f_" + i + \
-            " = Prob(" + i + "," + given + "," + probability + ")"
+        factor = "f_" + i.lower() + " = Prob(" + i + "," + given + "," + probability + ")"
         factors.append(factor)
         factorNames.append("f_" + i)
 
