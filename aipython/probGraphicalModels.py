@@ -156,8 +156,8 @@ f_influenza = Prob(Influenza, [], [0.05, 0.95])
 Simple_Diagnostic_Example = Belief_network(
     vars=[Fever, Smokes, Coughing, Bronchitis,
           Wheezing, Sore_Throat, Influenza],
-    factors=[f_Fever, f_Smokes, f_Coughing, f_Bronchitis,
-             f_Wheezing, f_Sore_Throat, f_Influenza],
+    factors=[f_fever, f_smokes, f_coughing, f_bronchitis,
+             f_wheezing, f_sore_throat, f_influenza],
     positions=[])
 
 B = Variable('B', ['T', 'F'])

@@ -1,0 +1,214 @@
+<?xml VERSION="0.01" ?>
+
+<PROBLEM>
+<DESCRIPTION>
+	<SHORT>A sample Robot example.</SHORT>
+
+	<DETAILED>There are two variables:
+
+hasCoffee - whether or not the robot is holding coffee.
+
+location - three locations where the robot can be; cs, hallway, and office.
+
+Note: in this example the robot has to travel to the hallway before being able to go anywhere else.</DETAILED>
+
+</DESCRIPTION>
+<CONTAINERS>
+	<CONTAINER TYPE=99876>
+		<HEIGHT>309</HEIGHT>
+	</CONTAINER>
+	<CONTAINER TYPE=99878>
+		<HEIGHT>407</HEIGHT>
+	</CONTAINER>
+</CONTAINERS>
+<VARIABLES>
+	<VARIABLE TYPE=Boolean>
+		<ID>1</ID>
+		<NAME>hasCoffee</NAME>
+		<POSITION>
+			<XPOS>7188.0</XPOS>
+			<YPOS>5095.497</YPOS>
+		</POSITION>
+		<VALUE>true</VALUE>
+		<VALUE>false</VALUE>
+	</VARIABLE>
+	<VARIABLE TYPE=String>
+		<ID>2</ID>
+		<NAME>location</NAME>
+		<POSITION>
+			<XPOS>7188.0</XPOS>
+			<YPOS>5253.8447</YPOS>
+		</POSITION>
+		<VALUE>cs</VALUE>
+		<VALUE>hallway</VALUE>
+		<VALUE>office</VALUE>
+	</VARIABLE>
+</VARIABLES>
+<ACTIONS>
+	<ACTION>
+		<NAME>PUC</NAME>
+		<POSITION>
+			<XPOS>7411.0</XPOS>
+			<YPOS>5093.4805</YPOS>
+		</POSITION>
+	<PRECONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>1</VARIABLE_ID>
+			<VALUE>false</VALUE>
+		</PAIR>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>cs</VALUE>
+		</PAIR>
+	</PRECONDITIONS>
+
+	<POSTCONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>1</VARIABLE_ID>
+			<VALUE>true</VALUE>
+		</PAIR>
+	</POSTCONDITIONS>
+
+	</ACTION>
+	<ACTION>
+		<NAME>DelC</NAME>
+		<POSITION>
+			<XPOS>7411.0</XPOS>
+			<YPOS>5152.9863</YPOS>
+		</POSITION>
+	<PRECONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>1</VARIABLE_ID>
+			<VALUE>true</VALUE>
+		</PAIR>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>office</VALUE>
+		</PAIR>
+	</PRECONDITIONS>
+
+	<POSTCONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>1</VARIABLE_ID>
+			<VALUE>false</VALUE>
+		</PAIR>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>office</VALUE>
+		</PAIR>
+	</POSTCONDITIONS>
+
+	</ACTION>
+	<ACTION>
+		<NAME>move to hallway</NAME>
+		<POSITION>
+			<XPOS>7411.0</XPOS>
+			<YPOS>5208.459</YPOS>
+		</POSITION>
+	<PRECONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>cs</VALUE>
+		</PAIR>
+	</PRECONDITIONS>
+
+	<POSTCONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>hallway</VALUE>
+		</PAIR>
+	</POSTCONDITIONS>
+
+	</ACTION>
+	<ACTION>
+		<NAME>move to CS</NAME>
+		<POSITION>
+			<XPOS>7411.0</XPOS>
+			<YPOS>5262.9224</YPOS>
+		</POSITION>
+	<PRECONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>hallway</VALUE>
+		</PAIR>
+	</PRECONDITIONS>
+
+	<POSTCONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>cs</VALUE>
+		</PAIR>
+	</POSTCONDITIONS>
+
+	</ACTION>
+	<ACTION>
+		<NAME>move to office</NAME>
+		<POSITION>
+			<XPOS>7411.0</XPOS>
+			<YPOS>5318.3945</YPOS>
+		</POSITION>
+	<PRECONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>hallway</VALUE>
+		</PAIR>
+	</PRECONDITIONS>
+
+	<POSTCONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>office</VALUE>
+		</PAIR>
+	</POSTCONDITIONS>
+
+	</ACTION>
+	<ACTION>
+		<NAME>move to hallway</NAME>
+		<POSITION>
+			<XPOS>7411.0</XPOS>
+			<YPOS>5377.901</YPOS>
+		</POSITION>
+	<PRECONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>office</VALUE>
+		</PAIR>
+	</PRECONDITIONS>
+
+	<POSTCONDITIONS>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>hallway</VALUE>
+		</PAIR>
+	</POSTCONDITIONS>
+
+	</ACTION>
+</ACTIONS>
+<STATES>
+	<STATE>
+		<TYPE>START</TYPE>
+		<PAIR>
+			<VARIABLE_ID>1</VARIABLE_ID>
+			<VALUE>  ---  </VALUE>
+		</PAIR>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>  ---  </VALUE>
+		</PAIR>
+	</STATE>
+
+	<STATE>
+		<TYPE>GOAL</TYPE>
+		<PAIR>
+			<VARIABLE_ID>1</VARIABLE_ID>
+			<VALUE>  ---  </VALUE>
+		</PAIR>
+		<PAIR>
+			<VARIABLE_ID>2</VARIABLE_ID>
+			<VALUE>  ---  </VALUE>
+		</PAIR>
+	</STATE>
+
+</STATES>
+</PROBLEM>
+

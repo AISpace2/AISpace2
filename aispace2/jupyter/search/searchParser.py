@@ -7,7 +7,7 @@ Created on Tue Aug 13 20:13:50 2019
 """
 
 import xml.etree.ElementTree as ET
-def loadFromXML(path):
+def XML_to_Python(path):
     try:
         tree = ET.parse(path)
     except:
