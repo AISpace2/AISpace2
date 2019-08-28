@@ -70,18 +70,18 @@ class Planning_problem(object):
         self.positions = positions
 
 
-strips_simple1 = Planning_problem(delivery_domain,
-                                  {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
-                                   'RHM': False},
-                                  {'RLoc': 'off'})
-strips_simple2 = Planning_problem(delivery_domain,
-                                  {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
-                                   'RHM': False},
-                                  {'SWC': False})
-strips_simple3 = Planning_problem(delivery_domain,
-                                  {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
-                                   'RHM': False},
-                                  {'SWC': False, 'MW': False, 'RHM': False})
+strips_delivery1 = Planning_problem(delivery_domain,
+                                    {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
+                                     'RHM': False},
+                                    {'RLoc': 'off'})
+strips_delivery2 = Planning_problem(delivery_domain,
+                                    {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
+                                     'RHM': False},
+                                    {'SWC': False})
+strips_delivery3 = Planning_problem(delivery_domain,
+                                    {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
+                                     'RHM': False},
+                                    {'SWC': False, 'MW': False, 'RHM': False})
 
 # blocks world
 

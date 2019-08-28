@@ -112,7 +112,7 @@ def xml_to_python(path):
 
     template = """$name = CSP(
         domains=$domains,
-        constraints=[$domains],
+        constraints=[$constraints],
         positions=$positions)"""
 
     print(Template(template).substitute(
