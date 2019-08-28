@@ -76,6 +76,10 @@ export interface ICSPNoSolutionEvent extends IEvent {
   action: "noSolution";
 }
 
+export interface ICSPFrontResetEvent extends IEvent {
+  action: "frontReset";
+}
+
 // CSP Visualizer Events
 export type Events =
   | ICSPHighlightArcsEvent
@@ -89,4 +93,5 @@ export type Events =
   | ICSPSetOrderEvent
   | ICSPShowPositionsEvent
   | ICSPNoSolutionEvent
+  | ICSPFrontResetEvent
   | Events;

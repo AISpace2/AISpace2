@@ -1,4 +1,5 @@
 import threading
+from time import sleep
 from functools import partial
 
 from aipython.cspProblem import CSP
@@ -227,6 +228,8 @@ class Displayable(StepDOMWidget):
             """
             Reset the algorithm and graph
             """
+            self._pause()
+            sleep(0.2)
             super().__init__()
             self.visualizer = self
             self._sls_first_conflict = True
@@ -237,14 +240,12 @@ class Displayable(StepDOMWidget):
             self._has_user_selected_var = False
             self._is_waiting_for_var_selection = False
             self._domain_split = None
-            queued_func = getattr(self, '_queued_func', None)
-            if queued_func:
-                func = queued_func['func']
-                args = queued_func['args']
-                kwargs = queued_func['kwargs']
-                self._previously_rendered = True
-                self._thread = ReturnableThread(target=func, args=args, kwargs=kwargs)
-                self._thread.start()
+            self.graph = CSP(self.csp.domains, self.csp.constraints, self.csp.positions)
+            (self._domain_map, self._edge_map) = generate_csp_graph_mappings(self.csp)
+            self.send({'action': 'frontReset'})
+
+            if self._thread:
+                self.stop_thread(self._thread)
 
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
