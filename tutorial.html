@@ -216,10 +216,17 @@
       We have included several pre-defined example problems for your convenience.
       Some of the problems are the examples discussed in the <a href="https://artint.info">textbook</a>.
       Some of these problems are the same as those in AIspace.
-      You may view the details of these problems in <code>AISpace2/aipython/searchProblem.py</code>.
+      You may view the details of these problems in <code>/aipython/searchProblem.py</code>.
     </p>
     <ul>
-      <li><code>search_simple1</code>: A simple search problem</li>
+      <li><code>search_simple1</code>: A simple search problems
+        <figure>
+          <img src="assets/images/problems/search_simple1.png" alt="Simple Search Problem 1" />
+          <figcaption>
+            <code>search_simple1</code>
+          </figcaption>
+        </figure>
+      </li>
       <li>
         <code>search_simple2</code>: Another simple search problem
         <figure>
@@ -233,18 +240,26 @@
       <li>
         <code>search_acyclic_delivery</code>: A delivery robot trying to deliver something to its goal location without any cycles
         <figure>
-          <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
+          <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Delivery Problem" />
           <figcaption>
             <code>search_acyclic_delivery</code>
           </figcaption>
         </figure>
       </li>
-      <li><code>search_cyclic_delivery</code>: A delivery robot trying to deliver something to its goal location with cycles</li>
+      <li>
+        <code>search_cyclic_delivery</code>: A delivery robot trying to deliver something to its goal location with cycles
+        <figure>
+          <img src="assets/images/problems/search_cyclic_delivery.png" alt="Cyclic Delivery Problem" />
+          <figcaption>
+            <code>search_cyclic_delivery</code>
+          </figcaption>
+        </figure>
+      </li>
       <li><code>seacch_tree</code>: A basic graph without cycles</li>
       <li>
         <code>seacch_extended_tree</code>: A more complex graph without cycles
         <figure>
-          <img src="assets/images/problems/seacch_extended_tree.png" alt="Extended Tree Problem" />
+          <img src="assets/images/problems/search_extended_tree.png" alt="Extended Tree Problem" />
           <figcaption>
             <code>seacch_extended_tree</code>
           </figcaption>
@@ -335,7 +350,7 @@
       We have included several pre-defined example problems for your convenience.
       Some of the problems are the examples discussed in the <a href="https://artint.info">textbook</a>.
       Some of these problems are the same as those in AIspace.
-      You may view the details of these problems in <code>AISpace2/aipython/cspProblem.py</code>.
+      You may view the details of these problems in <code>/aipython/cspProblem.py</code>.
     </p>
     <ul>
       <li><code>csp_simple1</code>: A simple CSP</li>
@@ -373,7 +388,7 @@
       <li><code>csp_crossword3</code>: Another crossword problem</li>
       <li><code>csp_crossword2d</code>: A 2D crossword problem</li>
       <li>
-        <code>csp_five_queens</code>: An example modeling the problem of placing 5 queens on a 5x5 chessboard such that no two queens can attack each other.
+        <code>csp_five_queens</code>: An example modeling the problem of placing 5 queens on a 5x5 chessboard such that no two queens can attack each other
         <figure>
           <img src="assets/images/problems/csp_five_queens.png" alt="Five Queens Problem" />
           <figcaption>
@@ -381,7 +396,7 @@
           </figcaption>
         </figure>
       </li>
-      <li><code>csp_eight_queens</code>: An example modeling the problem of placing 8 queens on a 8x8 chessboard such that no two queens can attack each other.</li>
+      <li><code>csp_eight_queens</code>: An example modeling the problem of placing 8 queens on a 8x8 chessboard such that no two queens can attack each other</li>
     </ul>
     <h3 id="tutorial-csp-construct-yourself" class="linkify"><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
@@ -428,7 +443,7 @@ csp_simple2 <span style="color: #666666">=</span> CSP(
       We have included several pre-defined example problems for your convenience.
       Some of the problems are the examples discussed in the <a href="https://artint.info">textbook</a>.
       Some of these problems are the same as those in AIspace.
-      You may view the details of these problems in <code>AISpace2/aipython/stripsProblem.py</code>.
+      You may view the details of these problems in <code>/aipython/stripsProblem.py</code>.
     </p>
     <ul>
       <li><code>strips_delivery1</code>: A coffee delivery problem</li>
@@ -508,7 +523,7 @@ strips_delivery1 <span style="color: #666666">=</span> Planning_problem(prob_dom
       We have included several pre-defined example problems for your convenience.
       Some of the problems are the examples discussed in the <a href="https://artint.info">textbook</a>.
       Some of these problems are the same as those in AIspace.
-      You may view the details of these problems in <code>AISpace2/aipython/probGraphicalModels.py</code>.
+      You may view the details of these problems in <code>/aipython/probGraphicalModels.py</code>.
     </p>
     <ul>
       <li><code>bn_simple1</code>: A simple belief network</li>
@@ -522,15 +537,20 @@ strips_delivery1 <span style="color: #666666">=</span> Planning_problem(prob_dom
         </figure>
       </li>
       <li><code>bn_simple3</code>: Another simple belief network</li>
-      <li><code>bn_grass_watering</code>: </li>
       <li>
-        <code>bn_fire_alarm</code>: Fire alarm example in the textbook
+        <code>bn_grass_watering</code>: A belief network modeling the grass watering based on weather
         <figure>
-          <img src="assets/images/problems/bn_fire_alarm.png" alt="Fire Alarm Belief Network" />
+          <img src="assets/images/problems/bn_grass_watering.png" alt="Grass Watering Belief Network" />
           <figcaption>
-            <code>bn_fire_alarm</code>
-          </figcaption>
-        </figure>
+            <code>bn_grass_watering</code>
+            </figcapti </li> <li>
+            <code>bn_fire_alarm</code>: Fire alarm example in the textbook
+            <figure>
+              <img src="assets/images/problems/bn_fire_alarm.png" alt="Fire Alarm Belief Network" />
+              <figcaption>
+                <code>bn_fire_alarm</code>
+              </figcaption>
+            </figure>
       </li>
       <li>
         <code>bn_diagnosis</code>: Influenza and smoking example in the textbook
