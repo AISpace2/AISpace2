@@ -70,18 +70,18 @@ class Planning_problem(object):
         self.positions = positions
 
 
-strips_simple1 = Planning_problem(delivery_domain,
-                                  {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
-                                   'RHM': False},
-                                  {'RLoc': 'off'})
-strips_simple2 = Planning_problem(delivery_domain,
-                                  {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
-                                   'RHM': False},
-                                  {'SWC': False})
-strips_simple3 = Planning_problem(delivery_domain,
-                                  {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
-                                   'RHM': False},
-                                  {'SWC': False, 'MW': False, 'RHM': False})
+strips_delivery1 = Planning_problem(delivery_domain,
+                                    {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
+                                     'RHM': False},
+                                    {'RLoc': 'off'})
+strips_delivery2 = Planning_problem(delivery_domain,
+                                    {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
+                                     'RHM': False},
+                                    {'SWC': False})
+strips_delivery3 = Planning_problem(delivery_domain,
+                                    {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
+                                     'RHM': False},
+                                    {'SWC': False, 'MW': False, 'RHM': False})
 
 # blocks world
 
@@ -136,3 +136,15 @@ strips_blocks2 = Planning_problem(blocks2dom,
 strips_blocks3 = Planning_problem(blocks2dom,
                                   tower4,  # initial state
                                   {on('d', 'a'): True, on('a', 'b'): True, on('b', 'c'): True})  # goal
+
+elevator_domain = STRIPS_domain({'Elevator': {'B', 1, 2, 3, 4}, 'Passenger': {'B', 1, 2, 3, 4, 'E'}},
+                                {'Goto1': Strips({}, {'Elevator': 1}),
+                                 'Goto2': Strips({}, {'Elevator': 2}),
+                                 'Goto3': Strips({}, {'Elevator': 3}),
+                                 'Goto4': Strips({}, {'Elevator': 4}),
+                                 'PickUp': Strips({'Elevator': 1, 'Passenger': 1}, {'Passenger': 'E'}),
+                                 'DeopOff': Strips({'Elevator': 4, 'Passenger': 'E'}, {'Passenger': 4})})
+
+strips_elevator = Planning_problem(elevator_domain,
+                                   {'Elevator': 'B', 'Passenger': 1},
+                                   {'Passenger': 4})

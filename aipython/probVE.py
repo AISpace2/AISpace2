@@ -9,10 +9,11 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 from .probFactors import Factor, Factor_observed, Factor_sum, factor_times
-from .probGraphicalModels import (A, Al, B, C, Fi, Graphical_model,
-                                  Grass_shiny, Grass_wet, Inference_method, Le,
-                                  Rained, Re, Season, Shoes_wet, Sm, Sprinkler,
-                                  Ta, bn1, bn2, bn3)
+from .probGraphicalModels import (A, Alarm, B, C, Fire, Graphical_model,
+                                  Grass_shiny, Grass_wet, Inference_method,
+                                  Leaving, Rained, Report, Season, Shoes_wet,
+                                  Smoke, Sprinkler, Tampering, bn_fire_alarm,
+                                  bn_grass_watering, bn_simple1)
 
 
 class VE(Inference_method):
@@ -76,25 +77,24 @@ class VE(Inference_method):
             not_contains_var.append(newFactor)
             return not_contains_var
 
-
-bn1v = VE(bn1)
-# bn1v.query(A,{})
-# bn1v.query(C,{})
+# bn1v = VE(bn_simple1)
+# bn1v.query(A, {})
+# bn1v.query(C, {})
 # Inference_method.max_display_level = 3   # show more detail in displaying
 # Inference_method.max_display_level = 1   # show less detail in displaying
-# bn1v.query(A,{C:True})
-# bn1v.query(B,{A:True,C:False})
-
-bn2v = VE(bn2)    # answers queries using variable elimination
-# bn2v.query(Ta,{})
+# bn1v.query(A, {C: True})
+# bn1v.query(B, {A: True, C: False})
+#
+# bn2v = VE(bn_fire_alarm)    # answers queries using variable elimination
+# bn2v.query(Tampering, {})
 # Inference_method.max_display_level = 0   # show no detail in displaying
-# bn2v.query(Le,{})
-# bn2v.query(Ta,{},elim_order=[Sm,Re,Le,Al,Fi])
-# bn2v.query(Ta,{Re:True})
-# bn2v.query(Ta,{Re:True,Sm:False})
-
-bn3v = VE(bn3)
-# bn3v.query(Shoes_wet,{})
-# bn3v.query(Shoes_wet,{Rained:True})
-# bn3v.query(Shoes_wet,{Grass_shiny:True})
-# bn3v.query(Shoes_wet,{Grass_shiny:False,Rained:True})
+# bn2v.query(Leaving, {})
+# bn2v.query(Tampering, {}, elim_order=[Smoke, Report, Leaving, Alarm, Fire])
+# bn2v.query(Tampering, {Report: True})
+# bn2v.query(Tampering, {Report: True, Smoke: False})
+#
+# bn3v = VE(bn_grass_watering)
+# bn3v.query(Shoes_wet, {})
+# bn3v.query(Shoes_wet, {Rained: True})
+# bn3v.query(Shoes_wet, {Grass_shiny: True})
+# bn3v.query(Shoes_wet, {Grass_shiny: False, Rained: True})

@@ -11,8 +11,8 @@
 import random
 
 from aipython.stripsProblem import (strips_blocks1, strips_blocks2,
-                                    strips_blocks3, strips_simple1,
-                                    strips_simple2, strips_simple3)
+                                    strips_blocks3, strips_delivery1,
+                                    strips_delivery2, strips_delivery3)
 from searchBranchAndBound import DF_branch_and_bound
 from searchGeneric import AStarSearcher
 from searchMPP import SearcherMPP
@@ -213,9 +213,9 @@ class POP_search_from_STRIPS(Search_problem, Displayable):
         return (y, x) not in constraint
 
 
-rplanning1 = POP_search_from_STRIPS(strips_simple1)
-rplanning2 = POP_search_from_STRIPS(strips_simple2)
-rplanning3 = POP_search_from_STRIPS(strips_simple3)
+rplanning1 = POP_search_from_STRIPS(strips_delivery1)
+rplanning2 = POP_search_from_STRIPS(strips_delivery2)
+rplanning3 = POP_search_from_STRIPS(strips_delivery3)
 searcher1 = DF_branch_and_bound(rplanning1, 5)
 searcher1a = AStarSearcher(rplanning1)
 searcher2 = DF_branch_and_bound(rplanning2, 10)

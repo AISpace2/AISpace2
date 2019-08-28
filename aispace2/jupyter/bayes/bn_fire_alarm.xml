@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BIF VERSION="0.3"  xmlns="http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3 http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3/XMLBIFv0_3.xsd">
+<NETWORK>
+<NAME>Fire Alarm Belief Network</NAME>
+<PROPERTY>detailed = This example models the problem of whether a fire alarm went off because of tampering or a fire. This is Figure 6.1 of Poole and Mackworth, Artificial Intelligence: foundations of computational agents. Copyright Poole and Mackworth, 2010, and used in Examples 6.10, 6.12, 6.13, 6.15, 6.20, 6.21, 6.23, 6.24, 6.26, and 6.27. This may be used under a Creative Commons Attribution-Noncommercial-Share Alike 2.5 Canada License http://creativecommons.org/licenses/by-nc-sa/2.5/ca/</PROPERTY>
+<PROPERTY>short = Fire Alarm Belief Network Example of Poole and Mackworth, Artificial Intelligence.</PROPERTY>
+
+<VARIABLE TYPE="nature">
+	<NAME>tampering</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7360.43603515625, 5049.322265625)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>fire</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7552.4765625, 5046.47216796875)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>alarm</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7451.478515625, 5170.2314453125)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>smoke</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7633.56396484375, 5164.541015625)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>leaving</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7452.9033203125, 5291.14990234375)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>report</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7454.32861328125, 5403.5283203125)</PROPERTY>
+</VARIABLE>
+
+<DEFINITION>
+	<FOR>tampering</FOR>
+	<TABLE>0.02 0.98</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>fire</FOR>
+	<TABLE>0.01 0.99</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>alarm</FOR>
+	<GIVEN>tampering</GIVEN>
+	<GIVEN>fire</GIVEN>
+	<TABLE>0.5 0.5 0.85 0.15 0.99 0.01 0.0 1.0</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>smoke</FOR>
+	<GIVEN>fire</GIVEN>
+	<TABLE>0.9 0.1 0.01 0.99</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>leaving</FOR>
+	<GIVEN>alarm</GIVEN>
+	<TABLE>0.88 0.12 0.0 1.0</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>report</FOR>
+	<GIVEN>leaving</GIVEN>
+	<TABLE>0.75 0.25 0.01 0.99</TABLE>
+</DEFINITION>
+</NETWORK>
+</BIF>

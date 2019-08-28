@@ -11,8 +11,8 @@
 from aipython.cspProblem import CSP, Constraint
 from aipython.stripsProblem import (Planning_problem, delivery_domain,
                                     strips_blocks1, strips_blocks2,
-                                    strips_blocks3, strips_simple1,
-                                    strips_simple2, strips_simple3)
+                                    strips_blocks3, strips_delivery1,
+                                    strips_delivery2, strips_delivery3)
 
 
 class CSP_from_STRIPS(CSP):
@@ -105,36 +105,36 @@ def con_plan(prob, horizon):
 #from aipython.cspConsistency import Search_with_AC_from_CSP, Con_solver
 
 # Problem 1
-# con_plan(strips_simple1,1) # should it succeed?
-# con_plan(strips_simple1,2) # should it succeed?
-# con_plan(strips_simple1,3) # should it succeed?
+# con_plan(strips_delivery1,1) # should it succeed?
+# con_plan(strips_delivery1,2) # should it succeed?
+# con_plan(strips_delivery1,3) # should it succeed?
 # To use search to enumerate solutions
-#searcher0a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(strips_simple1, 1)))
+#searcher0a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(strips_delivery1, 1)))
 # print(searcher0a.search())
 
 # Problem 2
-# con_plan(strips_simple2,5) # should it succeed?
-# con_plan(strips_simple2,4) # should it succeed?
+# con_plan(strips_delivery2,5) # should it succeed?
+# con_plan(strips_delivery2,4) # should it succeed?
 # To use search to enumerate solutions:
-#searcher15a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(strips_simple2,5)))
+#searcher15a = Searcher(Search_with_AC_from_CSP(CSP_from_STRIPS(strips_delivery2,5)))
 # print(searcher15a.search())
 
 # Problem 3
-# con_plan(strips_simple3,6)  # should fail??
-# con_plan(strips_simple3,7)  # should succeed???
+# con_plan(strips_delivery3,6)  # should fail??
+# con_plan(strips_delivery3,7)  # should succeed???
 
 # Example 6.13
-strips_edgeless = Planning_problem(delivery_domain,
-                                   {'SWC': True, 'RHC': False}, {'SWC': False})
+# strips_edgeless = Planning_problem(delivery_domain,
+#                                    {'SWC': True, 'RHC': False}, {'SWC': False})
 # con_plan(strips_edgeless,2)  # Horizon of 2
 # con_plan(strips_edgeless,3)  # Horizon of 3
 
-strips_simple4 = Planning_problem(delivery_domain, {'SWC': True},
-                                  {'SWC': False, 'MW': False, 'RHM': False})
+# strips_delivery4 = Planning_problem(delivery_domain, {'SWC': True},
+#                                   {'SWC': False, 'MW': False, 'RHM': False})
 
 # For the stochastic local search:
 #from cspSLS import SLSearcher, Runtime_distribution
-# cspplanning15 = CSP_from_STRIPS(strips_simple2,5) # should succeed
+# cspplanning15 = CSP_from_STRIPS(strips_delivery2,5) # should succeed
 #se0 = SLSearcher(cspplanning15); print(se0.search(100000,0.5))
 #p = Runtime_distribution(cspplanning15)
 # p.plot_run(1000,1000,0.7)  # warning will take a few minutes
