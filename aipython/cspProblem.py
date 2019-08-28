@@ -185,7 +185,13 @@ csp_simple1 = CSP({'A': {1, 2, 3}, 'B': {1, 2, 3}, 'C': {1, 2, 3}},
 csp_simple2 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
                   [Constraint(('A', 'B'), LessThan),
                    Constraint(('B',), NOT(Equals(2))),
-                   Constraint(('B', 'C'), LessThan)])
+                   Constraint(('B', 'C'), LessThan)],
+                  positions={"A": (374, 351),
+                             "B": (481, 168),
+                             "C": (591, 345),
+                             "LessThan('A', 'B')": (379, 231),
+                             "LessThan('B', 'C')": (586, 225),
+                             "NOT(Equals(2))('B',)": (484, 288)})
 
 csp_simple3 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
                   [Constraint(('A', 'B'), Equals),

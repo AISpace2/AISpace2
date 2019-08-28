@@ -60,7 +60,10 @@ f_a = Prob(A, [], [0.6, 0.4])
 f_b = Prob(B, [A], [0.1, 0.9, 0.8, 0.2])
 f_c = Prob(C, [B], [0.5, 0.5, 0.7, 0.3])
 
-bn_simple1 = Belief_network([A, B, C], [f_a, f_b, f_c])
+bn_simple1 = Belief_network([A, B, C], [f_a, f_b, f_c], positions={
+    "A": (474, 199),
+    "B": (427, 310),
+    "C": (546, 295)})
 
 B = Variable('B', boolean)
 A = Variable('A', boolean)
