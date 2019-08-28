@@ -247,7 +247,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
   }
     
   private resetFrontEnd() {
-      this.model.graph = this.vue.iniGraph;
+      this.model.graph = cloneDeep(this.vue.iniGraph);
       this.vue.graph = this.model.graph;
       this.vue.output = null;
       this.vue.preSolution = "";
