@@ -365,9 +365,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     this.vue.FocusNode.nodeName = node.name;
   }
 
- /**
-  * reset frontend after resetting backend to avoid undetermined state
-  */
+  /** Reset frontend variables and replace current graph with copyed initialzed graph and restart backend algorithm*/
   private resetFrontEnd() {
       this.model.graph = cloneDeep(this.vue.iniGraph);
       this.vue.graph = this.model.graph;

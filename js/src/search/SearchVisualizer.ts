@@ -245,7 +245,8 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     const charsToRemove = ["{", "}", "'"];
     return without(characters, ...charsToRemove).join("");
   }
-    
+
+  /** Reset frontend variables and replace current graph with copyed initialzed graph and restart backend algorithm*/
   private resetFrontEnd() {
       this.model.graph = cloneDeep(this.vue.iniGraph);
       this.vue.graph = this.model.graph;

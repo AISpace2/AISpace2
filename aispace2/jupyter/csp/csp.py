@@ -228,8 +228,12 @@ class Displayable(StepDOMWidget):
             """
             Reset the algorithm and graph
             """
+            # Before resetting backend, freeze the execution of queued function to avoid undetermined state
             self._pause()
+            # Wait until freezeing completed
             sleep(0.2)
+
+            # Reset algorithm related variables
             super().__init__()
             self.visualizer = self
             self._sls_first_conflict = True
@@ -242,8 +246,11 @@ class Displayable(StepDOMWidget):
             self._domain_split = None
             self.graph = CSP(self.csp.domains, self.csp.constraints, self.csp.positions)
             (self._domain_map, self._edge_map) = generate_csp_graph_mappings(self.csp)
+
+            # Tell frontend that it is ready to reset frontend graph and able to restart algorithm
             self.send({'action': 'frontReset'})
 
+            # Terminate current running thread
             if self._thread:
                 self.stop_thread(self._thread)
 

@@ -115,6 +115,8 @@ class StepDOMWidget(DOMWidget):
                     return_value = self._thread.join()
 
                     """
+                    # Instead of generally notifying users the returned value, we're sending specific  
+                    # messages within algorithm to make execution stage clearer to users
                     if return_value is not None:
                         self.send({
                             'action':
@@ -151,7 +153,7 @@ class StepDOMWidget(DOMWidget):
         """
         self._request_pause = False
         
-    
+    # Terminate running thread by raising exceptions. See https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
     def _async_raise(tid, exctype):
         """raises the exception, performs cleanup if needed"""
         tid = ctypes.c_long(tid)
@@ -169,7 +171,6 @@ class StepDOMWidget(DOMWidget):
     def stop_thread(thread):
         _async_raise(thread.ident, SystemExit)
         sleep(5.2)
-        #thread.join()
 
     def handle_custom_msgs(self, _, content, buffers=None):
         """Handle messages sent from the front-end.

@@ -93,8 +93,12 @@ class Displayable(StepDOMWidget):
             """
             Reset the algorithm and graph
             """
+            # Before resetting backend, freeze the execution of queued function to avoid undetermined state
             self._pause()
+            # Wait until freezeing completed
             sleep(0.2)
+
+            # Reset algorithm related variables
             super().__init__()
             self.graph = None
             self._implicit_neighbours_added = set()
@@ -107,6 +111,7 @@ class Displayable(StepDOMWidget):
             (self.node_map,
          self.edge_map) = generate_search_graph_mappings(self.graph)
             self._frontier = []
+            self._layout_root_id = self.node_map[str(self.graph.start)]
 
             #DFS search variables
             if getattr(self, 'num_expanded', None) and getattr(self, 'a_star', None) == None:
@@ -132,9 +137,10 @@ class Displayable(StepDOMWidget):
                 self.best_path = None
                 self.bound = float("inf")
 
-            self._layout_root_id = self.node_map[str(self.graph.start)]
+            # Tell frontend that it is ready to reset frontend graph and able to restart algorithm
             self.send({'action': 'frontReset'})
 
+            # Terminate current running thread
             if self._thread:
                 self.stop_thread(self._thread)
 
