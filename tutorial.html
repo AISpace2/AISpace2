@@ -212,36 +212,52 @@
     <h3 id="tutorial-search-supported-classes" class="linkify"><a href="#tutorial-search-supported-classes">Supported Classes</a></h3>
     <p><code>Searcher</code>, <code>AStarSearcher</code>, <code>SearcherMPP</code>, <code>DF_branch_and_bound</code></p>
     <h3 id="tutorial-search-included-problems" class="linkify"><a href="#tutorial-search-included-problems">Included Problems</a></h3>
-    <figure>
-      <img src="assets/images/problems/search_simple1.png" alt="Simple Search Problem 1" />
-      <figcaption>
-        <code>search_simple1</code>: A simple search problem
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/search_simple2.png" alt="Simple Search Problem 2" />
-      <figcaption>
+    <p>
+      We have included several pre-defined example problems for your convenience.
+      Some of the problems are the examples discussed in the <a href="https://artint.info">textbook</a>.
+      Some of these problems are the same as those in AIspace.
+      You may view the details of these problems in <code>AISpace2/aipython/searchProblem.py</code>.
+    </p>
+    <ul>
+      <li><code>search_simple1</code>: A simple search problem</li>
+      <li>
         <code>search_simple2</code>: Another simple search problem
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/search_edgeless.png" alt="Edgeless Search Problem" />
-      <figcaption>
-        <code>search_edgeless</code>: A search problem where there are no edges
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
-      <figcaption>
-        <code>search_acyclic_delivery</code>: A robot delivery problem that has no cycles
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/search_cyclic_delivery.png" alt="Cyclic Search Problem" />
-      <figcaption>
-        <code>search_cyclic_delivery</code>: A robot delivery problem that has cycles
-      </figcaption>
-    </figure>
+        <figure>
+          <img src="assets/images/problems/search_simple2.png" alt="Simple Search Problem 2" />
+          <figcaption>
+            <code>search_simple2</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>search_edgeless</code>: A search problem without edges</li>
+      <li>
+        <code>search_acyclic_delivery</code>: A delivery robot trying to deliver something to its goal location without any cycles
+        <figure>
+          <img src="assets/images/problems/search_acyclic_delivery.png" alt="Acyclic Search Problem" />
+          <figcaption>
+            <code>search_acyclic_delivery</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>search_cyclic_delivery</code>: A delivery robot trying to deliver something to its goal location with cycles</li>
+      <li><code>seacch_tree</code>: A basic graph without cycles</li>
+      <li>
+        <code>seacch_extended_tree</code>: A more complex graph without cycles
+        <figure>
+          <img src="assets/images/problems/seacch_extended_tree.png" alt="Extended Tree Problem" />
+          <figcaption>
+            <code>seacch_extended_tree</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>search_vancouver_neighbour</code>: Part of road network of Vancouver</li>
+      <li><code>search_misleading_heuristic</code>: An example demonstrating that some search strategies can be mislead by heuristic information</li>
+      <li><code>search_multiple_path_pruning</code>: An example demonstrating the algorithm of multiple path pruning</li>
+      <li><code>search_module_4_graph</code>: A simple graph with cycles</li>
+      <li><code>search_module_5_graph</code>: Part of the road network of a city</li>
+      <li><code>search_bicycle_courier_acyclic</code>: An example representing bike trails without any cycles</li>
+      <li><code>search_bicycle_courier_cyclic</code>: An example representing bike trails with cycles</li>
+    </ul>
     <h3 id="tutorial-search-construct-yourself" class="linkify"><a href="#tutorial-search-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
       Apart from the included problems, you can also construct various search problems by yourself. The simplest way is to use the search builder in <code>/notebooks/search/search_builder.ipynb</code> to help you generate a search problem visually.
@@ -315,42 +331,58 @@
     <h3 id="tutorial-csp-supported-classes" class="linkify"><a href="#tutorial-csp-supported-classes">Supported Classes</a></h3>
     <p><code>Con_solver</code>, <code>SLSearcher</code></p>
     <h3 id="tutorial-csp-included-problems" class="linkify"><a href="#tutorial-csp-included-problems">Included Problems</a></h3>
-    <figure>
-      <img src="assets/images/problems/csp_simple1.png" alt="Simple CSP 1" />
-      <figcaption>
-        <code>csp_simple1</code>: A simple CSP
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/csp_simple2.png" alt="Simple CSP 2" />
-      <figcaption>
+    <p>
+      We have included several pre-defined example problems for your convenience.
+      Some of the problems are the examples discussed in the <a href="https://artint.info">textbook</a>.
+      Some of these problems are the same as those in AIspace.
+      You may view the details of these problems in <code>AISpace2/aipython/cspProblem.py</code>.
+    </p>
+    <ul>
+      <li><code>csp_simple1</code>: A simple CSP</li>
+      <li>
         <code>csp_simple2</code>: Another simple CSP
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/csp_extended.png" alt="Extended CSP" />
-      <figcaption>
-        <code>csp_extended</code>: A more complex CSP
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/csp_crossword1.png" alt="CSP Crossword 1" />
-      <figcaption>
-        <code>csp_crossword1</code>: A crossword that represents word positions as variables
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/csp_crossword2.png" alt="CSP Crossword 2" />
-      <figcaption>
-        <code>csp_crossword2</code>: Another crossword that represents word positions as variables
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/csp_crossword2d.png" alt="CSP Crossword 2d" />
-      <figcaption>
-        <code>csp_crossword2d</code>: A crossword that represents squares as variables
-      </figcaption>
-    </figure>
+        <figure>
+          <img src="assets/images/problems/csp_simple2.png" alt="CSP Simple 2" />
+          <figcaption>
+            <code>csp_simple2</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>csp_simple3</code>: Another simple CSP</li>
+      <li>
+        <code>csp_extended1</code>: A more complex CSP
+        <figure>
+          <img src="assets/images/problems/csp_extended1.png" alt="Extended CSP 1" />
+          <figcaption>
+            <code>csp_extended1</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>csp_extended2</code>: Another more complex CSP</li>
+      <li><code>csp_extended3</code>: Another more complex CSP</li>
+      <li>
+        <code>csp_crossword1</code>: A simple crossword problem
+        <figure>
+          <img src="assets/images/problems/csp_crossword1.png" alt="CSP Crossword 1" />
+          <figcaption>
+            <code>csp_crossword1</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>csp_crossword2</code>: Another crossword problem</li>
+      <li><code>csp_crossword3</code>: Another crossword problem</li>
+      <li><code>csp_crossword2d</code>: A 2D crossword problem</li>
+      <li>
+        <code>csp_five_queens</code>: An example modeling the problem of placing 5 queens on a 5x5 chessboard such that no two queens can attack each other.
+        <figure>
+          <img src="assets/images/problems/csp_five_queens.png" alt="Five Queens Problem" />
+          <figcaption>
+            <code>csp_five_queens</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>csp_eight_queens</code>: An example modeling the problem of placing 8 queens on a 8x8 chessboard such that no two queens can attack each other.</li>
+    </ul>
     <h3 id="tutorial-csp-construct-yourself" class="linkify"><a href="#tutorial-csp-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
       Apart from the included problems, you can also construct various CSP problems by yourself. The simplest way is to use the CSP builder in <code>/notebooks/csp/csp_builder.ipynb</code> to help you generate a CSP problem visually.
@@ -393,10 +425,20 @@ csp_simple2 <span style="color: #666666">=</span> CSP(
     <p><code>Forward_STRIPS</code>, <code>Regression_STRIPS</code></p>
     <h3 id="tutorial-planning-included-problems" class="linkify"><a href="#tutorial-planning-included-problems">Included Problems</a></h3>
     <p>
-      We have included 6 planning problems in STRIPS representation. 3 of them model a robot delivery system: <code>strips_simple1</code>, <code>strips_simple2</code>
-      and <code>strips_simple3</code>; the other 3 model a block world: <code>strips_block1</code>, <code>strips_block2</code>
-      and <code>strips_block3</code>. Since it is hard to present the problems as graphs, you may view the details of them in <code>AISpace2/aipython/stripsProblem.py</code>.
+      We have included several pre-defined example problems for your convenience.
+      Some of the problems are the examples discussed in the <a href="https://artint.info">textbook</a>.
+      Some of these problems are the same as those in AIspace.
+      You may view the details of these problems in <code>AISpace2/aipython/stripsProblem.py</code>.
     </p>
+    <ul>
+      <li><code>strips_delivery1</code>: A coffee delivery problem</li>
+      <li><code>strips_delivery2</code>: Another coffee delivery problem</li>
+      <li><code>strips_delivery3</code>: Another coffee delivery problem</li>
+      <li><code>strips_block1</code>: An example modeling a block world</li>
+      <li><code>strips_block2</code>: Another example modeling a block world</li>
+      <li><code>strips_block3</code>: Another example modeling a block world</li>
+      <li><code>strips_elevator</code>: An elevator problem</li>
+    </ul>
     <h3 id="tutorial-planning-construct-yourself" class="linkify"><a href="#tutorial-planning-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
       Apart from the included problems, you can also construct various planning problems by yourself. You can use the <code>Planning_problem</code>
@@ -416,7 +458,7 @@ csp_simple2 <span style="color: #666666">=</span> CSP(
     <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
-      One example of defining <code>strips_simple1</code> is illustrated below. This example models a robot delivery system.
+      One example of using <code>positions</code> is illustrated below. This example contructs a STRIPS problem modeling a robot delivery system.
     </p>
 
     <!-- HTML generated using hilite.me -->
@@ -443,7 +485,7 @@ delivery_domain <span style="color: #666666">=</span> STRIPS_domain(
      <span style="color: #BA2121">&#39;dm&#39;</span>:     Strips({<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>, <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">True</span>},
                       {<span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>})})
 
-strips_simple1 <span style="color: #666666">=</span> Planning_problem(prob_domain<span style="color: #666666">=</span>delivery_domain,
+strips_delivery1 <span style="color: #666666">=</span> Planning_problem(prob_domain<span style="color: #666666">=</span>delivery_domain,
         initial_state<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;lab&#39;</span>, <span style="color: #BA2121">&#39;MW&#39;</span>:<span style="color: #008000">True</span>, <span style="color: #BA2121">&#39;SWC&#39;</span>:<span style="color: #008000">True</span>,
                        <span style="color: #BA2121">&#39;RHC&#39;</span>:<span style="color: #008000">False</span>, <span style="color: #BA2121">&#39;RHM&#39;</span>:<span style="color: #008000">False</span>},
         goal<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;RLoc&#39;</span>:<span style="color: #BA2121">&#39;off&#39;</span>})
@@ -462,30 +504,49 @@ strips_simple1 <span style="color: #666666">=</span> Planning_problem(prob_domai
     <h3 id="tutorial-bayesian-supported-classes" class="linkify"><a href="#tutorial-bayesian-supported-classes">Supported Classes</a></h3>
     <p><code>Belief_network</code></p>
     <h3 id="tutorial-bayesian-included-problems" class="linkify"><a href="#tutorial-bayesian-included-problems">Included Problems</a></h3>
-    <figure>
-      <img src="assets/images/problems/bn1.png" alt="BN 1" />
-      <figcaption>
-        <code>bn1</code>: A simple Bayesian Network problem
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/bn2.png" alt="BN 2" />
-      <figcaption>
-        <code>bn2</code>: A Bayesian Network modeling a fire alarm system
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/bn3.png" alt="BN 3" />
-      <figcaption>
-        <code>bn3</code>: A Bayesian Network modeling a sprinkler system
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/problems/bn4.png" alt="BN 4" />
-      <figcaption>
-        <code>bn4</code>: A Bayesian Network where domains have more than 2 values
-      </figcaption>
-    </figure>
+    <p>
+      We have included several pre-defined example problems for your convenience.
+      Some of the problems are the examples discussed in the <a href="https://artint.info">textbook</a>.
+      Some of these problems are the same as those in AIspace.
+      You may view the details of these problems in <code>AISpace2/aipython/probGraphicalModels.py</code>.
+    </p>
+    <ul>
+      <li><code>bn_simple1</code>: A simple belief network</li>
+      <li>
+        <code>bn_simple2</code>: Another simple belief network
+        <figure>
+          <img src="assets/images/problems/bn_simple2.png" alt="Simple Belief Network 2" />
+          <figcaption>
+            <code>bn_simple2</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>bn_simple3</code>: Another simple belief network</li>
+      <li><code>bn_grass_watering</code>: </li>
+      <li>
+        <code>bn_fire_alarm</code>: Fire alarm example in the textbook
+        <figure>
+          <img src="assets/images/problems/bn_fire_alarm.png" alt="Fire Alarm Belief Network" />
+          <figcaption>
+            <code>bn_fire_alarm</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li>
+        <code>bn_diagnosis</code>: Influenza and smoking example in the textbook
+        <figure>
+          <img src="assets/images/problems/bn_diagnosis.png" alt="Simple Diagnosis Network 2" />
+          <figcaption>
+            <code>bn_diagnosis</code>
+          </figcaption>
+        </figure>
+      </li>
+      <li><code>bn_diagnosis_extended</code>: A network to monitor intensive care patients</li>
+      <li><code>bn_conditional_independence</code>: A network useful for discussing about conditional independence</li>
+      <li><code>bn_car_starting</code>: A network modeling the behavior of a car based on the states of its parts</li>
+      <li><code>bn_electrical_diagnosis</code>: Electrical diagnosis example in the textbook</li>
+      <li><code>bn_hailfinder</code>: A weather forecasting network</li>
+    </ul>
     <h3 id="tutorial-bayesian-construct-yourself" class="linkify"><a href="#tutorial-bayesian-construct-yourself">Construct Problems Yourself</a></h3>
     <p>
       Apart from the included problems, you can also construct various belief network problems by yourself. You can use the <code>Belief_network</code>
