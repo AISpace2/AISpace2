@@ -45,12 +45,14 @@ def xml_to_python(path):
             probname = findcontain(prob, 'NAME').text.replace(' ', '_')
         elif 'VARIABLE' in element.tag:
             temp = findallcontain(element, 'OUTCOME')
-            name = findcontain(element, 'NAME').text.lower().capitalize()
+            name = findcontain(element, 'NAME').text.lower().capitalize().replace(' ', '_')
             names.add(name)
             domain[name] = temp
         elif 'DEFINITION' in element.tag:
-            name = findcontain(element, 'FOR').text.lower().capitalize()
+            name = findcontain(element, 'FOR').text.lower().capitalize().replace(' ', '_')
             given = findallcontain(element, 'GIVEN')
+            for i in range(0,len(given)):
+                given[i] = given[i].lower().capitalize().replace(' ', '_')
             probs = findcontain(element, 'TABLE').text
             probTable[name] = probs.split(' ')
             givenTable[name] = given
@@ -70,7 +72,7 @@ def xml_to_python(path):
         given = '[' + ','.join(givenTable[i]) + ']'
         factor = "f_" + i.lower() + " = Prob(" + i + "," + given + "," + probability + ")"
         factors.append(factor)
-        factorNames.append("f_" + i)
+        factorNames.append("f_" + i.lower())
 
     template = '\n'.join(domains) + " \n" + "\n".join(factors) + "\n" + """\n$probname = Belief_network(
         vars=[$vars],
