@@ -59,7 +59,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           this.vue.positions = this.vue.positions && event.positions == this.vue.positions ? "" : event.positions
           break;
         case "frontReset":
-          this.resetFrontEnd()
+          this.resetFrontEnd();
           break;
       }
     });

@@ -42,6 +42,10 @@ export interface ISearchShowPositionsEvent extends IEvent {
   positions: string;
 }
 
+export interface ISearchFrontResetEvent extends IEvent {
+  action: "frontReset";
+}
+
 // Search Visualizer Events
 export type Events =
   | ISearchHighlightNodeEvent
@@ -50,4 +54,5 @@ export type Events =
   | ISearchUpdateFrontierEvent
   | ISearchSetPreSolutionEvent
   | ISearchShowPositionsEvent
+  | ISearchFrontResetEvent
   | Events;
