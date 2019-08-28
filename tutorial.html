@@ -290,7 +290,8 @@
     <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
-      One example of defining <code>search_simple1</code> is illustrated below.
+      One example of using <code>positions</code> is illustrated below.
+      This example contructs <code>search_simple1</code>, a simple search problem.
     </p>
     <!-- HTML generated using hilite.me -->
     <pre style="margin: 0; line-height: 125%">search_simple1 <span style="color: #666666">=</span> Search_problem_from_explicit_graph(
@@ -411,19 +412,21 @@
     <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
-      One example of defining <code>csp_simple2</code> is illustrated below.
+      One example of using <code>positions</code> is illustrated below.
+      This example contructs <code>csp_simple2</code>, a simple CSP.
     </p>
     <!-- HTML generated using hilite.me -->
-    <pre style="margin: 0; line-height: 125%">con1 <span style="color: #666666">=</span> Constraint((<span style="color: #BA2121">&#39;A&#39;</span>,<span style="color: #BA2121">&#39;B&#39;</span>),lt)
-con2 <span style="color: #666666">=</span> Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,),ne_(<span style="color: #666666">2</span>))
-con3 <span style="color: #666666">=</span> Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,<span style="color: #BA2121">&#39;C&#39;</span>),lt)
-csp_simple2 <span style="color: #666666">=</span> CSP(
-       domains<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;A&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>},<span style="color: #BA2121">&#39;B&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>}, <span style="color: #BA2121">&#39;C&#39;</span>:{<span style="color: #666666">1</span>,<span style="color: #666666">2</span>,<span style="color: #666666">3</span>,<span style="color: #666666">4</span>}},
-       constraints<span style="color: #666666">=</span>[con1, con2, con3],
-       positions<span style="color: #666666">=</span>{<span style="color: #BA2121">&#39;A&#39;</span>: (<span style="color: #666666">551</span>,<span style="color: #666666">392</span>), <span style="color: #BA2121">&#39;B&#39;</span>: (<span style="color: #666666">533</span>,<span style="color: #666666">182</span>), <span style="color: #BA2121">&#39;C&#39;</span>: (<span style="color: #666666">358</span>,<span style="color: #666666">295</span>),
-                con1: (<span style="color: #666666">599</span>,<span style="color: #666666">282</span>), con2: (<span style="color: #666666">479</span>,<span style="color: #666666">289</span>), con3: (<span style="color: #666666">413</span>,<span style="color: #666666">189</span>)})
+    <pre style="margin: 0; line-height: 125%">csp_simple2 <span style="color: #666666">=</span> CSP({<span style="color: #BA2121">&#39;A&#39;</span>: {<span style="color: #666666">1</span>, <span style="color: #666666">2</span>, <span style="color: #666666">3</span>, <span style="color: #666666">4</span>}, <span style="color: #BA2121">&#39;B&#39;</span>: {<span style="color: #666666">1</span>, <span style="color: #666666">2</span>, <span style="color: #666666">3</span>, <span style="color: #666666">4</span>}, <span style="color: #BA2121">&#39;C&#39;</span>: {<span style="color: #666666">1</span>, <span style="color: #666666">2</span>, <span style="color: #666666">3</span>, <span style="color: #666666">4</span>}},
+                  [Constraint((<span style="color: #BA2121">&#39;A&#39;</span>, <span style="color: #BA2121">&#39;B&#39;</span>), LessThan),
+                   Constraint((<span style="color: #BA2121">&#39;B&#39;</span>,), NOT(Equals(<span style="color: #666666">2</span>))),
+                   Constraint((<span style="color: #BA2121">&#39;B&#39;</span>, <span style="color: #BA2121">&#39;C&#39;</span>), LessThan)],
+                  positions<span style="color: #666666">=</span>{<span style="color: #BA2121">&quot;A&quot;</span>: (<span style="color: #666666">374</span>, <span style="color: #666666">351</span>),
+                             <span style="color: #BA2121">&quot;B&quot;</span>: (<span style="color: #666666">481</span>, <span style="color: #666666">168</span>),
+                             <span style="color: #BA2121">&quot;C&quot;</span>: (<span style="color: #666666">591</span>, <span style="color: #666666">345</span>),
+                             <span style="color: #BA2121">&quot;LessThan(&#39;A&#39;, &#39;B&#39;)&quot;</span>: (<span style="color: #666666">379</span>, <span style="color: #666666">231</span>),
+                             <span style="color: #BA2121">&quot;LessThan(&#39;B&#39;, &#39;C&#39;)&quot;</span>: (<span style="color: #666666">586</span>, <span style="color: #666666">225</span>),
+                             <span style="color: #BA2121">&quot;NOT(Equals(2))(&#39;B&#39;,)&quot;</span>: (<span style="color: #666666">484</span>, <span style="color: #666666">288</span>)})
 </pre>
-
 
   </section>
 
@@ -473,7 +476,8 @@ csp_simple2 <span style="color: #666666">=</span> CSP(
     <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
-      One example of using <code>positions</code> is illustrated below. This example contructs a STRIPS problem modeling a robot delivery system.
+      One example of using <code>positions</code> is illustrated below.
+      This example contructs <code>strips_delivery1</code>, a STRIPS problem modeling a robot delivery system.
     </p>
 
     <!-- HTML generated using hilite.me -->
@@ -526,7 +530,15 @@ strips_delivery1 <span style="color: #666666">=</span> Planning_problem(prob_dom
       You may view the details of these problems in <code>/aipython/probGraphicalModels.py</code>.
     </p>
     <ul>
-      <li><code>bn_simple1</code>: A simple belief network</li>
+      <li>
+        <code>bn_simple1</code>: A simple belief network
+        <figure>
+          <img src="assets/images/problems/bn_simple1.png" alt="Simple Belief Network 1" />
+          <figcaption>
+            <code>bn_simple1</code>
+          </figcaption>
+        </figure>
+      </li>
       <li>
         <code>bn_simple2</code>: Another simple belief network
         <figure>
@@ -576,35 +588,21 @@ strips_delivery1 <span style="color: #666666">=</span> Planning_problem(prob_dom
       class defined in <code>/aipython/probGraphicalModels.py</code> to construct a belief network problem, which includes
     </p>
     <ul>
-      <li><code></code>, a list of variables,</li>
+      <li><code>vars</code>, a list of variables,</li>
       <li><code>factors</code>, a list of factors, and</li>
       <li><code>positions</code> (optional), a dictionary of variable positions.</li>
     </ul>
     <p>
       The <code>positions</code> is useful when you want the nodes to be located at a certain place when rendered on canvas in the notebook. You can get the positions of nodes on the canvas by using Print Positions button.
       You can refer to the file for a more precise definition and some examples of problem construction.
-      One example of defining <code>bn2</code> is illustrated below. This example models a fire alarm system.
+      One example of using <code>positions</code> is illustrated below.
+      This example contructs <code>bn_simple1</code>, a simple belief network.
     </p>
     <!-- HTML generated using hilite.me -->
-    <pre style="margin: 0; line-height: 125%">Al <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Alarm&quot;</span>, boolean)
-Fi <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Fire&quot;</span>, boolean)
-Le <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Leaving&quot;</span>, boolean)
-Re <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Report&quot;</span>, boolean)
-Sm <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Smoke&quot;</span>, boolean)
-Ta <span style="color: #666666">=</span> Variable(<span style="color: #BA2121">&quot;Tamper&quot;</span>, boolean)
-
-f_ta <span style="color: #666666">=</span> Prob(Ta, [], [<span style="color: #666666">0.98</span>,<span style="color: #666666">0.02</span>])
-f_fi <span style="color: #666666">=</span> Prob(Fi, [], [<span style="color: #666666">0.99</span>,<span style="color: #666666">0.01</span>])
-f_sm <span style="color: #666666">=</span> Prob(Sm, [Fi], [<span style="color: #666666">0.99</span>,<span style="color: #666666">0.01</span>,<span style="color: #666666">0.1</span>,<span style="color: #666666">0.9</span>])
-f_al <span style="color: #666666">=</span> Prob(Al, [Fi,Ta],
-            [<span style="color: #666666">0.9999</span>, <span style="color: #666666">0.0001</span>, <span style="color: #666666">0.15</span>, <span style="color: #666666">0.85</span>, <span style="color: #666666">0.01</span>, <span style="color: #666666">0.99</span>, <span style="color: #666666">0.5</span>, <span style="color: #666666">0.5</span>])
-f_lv <span style="color: #666666">=</span> Prob(Le, [Al], [<span style="color: #666666">0.999</span>, <span style="color: #666666">0.001</span>, <span style="color: #666666">0.12</span>, <span style="color: #666666">0.88</span>])
-f_re <span style="color: #666666">=</span> Prob(Re, [Le], [<span style="color: #666666">0.99</span>, <span style="color: #666666">0.01</span>, <span style="color: #666666">0.25</span>, <span style="color: #666666">0.75</span>])
-
-bn2 <span style="color: #666666">=</span> Belief_network(<span style="color: #008000">vars</span><span style="color: #666666">=</span>[Al,Fi,Le,Re,Sm,Ta],
-                  factors<span style="color: #666666">=</span>[f_ta,f_fi,f_sm,f_al,f_lv,f_re],
-                positions<span style="color: #666666">=</span>{Al: (<span style="color: #666666">496</span>,<span style="color: #666666">206</span>), Fi: (<span style="color: #666666">475</span>,<span style="color: #666666">324</span>), Le: (<span style="color: #666666">608</span>,<span style="color: #666666">165</span>),
-                           Re: (<span style="color: #666666">588</span>,<span style="color: #666666">283</span>), Sm: (<span style="color: #666666">385</span>,<span style="color: #666666">404</span>), Ta: (<span style="color: #666666">383</span>,<span style="color: #666666">247</span>)})
+    <pre style="margin: 0; line-height: 125%">bn_simple1 <span style="color: #666666">=</span> Belief_network([A, B, C], [f_a, f_b, f_c], positions<span style="color: #666666">=</span>{
+    <span style="color: #BA2121">&quot;A&quot;</span>: (<span style="color: #666666">474</span>, <span style="color: #666666">199</span>),
+    <span style="color: #BA2121">&quot;B&quot;</span>: (<span style="color: #666666">427</span>, <span style="color: #666666">310</span>),
+    <span style="color: #BA2121">&quot;C&quot;</span>: (<span style="color: #666666">546</span>, <span style="color: #666666">295</span>)})
 </pre>
 
 
