@@ -25,7 +25,7 @@ def findallcontain(elem, tag):
     return temp
 
 
-def XML_to_Python(path):
+def xml_to_python(path):
     try:
         tree = ET.parse(path)
     except:
@@ -72,12 +72,13 @@ def XML_to_Python(path):
         factors.append(factor)
         factorNames.append("f_" + i)
 
-    template = '\n'.join(domains) + " \n" + "\n".join(factors) + "\n" + probname + """ = Belief_network(
+    template = '\n'.join(domains) + " \n" + "\n".join(factors) + "\n" + """\n$probname = Belief_network(
         vars=[$vars],
         factors=[$probs],
         positions=$positions)"""
 
     print(Template(template).substitute(
-        vars=','.join(domainNames),
-        probs=',' .join(factorNames),
+        probname=probname,
+        vars=', '.join(domainNames),
+        probs=', ' .join(factorNames),
         positions=[]))

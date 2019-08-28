@@ -1,3 +1,3 @@
 from .bayes import Displayable
+from .bayes_xml_to_python import xml_to_python
 from .bayesbuilder import BayesBuilder
-from .XML_to_Python import XML_to_Python

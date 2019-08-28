@@ -7,39 +7,41 @@ Created on Tue Aug 27 12:21:17 2019
 """
 
 
-from string import Template
+import itertools
 import xml.etree.ElementTree as ET
 from ast import literal_eval as make_tuple
-import itertools
+from string import Template
 
 
-def findcontain(elem,tag):
+def findcontain(elem, tag):
     for child in elem:
         if tag in child.tag:
             return child
     return None
 
-def findallcontain(elem,tag):
+
+def findallcontain(elem, tag):
     temp = []
     for child in elem:
         if tag in child.tag:
-            temp.append(child.text.replace(' ', '_'));
+            temp.append(child.text.replace(' ', '_'))
     return temp
 
-def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
 
-def loadFromXML(path):
+def str2bool(v):
+    return v.lower() in ("yes", "true", "t", "1")
+
+
+def xml_to_python(path):
     tree = ET.parse(path)
 
     root = tree.getroot()
     CSP = root.find('CSP')
 
-    variables = {}
-    positions ={}
+    domains = {}
+    positions = {}
     constraints = []
     name = CSP.find('NAME').text.replace(' ', '_')
-
 
     for i in CSP:
         if i.tag == 'VARIABLE':
@@ -53,7 +55,7 @@ def loadFromXML(path):
             varDomain = []
             for e in i:
                 if e.tag == 'NAME':
-                    varName = e.text;
+                    varName = e.text
                 if e.tag == 'VALUE':
                     if(mytype == 'Integer'):
                         varDomain.append(int(e.text))
@@ -64,7 +66,7 @@ def loadFromXML(path):
                 if e.tag == 'PROPERTY':
                     positions[varName] = make_tuple(e.text.split('=')[1][1:])
 
-            variables[varName] = varDomain
+            domains[varName] = varDomain
         elif i.tag == 'CONSTRAINT':
             if i.get('TYPE') == 'Custom':
                 relatedvar = []
@@ -74,19 +76,19 @@ def loadFromXML(path):
                         relatedvar.append(e.text)
                     elif e.tag == 'TABLE':
                         table = e.text.split(" ")
-                table = [ 'T' in x for x in table ]
+                table = ['T' in x for x in table]
                 trueTuples = []
-                targetlist = [variables[x] for x in relatedvar]
+                targetlist = [domains[x] for x in relatedvar]
                 allTuple = list(itertools.product(*targetlist))
-                for i in range(0,len(allTuple)):
+                for i in range(0, len(allTuple)):
                     if table[i]:
                         trueTuples.append(str(allTuple[i]))
                 relatedvarName = ["'" + x + "'" for x in relatedvar]
                 constraints.append(Template('Constraint(($var),lambda $vNames: ($vNames) in [$true])').substitute(
-                        var = ','.join(relatedvarName),
-                        vNames = ','.join(relatedvar),
-                        true = ','.join(trueTuples)
-                        ))
+                    var=','.join(relatedvarName),
+                    vNames=','.join(relatedvar),
+                    true=','.join(trueTuples)
+                ))
             else:
                 relatedvar = []
                 complement = False
@@ -99,20 +101,22 @@ def loadFromXML(path):
                 relatedvarName = ["'" + x + "'" for x in relatedvar]
                 if complement:
                     constraints.append(Template('Constraint(($var),NOT($function))').substitute(
-                            var = ','.join(relatedvarName),
-                            function = i.get('TYPE')
-                            ))
+                        var=','.join(relatedvarName),
+                        function=i.get('TYPE')
+                    ))
                 else:
                     constraints.append(Template('Constraint(($var),$function)').substitute(
-                            var = ','.join(relatedvarName),
-                            function = i.get('TYPE')
-                            ))
+                        var=','.join(relatedvarName),
+                        function=i.get('TYPE')
+                    ))
 
+    template = """$name = CSP(
+        domains=$domains,
+        constraints=[$domains],
+        positions=$positions)"""
 
-    return(Template('$name = CSP($domain,[$constraint],positions = $pos)').substitute(
-            name = name,
-            domain = variables,
-            constraint = ','.join(constraints),
-            pos = positions
-            ))
-
+    print(Template(template).substitute(
+        name=name,
+        domains=domains,
+        constraints=', '.join(constraints),
+        positions=positions))

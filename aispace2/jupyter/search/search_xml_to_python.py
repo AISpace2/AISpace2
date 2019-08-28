@@ -9,7 +9,7 @@ Created on Tue Aug 13 20:13:50 2019
 import xml.etree.ElementTree as ET
 
 
-def XML_to_Python(path):
+def xml_to_python(path):
     try:
         tree = ET.parse(path)
     except:
@@ -53,7 +53,7 @@ def XML_to_Python(path):
 
     from string import Template
 
-    template = """Search_problem_from_explicit_graph(
+    template = """$name = Search_problem_from_explicit_graph(
         nodes=$nodes,
         arcs=[$arcs],
         start=$start,
@@ -62,6 +62,7 @@ def XML_to_Python(path):
         positions=$positions)"""
 
     print(Template(template).substitute(
+        name=name,
         nodes=nodes,
         arcs=', '.join(Edges),
         start=start.__repr__(),
