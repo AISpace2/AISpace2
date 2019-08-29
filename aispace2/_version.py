@@ -1,6 +1,6 @@
-import html
 import time
-import urllib.request
+import requests, re
+from bs4 import BeautifulSoup
 
 # Do not change this manually. Change this by runnning /updateVersion.py
 version_info = (0, 7, 11)
@@ -25,14 +25,13 @@ def get_web_version():
     if web_version != None and (time.time() - lookup_time < cache_duration):
         return web_version
     else:
-        webVerHtml = None
         try:
-            # read html from AISpace2 website, currently unused, can be parsed to get web_version
-            with urllib.request.urlopen(webVerURL) as response:
-                webVerHtml = response.read()
+            # read html from AISpace2 website, and parsed to get web_version
+            req = requests.get("https://aispace2.github.io/AISpace2/install.html")
+            html_info = str(BeautifulSoup(req.content, "html.parser").find(id="install-current-version"))
+            web_version = re.findall("\d+\.\d+\.\d+", html_info)[0]
+            lookup_time = time.time()
+            return web_version
         except:
+            # in case when cannot connect to url, return stored version
             return __version__
-        # web_version is currently hardcoded, can parse html to dynamically check ver.
-        web_version = "0.7.11"
-        lookup_time = time.time()
-        return web_version
