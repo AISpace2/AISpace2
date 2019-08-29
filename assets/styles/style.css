@@ -363,7 +363,6 @@ figcaption {
 
 .about-developers-text {
 	font-weight: bold;
-  vertical-align: middle;
 }
 
 @media screen and (max-width: 480px) {
