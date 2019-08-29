@@ -355,6 +355,15 @@ figcaption {
   height: 1.4em;
 }
 
+.about-developers img {
+	vertical-align: middle;
+  height: 60px;
+  width: 60px;
+}
+.about-developers-text {
+	font-weight: bold;
+}
+
 @media screen and (max-width: 480px) {
   #tutorial-search svg,
   #tutorial-csp svg,
