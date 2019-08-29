@@ -242,7 +242,7 @@ a:focus {
   margin: 0 auto;
 }
 
-.column img,
+.column img:not(.about-developers-img),
 .column video {
   display: block;
   margin-right: auto;
@@ -355,7 +355,7 @@ figcaption {
   height: 1.4em;
 }
 
-.about-developers img {
+.about-developers-img {
 	vertical-align: middle;
   height: 60px;
   width: 60px;
