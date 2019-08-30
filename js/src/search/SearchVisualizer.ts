@@ -63,6 +63,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.vue = new SearchVisualizer({
         data: {
           graph: this.model.graph,
+          iniGraph: cloneDeep(this.model.graph),
           layout: this.getLayout(),
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
@@ -248,6 +249,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
 
   /** Reset frontend variables and replace current graph with copyed initialzed graph and restart backend algorithm*/
   private resetFrontEnd() {
+      this.vue.graph.should_relayout = false;
       this.model.graph = cloneDeep(this.vue.iniGraph);
       this.vue.graph = this.model.graph;
       this.vue.output = null;
@@ -261,4 +263,5 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.clearStyling();
       this.send({ event: "initial_render" });
   }
+    
 }

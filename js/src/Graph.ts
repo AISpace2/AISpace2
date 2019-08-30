@@ -121,6 +121,7 @@ export class Graph<
 
   public nodes: TNode[];
   public edges: TEdge[];
+  public should_relayout: boolean;
 
   /** A mapping from IDs in the graph to nodes or edges.
    *
@@ -128,10 +129,11 @@ export class Graph<
    * Assumption: All IDs are unique.
    */
   public idMap: { [id: string]: TNode | TEdge };
-
+    
   constructor(nodes: TNode[] = [], edges: TEdge[] = []) {
     this.nodes = nodes;
     this.edges = edges;
+    this.should_relayout = true;
     this.updateIdMap();
   }
 
@@ -285,8 +287,8 @@ export class Graph<
       if (prevNode != null) {
         // Copy over the styles of the node in the previous graph
         node.styles = prevNode.styles;
-        node.x = prevNode.x;
-        node.y = prevNode.y;
+        //node.x = prevNode.x;
+        //node.y = prevNode.y;
         node.radius = prevNode.radius;
         node.level = prevNode.level;
       }

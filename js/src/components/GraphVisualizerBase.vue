@@ -329,12 +329,14 @@
     }
 
     @Watch("graph")
-    onGraphChanged(newVal: Graph) {
+    onGraphChanged(newVal: Graph, oldVal: Graph) {
       // Whenever nodes or edges are added, re-layout the graph
-      this.layout.relayout(this.graph, {
-        width: this.width,
-        height: this.height
-      });
+      if (oldVal.should_relayout) {
+          this.layout.relayout(this.graph, {
+              width: this.width,
+              height: this.height
+          });
+      }
     }
     
     @Watch("textSize")

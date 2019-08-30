@@ -70,6 +70,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       this.vue = new CSPGraphVisualizer({
         data: {
           graph: this.model.graph,
+          iniGraph: cloneDeep(this.model.graph),
           layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
           width: 0,
           height: 0,
@@ -367,6 +368,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
   /** Reset frontend variables and replace current graph with copyed initialzed graph and restart backend algorithm*/
   private resetFrontEnd() {
+      this.vue.graph.should_relayout = false;
       this.model.graph = cloneDeep(this.vue.iniGraph);
       this.vue.graph = this.model.graph;
       this.vue.output = null;
