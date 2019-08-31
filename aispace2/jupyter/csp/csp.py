@@ -238,7 +238,7 @@ class Displayable(StepDOMWidget):
             sleep(0.2)
 
             # Reset algorithm related variables
-            
+
             user_sleep_time = getattr(self, 'sleep_time', None)
             super().__init__()
             self.sleep_time = user_sleep_time
