@@ -1,13 +1,14 @@
 import copy
 import json
-from time import sleep
 from functools import partial
 from threading import Thread
+from time import sleep
 
 from ipywidgets import register
 from traitlets import Bool, Instance, Int, Unicode, observe
 
-from aipython.searchProblem import Frontier, Path, Arc, Search_problem_from_explicit_graph
+from aipython.searchProblem import (Arc, Frontier, Path,
+                                    Search_problem_from_explicit_graph)
 
 from ... import __version__
 from ..stepdomwidget import ReturnableThread, StepDOMWidget
@@ -111,17 +112,17 @@ class Displayable(StepDOMWidget):
                 self.graph = self.problem
                 self._is_problem_explicit = True
             (self.node_map,
-         self.edge_map) = generate_search_graph_mappings(self.graph)
+             self.edge_map) = generate_search_graph_mappings(self.graph)
             self._frontier = []
             self._layout_root_id = self.node_map[str(self.graph.start)]
 
-            #DFS search variables
+            # DFS search variables
             if getattr(self, 'num_expanded', None) and getattr(self, 'a_star', None) == None:
                 self.frontier = []
                 self.num_expanded = 0
                 self.frontier.append(Path(self.problem.start_node()))
 
-            #A* search variables
+            # A* search variables
             if getattr(self, 'a_star', None):
                 self.frontier = Frontier()
                 self.frontier.empty()
@@ -130,12 +131,12 @@ class Displayable(StepDOMWidget):
                 value = path.cost + self.problem.heuristic(path.end())
                 self.frontier.add(path, value)
 
-            #MPP search variables    
+            # MPP search variables
             if getattr(self, 'explored', None):
                 self.explored = set()
 
-            #B&B search variables    
-            if getattr(self, 'best_path', None):  
+            # B&B search variables
+            if getattr(self, 'best_path', None):
                 self.best_path = None
                 self.bound = float("inf")
 
@@ -198,15 +199,19 @@ class Displayable(StepDOMWidget):
                     if (str(arc.from_node), str(arc.to_node)) not in self._implicit_neighbours_added:
                         # Found a new neighbour!
                         self.graph.arcs.append(arc)
-                        self._implicit_neighbours_added.add((str(arc.from_node), str(arc.to_node)))
-                        self.graph.hmap[str(arc.to_node)] = self.problem.heuristic(arc.to_node)
+                        self._implicit_neighbours_added.add(
+                            (str(arc.from_node), str(arc.to_node)))
+                        self.graph.hmap[str(arc.to_node)] = self.problem.heuristic(
+                            arc.to_node)
                         has_graph_changed = True
 
                 if has_graph_changed:
                     # Sync updated explicit representation with the front-end
-                    (self.node_map, self.edge_map) = generate_search_graph_mappings(self.graph)
+                    (self.node_map, self.edge_map) = generate_search_graph_mappings(
+                        self.graph)
                     self._layout_root_id = self.node_map[str(self.graph.start)]
-                    self.graph = copy.copy(self.graph)  # Copy necessary to trigger resynchronization
+                    # Copy necessary to trigger resynchronization
+                    self.graph = copy.copy(self.graph)
 
             neighbour_nodes = []
             arcs_of_path = []
@@ -224,11 +229,13 @@ class Displayable(StepDOMWidget):
             self._send_frontier_updated_action()
 
         elif args[0] == "Solution found:":
-            self.send({'action': 'setPreSolution', 'solution': str(args[1]), 'cost': args[3]})
+            self.send({'action': 'setPreSolution',
+                       'solution': str(args[1]), 'cost': args[3]})
             args += ("\nClick Step or Auto Solve to find more solutions.", )
 
         elif args[0] == "New best path:":
-            self.send({'action': 'setPreSolution', 'solution': str(args[1]), 'cost': args[3]})
+            self.send({'action': 'setPreSolution',
+                       'solution': str(args[1]), 'cost': args[3]})
             args += ('\nClick Step or Auto Solve to try to find a solution with less cost.', )
 
         super().display(level, *args, **kwargs)

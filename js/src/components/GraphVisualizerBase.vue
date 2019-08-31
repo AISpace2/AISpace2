@@ -338,7 +338,7 @@
           });
       }
     }
-    
+
     @Watch("textSize")
     onTextSizeChanged(newVal: number) {
       let legendRectSize = 10 * newVal / 15;

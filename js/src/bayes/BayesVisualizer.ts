@@ -43,7 +43,7 @@ export default class BayesVisualizer extends DOMWidgetView {
       this.vue = new BayesNetInteractor({
         data: {
           graph: this.model.graph,
-		  iniGraph: cloneDeep(this.model.graph),
+          iniGraph: cloneDeep(this.model.graph),
           output: null,
           warningMessage: null,
           positions: null,

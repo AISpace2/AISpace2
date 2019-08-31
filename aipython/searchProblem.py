@@ -10,6 +10,7 @@
 
 import heapq
 
+
 class Search_problem(object):
     """A search problem consists of:
     * a start node
@@ -35,6 +36,7 @@ class Search_problem(object):
         Returns 0 if not overridden."""
         return 0
 
+
 class Arc(object):
     """An arc has a from_node and a to_node node and a (non-negative) cost"""
 
@@ -52,6 +54,7 @@ class Arc(object):
             return str(self.from_node) + " --" + str(self.action) + "--> " + str(self.to_node)
         else:
             return str(self.from_node) + " --> " + str(self.to_node)
+
 
 class Frontier(object):
     """A frontier consists of a priority queue (heap), frontierpq, of
@@ -98,6 +101,7 @@ class Frontier(object):
     def __iter__(self):
         for (_, _, p) in self.frontierpq:
             yield p
+
 
 class Search_problem_from_explicit_graph(Search_problem):
     """A search problem consists of:
@@ -207,14 +211,16 @@ search_empty = Search_problem_from_explicit_graph(
 
 search_simple1 = Search_problem_from_explicit_graph(
     {'a', 'b', 'c', 'd', 'g'},
-    [Arc('a', 'b', 1), Arc('a', 'c', 3), Arc('b', 'c', 1), Arc('b', 'd', 3), Arc('c', 'd', 1), Arc('c', 'g', 3), Arc('d', 'g', 1)],
+    [Arc('a', 'b', 1), Arc('a', 'c', 3), Arc('b', 'c', 1), Arc(
+        'b', 'd', 3), Arc('c', 'd', 1), Arc('c', 'g', 3), Arc('d', 'g', 1)],
     start='a',
     goals={'g'},
     positions={'g': (60, 483), 'd': (229, 110), 'a': (919, 385), 'b': (659, 60), 'c': (489, 436)})
 
 search_simple2 = Search_problem_from_explicit_graph(
     {'a', 'b', 'c', 'd', 'e', 'g', 'h', 'j'},
-    [Arc('a', 'b', 1), Arc('b', 'c', 3), Arc('b', 'd', 1), Arc('d', 'e', 3), Arc('d', 'g', 1), Arc('a', 'h', 3), Arc('h', 'j', 1)],
+    [Arc('a', 'b', 1), Arc('b', 'c', 3), Arc('b', 'd', 1), Arc(
+        'd', 'e', 3), Arc('d', 'g', 1), Arc('a', 'h', 3), Arc('h', 'j', 1)],
     start='a',
     goals={'g'})
 
