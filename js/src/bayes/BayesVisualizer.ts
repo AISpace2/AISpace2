@@ -5,6 +5,7 @@ import BayesVisualizerModel from "./BayesVisualizerModel";
 import BayesNetInteractor from "./components/BayesVisualizer.vue";
 import { IObservation, ObservationManager } from "./Observation";
 
+import { cloneDeep } from "lodash";
 import * as Analytics from "../Analytics";
 import { IBayesGraphNode } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
@@ -42,6 +43,7 @@ export default class BayesVisualizer extends DOMWidgetView {
       this.vue = new BayesNetInteractor({
         data: {
           graph: this.model.graph,
+          iniGraph: cloneDeep(this.model.graph),
           output: null,
           warningMessage: null,
           positions: null,
@@ -87,6 +89,9 @@ export default class BayesVisualizer extends DOMWidgetView {
 
       this.vue.$on('reset', () => {
         this.manager.reset();
+        this.vue.graph.should_relayout = false;
+        this.model.graph = cloneDeep(this.vue.iniGraph);
+        this.vue.graph = this.model.graph;
         this.model.graph.nodes.map((variableNode: IBayesGraphNode) => {
           this.vue.$set(variableNode, "prob", undefined);
           this.vue.$set(variableNode, "observed", undefined);
@@ -98,6 +103,7 @@ export default class BayesVisualizer extends DOMWidgetView {
 
       if (!this.model.previouslyRendered) {
         this.send({ event: "initial_render" });
+        this.vue.iniGraph = cloneDeep(this.model.graph);
       }
     });
   }

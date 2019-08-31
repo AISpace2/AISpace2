@@ -1,8 +1,10 @@
+import ctypes
+import inspect
 import threading
 from time import sleep
 
 from ipywidgets import DOMWidget
-from traitlets import Float, Integer, validate, Bool
+from traitlets import Bool, Float, Integer, validate
 
 
 class ReturnableThread(threading.Thread):
@@ -111,6 +113,9 @@ class StepDOMWidget(DOMWidget):
                 if not self._thread.is_alive():
                     return_value = self._thread.join()
 
+                    """
+                    # Instead of generally notifying users the returned value, we're sending specific
+                    # messages within algorithm to make execution stage clearer to users
                     if return_value is not None:
                         self.send({
                             'action':
@@ -118,7 +123,7 @@ class StepDOMWidget(DOMWidget):
                             'text':
                             'Output: {}'.format(str(return_value))
                         })
-
+                    """
             return step
 
         def pause():
@@ -127,7 +132,8 @@ class StepDOMWidget(DOMWidget):
         def print_positions(nodes):
             text = "positions={"
             for node in nodes:
-                text += "\n\"{}\": ({},{}),".format(node['name'], int(node['x']), int(node['y']))
+                text += "\n\"{}\": ({},{}),".format(
+                    node['name'], int(node['x']), int(node['y']))
             text = text[:-1] + "}"
             self.send({'action': 'showPositions', 'positions': text})
 
@@ -146,6 +152,26 @@ class StepDOMWidget(DOMWidget):
         For example, you may reset state variables.
         """
         self._request_pause = False
+
+    # Terminate running thread by raising exceptions. See https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
+    def _async_raise(tid, exctype):
+        """raises the exception, performs cleanup if needed"""
+        tid = ctypes.c_long(tid)
+        if not inspect.isclass(exctype):
+            exctype = type(exctype)
+        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+            tid, ctypes.py_object(exctype))
+        if res == 0:
+            raise ValueError("invalid thread id")
+        elif res != 1:
+            # """if it returns a number greater than one, you're in trouble,
+            # and you should call it again with exc=NULL to revert the effect"""
+            ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
+            raise SystemError("PyThreadState_SetAsyncExc failed")
+
+    def stop_thread(thread):
+        _async_raise(thread.ident, SystemExit)
+        sleep(5.2)
 
     def handle_custom_msgs(self, _, content, buffers=None):
         """Handle messages sent from the front-end.

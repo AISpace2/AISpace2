@@ -1,14 +1,17 @@
 import threading
 from functools import partial
+from time import sleep
 
-from aipython.cspProblem import CSP
 from ipywidgets import register
 from traitlets import Bool, Dict, Float, Instance, Unicode
 
-from ..stepdomwidget import ReturnableThread, StepDOMWidget
-from .cspjsonbridge import (json_to_csp, csp_to_json, generate_csp_graph_mappings)
+from aipython.cspProblem import CSP
 
 from ... import __version__
+from ..stepdomwidget import ReturnableThread, StepDOMWidget
+from .cspjsonbridge import (csp_to_json, generate_csp_graph_mappings,
+                            json_to_csp)
+
 
 @register
 class Displayable(StepDOMWidget):
@@ -26,7 +29,8 @@ class Displayable(StepDOMWidget):
     _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The CSP that is synced as a graph to the frontend.
-    graph = Instance(klass=CSP, allow_none=True).tag(sync=True, to_json=csp_to_json, from_json=json_to_csp)
+    graph = Instance(klass=CSP, allow_none=True).tag(
+        sync=True, to_json=csp_to_json, from_json=json_to_csp)
 
     # Constrols whether the auto arc consistency button will show up in the widget (will not in SLS)
     need_AC_button = Bool(True).tag(sync=True)
@@ -69,7 +73,8 @@ class Displayable(StepDOMWidget):
         self._domain_split = None
 
         # self.graph = self.csp
-        self.graph = CSP(self.csp.domains, self.csp.constraints, self.csp.positions)
+        self.graph = CSP(self.csp.domains,
+                         self.csp.constraints, self.csp.positions)
         (self._domain_map, self._edge_map) = generate_csp_graph_mappings(self.csp)
 
         self._initialize_controls()
@@ -223,6 +228,40 @@ class Displayable(StepDOMWidget):
             self._block_for_user_input.clear()
             self._is_waiting_for_var_selection = False
 
+        elif event == 'reset':
+            """
+            Reset the algorithm and graph
+            """
+            # Before resetting backend, freeze the execution of queued function to avoid undetermined state
+            self._pause()
+            # Wait until freezeing completed
+            sleep(0.2)
+
+            # Reset algorithm related variables
+
+            user_sleep_time = getattr(self, 'sleep_time', None)
+            super().__init__()
+            self.sleep_time = user_sleep_time
+            self.visualizer = self
+            self._sls_first_conflict = True
+            self._selected_arc = None
+            self._has_user_selected_arc = False
+            self._is_waiting_for_arc_selection = False
+            self._selected_var = None
+            self._has_user_selected_var = False
+            self._is_waiting_for_var_selection = False
+            self._domain_split = None
+            self.graph = CSP(self.csp.domains,
+                             self.csp.constraints, self.csp.positions)
+            (self._domain_map, self._edge_map) = generate_csp_graph_mappings(self.csp)
+
+            # Tell frontend that it is ready to reset frontend graph and able to restart algorithm
+            self.send({'action': 'frontReset'})
+
+            # Terminate current running thread
+            if self._thread:
+                self.stop_thread(self._thread)
+
         elif event == 'initial_render':
             queued_func = getattr(self, '_queued_func', None)
 
@@ -232,7 +271,8 @@ class Displayable(StepDOMWidget):
                 args = queued_func['args']
                 kwargs = queued_func['kwargs']
                 self._previously_rendered = True
-                self._thread = ReturnableThread(target=func, args=args, kwargs=kwargs)
+                self._thread = ReturnableThread(
+                    target=func, args=args, kwargs=kwargs)
                 self._thread.start()
 
     def display(self, level, *args, **kwargs):
@@ -258,22 +298,26 @@ class Displayable(StepDOMWidget):
             domain = args[4]
             constraint = args[6]
             self._send_set_domains_action(variable, domain)
-            self._send_highlight_arcs_action((variable, constraint), style='bold', colour='green')
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='bold', colour='green')
 
         elif args[0] == "Processing arc (":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_arcs_action((variable, constraint), style='bold', colour=None)
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='bold', colour=None)
 
         elif args[0] == "Arc: (" and args[4] == ") is inconsistent":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_arcs_action((variable, constraint), style='bold', colour='red')
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='bold', colour='red')
 
         elif args[0] == "Arc: (" and args[4] == ") now consistent":
             variable = args[1]
             constraint = args[3]
-            self._send_highlight_arcs_action((variable, constraint), style='normal', colour='green')
+            self._send_highlight_arcs_action(
+                (variable, constraint), style='normal', colour='green')
             should_wait = False
 
         elif (args[0] == "Adding" or args[0] == "New domain. Adding") and args[2] == "to to_do.":
@@ -284,13 +328,15 @@ class Displayable(StepDOMWidget):
                 for arc in arcs:
                     arcs_to_highlight.append((arc[0], arc[1]))
 
-                self._send_highlight_arcs_action(arcs_to_highlight, style='normal', colour='blue')
+                self._send_highlight_arcs_action(
+                    arcs_to_highlight, style='normal', colour='blue')
 
         elif args[0] == "You can now split domain. Click on a variable whose domain has more than 1 value.":
             self.send({'action': 'chooseDomainSplit'})
 
         elif args[0] == "... splitting":
-            self.send({'action': 'setOrder', 'var':args[1], 'domain': args[3], 'other':args[5]})
+            self.send(
+                {'action': 'setOrder', 'var': args[1], 'domain': args[3], 'other': args[5]})
 
         elif args[0] == "Solution found:":
             if self.max_display_level == 0:
@@ -303,7 +349,8 @@ class Displayable(StepDOMWidget):
             args += ("\nClick Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.", )
 
         elif args[0] == "Solving new domain with":
-            self.send({'action': 'setSplit', 'domain': args[2], 'var': args[1]})
+            self.send(
+                {'action': 'setSplit', 'domain': args[2], 'var': args[1]})
 
         elif args[0] == "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.":
             if self.max_display_level == 0:
@@ -351,7 +398,8 @@ class Displayable(StepDOMWidget):
                 arcs_to_highlight.append((var, const))
 
             self._send_highlight_nodes_action(nodes_to_highlight, "green")
-            self._send_highlight_arcs_action(arcs_to_highlight, "bold", "green")
+            self._send_highlight_arcs_action(
+                arcs_to_highlight, "bold", "green")
 
         elif args[0] == "Became consistent":
             const = args[1]
@@ -363,7 +411,8 @@ class Displayable(StepDOMWidget):
                 arcs_to_highlight.append((var, const))
 
             self._send_highlight_nodes_action(nodes_to_highlight, "green")
-            self._send_highlight_arcs_action(arcs_to_highlight, "bold", "green")
+            self._send_highlight_arcs_action(
+                arcs_to_highlight, "bold", "green")
 
         elif args[0] == "Became inconsistent":
             const = args[1]
@@ -397,10 +446,13 @@ class Displayable(StepDOMWidget):
 
                     for node in not_conflict.scope:
                         non_conflict_nodes_to_highlight.add(node)
-                        non_conflict_arcs_to_highlight.append((node, not_conflict))
+                        non_conflict_arcs_to_highlight.append(
+                            (node, not_conflict))
 
-                self._send_highlight_nodes_action(non_conflict_nodes_to_highlight, "green")
-                self._send_highlight_arcs_action(non_conflict_arcs_to_highlight, "bold", "green")
+                self._send_highlight_nodes_action(
+                    non_conflict_nodes_to_highlight, "green")
+                self._send_highlight_arcs_action(
+                    non_conflict_arcs_to_highlight, "bold", "green")
 
             # Highlight all conflicts red
             for conflict in conflicts:
@@ -410,8 +462,10 @@ class Displayable(StepDOMWidget):
                     conflict_nodes_to_highlight.add(node)
                     conflict_arcs_to_highlight.append((node, conflict))
 
-            self._send_highlight_nodes_action(conflict_nodes_to_highlight, "red")
-            self._send_highlight_arcs_action(conflict_arcs_to_highlight, "bold", "red")
+            self._send_highlight_nodes_action(
+                conflict_nodes_to_highlight, "red")
+            self._send_highlight_arcs_action(
+                conflict_arcs_to_highlight, "bold", "red")
 
         super().display(level, *args, **dict(kwargs, should_wait=should_wait))
 
@@ -505,6 +559,7 @@ class Displayable(StepDOMWidget):
             'domains': [list(domain) for domain in domains]
             if not is_single_var else [domains]
         })
+
 
 def visualize(func_to_delay):
     """Enqueues a function that does not run until the Jupyter widget has rendered.

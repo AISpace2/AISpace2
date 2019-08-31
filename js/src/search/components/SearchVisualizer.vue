@@ -36,6 +36,7 @@
         <button id="auto-solve" class="btn btn-default" @click="$emit('click:auto-solve')">Auto Solve</button>
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
+        <button id="reset" class="btn btn-default" @click="$emit('reset')">Reset</button>
       </div>
       <div class="output">Frontier: {{frontier}}</div>
       <div v-if="output" class="output">
@@ -82,6 +83,8 @@
   export default class SearchVisualizer extends Vue {
     // The graph being visualized
     graph: Graph<ISearchGraphNode, ISearchGraphEdge>;
+    // The copy of initial graph used for resetting
+    iniGraph: Graph<ISearchGraphNode, ISearchGraphEdge>;
     // Text describing what is currently happening
     output: string;
     // The text representing the frontier

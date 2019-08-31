@@ -43,6 +43,9 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         case "showPositions":
           this.vue.positions = this.vue.positions && event.positions == this.vue.positions ? "" : event.positions
           break;
+        case "frontReset":
+          this.resetFrontEnd();
+          break;
       }
     });
 
@@ -60,6 +63,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.vue = new SearchVisualizer({
         data: {
           graph: this.model.graph,
+          iniGraph: cloneDeep(this.model.graph),
           layout: this.getLayout(),
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
@@ -101,6 +105,11 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         });
       });
 
+      this.vue.$on('reset', () => {
+        Analytics.trackEvent("Search Visualizer", "Reset");
+        this.send({ event: "reset" });
+      });
+
       this.vue.$on("toggle:showFullDomain", () => {
         this.showFullDomainFlag = !this.showFullDomainFlag;
         // Nodes/edges have been added to the graph from the backend.
@@ -113,6 +122,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
 
       if (!this.model.previouslyRendered) {
         this.send({ event: "initial_render" });
+        this.vue.iniGraph = cloneDeep(this.model.graph);
       }
     });
   }
@@ -236,4 +246,22 @@ export default class SearchViewer extends widgets.DOMWidgetView {
     const charsToRemove = ["{", "}", "'"];
     return without(characters, ...charsToRemove).join("");
   }
+
+  /** Reset frontend variables and replace current graph with copyed initialzed graph and restart backend algorithm*/
+  private resetFrontEnd() {
+    this.vue.graph.should_relayout = false;
+    this.model.graph = cloneDeep(this.vue.iniGraph);
+    this.vue.graph = this.model.graph;
+    this.vue.output = null;
+    this.vue.preSolution = "";
+    this.vue.positions = null;
+    this.vue.showEdgeCosts = this.model.showEdgeCosts;
+    this.vue.showNodeHeuristics = this.model.showNodeHeuristics;
+    this.vue.textSize = this.model.textSize;
+    this.vue.detailLevel = this.model.detailLevel;
+    this.vue.frontier = [];
+    this.clearStyling();
+    this.send({ event: "initial_render" });
+  }
+
 }

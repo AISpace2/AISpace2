@@ -40,6 +40,7 @@
         <button id="auto-solve" class="btn btn-default" @click="$emit('click:auto-solve')">Auto Solve</button>
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
+        <button id="reset" class="btn btn-default" @click="$emit('reset')">Reset</button>
       </div>
       <div v-if="output" class="output">
           <div v-for="sub in output.split('\n')" :key ="sub">
@@ -108,6 +109,8 @@ import * as CSPUtils from "../CSPUtils";
 export default class CSPGraphInteractor extends Vue {
   // The graph being displayed
   graph: Graph<ICSPGraphNode>;
+  // The copy of initial graph used for resetting
+  iniGraph: Graph<ICSPGraphNode>;
   // Text describing what is currently happening
   output: string;
   // Text descrbing warnings

@@ -1,5 +1,6 @@
 import * as widgets from "@jupyter-widgets/base";
 import { timeout } from "d3";
+import { cloneDeep } from "lodash";
 import * as Analytics from "../Analytics";
 import { ICSPGraphNode, IGraphEdge } from "../Graph";
 import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
@@ -17,6 +18,7 @@ import CSPViewerModel from "./CSPVisualizerModel";
 export default class CSPViewer extends widgets.DOMWidgetView {
   private static readonly ARC_CLICK = "arc:click";
   private static readonly VAR_CLICK = "var:click";
+  private static readonly RESET = "reset";
 
   public model: CSPViewerModel;
   private vue: any;
@@ -56,6 +58,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         case "showPositions":
           this.vue.positions = this.vue.positions && event.positions == this.vue.positions ? "" : event.positions
           break;
+        case "frontReset":
+          this.resetFrontEnd();
+          break;
       }
     });
   }
@@ -65,6 +70,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       this.vue = new CSPGraphVisualizer({
         data: {
           graph: this.model.graph,
+          iniGraph: cloneDeep(this.model.graph),
           layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
           width: 0,
           height: 0,
@@ -153,6 +159,11 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.chooseDomainSplit();
       });
 
+      this.vue.$on('reset', () => {
+        Analytics.trackEvent("CSP Visualizer", "Reset");
+        this.send({ event: CSPViewer.RESET });
+      });
+
       // Functions called on the Python backend are queued until first render
       if (!this.model.previouslyRendered && this.model.waitForRender) {
         this.send({ event: "initial_render" });
@@ -162,6 +173,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           colour: "blue",
           style: "normal"
         });
+        this.vue.iniGraph = cloneDeep(this.model.graph);
       }
     });
 
@@ -352,5 +364,31 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     this.vue.FocusNode.checkedNames = [];
     this.vue.FocusNode.domain = node.domain;
     this.vue.FocusNode.nodeName = node.name;
+  }
+
+  /** Reset frontend variables and replace current graph with copyed initialzed graph and restart backend algorithm*/
+  private resetFrontEnd() {
+    this.vue.graph.should_relayout = false;
+    this.model.graph = cloneDeep(this.vue.iniGraph);
+    this.vue.graph = this.model.graph;
+    this.vue.output = null;
+    this.vue.warningMessage = null;
+    this.vue.preSolution = "";
+    this.vue.positions = null;
+    this.vue.needACButton = this.model.needACButton;
+    this.vue.spaces = 4;
+    this.vue.history = {};
+    this.vue.doOrder = 1;
+    this.vue.origin = 4;
+    this.vue.ind = 0;
+    this.vue.indent = 8;
+    this.vue.needSplit = false;
+    this.send({ event: "initial_render" });
+    this.highlightArcs({
+      action: "highlightArcs",
+      arcIds: null,
+      colour: "blue",
+      style: "normal"
+    });
   }
 }

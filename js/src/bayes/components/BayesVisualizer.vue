@@ -99,6 +99,8 @@
 
     // The graph being displayed
     graph: Graph;
+    // The initial graph used for resetting
+    iniGraph: Graph;
     // Text describing what is currently happening
     output: string;
     // Text descrbing warnings
