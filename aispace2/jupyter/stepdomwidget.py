@@ -56,7 +56,7 @@ class StepDOMWidget(DOMWidget):
         super().__init__()
         self.on_msg(self.handle_custom_msgs)
 
-        #self.sleep_time = 0.2
+        self.sleep_time = 0.2
 
         # Set to True to pause when the next display call is triggered
         # This does not work e.g. within infinite loops that don't call display
