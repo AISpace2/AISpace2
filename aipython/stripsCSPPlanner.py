@@ -25,7 +25,21 @@ class CSP_from_STRIPS(CSP):
         prob_domain = planning_problem.prob_domain
         initial_state = planning_problem.initial_state
         goal = planning_problem.goal
+        
+        old_pos = planning_problem.positions
+        
+        maxwidth = max([x for x,y in old_pos.values()])
+        minwidth = min([x for x,y in old_pos.values()])
+        
+        positions ={}
+        positions.update({st(var, stage): (old_pos[var][0]+(maxwidth-minwidth)*2*(stage),old_pos[var][1])
+                        for (var, dom) in prob_domain.feats_vals.items()
+                        for stage in range(horizon + 1)})
+        maxcurrwidth = max([x for x,y in positions.values()])
+        
+        positions.update({st('action', stage):(minwidth+(maxwidth-minwidth)*(2*(stage+1)-1),old_pos['action'][1]) for stage in range(horizon)})
         self.act_vars = [st('action', stage) for stage in range(horizon)]
+        
         domains = {av: prob_domain.actions for av in self.act_vars}
         domains.update({st(var, stage): dom
                         for (var, dom) in prob_domain.feats_vals.items()
@@ -33,35 +47,73 @@ class CSP_from_STRIPS(CSP):
 
         # TODO: Change constraint names
 
+        
         # intial state constraints:
+        positions.update({Constraint((st(var, 0),), is_(val)).__repr__():(minwidth-50,old_pos['action'][1])
+                       for (var, val) in initial_state.items()})
+        
         constraints = [Constraint((st(var, 0),), is_(val))
                        for (var, val) in initial_state.items()]
         # goal constraints on the final state:
+        
+        positions.update({Constraint((st(var, horizon),),
+                                   is_(val)).__repr__():(maxcurrwidth+50,old_pos['action'][1])
+                        for (var, val) in goal.items()})
         constraints += [Constraint((st(var, horizon),),
                                    is_(val))
                         for (var, val) in goal.items()]
+        
+
         # precondition constraints:
+        positions.update({Constraint((st(var, stage), st('action', stage)),
+                                   if_(val, act)).__repr__():(minwidth+(maxwidth-minwidth)*(2*(stage+1)-1.5),old_pos['action'][1])
+                        for act, strps in prob_domain.strips_map.items()
+                        for var, val in strps.preconditions.items()
+                        for stage in range(horizon)})
+        
+        
         constraints += [Constraint((st(var, stage), st('action', stage)),
                                    if_(val, act))  # st(var,stage)==val if st('action',stage)=act
                         for act, strps in prob_domain.strips_map.items()
                         for var, val in strps.preconditions.items()
                         for stage in range(horizon)]
+        
+        
+        
+        
         # effect constraints:
         constraints += [Constraint((st(var, stage + 1), st('action', stage)),
                                    if_(val, act))  # st(var,stage+1)==val if st('action',stage)==act
                         for act, strps in prob_domain.strips_map.items()
                         for var, val in strps.effects.items()
                         for stage in range(horizon)]
+        positions.update({Constraint((st(var, stage + 1), st('action', stage)),
+                                   if_(val, act)).__repr__():(minwidth+(maxwidth-minwidth)*(2*(stage+1)-0.5),old_pos['action'][1])
+                        for act, strps in prob_domain.strips_map.items()
+                        for var, val in strps.effects.items()
+                        for stage in range(horizon)})
         # frame constraints:
         constraints += [Constraint((st(var, stage), st('action', stage), st(var, stage + 1)),
                                    eq_if_not_in_({act for act in prob_domain.actions
                                                   if var in prob_domain.strips_map[act].effects}))
                         for var in prob_domain.feats_vals
                         for stage in range(horizon)]
+        positions.update({Constraint((st(var, stage), st('action', stage), st(var, stage + 1)),
+                                   eq_if_not_in_({act for act in prob_domain.actions
+                                                  if var in prob_domain.strips_map[act].effects})).__repr__():(old_pos[var][0]+(maxwidth-minwidth)*(2*(stage+1)-0.75),old_pos[var][1])
+                        for var in prob_domain.feats_vals
+                        for stage in range(horizon)})
+        
 
         # TODO: set positions using domains, constraints and horizon
-        positions = {}
-
+        
+        pos_keys = list(positions.keys())
+        for i in range(len(pos_keys)):
+            for j in range(i+1,len(pos_keys)):
+                if positions[pos_keys[i]] == positions[pos_keys[j]]:
+                    positions[pos_keys[j]] = (positions[pos_keys[j]][0],positions[pos_keys[j]][1]-200)
+        
+        
         CSP.__init__(self, domains, constraints, positions)
 
     def extract_plan(self, soln):
