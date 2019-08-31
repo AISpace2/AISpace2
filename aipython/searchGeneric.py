@@ -68,53 +68,6 @@ class Searcher(Displayable):
                      self.num_expanded, "paths expanded.")
 
 
-# class Frontier(object):
-#     """A frontier consists of a priority queue (heap), frontierpq, of
-#         (value, index, path) triples, where
-#     * value is the value we want to minimize (e.g., path cost + h).
-#     * index is a unique index for each element
-#     * path is the path on the queue
-#     Note that the priority queue always returns the smallest element.
-#     """
-#
-#     def __init__(self):
-#         """constructs the frontier, initially an empty priority queue
-#         """
-#         self.frontier_index = 0  # the number of items ever added to the frontier
-#         self.frontierpq = []  # the frontier priority queue
-#
-#     def empty(self):
-#         """is True if the priority queue is empty"""
-#         return self.frontierpq == []
-#
-#     def add(self, path, value):
-#         """add a path to the priority queue
-#         value is the value to be minimized"""
-#         self.frontier_index += 1    # get a new unique index
-#         heapq.heappush(self.frontierpq, (value, -self.frontier_index, path))
-#
-#     def pop(self):
-#         """returns and removes the path of the frontier with minimum value.
-#         Note that [2] extracts the path from the triple on the queue.
-#         """
-#         return heapq.heappop(self.frontierpq)[2]
-#
-#     def count(self, val):
-#         """returns the number of elements of the frontier with value=val"""
-#         return sum(1 for e in self.frontierpq if e[0] == val)
-#
-#     def __repr__(self):
-#         """string representation of the frontier"""
-#         return "\n".join("".join(str(["{} ({})".format(p, n) for (n, c, p) in self.frontierpq])).split("\\n"))
-#
-#     def __len__(self):
-#         return len(self.frontierpq)
-#
-#     def __iter__(self):
-#         for (_, _, p) in self.frontierpq:
-#         yield p
-
-
 class AStarSearcher(Searcher):
     """returns a searcher for a problem.
     Paths can be found by repeatedly calling search().
