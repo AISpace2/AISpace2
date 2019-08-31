@@ -67,7 +67,7 @@ class CSP(Displayable):
                     # start numbering
                     old_repr = self.constraints[i + j].repr
                     old_posx,old_posy = self.positions[old_repr]
-                    gap = max(200/occurence,50)
+                    gap = min(200/occurence,50)
                     self.constraints[i + j].repr += str(j)
                     self.positions[self.constraints[i + j].repr] = (old_posx,old_posy+gap*j)
             i += occurence
