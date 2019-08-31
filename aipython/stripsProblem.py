@@ -148,14 +148,14 @@ elevator_domain = STRIPS_domain({'Elevator': {'B', 1, 2, 3, 4}, 'Passenger': {'B
 strips_elevator = Planning_problem(elevator_domain,
                                    {'Elevator': 'B', 'Passenger': 1},
                                    {'Passenger': 4},
-                                  positions = {
-                                      'Elevator':(100,200),
-                                      'Passenger':(100,500),
-                                      'Goto1': (200,100),
-                                 'Goto2': (200,200),
-                                 'Goto3': (200,300),
-                                 'Goto4': (200,400),
-                                 'PickUp': (200,500),
-                                 'DeopOff': (200,600),
-                                 'action': (200,300)
-                                  })
+                                   positions={
+                                       'Elevator': (100, 200),
+                                       'Passenger': (100, 500),
+                                       'Goto1': (200, 100),
+                                       'Goto2': (200, 200),
+                                       'Goto3': (200, 300),
+                                       'Goto4': (200, 400),
+                                       'PickUp': (200, 500),
+                                       'DeopOff': (200, 600),
+                                       'action': (200, 300)
+                                   })
