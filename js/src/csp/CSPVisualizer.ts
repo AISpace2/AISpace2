@@ -160,8 +160,8 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       });
 
       this.vue.$on('reset', () => {
-          Analytics.trackEvent("CSP Visualizer", "Reset");
-          this.send({event: CSPViewer.RESET});
+        Analytics.trackEvent("CSP Visualizer", "Reset");
+        this.send({ event: CSPViewer.RESET });
       });
 
       // Functions called on the Python backend are queued until first render
@@ -368,27 +368,27 @@ export default class CSPViewer extends widgets.DOMWidgetView {
 
   /** Reset frontend variables and replace current graph with copyed initialzed graph and restart backend algorithm*/
   private resetFrontEnd() {
-      this.vue.graph.should_relayout = false;
-      this.model.graph = cloneDeep(this.vue.iniGraph);
-      this.vue.graph = this.model.graph;
-      this.vue.output = null;
-      this.vue.warningMessage = null;
-      this.vue.preSolution = "";
-      this.vue.positions = null;
-      this.vue.needACButton = this.model.needACButton;
-      this.vue.spaces = 4;
-      this.vue.history = {};
-      this.vue.doOrder = 1;
-      this.vue.origin = 4;
-      this.vue.ind =  0;
-      this.vue.indent = 8;
-      this.vue.needSplit = false;
-      this.send({ event: "initial_render" });
-      this.highlightArcs({
-          action: "highlightArcs",
-          arcIds: null,
-          colour: "blue",
-          style: "normal"
-      });
+    this.vue.graph.should_relayout = false;
+    this.model.graph = cloneDeep(this.vue.iniGraph);
+    this.vue.graph = this.model.graph;
+    this.vue.output = null;
+    this.vue.warningMessage = null;
+    this.vue.preSolution = "";
+    this.vue.positions = null;
+    this.vue.needACButton = this.model.needACButton;
+    this.vue.spaces = 4;
+    this.vue.history = {};
+    this.vue.doOrder = 1;
+    this.vue.origin = 4;
+    this.vue.ind = 0;
+    this.vue.indent = 8;
+    this.vue.needSplit = false;
+    this.send({ event: "initial_render" });
+    this.highlightArcs({
+      action: "highlightArcs",
+      arcIds: null,
+      colour: "blue",
+      style: "normal"
+    });
   }
 }
