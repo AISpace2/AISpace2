@@ -808,6 +808,7 @@ export default class BayesGraphBuilder extends Vue {
     this.first = null;
     this.selection = null;
     this.cleanEdgeMessage();
+    this.updatePythonCode();
   }
 
   /** Adds a new edge to the graph. */
@@ -848,6 +849,7 @@ export default class BayesGraphBuilder extends Vue {
     this.selection = null;
     this.warning_message = "";
     this.succeed_message = "";
+    this.updatePythonCode();
   }
 
   /** Check whether the edge can be created */
@@ -1010,6 +1012,7 @@ export default class BayesGraphBuilder extends Vue {
       }
       this.selection = null;
     }
+    this.updatePythonCode();
   }
 
   /** Remove the deleted node from all children's parents lists, and update children's evidences*/
@@ -1038,6 +1041,7 @@ export default class BayesGraphBuilder extends Vue {
         );
       }
     });
+    this.updatePythonCode();
   }
 
   /** Handle the children @param node's evidences when a parent is deleted
@@ -1480,11 +1484,13 @@ export default class BayesGraphBuilder extends Vue {
       this.succeed_message = "";
     }
   }
-
+  /* Toggle the Visability of Python Code*/
   pyCode(){
     this.showPythonCode = !this.showPythonCode;
     this.updatePythonCode();
   }
+
+  /*Update the Python Code*/
   updatePythonCode(){
     
     var variables:string[] = [];
