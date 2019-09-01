@@ -63,15 +63,19 @@ class CSP(Displayable):
         while i < len(constraint_strings):
             occurence = constraint_strings.count(constraint_strings[i])
             if occurence > 1:
+                old_repr = self.constraints[i].repr
+                if old_repr in self.positions:
+                    old_posx, old_posy = self.positions[old_repr]
+                    
                 for j in range(occurence):
                     # start numbering
-                    old_repr = self.constraints[i + j].repr
-                    old_posx, old_posy = self.positions[old_repr]
-                    del self.positions[old_repr]
                     gap = min(200 / occurence, 50)
                     self.constraints[i + j].repr += str(j)
-                    self.positions[self.constraints[i +
-                                                    j].repr] = (old_posx, old_posy + gap * j)
+                    if old_repr in self.positions:
+                        self.positions[self.constraints[i +
+                                                        j].repr] = (old_posx, old_posy + gap * j)
+                if old_repr in self.positions:
+                    del self.positions[old_repr]
             i += occurence
 
     def __str__(self):
