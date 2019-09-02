@@ -123,6 +123,27 @@ class CSP_from_STRIPS(CSP):
                             positions[pos_keys[j]][0], positions[pos_keys[j]][1] - 200)
         except:
                 pass
+        # Numbering the conditions with the same names: and order them vertically    
+        constraints = sorted(constraints, key=lambda con: con.__repr__())
+        constraint_strings = list(
+            map(lambda con: con.__repr__(), constraints))
+        i = 0
+        while i < len(constraint_strings):
+            occurence = constraint_strings.count(constraint_strings[i])
+            if occurence > 1:
+                old_repr = constraints[i].repr
+                if old_repr in positions:
+                    old_posx, old_posy = positions[old_repr]
+                    
+                for j in range(occurence):
+                    # start numbering
+                    gap = min(200 / occurence, 50)
+                    constraints[i + j].repr += str(j)
+                    if old_repr in positions:
+                        positions[constraints[i +j].repr] = (old_posx, old_posy + gap * j)
+                if old_repr in positions:
+                    del positions[old_repr]
+            i += occurence    
         CSP.__init__(self, domains, constraints, positions)
 
     def extract_plan(self, soln):
