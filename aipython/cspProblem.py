@@ -65,7 +65,12 @@ class CSP(Displayable):
             if occurence > 1:
                 for j in range(occurence):
                     # start numbering
+                    old_repr = self.constraints[i + j].repr
                     self.constraints[i + j].repr += str(j)
+                    if old_repr in self.positions:
+                        self.positions[self.constraints[i +
+                                                        j].repr] = self.positions[old_repr]
+                        del self.positions[old_repr]
             i += occurence
 
     def __str__(self):
