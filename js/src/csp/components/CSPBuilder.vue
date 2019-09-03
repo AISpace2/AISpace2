@@ -180,7 +180,7 @@
       </div>
       <div id="select_constraint" v-if="selection && selection.type == 'csp:constraint'">
         <div v-if="findVariablesConnected(selection).length == 0">
-          <span>Can only set properties of constraint after connected to variable(s).</span>
+          <span class="warningText">Can only set properties of constraint after connected to variable(s).</span>
         </div>
         <div v-else>
           <span id="constraint_type_modify">
@@ -188,7 +188,7 @@
               <strong>Constraint Type:</strong>
             </label>
             <span>
-              <label for="show_negation">Show Negation</label>
+              <label for="show_negation">Negation</label>
               <input type="checkbox" id="show_negation" v-model="show_negation" />
             </span>
             <select v-if="!show_negation" v-model="select_constraint_type">
@@ -218,7 +218,7 @@
               <button
                 class="show_new_table_btn"
                 @click="InitialTempTableAssign(selection)"
-              >Use New Value</button>
+              >Apply</button>
             </span>
           </span>
           <br />
@@ -684,7 +684,7 @@ export default class CSPGraphBuilder extends Vue {
         constraint_node!.name = this.genNewDefaultNameC();
 
         this.graph.removeEdge(this.selection);
-        this.succeed_message = "Edge removed.";
+        this.succeed_message = "Edge deleted.";
       } else {
         if (this.selection.type === "csp:variable") {
           // find constraint nodes it is connected to
@@ -702,7 +702,7 @@ export default class CSPGraphBuilder extends Vue {
         }
 
         this.graph.removeNode(this.selection);
-        this.succeed_message = "Node removed.";
+        this.succeed_message = "Node deleted.";
       }
       this.selection = null;
     }
