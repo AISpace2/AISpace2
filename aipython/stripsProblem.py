@@ -73,15 +73,36 @@ class Planning_problem(object):
 strips_delivery1 = Planning_problem(delivery_domain,
                                     {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
                                      'RHM': False},
-                                    {'RLoc': 'off'})
+                                    {'RLoc': 'off'}, positions={
+                                        'RLoc': (100, 100),
+                                        'RHC': (100, 200),
+                                        'SWC': (100, 300),
+                                        'MW': (100, 400),
+                                        'RHM': (100, 500),
+                                        'action': (200, 300)
+                                    })
 strips_delivery2 = Planning_problem(delivery_domain,
                                     {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
                                      'RHM': False},
-                                    {'SWC': False})
+                                    {'SWC': False}, positions={
+                                        'RLoc': (100, 100),
+                                        'RHC': (100, 200),
+                                        'SWC': (100, 300),
+                                        'MW': (100, 400),
+                                        'RHM': (100, 500),
+                                        'action': (200, 300)
+                                    })
 strips_delivery3 = Planning_problem(delivery_domain,
                                     {'RLoc': 'lab', 'MW': True, 'SWC': True, 'RHC': False,
                                      'RHM': False},
-                                    {'SWC': False, 'MW': False, 'RHM': False})
+                                    {'SWC': False, 'MW': False, 'RHM': False}, positions={
+                                        'RLoc': (100, 100),
+                                        'RHC': (100, 200),
+                                        'SWC': (100, 300),
+                                        'MW': (100, 400),
+                                        'RHM': (100, 500),
+                                        'action': (200, 300)
+                                    })
 
 # blocks world
 
@@ -117,13 +138,24 @@ def create_blocks_world(blocks=['a', 'b', 'c', 'd']):
     feats_vals = {on(x, y): boolean for x in blocks for y in blocks_and_table}
     feats_vals.update({clear(x): boolean for x in blocks_and_table})
     return STRIPS_domain(feats_vals, stmap)
+# Generate Positions From Variables
+
+
+def create_position(variables):
+    positions = {}
+    i = 0
+    for var in variables.feats_vals:
+        positions[var] = (100, i * 100)
+        i += 1
+    positions['action'] = (200, i * 50)
+    return positions
 
 
 blocks1dom = create_blocks_world(['a', 'b', 'c'])
 strips_blocks1 = Planning_problem(blocks1dom,
                                   {on('a', 'table'): True, clear('a'): True, clear('b'): True, on('b', 'c'): True,
                                    on('c', 'table'): True, clear('c'): False},  # initial state
-                                  {on('a', 'b'): True, on('c', 'a'): True})  # goal
+                                  {on('a', 'b'): True, on('c', 'a'): True}, positions=create_position(blocks1dom))  # goal
 
 blocks2dom = create_blocks_world(['a', 'b', 'c', 'd'])
 tower4 = {clear('a'): True, on('a', 'b'): True, clear('b'): False,
@@ -131,11 +163,13 @@ tower4 = {clear('a'): True, on('a', 'b'): True, clear('b'): False,
           clear('b'): False, on('d', 'table'): True}
 strips_blocks2 = Planning_problem(blocks2dom,
                                   tower4,  # initial state
-                                  {on('d', 'c'): True, on('c', 'b'): True, on('b', 'a'): True})  # goal
+                                  {on('d', 'c'): True, on('c', 'b'): True, on('b', 'a'): True}, positions=create_position(blocks2dom))  # goal
 
 strips_blocks3 = Planning_problem(blocks2dom,
                                   tower4,  # initial state
-                                  {on('d', 'a'): True, on('a', 'b'): True, on('b', 'c'): True})  # goal
+                                  {on('d', 'a'): True, on('a', 'b')
+                                      : True, on('b', 'c'): True},  # goal
+                                  positions=create_position(blocks2dom))
 
 elevator_domain = STRIPS_domain({'Elevator': {'B', 1, 2, 3, 4}, 'Passenger': {'B', 1, 2, 3, 4, 'E'}},
                                 {'Goto1': Strips({}, {'Elevator': 1}),
@@ -147,4 +181,9 @@ elevator_domain = STRIPS_domain({'Elevator': {'B', 1, 2, 3, 4}, 'Passenger': {'B
 
 strips_elevator = Planning_problem(elevator_domain,
                                    {'Elevator': 'B', 'Passenger': 1},
-                                   {'Passenger': 4})
+                                   {'Passenger': 4},
+                                   positions={
+                                       'Elevator': (100, 200),
+                                       'Passenger': (100, 500),
+                                       'action': (200, 300)
+                                   })
