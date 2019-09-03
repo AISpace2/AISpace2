@@ -29,14 +29,13 @@ class CSP_from_STRIPS(CSP):
         old_pos = planning_problem.positions
 
         if 'action' not in old_pos:
-            old_pos['action'] = (100,100)
+            old_pos['action'] = (100, 100)
 
         maxwidth = max([x for x, y in old_pos.values()])
         minwidth = min([x for x, y in old_pos.values()])
-        
-        diff = max(100,maxwidth-minwidth)
-        
-        
+
+        diff = max(100, maxwidth - minwidth)
+
         self.act_vars = [st('action', stage) for stage in range(horizon)]
 
         domains = {av: prob_domain.actions for av in self.act_vars}
@@ -45,85 +44,86 @@ class CSP_from_STRIPS(CSP):
                         for stage in range(horizon + 1)})
 
         # intial state constraints:
-       
 
-        constraints = [prefixConstraint(Constraint((st(var, 0),), is_(val)),['Initial',var])
+        constraints = [prefixConstraint(Constraint((st(var, 0),), is_(val)), ['Initial', var])
                        for (var, val) in initial_state.items()]
         # goal constraints on the final state:
 
-       
         constraints += [prefixConstraint(Constraint((st(var, horizon),),
-                                   is_(val)),['Goal',var])
+                                                    is_(val)), ['Goal', var])
                         for (var, val) in goal.items()]
 
         # precondition constraints:
         constraints += [prefixConstraint(Constraint((st(var, stage), st('action', stage)),
-                                   if_(val, act)),['Pre',act,st(var,stage)])  # st(var,stage)==val if st('action',stage)=act
+                                                    if_(val, act)), ['Pre', act, st(var, stage)])  # st(var,stage)==val if st('action',stage)=act
                         for act, strps in prob_domain.strips_map.items()
                         for var, val in strps.preconditions.items()
                         for stage in range(horizon)]
 
         # effect constraints:
         constraints += [prefixConstraint(Constraint((st(var, stage + 1), st('action', stage)),
-                                   if_(val, act)),['Effect',act,st(var,stage+1)])  # st(var,stage+1)==val if st('action',stage)==act
+                                                    if_(val, act)), ['Effect', act, st(var, stage + 1)])  # st(var,stage+1)==val if st('action',stage)==act
                         for act, strps in prob_domain.strips_map.items()
                         for var, val in strps.effects.items()
                         for stage in range(horizon)]
         # frame constraints:
         constraints += [prefixConstraint(Constraint((st(var, stage), st('action', stage), st(var, stage + 1)),
-                                   eq_if_not_in_({act for act in prob_domain.actions
-                                                  if var in prob_domain.strips_map[act].effects})),['Frame',st(var,stage)])
+                                                    eq_if_not_in_({act for act in prob_domain.actions
+                                                                   if var in prob_domain.strips_map[act].effects})), ['Frame', st(var, stage)])
                         for var in prob_domain.feats_vals
                         for stage in range(horizon)]
         try:
             positions = {}
-            #precondition positions
-            positions.update({' '.join(['Pre',act,st(var,stage)]): (minwidth + (diff) * (2 * (stage + 1) - 1.5), old_pos['action'][1])
-                                  for act, strps in prob_domain.strips_map.items()
-                                  for var, val in strps.preconditions.items()
-                                  for stage in range(horizon)})
-            #effect positions
-            positions.update({' '.join(['Effect',act,st(var,stage+1)]): (minwidth + (diff) * (2 * (stage + 1) - 0.5), old_pos['action'][1])
-                                  for act, strps in prob_domain.strips_map.items()
-                                  for var, val in strps.effects.items()
-                                  for stage in range(horizon)})
+            # precondition positions
+            positions.update({' '.join(['Pre', act, st(var, stage)]): (minwidth + (diff) * (2 * (stage + 1) - 1.5), old_pos['action'][1])
+                              for act, strps in prob_domain.strips_map.items()
+                              for var, val in strps.preconditions.items()
+                              for stage in range(horizon)})
+            # effect positions
+            positions.update({' '.join(['Effect', act, st(var, stage + 1)]): (minwidth + (diff) * (2 * (stage + 1) - 0.5), old_pos['action'][1])
+                              for act, strps in prob_domain.strips_map.items()
+                              for var, val in strps.effects.items()
+                              for stage in range(horizon)})
             pos_keys = list(positions.keys())
             for i in range(len(pos_keys)):
                 for j in range(i + 1, len(pos_keys)):
                     if positions[pos_keys[i]] == positions[pos_keys[j]]:
-                        positions[pos_keys[j]] = (positions[pos_keys[j]][0], positions[pos_keys[j]][1] - 200)
+                        positions[pos_keys[j]] = (
+                            positions[pos_keys[j]][0], positions[pos_keys[j]][1] - 200)
 
             domainCount = len(prob_domain.feats_vals.items())
             maxheight = max([y for x, y in positions.values()])
             minheight = min([y for x, y in positions.values()])
-            if domainCount>1:
-                diffy = max(100,(maxheight-minheight)/(domainCount-1))
+            if domainCount > 1:
+                diffy = max(100, (maxheight - minheight) / (domainCount - 1))
             else:
                 diffy = 0
-            
-            #position of the variable
+
+            # position of the variable
             for stage in range(horizon + 1):
-                index = 0;
+                index = 0
                 for (var, dom) in prob_domain.feats_vals.items():
-                    positions[st(var, stage)] = (old_pos[var][0] + (diff) * 2 * (stage), minheight+index*diffy)
+                    positions[st(var, stage)] = (
+                        old_pos[var][0] + (diff) * 2 * (stage), minheight + index * diffy)
                     old_pos[var] = positions[st(var, 0)]
-                    index+=1
-            #Position of Actions
-            positions.update({st('action', stage): (minwidth + (diff) * (2 * (stage + 1) - 0.75), (maxheight+minheight)/2) for stage in range(horizon)})
+                    index += 1
+            # Position of Actions
+            positions.update({st('action', stage): (minwidth + (diff) * (2 * (
+                stage + 1) - 0.75), (maxheight + minheight) / 2) for stage in range(horizon)})
 
             maxcurrwidth = max([x for x, y in positions.values()])
 
-            #initial state positions
-            positions.update({' '.join(['Initial',var]): (minwidth - 50, old_pos[var][1])
-                             for (var, val) in initial_state.items()})
-            #goal state positions
-            positions.update({' '.join(['Goal',var]): (maxcurrwidth + 50, old_pos[var][1])
-                             for (var, val) in goal.items()})
+            # initial state positions
+            positions.update({' '.join(['Initial', var]): (minwidth - 50, old_pos[var][1])
+                              for (var, val) in initial_state.items()})
+            # goal state positions
+            positions.update({' '.join(['Goal', var]): (maxcurrwidth + 50, old_pos[var][1])
+                              for (var, val) in goal.items()})
 
-            #frame positions
-            positions.update({' '.join(['Frame',st(var,stage)]): (old_pos[var][0] + (diff) * (2 * (stage + 1) - 1), old_pos[var][1])
-                                  for var in prob_domain.feats_vals
-                                  for stage in range(horizon)})
+            # frame positions
+            positions.update({' '.join(['Frame', st(var, stage)]): (old_pos[var][0] + (diff) * (2 * (stage + 1) - 1), old_pos[var][1])
+                              for var in prob_domain.feats_vals
+                              for stage in range(horizon)})
         except:
             pass
         CSP.__init__(self, domains, constraints, positions)
@@ -131,9 +131,12 @@ class CSP_from_STRIPS(CSP):
     def extract_plan(self, soln):
         return [soln[a] for a in self.act_vars]
 
-def prefixConstraint(constraint,prefix):
+
+def prefixConstraint(constraint, prefix):
     constraint.repr = ' '.join(prefix)
     return constraint
+
+
 def st(var, stage):
     """returns a string for the var-stage pair that can be used as a variable"""
     return str(var) + "_" + str(stage)
