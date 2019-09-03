@@ -109,7 +109,7 @@ class CSP_from_STRIPS(CSP):
                     old_pos[var] = positions[st(var, 0)]
                     index+=1
             #Position of Actions
-            positions.update({st('action', stage): (minwidth + (diff) * (2 * (stage + 1) - 1), (maxheight+minheight)/2) for stage in range(horizon)})
+            positions.update({st('action', stage): (minwidth + (diff) * (2 * (stage + 1) - 0.75), (maxheight+minheight)/2) for stage in range(horizon)})
 
             maxcurrwidth = max([x for x, y in positions.values()])
 
