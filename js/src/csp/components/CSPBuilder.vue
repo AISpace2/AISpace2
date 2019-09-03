@@ -64,7 +64,7 @@
       <CSPToolbar @modechanged="setMode"></CSPToolbar>
       <div v-if="mode == 'create'">
         <p>
-          <strong>To create variable or constraint:</strong> Select a node type, then double click on the graph to create.
+          <strong>To create variable or constraint:</strong> Select a node type, then double click on the canvas to create.
           <br />
           <span>
             <span class="radioInputGroup">
@@ -112,7 +112,7 @@
             </span>
           </span>
           <span v-else-if="create_sub_mode == 'constraint'">
-            <span>Can only set the properties of the constraint after connected to variable(s).</span>
+            <span>Can only set properties of constraint after connected to variable(s).</span>
           </span>
           <br />
           <span>
@@ -127,8 +127,8 @@
           >Select the first node to begin.</span>
           <span v-else>
             Source node:
-            <span class="nodeText">{{getNodeType(first)}}</span>. Select an end
-            <span class="nodeText">{{getEndNodeType(first)}}</span> to create an edge.
+            <span class="nodeText">{{first.name}}</span>. Click on an {{getEndNodeType(first)}} as the end node to create an edge,
+            or click on <span class="nodeText">{{first.name}}</span> again to unselect it.
           </span>
           <br />
           <span>
@@ -180,7 +180,7 @@
       </div>
       <div id="select_constraint" v-if="selection && selection.type == 'csp:constraint'">
         <div v-if="findVariablesConnected(selection).length == 0">
-          <span>Can only set the properties of the constraint after connected to variable(s).</span>
+          <span>Can only set properties of constraint after connected to variable(s).</span>
         </div>
         <div v-else>
           <span id="constraint_type_modify">
@@ -368,14 +368,6 @@ export default class CSPGraphBuilder extends Vue {
     this.first = null;
   }
 
-  getNodeType(node: ICSPGraphNode) {
-    if (node.type === "csp:variable") {
-      return "Variable - " + node.name;
-    } else if (node.type === "csp:constraint") {
-      return "Constraint - " + node.name;
-    }
-  }
-
   getEndNodeType(node: ICSPGraphNode) {
     if (node.type === "csp:variable") {
       return "constraint node";
@@ -445,7 +437,7 @@ export default class CSPGraphBuilder extends Vue {
       });
 
       this.temp_c_name = this.genNewDefaultNameC();
-      this.succeed_message = "Constraint node created.";
+      this.succeed_message = "Constraint created.";
       this.warning_message = "";
     }
   }
@@ -476,7 +468,7 @@ export default class CSPGraphBuilder extends Vue {
       this.succeed_message = "";
     } else {
       this.warning_message = "";
-      this.succeed_message = "Variable node created.";
+      this.succeed_message = "Variable created.";
     }
     return node_to_be_drawn;
   }
@@ -573,7 +565,7 @@ export default class CSPGraphBuilder extends Vue {
         this.first = null;
         this.selection = null;
         this.edge_warning_message =
-          "Can't create an edge between two variables";
+          "Can't create an edge between variables";
         return;
       }
 
@@ -584,7 +576,7 @@ export default class CSPGraphBuilder extends Vue {
         this.first = null;
         this.selection = null;
         this.edge_warning_message =
-          "Can't create an edge between two constraints";
+          "Can't create an edge between constraints";
         return;
       }
 
