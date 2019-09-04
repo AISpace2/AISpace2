@@ -27,7 +27,7 @@ def get_web_version():
     else:
         try:
             # read html from AISpace2 website, and parsed to get web_version
-            req = requests.get("https://aispace2.github.io/AISpace2/install.html")
+            req = requests.get(webVerURL)
             html_info = str(BeautifulSoup(req.content, "html.parser").find(id="install-current-version"))
             web_version = re.findall("\d+\.\d+\.\d+", html_info)[0]
             lookup_time = time.time()
