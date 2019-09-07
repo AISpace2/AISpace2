@@ -17,12 +17,13 @@
 
     /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedX1() {
-      return this.pathLength === 0 ? 0 : this.x1;
+      //return this.pathLength === 0 ? 0 : this.x1;
+      return this.x1;
     }
 
     /** The y-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedY1() {
-      if (this.pathLength === 0) return 0;
+      //if (this.pathLength === 0) return 0;
       return this.y1;
     }
 

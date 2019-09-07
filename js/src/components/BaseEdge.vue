@@ -117,7 +117,9 @@
 
     /** The x-coordinate that is the midpoint between the source and target of the adjusted path. */
     get centerX() {
-      return this.adjustedX1 + (this.adjustedX2 - this.adjustedX1) / 2;
+      if(this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2){
+        return this.adjustedX1 + 80;
+      } else return this.adjustedX1 + (this.adjustedX2 - this.adjustedX1) / 2;
     }
 
     get textX() {
@@ -126,7 +128,9 @@
 
     /** The y-coordinate that is the midpoint between the source and target of the adjusted path. */
     get centerY() {
-      return this.adjustedY1 + (this.adjustedY2 - this.adjustedY1) / 2;
+      if(this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2){
+        return this.adjustedY1;
+      } else return this.adjustedY1 + (this.adjustedY2 - this.adjustedY1) / 2;
     }
 
     get textY() {
@@ -173,7 +177,37 @@
 
     /** The computed path of the line between the source and target. */
     get path() {
-      return (
+      if(this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2)
+      {
+        return (
+        "M" +
+        this.adjustedX1 +
+        "," +
+        this.adjustedY1 +
+        "L" +
+        String(this.adjustedX1 + 80) +
+        "," +
+        String(this.adjustedY1 + 80) +
+
+        "M" +
+        this.adjustedX1 +
+        "," +
+        this.adjustedY1 +
+        "L" +
+        String(this.adjustedX1 + 80) +
+        "," +
+        String(this.adjustedY1 - 80) +
+
+        "M" +
+        String(this.adjustedX1 + 80) +
+        "," +
+        String(this.adjustedY1 + 80) +
+        "L" +
+        String(this.adjustedX1 + 80) +
+        "," +
+        String(this.adjustedY1 - 80) 
+      );
+      } else return (
         "M" +
         this.adjustedX1 +
         "," +
