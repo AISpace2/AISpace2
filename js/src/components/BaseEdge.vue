@@ -205,7 +205,7 @@
         "L" +
         String(this.adjustedX1 + 80) +
         "," +
-        String(this.adjustedY1 - 80) 
+        String(this.adjustedY1 - 80)
       );
       } else return (
         "M" +
@@ -242,6 +242,6 @@
                     0    1px 0 black,
                    -1px  1px 0 black,
                    -1px  0   0 black;
-     
+
     }
 </style>
