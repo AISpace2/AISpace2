@@ -1,4 +1,4 @@
-from ._version import version_info, __version__, update_notification, get_web_version
+from ._version import version_info, __version__
 
     
 
