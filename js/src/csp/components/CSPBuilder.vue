@@ -436,6 +436,7 @@ export default class CSPGraphBuilder extends Vue {
 
       this.temp_v_name = this.genNewDefaultNameV();
       this.temp_v_domain = "1, 2, 3";
+      this.succeed_message = "Variable node created.";
       this.warning_message = "";
     } else if (
       this.mode === "create" &&
@@ -453,6 +454,9 @@ export default class CSPGraphBuilder extends Vue {
       this.succeed_message = "Constraint node created.";
       this.warning_message = "";
     }
+
+    this.first = null;
+    this.selection = null;
   }
 
   /** Returns whether name and domain for a new node to be created are valid */
@@ -589,7 +593,12 @@ export default class CSPGraphBuilder extends Vue {
         this.first = null;
         this.selection = null;
         this.edge_warning_message =
-          "Can't create an edge between two constraints";
+          "Can't create an edge between two constraints.";
+        return;
+      }
+
+      if (this.edgeExist(this.first, this.selection)) {
+        this.edge_warning_message = "Edge exists.";
         return;
       }
 
@@ -614,6 +623,19 @@ export default class CSPGraphBuilder extends Vue {
       this.first = null;
       this.selection = null;
     }
+  }
+
+  edgeExist(source: ICSPGraphNode, target: ICSPGraphNode) {
+    var exist = false;
+    this.graph.edges.forEach(e => {
+      if (
+        (e.target === target && e.source === source) ||
+        (e.source === target && e.target === source)
+      ) {
+        return (exist = true);
+      }
+    });
+    return exist;
   }
 
   nodeStrokeWidth(node: ICSPGraphNode) {
@@ -1102,9 +1124,14 @@ export default class CSPGraphBuilder extends Vue {
   }
 
   /** Trim non-numeric chars when constraint type is LessThan(num), GreaterThan(num) */
-  trimNonNumeric(val: string) {
+  trimNonNumeric(val_origin: string) {
+    var val: string = "";
+    if (val_origin[0] === "-") {
+      val = val_origin.substring(1, val_origin.length);
+    }
     if (val.match(/^.*[^0-9\.].*$/) || !val.match(/^[0-9]*\.?[0-9]*$/)) {
       var result = val.replace(/[^\d.]/g, "");
+
       if (!result.match(/^[0-9]*\.?[0-9]*$/)) {
         var indexofdot = result.indexOf(".");
         var result_removed_dot = result.replace(/\./g, "");
@@ -1112,6 +1139,9 @@ export default class CSPGraphBuilder extends Vue {
           result_removed_dot.slice(0, indexofdot) +
           "." +
           result_removed_dot.slice(indexofdot, result_removed_dot.length);
+      }
+      if (val_origin[0] === "-") {
+        result = "-" + result;
       }
       this.$refs.numberonlyinput.value = result;
     }
@@ -1739,9 +1769,13 @@ export default class CSPGraphBuilder extends Vue {
       this.warning_message = "";
       this.succeed_message = "";
 
-      if (this.selection!.type === "edge") {
-        this.selection = null;
+      if (this.selection) {
+        this.warning_message = "";
+        this.succeed_message = "";
+        this.edge_succeed_message = "";
+        this.edge_warning_message = "";
       }
+
       if (this.first == null) {
         this.first = this.selection as ICSPGraphNode;
         this.edge_succeed_message = "";
