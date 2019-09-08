@@ -46,7 +46,7 @@ export interface ICSPGraphNode extends IGraphNode {
   domain?: number[] | string[] | boolean[];
 }
 
-export type SearchNodeTypes = "search:start" | "search:goal" | "search:normal";
+export type SearchNodeTypes = "search:start" | "search:goal" | "search:regular";
 export interface ISearchGraphNode extends IGraphNode {
   type: SearchNodeTypes;
   /** The node's heuristic value. Zero by default. Should be non-negative. */
@@ -80,7 +80,7 @@ export interface IGraphEdgeJSON {
 export interface IGraph<
   TNode extends IGraphNode = IGraphNode,
   TEdge extends IGraphEdge = IGraphEdge
-  > {
+> {
   nodes: TNode[];
   edges: TEdge[];
 }
@@ -88,7 +88,7 @@ export interface IGraph<
 export interface IGraphJSON<
   TNode extends IGraphNode = IGraphNode,
   TEdge extends IGraphEdgeJSON = IGraphEdgeJSON
-  > {
+> {
   nodes: TNode[];
   edges: TEdge[];
 }
@@ -96,7 +96,7 @@ export interface IGraphJSON<
 export class Graph<
   TNode extends IGraphNode = IGraphNode,
   TEdge extends IGraphEdge = IGraphEdge
-  > implements IGraph<TNode, TEdge> {
+> implements IGraph<TNode, TEdge> {
   /**
    * Converts JSON into an instance of the class Graph.
    * @param json The JSON representation of the graph to convert. This may be modified.
@@ -121,7 +121,6 @@ export class Graph<
 
   public nodes: TNode[];
   public edges: TEdge[];
-  public should_relayout: boolean;
 
   /** A mapping from IDs in the graph to nodes or edges.
    *
@@ -133,7 +132,6 @@ export class Graph<
   constructor(nodes: TNode[] = [], edges: TEdge[] = []) {
     this.nodes = nodes;
     this.edges = edges;
-    this.should_relayout = true;
     this.updateIdMap();
   }
 
@@ -287,8 +285,8 @@ export class Graph<
       if (prevNode != null) {
         // Copy over the styles of the node in the previous graph
         node.styles = prevNode.styles;
-        // node.x = prevNode.x;
-        // node.y = prevNode.y;
+        node.x = prevNode.x;
+        node.y = prevNode.y;
         node.radius = prevNode.radius;
         node.level = prevNode.level;
       }
