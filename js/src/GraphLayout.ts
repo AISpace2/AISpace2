@@ -258,7 +258,7 @@ export function d3TreeLayout(
         n.data.node.x = (n as any).x * layoutParams.width;
         n.data.node.y =
           (n as any).y *
-            (layoutParams.height - heightDivision - heightDivision) +
+          (layoutParams.height - heightDivision - heightDivision) +
           heightDivision;
       });
 
@@ -338,11 +338,11 @@ function scaleNodePositions(
 
     node.x =
       ((layoutParams.width - edgePadding * 2) * (node.x! - minX)) /
-        (maxX - minX) +
+      (maxX - minX) +
       edgePadding;
     node.y =
       ((layoutParams.height - edgePadding * 2) * (node.y! - minY)) /
-        (maxY - minY) +
+      (maxY - minY) +
       edgePadding;
   }
 }

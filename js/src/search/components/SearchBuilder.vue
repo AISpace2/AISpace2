@@ -69,7 +69,7 @@
 
       <div v-if="mode == 'create'">
         <p>
-          <strong>To create variable:</strong> Modify the properties below, then double click on the graph to create.
+          <strong>To create variable:</strong> Set the properties below, then double click on the graph.
           <br />
           <span>
             Node type:
@@ -109,14 +109,8 @@
             <span class="successText">{{succeed_message}}</span>
           </span>
           <br />
-          <strong>To create edge:</strong> Modify the properties below, click on the start node, then click on the end node.
+          <strong>To create edge:</strong> Set the properties below, then click on the start node, then click on the end node.
           <br />
-          <span v-if="first == null || first.type == 'edge'">Select the first node to begin.</span>
-          <span v-else>
-            Source node:
-            <span class="nodeText">{{first.name}}</span>. Select an end
-            node to create an edge.
-          </span>
           <br />
           <label>Edge Name:</label>
           <input
@@ -135,6 +129,11 @@
             @input="trimNonNumeric($event.target.value),temp_e_cost = $event.target.value"
           />
           <br />
+          <span v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')">
+            Source node:
+            <span class="nodeText">{{first.name}}</span>. Select an end
+            node to create an edge, or click on <span class="nodeText">{{first.name}}</span> again to unselect it.
+          </span>
           <span>
             <span class="warningText">{{edge_warning_message}}</span>
             <span class="successText">{{edge_succeed_message}}</span>
@@ -147,7 +146,7 @@
         <br />
         <div v-if="selection">
           <div v-if="selection.type != 'edge'">
-            You select node
+            You selected node
             <span class="nodeText">{{selection.name}}</span>.
             <br />
             <span>
@@ -190,7 +189,7 @@
           </div>
 
           <div v-else>
-            You select edge
+            You selected edge
             <span class="nodeText">{{selection.name}}</span>.
             <br />
             <label>

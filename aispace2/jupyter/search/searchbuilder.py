@@ -22,12 +22,13 @@ class SearchBuilder(DOMWidget):
     _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The explicit search problem that is synced to the frontend.
-    graph = Instance(klass=Search_problem_from_explicit_graph, allow_none=True).tag(sync=True, from_json=json_to_search_problem, to_json=search_problem_to_json)
+    graph = Instance(klass=Search_problem_from_explicit_graph, allow_none=True).tag(
+        sync=True, from_json=json_to_search_problem, to_json=search_problem_to_json)
 
     # True if the visualization should show edge costs.
     show_edge_costs = Bool(True).tag(sync=True)
     # True if a node's heuristic value should be shown.
-    show_node_heuristics = Bool(False).tag(sync=True)
+    show_node_heuristics = Bool(True).tag(sync=True)
     text_size = Integer(12).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
 

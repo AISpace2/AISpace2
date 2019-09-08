@@ -60,8 +60,7 @@
       <BayesToolbar @modechanged="setMode"></BayesToolbar>
       <div v-if="mode == 'create'">
         <p class="builder_output">
-          <strong>To create variable:</strong> Set the name and the domain of the variable below,
-          <br />      and then double click at a position on the canvas where you want the new node to be created.
+          <strong>To create variable:</strong> Set the properties below, then double click on the graph.
           <br />
           <span>
             <label>
@@ -95,7 +94,8 @@
           <br />
           <span v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')">
             Start node:
-            <span class="nodeText">{{first.name}}</span>. Click on the end node to create an edge, or click on <span class="nodeText">{{first.name}}</span> again to unselect it.
+            <span class="nodeText">{{first.name}}</span>. Select an end
+            node to create an edge, or click on <span class="nodeText">{{first.name}}</span> again to unselect it.
           </span>
           <span>
             <span class="warningText">{{edge_warning_message}}</span>
@@ -108,7 +108,7 @@
     <div>
       <div v-if="mode =='select'" v-on:keyup.enter="$refs.btn_select_submit.click()">
         <p class="builder_output">
-          Set the name and the domain of a node by cliking on it.
+          Select a node to modify its properties.
           <br />
         </p>
         <div v-if="selection && (graph.nodes.indexOf(selection) > -1)">
