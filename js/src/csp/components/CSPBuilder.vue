@@ -23,7 +23,7 @@
         ></RoundedRectangleGraphNode>
         <RectangleGraphNode
           v-if="props.node.type === 'csp:constraint'"
-          :text="props.node.name"
+          :text="props.node.name.replace(/'/g, '&quot;')"
           :fill="nodeBackground(props.node, props.hover)"
           :textSize="textSize"
           :hover="props.hover"
@@ -64,7 +64,7 @@
       <CSPToolbar @modechanged="setMode"></CSPToolbar>
       <div v-if="mode == 'create'">
         <p>
-          <strong>To create variable or constraint:</strong> Select a node type, then double click on the canvas to create.
+          <strong>To create variable or constraint:</strong> Select a node type, then double click on the graph to create.
           <br />
           <span>
             <span class="radioInputGroup">
@@ -112,7 +112,7 @@
             </span>
           </span>
           <span v-else-if="create_sub_mode == 'constraint'">
-            <span>Can only set properties of constraint after connected to variable(s).</span>
+            <span>Can only set the properties of the constraint after connected to variable(s).</span>
           </span>
           <br />
           <span>
@@ -127,8 +127,8 @@
           >Select the first node to begin.</span>
           <span v-else>
             Source node:
-            <span class="nodeText">{{first.name}}</span>. Click on an {{getEndNodeType(first)}} as the end node to create an edge,
-            or click on <span class="nodeText">{{first.name}}</span> again to unselect it.
+            <span class="nodeText">{{getNodeType(first)}}</span>. Select an end
+            <span class="nodeText">{{getEndNodeType(first)}}</span> to create an edge.
           </span>
           <br />
           <span>
@@ -180,7 +180,7 @@
       </div>
       <div id="select_constraint" v-if="selection && selection.type == 'csp:constraint'">
         <div v-if="findVariablesConnected(selection).length == 0">
-          <span class="warningText">Can only set properties of constraint after connected to variable(s).</span>
+          <span>Can only set the properties of the constraint after connected to variable(s).</span>
         </div>
         <div v-else>
           <span id="constraint_type_modify">
@@ -188,7 +188,7 @@
               <strong>Constraint Type:</strong>
             </label>
             <span>
-              <label for="show_negation">Negation</label>
+              <label for="show_negation">Show Negation</label>
               <input type="checkbox" id="show_negation" v-model="show_negation" />
             </span>
             <select v-if="!show_negation" v-model="select_constraint_type">
@@ -218,7 +218,7 @@
               <button
                 class="show_new_table_btn"
                 @click="InitialTempTableAssign(selection)"
-              >Apply</button>
+              >Use New Value</button>
             </span>
           </span>
           <br />
@@ -296,7 +296,7 @@ import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNod
 import { prependListener } from "cluster";
 
 type Mode = "create" | "select" | "delete";
-type CreateSubMode = "variable" | "constraint" | "edge";
+type CreateSubMode = "variable" | "constraint";
 
 /**
  * Component to visually construct a CSP graph.
@@ -326,6 +326,7 @@ export default class CSPGraphBuilder extends Vue {
   first: ICSPGraphNode | null = null;
   textSize: number;
   detailLevel: number;
+  /** The sub-mode of the create mode. */
   create_sub_mode: CreateSubMode = "variable";
   isDomainBool: boolean = false;
   temp_v_name: string = "";
@@ -366,6 +367,18 @@ export default class CSPGraphBuilder extends Vue {
     this.mode = mode;
     this.selection = null;
     this.first = null;
+  }
+
+  HandleQuotesinName(name: string) {
+    name.replace("'", "&apos;");
+  }
+
+  getNodeType(node: ICSPGraphNode) {
+    if (node.type === "csp:variable") {
+      return "Variable - " + node.name;
+    } else if (node.type === "csp:constraint") {
+      return "Constraint - " + node.name;
+    }
   }
 
   getEndNodeType(node: ICSPGraphNode) {
@@ -437,7 +450,7 @@ export default class CSPGraphBuilder extends Vue {
       });
 
       this.temp_c_name = this.genNewDefaultNameC();
-      this.succeed_message = "Constraint created.";
+      this.succeed_message = "Constraint node created.";
       this.warning_message = "";
     }
   }
@@ -468,7 +481,7 @@ export default class CSPGraphBuilder extends Vue {
       this.succeed_message = "";
     } else {
       this.warning_message = "";
-      this.succeed_message = "Variable created.";
+      this.succeed_message = "Variable node created.";
     }
     return node_to_be_drawn;
   }
@@ -565,7 +578,7 @@ export default class CSPGraphBuilder extends Vue {
         this.first = null;
         this.selection = null;
         this.edge_warning_message =
-          "Can't create an edge between variables";
+          "Can't create an edge between two variables";
         return;
       }
 
@@ -576,7 +589,7 @@ export default class CSPGraphBuilder extends Vue {
         this.first = null;
         this.selection = null;
         this.edge_warning_message =
-          "Can't create an edge between constraints";
+          "Can't create an edge between two constraints";
         return;
       }
 
@@ -684,7 +697,7 @@ export default class CSPGraphBuilder extends Vue {
         constraint_node!.name = this.genNewDefaultNameC();
 
         this.graph.removeEdge(this.selection);
-        this.succeed_message = "Edge deleted.";
+        this.succeed_message = "Edge removed.";
       } else {
         if (this.selection.type === "csp:variable") {
           // find constraint nodes it is connected to
@@ -702,7 +715,7 @@ export default class CSPGraphBuilder extends Vue {
         }
 
         this.graph.removeNode(this.selection);
-        this.succeed_message = "Node deleted.";
+        this.succeed_message = "Node removed.";
       }
       this.selection = null;
     }
