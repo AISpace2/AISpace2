@@ -185,27 +185,27 @@
         "," +
         this.adjustedY1 +
         "L" +
-        String(this.adjustedX1 + 80) +
+        String(this.adjustedX1 + 60) +
         "," +
-        String(this.adjustedY1 + 80) +
+        String(this.adjustedY1 + 60) +
 
         "M" +
         this.adjustedX1 +
         "," +
         this.adjustedY1 +
         "L" +
-        String(this.adjustedX1 + 80) +
+        String(this.adjustedX1 + 60) +
         "," +
-        String(this.adjustedY1 - 80) +
+        String(this.adjustedY1 - 60) +
 
         "M" +
-        String(this.adjustedX1 + 80) +
+        String(this.adjustedX1 + 60) +
         "," +
-        String(this.adjustedY1 + 80) +
+        String(this.adjustedY1 + 60) +
         "L" +
-        String(this.adjustedX1 + 80) +
+        String(this.adjustedX1 + 60) +
         "," +
-        String(this.adjustedY1 - 80)
+        String(this.adjustedY1 - 60)
       );
       } else return (
         "M" +
