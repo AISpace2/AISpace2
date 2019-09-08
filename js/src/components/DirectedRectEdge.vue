@@ -17,25 +17,26 @@
 
     /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedX1() {
-      return this.pathLength === 0 ? 0 : this.x1;
+      return this.x1;
     }
 
     /** The y-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
     get adjustedY1() {
-      if (this.pathLength === 0) return 0;
       return this.y1;
     }
 
     /** The x-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
     get adjustedX2() {
-      let point = this.intersectPoint();
-      return point ? point.x : this.x2;
+      // let point = this.intersectPoint();
+      // return point ? point.x : this.x2;
+      return this.x2;
     }
 
     /** The y-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
     get adjustedY2() {
-      let point = this.intersectPoint();
-      return point ? point.y : this.y2;
+      // let point = this.intersectPoint();
+      // return point ? point.y : this.y2;
+      return this.y2;
     }
 
     /* Slope of the edge */
