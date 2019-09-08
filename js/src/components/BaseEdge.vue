@@ -118,7 +118,7 @@
     /** The x-coordinate that is the midpoint between the source and target of the adjusted path. */
     get centerX() {
       if(this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2){
-        return this.adjustedX1 + 80;
+        return this.adjustedX1 + 60;
       } else return this.adjustedX1 + (this.adjustedX2 - this.adjustedX1) / 2;
     }
 
