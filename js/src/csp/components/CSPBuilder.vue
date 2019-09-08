@@ -30,7 +30,7 @@
       <span>
         <b>Mode: </b>
       </span>
-      <CSPToolbar @modechanged="setMode"></CSPToolbar>
+      <CSPToolbar @modechanged="setMode" @showPythonCode = "toggleCode"></CSPToolbar>
       <div v-if="mode == 'variable' || mode == 'constraint' ">
         <span>Double click on the graph to create a new {{mode}}.</span>
       </div>
@@ -55,6 +55,9 @@
           <option value="eq">Equal to (=)</option>
           <option value="undefined" v-if="selection.constraint == null">Python Constraint</option>
         </select>
+      </div>
+      <div v-if = "showPythonCode">
+        from aipython.cspProblem import CSP, Constraint, LessThan <br>{{pythonCode}}
       </div>
     </div>
   </div>
@@ -108,6 +111,68 @@ export default class CSPGraphBuilder extends Vue {
   textSize: number;
   detailLevel: number;
 
+  pythonCode : string;
+  showPythonCode:boolean = false;
+
+  /*Toggle the Visibility of the code*/
+  toggleCode(){
+    this.showPythonCode = !this.showPythonCode;
+    this.updateCode();
+  }
+  updateCode(){
+    this.pythonCode = "csp = CSP( "+"domains = {";
+    this.graph.nodes.forEach(node => {
+      if(node.type === "csp:variable"){
+      this.pythonCode += "'"+ node.name + "':{";
+      this.pythonCode += node.domain +"},";
+      }
+    });
+    this.pythonCode += "}, constraints=[";
+
+    this.graph.nodes.forEach(node => {
+      var scope:string[] = [];
+      if(node.type == 'csp:constraint')
+      {
+        //Find the links with the target as this constraint
+        this.graph.edges.forEach(edge => {
+          if(edge.target.id == node.id){
+            var p:ICSPGraphNode;
+            for (let n of this.graph.nodes) {
+              if (n.id == edge.source.id){
+                  p = n;
+                  break;
+              }
+            } 
+            scope.push(p.name);
+          }
+          else if(edge.source.id == node.id){
+             var p:ICSPGraphNode ;
+            for (let n of this.graph.nodes) {
+              if (n.id == edge.target.id){
+                  p = n;
+                  break;
+              }
+            } 
+            scope.push(p.name);
+          }
+        });
+        if(scope.length>0){
+          this.pythonCode += "Constraint((";
+          scope.forEach(s => {
+            this.pythonCode += "'"+s+"',";
+          }); 
+          this.pythonCode+= "),LessThan),";
+        }
+        
+      }
+      
+    });
+    this.pythonCode += "], positions={})";
+
+    console.log(this.pythonCode);
+  }
+
+
   /** Switches to a new mode. */
   setMode(mode: Mode) {
     this.mode = mode;
@@ -136,6 +201,7 @@ export default class CSPGraphBuilder extends Vue {
         constraint: "gt"
       });
     }
+    this.updateCode();
   }
 
   /** Adds a new edge to the graph. */
@@ -161,6 +227,7 @@ export default class CSPGraphBuilder extends Vue {
       this.first = null;
       this.selection = null;
     }
+     this.updateCode();
   }
 
   strokeColour(edge: IGraphEdge) {
@@ -198,6 +265,7 @@ export default class CSPGraphBuilder extends Vue {
       }
       this.selection = null;
     }
+     this.updateCode();
   }
 
   @Watch("selection")

@@ -58,6 +58,8 @@
         <strong>Mode:</strong>
       </span>
       <BayesToolbar @modechanged="setMode"></BayesToolbar>
+      
+
       <div v-if="mode == 'create'">
         <p class="builder_output">
           <strong>To create variable:</strong> Set the name and the domain of the variable below,
@@ -272,6 +274,17 @@
         </div>
       </div>
     </div>
+    <div>
+      <div class = "ShowPycode">
+      <button id="showPythonCode" class="btn btn-default" @click="pyCode()">Show Python Code</button>
+      </div>
+      <div v-if = "showPythonCode">
+      from aipython.probGraphicalModels import Belief_network
+<br>from aipython.probVariables import Variable<br>
+from aipython.probFactors import Prob <br>
+      <pre>{{pythonCode}}</pre>
+          </div>
+    </div>
   </div>
 </template>
 
@@ -332,6 +345,8 @@ export default class BayesGraphBuilder extends Vue {
   edge_warning_message: string = "";
   temp_node_evidences: [];
   temp: string;
+  showPythonCode: boolean = false;
+  pythonCode: string = "";
   /** MAX_DIGITS is to solve the problem of float type number calculation in js,
    * to get precise result, we use integer calculation instead,
    * for each prob, we multiply it with MAX_DIGITS and round it to an integer,
@@ -794,6 +809,7 @@ export default class BayesGraphBuilder extends Vue {
     this.first = null;
     this.selection = null;
     this.cleanEdgeMessage();
+    this.updatePythonCode();
   }
 
   /** Adds a new edge to the graph. */
@@ -834,6 +850,7 @@ export default class BayesGraphBuilder extends Vue {
     this.selection = null;
     this.warning_message = "";
     this.succeed_message = "";
+    this.updatePythonCode();
   }
 
   /** Check whether the edge can be created */
@@ -996,6 +1013,7 @@ export default class BayesGraphBuilder extends Vue {
       }
       this.selection = null;
     }
+    this.updatePythonCode();
   }
 
   /** Remove the deleted node from all children's parents lists, and update children's evidences*/
@@ -1024,6 +1042,7 @@ export default class BayesGraphBuilder extends Vue {
         );
       }
     });
+    this.updatePythonCode();
   }
 
   /** Handle the children @param node's evidences when a parent is deleted
@@ -1466,7 +1485,50 @@ export default class BayesGraphBuilder extends Vue {
       this.succeed_message = "";
     }
   }
+  /* Toggle the Visability of Python Code*/
+  pyCode(){
+    this.showPythonCode = !this.showPythonCode;
+    this.updatePythonCode();
+  }
+
+  /*Update the Python Code*/
+  updatePythonCode(){
+    
+    var variables:string[] = [];
+    var factors:string[] = [];
+    var variablenames:string[] = [];
+    var factornames:string[] = [];
+    var positions:string[] = [];
+
+
+    for (var node of this.graph.nodes){
+      var domains:string[] = [];
+      var name:string = "";
+      var parents = node.parents;
+      var prob = node.evidences;
+      name = node.name;
+      domains = node.domain;
+      variablenames.push(name);
+
+      //Define Variables
+      variables.push(`${name} = Variable('${name}', ['${domains.join("','")}'])`);
+      
+      //Create factor name
+      var factorname: string = `f_${name.toLowerCase()}`;
+      factornames.push(factorname);
+
+      //Build Factors
+      factors.push(`${factorname} = Prob(${name},[${parents}],[${prob}])`);
+
+      //Record Node Positions
+      positions.push(`'${name}':(${node.x},${node.y})`);
+    }
+    this.pythonCode = `${variables.join("\n")}\n${factors.join("\n")}\nbnproblem = Belief_network([${variablenames}],[${factornames}],positions = {${positions}})`
+
+  }
 }
+  
+  
 </script>
 
 <style scoped>

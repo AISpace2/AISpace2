@@ -1,6 +1,7 @@
 from aipython.probGraphicalModels import Belief_network
 from aipython.probFactors import Prob
 from aipython.probVariables import Variable
+from string import Template
 
 def bayes_problem_to_json(bayesNet, widget_model=None):
     """Converts a Python Belief_network instance to a dictionary representable as JSON.
@@ -106,13 +107,13 @@ def bayes_problem_to_python_code(problem):
             A string of Python code that, when executed, recinstructs to the bayes problem given.
     """
     var_strings = []
-    for variable in problem.vars:
+    for variable in problem.variables:
         name = variable.name
         domain = variable.domain
         var_strings.append("Variable({},{})".format(name, domain))
 
     prob_strings = []
-    for prob in problem.listOfProb:
+    for prob in problem.factors:
         child = prob.child
         parents = prob.parents
         cpt = prob.cpt
@@ -129,5 +130,5 @@ bayes_problem = Belief_network(
 
     return Template(template).substitute(
         vars=', '.join(var_strings),
-        prob=', '.join(prob_strings),
+        probs=', '.join(prob_strings),
         positions=positions)

@@ -8,6 +8,7 @@
         <label for="two">Constraint</label>
         <input type="radio" id="three" value="edge" v-model="picked">
         <label for="three">Edge</label>
+        <button id="showPythonCode" class="btn btn-default" @click="$emit(pyCode())">Show Python Code</button>
     </span>
 </template>
 
@@ -28,6 +29,10 @@ export default class CSPToolbar extends Vue {
   @Watch("picked")
   onPickedChanged() {
     this.$emit("modechanged", this.picked);
+  }
+
+  pyCode(){
+    this.$emit("showPythonCode");
   }
 }
 
