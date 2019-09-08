@@ -177,7 +177,7 @@
 
     /** The computed path of the line between the source and target. */
     get path() {
-      if(this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2)
+      if (this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2)
       {
         return (
         "M" +

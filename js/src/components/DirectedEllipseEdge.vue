@@ -25,28 +25,24 @@ export default class DirectedEllipseEdge extends BaseEdge {
 
   /** The x-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
   get adjustedX1() {
-    //if (this.pathLength === 0) return 0;
     let offsetX = this.deltaX * this.sourceRx / this.pathLength;
     return this.x1 + offsetX;
   }
 
   /** The y-coordinate to place the start of the path. It is adjusted to be on the edge of the node. */
   get adjustedY1() {
-    //if (this.pathLength === 0) return 0;
     let offsetY = this.deltaY * this.sourceRy / this.pathLength;
     return this.y1 + offsetY;
   }
 
   /** The x-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
   get adjustedX2() {
-    //if (this.pathLength === 0) return 0;
     let offsetX = this.deltaX * this.targetRx / this.pathLength;
     return this.x2 - offsetX;
   }
 
   /** The y-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
   get adjustedY2() {
-    //if (this.pathLength === 0) return 0;
     let offsetY = this.deltaY * this.targetRy / this.pathLength;
     return this.y2 - offsetY;
   }
