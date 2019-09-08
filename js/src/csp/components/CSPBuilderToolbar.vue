@@ -1,16 +1,12 @@
 <template>
   <span>
     <span class="radioInputGroup">
-      <input type="radio" id="one" value="create" v-model="picked" />
-      <label for="one">Create</label>
+      <input type="radio" id="zero" value="create" v-model="picked" />
+      <label for="zero">Create</label>
     </span>
     <span class="radioInputGroup">
-      <input type="radio" id="zero" value="select" v-model="picked" />
-      <label for="zero">Select</label>
-    </span>
-    <span class="radioInputGroup">
-      <input type="radio" id="three" value="set_prob" v-model="picked" />
-      <label for="three">Set Probability Table</label>
+      <input type="radio" id="one" value="select" v-model="picked" />
+      <label for="one">Select</label>
     </span>
     <span class="radioInputGroup">
       <input type="radio" id="two" value="delete" v-model="picked" />
@@ -24,13 +20,13 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 
-type Mode = "select" | "create" | "delete" | "set_prob";
+type Mode = "create" | "select" | "delete";
 
 /**
  * Toolbar to switch between modes while creating a CSP.
  */
 @Component
-export default class BayesToolbar extends Vue {
+export default class CSPToolbar extends Vue {
   picked: Mode = "create";
 
   @Watch("picked")
@@ -39,3 +35,6 @@ export default class BayesToolbar extends Vue {
   }
 }
 </script>
+
+<style scoped>
+</style>
