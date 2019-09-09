@@ -151,7 +151,7 @@
             </label>
             <input
               type="text"
-              :value="selection ? selection.name : null"
+              :value="temp_v_name"
               @focus="$event.target.select()"
               @input="temp_v_name = $event.target.value"
             />
@@ -162,7 +162,7 @@
               type="text"
               style="width: 150px;"
               @focus="$event.target.select()"
-              :value="selection ? selection.domain : null"
+              :value="temp_v_domain"
               @input="temp_v_domain = $event.target.value"
             />
             (use comma to separate values)
@@ -224,7 +224,7 @@
           <br />
           <p class="constraint_name_readable" ref="constraint_name_readable">
             <span class="nodeText">
-              <strong>{{NegateConstraintToReadableText(selection)}}</strong>
+              <strong>{{NegateConstraintToReadableText(selection)}}{{selection.constraintName}}</strong>
               <button
                 v-if="findVariablesConnected(selection).length === 2"
                 id="reverse_order"
@@ -361,6 +361,18 @@ export default class CSPGraphBuilder extends Vue {
   created() {
     this.temp_v_name = this.genNewDefaultNameV();
     this.temp_v_domain = "1, 2, 3";
+    this.AddConstraintNameToAllNodes();
+  }
+
+  AddConstraintNameToAllNodes() {
+    this.graph.nodes.forEach(n => {
+      if (n.type === "csp:constraint") {
+        this.selectboxDefault(n);
+      }
+    });
+    this.value_in_parentheses = null;
+    this.value_in_parentheses_temp = null;
+    this.select_constraint_type = "";
   }
 
   setMode(mode: Mode) {
@@ -447,6 +459,7 @@ export default class CSPGraphBuilder extends Vue {
         name: this.temp_c_name,
         x,
         y,
+        constraintName: "",
         type: "csp:constraint"
       });
 
@@ -496,26 +509,32 @@ export default class CSPGraphBuilder extends Vue {
     if (name === null || name.match(/^\s*$/)) {
       this.warning_message = "Name not valid.";
       this.succeed_message = "";
-    } else if (this.NameExists(name) && this.selection.name !== name) {
+      return;
+    }
+
+    if (this.NameExists(name)) {
       this.warning_message = "Name already exists.";
       this.succeed_message = "";
-    } else if (
-      domain === null ||
-      domain === "" ||
-      !domain.match(/^.+(,(\s)*.*)*$/)
-    ) {
+      return;
+    }
+
+    if (domain === null || domain === "" || !domain.match(/^.+(,(\s)*.*)*$/)) {
       this.warning_message = "Domain not valid.";
       this.succeed_message = "";
-    } else if (this.checkDomainDuplicates(domain)) {
+      return;
+    }
+
+    if (this.checkDomainDuplicates(domain)) {
       this.warning_message = "Domain contains duplicated values.";
       this.succeed_message = "";
-    } else {
-      this.selection!.name = name.trimLeft().trimRight();
-      var newdomain = this.handleDomain(domain);
-      this.selection!.domain = newdomain;
-      this.warning_message = "";
-      this.succeed_message = "Node updated.";
+      return;
     }
+
+    this.selection!.name = name.trimLeft().trimRight();
+    var newdomain = this.handleDomain(domain);
+    this.selection!.domain = newdomain;
+    this.warning_message = "";
+    this.succeed_message = "Node updated.";
   }
 
   /** Check whether the given node name exists */
@@ -530,7 +549,6 @@ export default class CSPGraphBuilder extends Vue {
   }
 
   /** This will handle domain:
-   * - If domain has duplicated value, send a warning message
    * - If domain has white-spaces at the beginning or the end, trim the domain
    * - Remove any empty string
    */
@@ -617,6 +635,7 @@ export default class CSPGraphBuilder extends Vue {
       }
 
       constraint_node!.name = this.genNewDefaultNameC();
+      constraint_node!.constraintName = "";
 
       this.edge_succeed_message = "Edge created.";
 
@@ -717,6 +736,7 @@ export default class CSPGraphBuilder extends Vue {
           constraint_node = this.selection.target as ICSPGraphNode;
         }
         constraint_node!.name = this.genNewDefaultNameC();
+        constraint_node!.constraintName = "";
 
         this.graph.removeEdge(this.selection);
         this.succeed_message = "Edge removed.";
@@ -733,6 +753,7 @@ export default class CSPGraphBuilder extends Vue {
           });
           if (constraint_node) {
             constraint_node!.name = this.genNewDefaultNameC();
+            constraint_node!.constraintName = "";
           }
         }
 
@@ -1079,6 +1100,14 @@ export default class CSPGraphBuilder extends Vue {
       }
       this.select_constraint_type = earliest_appeared;
     }
+
+    // Used for AddConstraintNameToAllNodes()
+    var constraintName = this.select_constraint_type.slice(0);
+    var regex = /val|num/;
+    node.constraintName = constraintName.replace(
+      regex,
+      this.value_in_parentheses!
+    );
   }
 
   /** Check the type of domain:
@@ -1738,6 +1767,8 @@ export default class CSPGraphBuilder extends Vue {
       var list = connected_v.map(v => `'${v.name}'`);
       node.name = prefix + "(" + list.join(", ") + ")";
     }
+
+    node.constraintName = prefix;
   }
 
   // Convert temp table to node.combinations_for_true
@@ -1789,11 +1820,11 @@ export default class CSPGraphBuilder extends Vue {
       this.warning_message = "";
       this.succeed_message = "";
 
-      if (this.selection!.type === "edge") {
+      if (this.selection && this.selection.type === "edge") {
         this.selection = null;
       }
 
-      if (this.selection!.type === "csp:constraint") {
+      if (this.selection && this.selection.type === "csp:constraint") {
         if (
           this.findVariablesConnected(this.selection! as ICSPGraphNode).length >
           0
@@ -1802,9 +1833,9 @@ export default class CSPGraphBuilder extends Vue {
           this.InitialTempTableAssign(this.selection as ICSPGraphNode);
         }
       }
-      if (this.selection!.type === "csp:variable") {
-        this.temp_v_name = this.selection!.name!;
-        this.temp_v_domain = this.selection!.domain!;
+      if (this.selection && this.selection.type === "csp:variable") {
+        this.temp_v_name = this.selection.name;
+        this.temp_v_domain = this.selection.domain!.join(",");
       }
 
       if (
