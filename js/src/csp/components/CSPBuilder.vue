@@ -140,7 +140,6 @@
     </div>
 
     <div v-if="mode == 'select'">
-      <p>{{graph.nodes}}</p>
       <div id="select_variable" v-if="selection && selection.type == 'csp:variable'">
         <p class="builder_output">
           You selected variable node
@@ -225,7 +224,7 @@
           <br />
           <p class="constraint_name_readable" ref="constraint_name_readable">
             <span class="nodeText">
-              <strong>{{NegateConstraintToReadableText(selection)}}{{selection.constraintName}}</strong>
+              <strong>{{NegateConstraintToReadableText(selection)}}</strong>
               <button
                 v-if="findVariablesConnected(selection).length === 2"
                 id="reverse_order"
