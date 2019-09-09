@@ -140,6 +140,7 @@
     </div>
 
     <div v-if="mode == 'select'">
+      <p>{{graph.nodes}}</p>
       <div id="select_variable" v-if="selection && selection.type == 'csp:variable'">
         <p class="builder_output">
           You selected variable node
@@ -1108,6 +1109,41 @@ export default class CSPGraphBuilder extends Vue {
       regex,
       this.value_in_parentheses!
     );
+
+    if (constraintName === "Custom") {
+      node.constraintName = this.trueCombinations(
+        connected_variables,
+        node.combinations_for_true
+      );
+    }
+  }
+
+  /** If the constraint node has a type of custom,
+   * change the constraintName field to the python code of
+   * all true combinations.*/
+  trueCombinations(nodes: ICSPGraphNode[], combinations: Object[]) {
+    var acc: string[] = [];
+
+    var vars: string[] = [];
+    nodes.forEach((n, index) => {
+      vars.push("var" + index);
+    });
+
+    combinations.forEach(c => {
+      var single_c: string[] = [];
+      nodes.forEach((n, index) => {
+        var type = this.checkDomainType(n.domain);
+        if (type === "string") {
+          single_c.push(vars[index] + " == '" + c[n.name] + "'");
+        } else {
+          single_c.push(vars[index] + " == " + c[n.name]);
+        }
+      });
+      acc.push(single_c.join(" and "));
+    });
+
+    var result = "lambda " + vars.join(", ") + ": (" + acc.join(") or (") + ")";
+    return result;
   }
 
   /** Check the type of domain:
@@ -1769,6 +1805,12 @@ export default class CSPGraphBuilder extends Vue {
     }
 
     node.constraintName = prefix;
+    if (node.constraintName === "Custom") {
+      node.constraintName = this.trueCombinations(
+        connected_v,
+        node.combinations_for_true
+      );
+    }
   }
 
   // Convert temp table to node.combinations_for_true

@@ -8,6 +8,12 @@ from string import Template
 
 from aipython.cspProblem import CSP, Constraint
 
+import aipython.cspProblem
+
+import re
+
+import ast
+
 
 def csp_to_json(csp, widget_model=None):
     """Converts a Python CSP instance to a dictionary representable as JSON.
@@ -140,7 +146,9 @@ def json_to_csp(graph_json, widget_model=None):
 
     for node in graph_json['nodes']:
         scope = []
+        constraintName = ''
         if node['type'] == 'csp:constraint':
+            constraintName = node['constraintName']
             # Find the links with the target as this constraint
             for link in graph_json['edges']:
                 if link['target'] == node['id']:
@@ -153,9 +161,12 @@ def json_to_csp(graph_json, widget_model=None):
                     scope.append(source_node['name'])
 
             if scope:
-                constraints.append(Constraint(tuple(scope), lt))
+                c = Constraint(tuple(scope), lt)
+                c.constraintName = constraintName
+                constraints.append(c)
 
-    positions = {node['name']: (int(node['x']), int(node['y'])) for node in graph_json['nodes']}
+    positions = {node['name']: (int(node['x']), int(node['y']))
+                 for node in graph_json['nodes']}
 
     return CSP(domains, constraints, positions)
 
@@ -180,7 +191,7 @@ def csp_to_python_code(csp, need_positions=False):
     constraint_strings = []
     for constraint in csp.constraints:
         scope = constraint.scope
-        name = constraint.condition.__name__
+        name = constraint.constraintName
         constraint_strings.append("Constraint({}, {})".format(scope, name))
     positions = csp.positions if need_positions else {}
 
