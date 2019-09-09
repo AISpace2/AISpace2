@@ -8,12 +8,6 @@ from string import Template
 
 from aipython.cspProblem import CSP, Constraint
 
-import aipython.cspProblem
-
-import re
-
-import ast
-
 
 def csp_to_json(csp, widget_model=None):
     """Converts a Python CSP instance to a dictionary representable as JSON.
