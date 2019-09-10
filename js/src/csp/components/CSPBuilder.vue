@@ -23,7 +23,7 @@
         ></RoundedRectangleGraphNode>
         <RectangleGraphNode
           v-if="props.node.type === 'csp:constraint'"
-          :text="props.node.name.replace(/'/g, '&quot;')"
+          :text="props.node.name"
           :fill="nodeBackground(props.node, props.hover)"
           :textSize="textSize"
           :hover="props.hover"
@@ -469,6 +469,7 @@ export default class CSPGraphBuilder extends Vue {
         x,
         y,
         constraintName: "",
+        combinations_for_true: [],
         type: "csp:constraint"
       });
 
@@ -636,15 +637,12 @@ export default class CSPGraphBuilder extends Vue {
         name: "edge1"
       });
 
-      var constraint_node: ICSPGraphNode;
-      if (this.first.type === "csp:constraint") {
-        constraint_node = this.first;
-      } else if (this.selection.type === "csp:constraint") {
+      var constraint_node: ICSPGraphNode = this.first;
+      if (this.selection.type === "csp:constraint") {
         constraint_node = this.selection as ICSPGraphNode;
       }
 
-      this.nameChangeOnDeletionOrAddition(constraint_node!);
-      constraint_node!.constraintName = "";
+      this.nameChangeOnDeletionOrAddition(constraint_node);
 
       this.edge_succeed_message = "Edge created.";
 
@@ -747,7 +745,6 @@ export default class CSPGraphBuilder extends Vue {
         this.graph.removeEdge(this.selection);
 
         this.nameChangeOnDeletionOrAddition(constraint_node!);
-        constraint_node!.constraintName = "";
 
         this.succeed_message = "Edge removed.";
       } else {
@@ -767,9 +764,10 @@ export default class CSPGraphBuilder extends Vue {
           if (constraint_nodes.length > 0) {
             constraint_nodes.forEach(cn => {
               this.nameChangeOnDeletionOrAddition(cn);
-              cn.constraintName = "";
             });
           }
+        } else {
+          this.graph.removeNode(this.selection);
         }
 
         this.succeed_message = "Node removed.";
@@ -1097,7 +1095,7 @@ export default class CSPGraphBuilder extends Vue {
 
           if (temp[0] === "'") {
             // if the value in side the parentheses is a string:
-            this.value_in_parentheses = temp.substring(1, temp.length);
+            this.value_in_parentheses = temp.substring(1, temp.length - 1);
           } else {
             // if the value in side the parentheses is a number:
             this.value_in_parentheses = temp;
@@ -1118,10 +1116,20 @@ export default class CSPGraphBuilder extends Vue {
     // Used for AddConstraintNameToAllNodes()
     var constraintName = this.select_constraint_type.slice(0);
     var regex = /val|num/;
-    node.constraintName = constraintName.replace(
-      regex,
-      this.value_in_parentheses!
-    );
+    if (
+      constraintName === "Equals(val)" &&
+      this.checkEqualsType(node) === "string"
+    ) {
+      node.constraintName = constraintName.replace(
+        regex,
+        "'" + this.value_in_parentheses! + "'"
+      );
+    } else {
+      node.constraintName = constraintName.replace(
+        regex,
+        this.value_in_parentheses!
+      );
+    }
 
     if (constraintName === "Custom") {
       node.constraintName = this.trueCombinations(
@@ -1129,6 +1137,24 @@ export default class CSPGraphBuilder extends Vue {
         node.combinations_for_true
       );
     }
+  }
+
+  /**Check whether Equal(val) is for strings or numbers.*/
+  checkEqualsType(node: ICSPGraphNode) {
+    if (node.type !== "csp:constraint") {
+      return;
+    }
+    var connected_v = this.findVariablesConnected(node);
+    var type_of_equal = "number";
+
+    // in actual situation there will be only one variable connected to constraint Equals(val)
+    connected_v.forEach(v => {
+      if (this.checkDomainType(v.domain!) !== "number") {
+        type_of_equal = "string";
+        return;
+      }
+    });
+    return type_of_equal;
   }
 
   /** If the constraint node has a type of custom,
@@ -1165,7 +1191,7 @@ export default class CSPGraphBuilder extends Vue {
    *    - if all strings are numeric, return "number";
    *    - else return "string";
    */
-  checkDomainType(domain: string[] | boolean[]) {
+  checkDomainType(domain: any[]) {
     if (typeof domain[0] === "boolean") {
       return "boolean";
     } else {
@@ -1176,8 +1202,9 @@ export default class CSPGraphBuilder extends Vue {
       });
       var type = "number";
       domain.forEach(d => {
-        if (!(d.match(/^\.\d+$/) || d.match(/^\d+\.?\d*$/))) {
+        if (isNaN(d)) {
           type = "string";
+          return;
         }
       });
       return type;
@@ -1296,14 +1323,24 @@ export default class CSPGraphBuilder extends Vue {
 
   InitialTempTableAssign(node: ICSPGraphNode) {
     var prev_val_in_parentheses = this.value_in_parentheses;
+    var constraints_need_input = [
+      "Equals(val)",
+      "LargerThan(num)",
+      "LessThan(num)",
+      "NOT(Equals(val))",
+      "NOT(LargerThan(num))",
+      "NOT(LessThan(num))"
+    ];
 
     if (this.value_in_parentheses_temp !== null) {
       this.value_in_parentheses = this.value_in_parentheses_temp;
     }
 
     if (
-      !this.value_in_parentheses ||
-      this.value_in_parentheses.match(/^\s*$/)
+      (!this.value_in_parentheses ||
+        this.value_in_parentheses.match(/^\s*$/)) &&
+      constraints_need_input.indexOf(this.select_constraint_type) > -1 &&
+      this.mode === "select"
     ) {
       this.value_in_parentheses = prev_val_in_parentheses;
       this.succeed_message = "";
@@ -1818,10 +1855,20 @@ export default class CSPGraphBuilder extends Vue {
     ];
     if (constraint_types1.indexOf(this.select_constraint_type) > -1) {
       var regex = /val|num/;
-      prefix = this.select_constraint_type.replace(
-        regex,
-        this.value_in_parentheses!
-      );
+      if (
+        this.select_constraint_type === "Equals(val)" &&
+        this.checkEqualsType(node) === "string"
+      ) {
+        prefix = this.select_constraint_type.replace(
+          regex,
+          "'" + this.value_in_parentheses! + "'"
+        );
+      } else {
+        prefix = this.select_constraint_type.replace(
+          regex,
+          this.value_in_parentheses!
+        );
+      }
     }
 
     if (connected_v.length === 1) {
@@ -1847,16 +1894,32 @@ export default class CSPGraphBuilder extends Vue {
     var connected_v = this.findVariablesConnected(node);
     if (connected_v.length === 0) {
       node.name = this.genNewDefaultNameC();
+      node.combinations_for_true = [];
       return;
     }
     var defaultACT = this.getACT(node)![0];
     if (connected_v.length === 1) {
-      node.name =
-        defaultACT.replace("num", "0") + "('" + connected_v[0].name + "',)";
+      if (
+        defaultACT === "Equals(val)" &&
+        this.checkEqualsType(node) === "string"
+      ) {
+        node.name =
+          defaultACT.replace("val", "'0'") + "('" + connected_v[0].name + "',)";
+      } else {
+        node.name =
+          defaultACT.replace("num", "0").replace("val", "0") +
+          "('" +
+          connected_v[0].name +
+          "',)";
+      }
     } else {
       var list = connected_v.map(v => `'${v.name}'`);
       node.name = defaultACT + "(" + list.join(", ") + ")";
     }
+
+    this.selectboxDefault(node);
+    this.InitialTempTableAssign(node);
+    this.dicTempTable(node);
   }
 
   // Convert temp table to node.combinations_for_true
@@ -1878,6 +1941,12 @@ export default class CSPGraphBuilder extends Vue {
     });
 
     node.combinations_for_true = combinations_for_true;
+    if (this.select_constraint_type === "Custom") {
+      node.constraintName = this.trueCombinations(
+        connected_v,
+        node.combinations_for_true
+      );
+    }
   }
 
   UpdateConstraintNode(node: ICSPGraphNode) {
