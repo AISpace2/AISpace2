@@ -2,9 +2,10 @@
 Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP)
 and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 """
+
 from string import Template
 
-from aipython.cspProblem import CSP, Constraint
+from aipython.cspProblem import CSP, Constraint, meet_at, TRUE, FALSE, LessThan, Equals, GreaterThan, IsTrue, IsFalse, AND, OR, IMPLIES, XOR, NOT
 
 
 def csp_to_json(csp, widget_model=None):
@@ -153,7 +154,7 @@ def json_to_csp(graph_json, widget_model=None):
                     scope.append(source_node['name'])
 
             if scope:
-                c = Constraint(tuple(scope), lt)
+                c = Constraint(tuple(scope), LessThan)
                 c.constraintName = constraintName
                 constraints.append(c)
 
@@ -187,7 +188,7 @@ def csp_to_python_code(csp, need_positions=False):
         constraint_strings.append("Constraint({}, {})".format(scope, name))
     positions = csp.positions if need_positions else {}
 
-    template = """from aipython.cspProblem import CSP, Constraint\n
+    template = """from aipython.cspProblem import CSP, Constraint, meet_at, TRUE, FALSE, LessThan, Equals, GreaterThan, IsTrue, IsFalse, AND, OR, IMPLIES, XOR, NOT\n
 csp = CSP(
     domains=$domains,
     constraints=[$constraints],
