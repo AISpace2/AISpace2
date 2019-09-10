@@ -22,7 +22,8 @@ class BayesBuilder(DOMWidget):
     _model_module_version = Unicode(__version__).tag(sync=True)
 
     # The Bayes problem that is synced as a graph to the frontend.
-    graph = Instance(klass=Belief_network, allow_none=True).tag(sync=True, from_json=json_to_bayes_problem, to_json=bayes_problem_to_json)
+    graph = Instance(klass=Belief_network, allow_none=True).tag(
+        sync=True, from_json=json_to_bayes_problem, to_json=bayes_problem_to_json)
     text_size = Integer(12).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
     decimal_place = Integer(2).tag(sync=True)
@@ -31,7 +32,7 @@ class BayesBuilder(DOMWidget):
         super().__init__()
         self.graph = bayes_problem
 
-    def py_code(self):
+    def py_code(self, need_positions=False):
         """Prints the bayes problem represented by Python code.
         """
-        print(bayes_problem_to_python_code(self.graph))
+        print(bayes_problem_to_python_code(self.graph, need_positions))

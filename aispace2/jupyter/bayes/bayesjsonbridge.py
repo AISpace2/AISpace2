@@ -2,6 +2,9 @@ from aipython.probGraphicalModels import Belief_network
 from aipython.probFactors import Prob
 from aipython.probVariables import Variable
 
+from string import Template
+
+
 def bayes_problem_to_json(bayesNet, widget_model=None):
     """Converts a Python Belief_network instance to a dictionary representable as JSON.
 
@@ -20,16 +23,16 @@ def bayes_problem_to_json(bayesNet, widget_model=None):
     def parseNode(variables, factors):
         nodes = []
         for var in variables:
-           nodes.append({
+            nodes.append({
                 'id': str(hash(var.name)),
                 'name': var.name,
                 'domain': var.domain,
                 'parents': [],
                 'evidences': []
-           })
-           if var.name in bayesNet.positions:
-               nodes[-1]['x'] = bayesNet.positions[var.name][0]
-               nodes[-1]['y'] = bayesNet.positions[var.name][1]
+            })
+            if var.name in bayesNet.positions:
+                nodes[-1]['x'] = bayesNet.positions[var.name][0]
+                nodes[-1]['y'] = bayesNet.positions[var.name][1]
 
         nodesMap = {node["name"]: index for index, node in enumerate(nodes)}
 
@@ -52,7 +55,7 @@ def bayes_problem_to_json(bayesNet, widget_model=None):
         for prob in factors:
             for parent in prob.parents:
                 edge = {
-                    #'name': prob.child.name,
+                    # 'name': prob.child.name,
                     'source': str(hash(parent.name)),
                     'target': str(hash(prob.child.name)),
                     'id': str(hash(parent.name+prob.child.name))
@@ -69,11 +72,14 @@ def bayes_problem_to_json(bayesNet, widget_model=None):
 
     return bayes
 
+
 def json_to_bayes_problem(json, widget_model=None):
     if not json:
         return None
 
-    listOfVars = [Variable(var["name"], var["domain"]) for var in json["nodes"]]
+    listOfVars = [Variable(var["name"], var["domain"])
+                  for var in json["nodes"]]
+    positions = {}
 
     # extra data for easy name to Variable object search for Probability
     dictionary = [{var.name: var} for var in listOfVars]
@@ -83,10 +89,12 @@ def json_to_bayes_problem(json, widget_model=None):
         primaryObj = dictionary[node["name"]]
         parentsObj = [dictionary[name] for name in node["parents"]]
         listOfProb.append(Prob(primaryObj, parentsObj, node["evidences"]))
+        positions[node['name']] = (int(node['x']), int(node['y']))
 
-    return Belief_network(listOfVars, listOfProb)
+    return Belief_network(listOfVars, listOfProb, positions)
 
-def bayes_problem_to_python_code(problem):
+
+def bayes_problem_to_python_code(problem, need_positions=False):
     """Converts the JSON representation of a Belief_network into Python code.
     Example:
         ::
@@ -106,18 +114,18 @@ def bayes_problem_to_python_code(problem):
             A string of Python code that, when executed, recinstructs to the bayes problem given.
     """
     var_strings = []
-    for variable in problem.vars:
+    for variable in problem.variables:
         name = variable.name
         domain = variable.domain
         var_strings.append("Variable({},{})".format(name, domain))
 
     prob_strings = []
-    for prob in problem.listOfProb:
+    for prob in problem.factors:
         child = prob.child
         parents = prob.parents
         cpt = prob.cpt
         prob_strings.append("Prob({},{},{})".format(child, parents, cpt))
-    positions = problem.positions
+    positions = problem.positions if need_positions else {}
 
     template = """from aipython.probGraphicalModels.Belief_network import Belief_network
 from aipython.probVariables import Variable
@@ -129,5 +137,5 @@ bayes_problem = Belief_network(
 
     return Template(template).substitute(
         vars=', '.join(var_strings),
-        prob=', '.join(prob_strings),
+        probs=', '.join(prob_strings),
         positions=positions)
