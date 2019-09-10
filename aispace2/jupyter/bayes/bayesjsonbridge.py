@@ -117,14 +117,16 @@ def bayes_problem_to_python_code(problem, need_positions=False):
     for variable in problem.variables:
         name = variable.name
         domain = variable.domain
-        var_strings.append("Variable({},{})".format(name, domain))
+        var_strings.append("{} = Variable({},{})".format(
+            name, "'" + name + "'", domain))
 
     prob_strings = []
     for prob in problem.factors:
-        child = prob.child
-        parents = prob.parents
+        child = prob.child.name
+        parents = [p.name for p in prob.parents]
         cpt = prob.cpt
-        prob_strings.append("Prob({},{},{})".format(child, parents, cpt))
+        prob_strings.append("Prob({},{},{})".format(
+            child, parents, cpt).replace("'", ""))
     positions = problem.positions if need_positions else {}
 
     template = """from aipython.probGraphicalModels.Belief_network import Belief_network
