@@ -81,7 +81,7 @@ def json_to_bayes_problem(json, widget_model=None):
                   for var in json["nodes"]]
 
     # extra data for easy name to Variable object search for Probability
-    dictionary = [{var.name: var} for var in listOfVars]
+    dictionary = {var.name: var for var in listOfVars}
     listOfProb = []
 
     for node in json["nodes"]:
