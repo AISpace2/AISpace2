@@ -79,7 +79,6 @@ def json_to_bayes_problem(json, widget_model=None):
 
     listOfVars = [Variable(var["name"], var["domain"])
                   for var in json["nodes"]]
-    positions = {}
 
     # extra data for easy name to Variable object search for Probability
     dictionary = [{var.name: var} for var in listOfVars]
@@ -89,7 +88,9 @@ def json_to_bayes_problem(json, widget_model=None):
         primaryObj = dictionary[node["name"]]
         parentsObj = [dictionary[name] for name in node["parents"]]
         listOfProb.append(Prob(primaryObj, parentsObj, node["evidences"]))
-        positions[node['name']] = (int(node['x']), int(node['y']))
+
+    positions = {node['name']: (int(node['x']), int(node['y']))
+                 for node in json['nodes']}
 
     return Belief_network(listOfVars, listOfProb, positions)
 
@@ -113,31 +114,49 @@ def bayes_problem_to_python_code(problem, need_positions=False):
         (string):
             A string of Python code that, when executed, recinstructs to the bayes problem given.
     """
+
+    dictionary = {}
+
     var_strings = []
-    for variable in problem.variables:
-        name = variable.name
+    var_name_strings = []
+    for index, variable in enumerate(problem.variables):
+        name = "var" + str(index)
+        dictionary[variable.name] = name
+        var_name_strings.append(name)
+        name_string = variable.name
         domain = variable.domain
         var_strings.append("{} = Variable({},{})".format(
-            name, "'" + name + "'", domain))
+            name, "'" + name_string + "'", domain))
 
     prob_strings = []
-    for prob in problem.factors:
-        child = prob.child.name
-        parents = [p.name for p in prob.parents]
+    prob_name_strings = []
+    for index, prob in enumerate(problem.factors):
+        name = "f" + str(index)
+        prob_name_strings.append(name)
+        child_name = dictionary[prob.child.name]
+        parents_names = [dictionary[p.name] for p in prob.parents]
         cpt = prob.cpt
-        prob_strings.append("Prob({},{},{})".format(
-            child, parents, cpt).replace("'", ""))
+        prob_strings.append("{} = Prob({},{},{})".format(
+            name, child_name, parents_names, cpt).replace("'", ""))
+
     positions = problem.positions if need_positions else {}
 
     template = """from aipython.probGraphicalModels.Belief_network import Belief_network
 from aipython.probVariables import Variable
 from aipython.probFactors import Prob\n
+
+$vars\n
+
+$probs\n
+
 bayes_problem = Belief_network(
-    vars=[$vars],
-    factors=[$probs],
+    vars=[$vars_names]
+    factors=[$probs_names],
     positions=$positions)"""
 
     return Template(template).substitute(
-        vars=', '.join(var_strings),
-        probs=', '.join(prob_strings),
+        vars='\n'.join(var_strings),
+        probs='\n'.join(prob_strings),
+        vars_names=', '.join(var_name_strings),
+        probs_names=', '.join(prob_name_strings),
         positions=positions)
