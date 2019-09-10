@@ -103,8 +103,15 @@ def bayes_problem_to_python_code(problem, need_positions=False):
             'from aipython.probGraphicalModels import Belief_network
              from aipython.probVariables import Variable
              from aipython.probFactors import Prob
-            problem = Belief_network([Variable("A",boolean),Variable("B",boolean)],
-                [Prob(Variable("A",boolean),[],[0.9,0.1]),Prob(Variable("B",boolean),[Variable("A",boolean)],[0.9,0.1,0.05,0.95])'
+
+            var0 = Variable("A",boolean)
+            var1 = Variable("B",boolean)
+
+            f0 = Prob(var0,[],[0.9,0.1])
+            f1 = Prob(var1,[var0],[0.9,0.1,0.05,0.95]
+
+            problem = Belief_network(var0, var1],
+                [var0],[0.9,0.1,0.05,0.95])'
 
     Args:
         problem (aipython.probGraphicalModels.Belief_network):
