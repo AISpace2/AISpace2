@@ -1295,14 +1295,19 @@ export default class CSPGraphBuilder extends Vue {
   /** Initial temp table assignment on selected constraint node change*/
 
   InitialTempTableAssign(node: ICSPGraphNode) {
+    var prev_val_in_parentheses = this.value_in_parentheses;
 
     if (this.value_in_parentheses_temp !== null) {
       this.value_in_parentheses = this.value_in_parentheses_temp;
     }
 
-    if (!this.value_in_parentheses) {
+    if (
+      !this.value_in_parentheses ||
+      this.value_in_parentheses.match(/^\s*$/)
+    ) {
+      this.value_in_parentheses = prev_val_in_parentheses;
       this.succeed_message = "";
-      this.warning_message = "Comparison parameter not specified."
+      this.warning_message = "Comparison parameter not specified.";
       return;
     } else {
       this.warning_message = "";
@@ -1876,14 +1881,24 @@ export default class CSPGraphBuilder extends Vue {
   }
 
   UpdateConstraintNode(node: ICSPGraphNode) {
-    var constraints_need_input = ["Equals(val)", "LargerThan(num)", "LessThan(num)", "NOT(Equals(val))", "NOT(LargerThan(num))", "NOT(LessThan(num))"];
-    if ((constraints_need_input.indexOf(this.select_constraint_type) > -1) && !this.value_in_parentheses) {
+    var constraints_need_input = [
+      "Equals(val)",
+      "LargerThan(num)",
+      "LessThan(num)",
+      "NOT(Equals(val))",
+      "NOT(LargerThan(num))",
+      "NOT(LessThan(num))"
+    ];
+    if (
+      constraints_need_input.indexOf(this.select_constraint_type) > -1 &&
+      !this.value_in_parentheses
+    ) {
       this.warning_message = "Comparison parameter not specified.";
       this.succeed_message = "";
       return;
     }
     this.nameChange(node);
-    this.dicTempTable(node)
+    this.dicTempTable(node);
   }
 
   @Watch("selection")
