@@ -140,7 +140,11 @@
     </div>
 
     <div v-if="mode == 'select'">
-      <div id="select_variable" v-if="selection && selection.type == 'csp:variable'">
+      <div
+        id="select_variable"
+        v-if="selection && selection.type == 'csp:variable'"
+        v-on:keyup.enter="$refs.btn_select_submit.click()"
+      >
         <p class="builder_output">
           You selected variable node
           <span class="nodeText">{{selection.name}}</span>.
@@ -178,7 +182,11 @@
           <span class="successText">{{succeed_message}}</span>
         </p>
       </div>
-      <div id="select_constraint" v-if="selection && selection.type == 'csp:constraint'">
+      <div
+        id="select_constraint"
+        v-if="selection && selection.type == 'csp:constraint'"
+        v-on:keyup.enter="inputbox_focused ? $refs.show_new_table_btn.click() : $refs.btn_table_change.click()"
+      >
         <div v-if="findVariablesConnected(selection).length == 0">
           <span>Can only set the properties of the constraint after connected to variable(s).</span>
         </div>
@@ -203,7 +211,8 @@
                 type="text"
                 placeholder="string or number"
                 :value="value_in_parentheses"
-                @focus="$event.target.select()"
+                @focus="$event.target.select(), inputbox_focused = true"
+                @blur="inputbox_focused = false"
                 @input="value_in_parentheses_temp = $event.target.value"
               />
               <input
@@ -212,11 +221,12 @@
                 placeholder="number"
                 ref="numberonlyinput"
                 :value="value_in_parentheses"
-                @focus="$event.target.select()"
+                @focus="$event.target.select(), inputbox_focused = true"
+                @blur="inputbox_focused = false"
                 @input="trimNonNumeric($event.target.value),value_in_parentheses_temp = $event.target.value"
               />
               <button
-                class="show_new_table_btn"
+                ref="show_new_table_btn"
                 @click="InitialTempTableAssign(selection)"
               >Use New Value</button>
             </span>
@@ -258,10 +268,11 @@
           </div>
           <div>
             <p>
-              <button @click="resetTable()">Reset</button>
               <button
-                @click="nameChange(selection), dicTempTable(selection), reversed = false, reversed_constraint_without_submission = null"
+                ref="btn_table_change"
+                @click="UpdateConstraintNode(selection), reversed = false, reversed_constraint_without_submission = null"
               >Submit</button>
+              <button @click="resetTable()">Cancel</button>
             </p>
           </div>
           <p>
@@ -357,6 +368,8 @@ export default class CSPGraphBuilder extends Vue {
    */
   initially_in_ACT: boolean = false;
 
+  inputbox_focused: boolean = false;
+
   /** Switches to a new mode. */
   created() {
     this.temp_v_name = this.genNewDefaultNameV();
@@ -379,10 +392,6 @@ export default class CSPGraphBuilder extends Vue {
     this.mode = mode;
     this.selection = null;
     this.first = null;
-  }
-
-  HandleQuotesinName(name: string) {
-    name.replace("'", "&apos;");
   }
 
   getNodeType(node: ICSPGraphNode) {
@@ -634,7 +643,7 @@ export default class CSPGraphBuilder extends Vue {
         constraint_node = this.selection as ICSPGraphNode;
       }
 
-      constraint_node!.name = this.genNewDefaultNameC();
+      this.nameChangeOnDeletionOrAddition(constraint_node!);
       constraint_node!.constraintName = "";
 
       this.edge_succeed_message = "Edge created.";
@@ -735,29 +744,34 @@ export default class CSPGraphBuilder extends Vue {
         } else if (this.selection.target.type === "csp:constraint") {
           constraint_node = this.selection.target as ICSPGraphNode;
         }
-        constraint_node!.name = this.genNewDefaultNameC();
+        this.graph.removeEdge(this.selection);
+
+        this.nameChangeOnDeletionOrAddition(constraint_node!);
         constraint_node!.constraintName = "";
 
-        this.graph.removeEdge(this.selection);
         this.succeed_message = "Edge removed.";
       } else {
         if (this.selection.type === "csp:variable") {
           // find constraint nodes it is connected to
-          var constraint_node: ICSPGraphNode | null = null;
+          var constraint_nodes: ICSPGraphNode[] = [];
           this.graph.edges.forEach(e => {
             if (e.source === this.selection) {
-              constraint_node = e.target as ICSPGraphNode;
+              constraint_nodes.push(e.target as ICSPGraphNode);
             } else if (e.target === this.selection) {
-              constraint_node = e.source as ICSPGraphNode;
+              constraint_nodes.push(e.source as ICSPGraphNode);
             }
           });
-          if (constraint_node) {
-            constraint_node!.name = this.genNewDefaultNameC();
-            constraint_node!.constraintName = "";
+
+          this.graph.removeNode(this.selection);
+
+          if (constraint_nodes.length > 0) {
+            constraint_nodes.forEach(cn => {
+              this.nameChangeOnDeletionOrAddition(cn);
+              cn.constraintName = "";
+            });
           }
         }
 
-        this.graph.removeNode(this.selection);
         this.succeed_message = "Node removed.";
       }
       this.selection = null;
@@ -1281,8 +1295,17 @@ export default class CSPGraphBuilder extends Vue {
   /** Initial temp table assignment on selected constraint node change*/
 
   InitialTempTableAssign(node: ICSPGraphNode) {
+
     if (this.value_in_parentheses_temp !== null) {
       this.value_in_parentheses = this.value_in_parentheses_temp;
+    }
+
+    if (!this.value_in_parentheses) {
+      this.succeed_message = "";
+      this.warning_message = "Comparison parameter not specified."
+      return;
+    } else {
+      this.warning_message = "";
     }
 
     if (node.type === "csp:constraint") {
@@ -1812,6 +1835,25 @@ export default class CSPGraphBuilder extends Vue {
     }
   }
 
+  /** Handle constraint node name changing while an edge or a variable
+   * node connected to this constraint node is deleted or added.
+   */
+  nameChangeOnDeletionOrAddition(node: ICSPGraphNode) {
+    var connected_v = this.findVariablesConnected(node);
+    if (connected_v.length === 0) {
+      node.name = this.genNewDefaultNameC();
+      return;
+    }
+    var defaultACT = this.getACT(node)![0];
+    if (connected_v.length === 1) {
+      node.name =
+        defaultACT.replace("num", "0") + "('" + connected_v[0].name + "',)";
+    } else {
+      var list = connected_v.map(v => `'${v.name}'`);
+      node.name = defaultACT + "(" + list.join(", ") + ")";
+    }
+  }
+
   // Convert temp table to node.combinations_for_true
   dicTempTable(node: ICSPGraphNode) {
     var connected_v = this.findVariablesConnected(node);
@@ -1831,6 +1873,17 @@ export default class CSPGraphBuilder extends Vue {
     });
 
     node.combinations_for_true = combinations_for_true;
+  }
+
+  UpdateConstraintNode(node: ICSPGraphNode) {
+    var constraints_need_input = ["Equals(val)", "LargerThan(num)", "LessThan(num)", "NOT(Equals(val))", "NOT(LargerThan(num))", "NOT(LessThan(num))"];
+    if ((constraints_need_input.indexOf(this.select_constraint_type) > -1) && !this.value_in_parentheses) {
+      this.warning_message = "Comparison parameter not specified.";
+      this.succeed_message = "";
+      return;
+    }
+    this.nameChange(node);
+    this.dicTempTable(node)
   }
 
   @Watch("selection")
