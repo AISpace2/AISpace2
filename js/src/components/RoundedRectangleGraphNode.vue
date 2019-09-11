@@ -4,10 +4,10 @@
           :x="-size.width/2" :y="-size.height/2"
           :fill="fill" :stroke="stroke" :stroke-width="strokeWidth" :rx="this.showFullTextFlag() ? 30 : 25"></rect>
 
-    <text id="text" :font-size="textSize" ref="text" x="0" :y="subtext != null ? (subtext.length != 0 ? -size.height/2 + textSize : 0) : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
+    <text id="text" font-family="Courier" :font-size="textSize" ref="text" x="0" :y="subtext != null ? (subtext.length != 0 ? -size.height/2 + textSize : 0) : 0" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       {{displayText}}
     </text>
-    <text :v-show="subtext !== undefined" id="subtext" :font-size="textSize - 2"  v-if="subtext != null" ref="subtext" x="0" :y="-size.height/2 + textSize + 2" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
+    <text :v-show="subtext !== undefined" id="subtext" font-family="Courier" :font-size="textSize - 2"  v-if="subtext != null" ref="subtext" x="0" :y="-size.height/2 + textSize + 2" :fill="textColour" text-anchor="middle" alignment-baseline="middle">
       <tspan x="0" dy="1.6em" id="subspan" v-for = "key in displayTest" style="white-space: pre; font-weight: bold;">{{key}}</tspan>
     </text>
   </g>

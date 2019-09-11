@@ -245,7 +245,7 @@
     measureTextWidth(text: string) {
       let canvas = document.createElement('canvas');
       let context = canvas.getContext("2d");
-      context!.font = this.textSize.toString() + "px serif";
+      context!.font = this.textSize.toString() + "px Courier";
       if (text) {
       var splitText : string[] = text.split('\n');
       var measureText : string = splitText[0];
