@@ -9,6 +9,8 @@ from aipython.cspProblem import (AND, CSP, FALSE, IMPLIES, NOT, OR, TRUE, XOR,
                                  Constraint, Equals, GreaterThan, IsFalse,
                                  IsTrue, LessThan, meet_at)
 
+import re
+
 
 def csp_to_json(csp, widget_model=None):
     """Converts a Python CSP instance to a dictionary representable as JSON.
@@ -115,6 +117,28 @@ def generate_csp_graph_mappings(csp):
     return (node_map, edge_map)
 
 
+def find_used_condition_func(constraintType):
+    conditions_used = []
+    conditions = ["Equals", "LessThan", "GreaterThan",
+                  "TRUE", "FALSE", "IsTrue", "IsFalse",
+                  "AND", "OR", "XOR", "IMPLIES"]
+
+    if constraintType in conditions:
+        conditions_used.append(constraintType)
+
+    if re.match(r'Equals\(.*\)', constraintType):
+        conditions_used.append("Equals")
+    if re.match(r'LessThan\(.*\)', constraintType):
+        conditions_used.append("LessThan")
+    if re.match(r'GreaterThan\(.*\)', constraintType):
+        conditions_used.append("GreaterThan")
+
+    if (constraintType[4:len(constraintType)-1] in conditions) and (constraintType[0:4] == "NOT("):
+        conditions_used.append("NOT")
+
+    return conditions_used
+
+
 def json_to_csp(graph_json, widget_model=None):
     """Converts a CSP represented by a JSON dictionary into a Python CSP instance.
 
@@ -184,21 +208,26 @@ def csp_to_python_code(csp, need_positions=False):
         (string):
             A string containing Python code. Executing this string will cause a CSP to be created.
     """
+    conditions_used = []
+
     domains = csp.domains
     constraint_strings = []
     for constraint in csp.constraints:
         scope = constraint.scope
         name = constraint.condition_name
+        conditions_used = conditions_used + find_used_condition_func(name)
         constraint_strings.append("Constraint({}, {})".format(scope, name))
     positions = csp.positions if need_positions else {}
+    conditions_used = list(dict.fromkeys(conditions_used))
 
-    template = """from aipython.cspProblem import CSP, Constraint, meet_at, TRUE, FALSE, LessThan, Equals, GreaterThan, IsTrue, IsFalse, AND, OR, IMPLIES, XOR, NOT\n
+    template = """from aipython.cspProblem import CSP, Constraint, $conditions_used\n
 csp = CSP(
     domains=$domains,
     constraints=[$constraints],
     positions=$positions)"""
 
     return Template(template).substitute(
+        conditions_used=', '.join(conditions_used),
         domains=domains,
         constraints=', '.join(constraint_strings),
         positions=positions)
