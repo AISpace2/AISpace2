@@ -9,8 +9,8 @@
 # See: http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
 
 from aipython.cspProblem import (CSP, Constraint, csp_crossword1,
-                                 csp_crossword2, csp_crossword2d, csp_extended,
-                                 csp_simple1, csp_simple2)
+                                 csp_crossword2, csp_crossword2d,
+                                 csp_extended1, csp_simple1, csp_simple2)
 from aipython.searchGeneric import Searcher
 from aipython.searchProblem import Arc, Search_problem
 from aipython.utilities import dict_union
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     test(dfs_solver)
 
 # Test Solving CSPs with Search:
-searcher1 = Searcher(Search_from_CSP(csp_simple2))
+# searcher1 = Searcher(Search_from_CSP(csp_simple2))
 # print(searcher1.search())  # get next solution
-searcher2 = Searcher(Search_from_CSP(csp_extended))
+# searcher2 = Searcher(Search_from_CSP(csp_extended1))
 # print(searcher2.search())  # get next solution
