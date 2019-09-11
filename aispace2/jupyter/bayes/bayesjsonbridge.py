@@ -157,7 +157,7 @@ $vars\n
 $probs\n
 
 bayes_problem = Belief_network(
-    vars=[$vars_names]
+    vars=[$vars_names],
     factors=[$probs_names],
     positions=$positions)"""
 
