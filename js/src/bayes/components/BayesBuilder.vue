@@ -344,6 +344,15 @@ export default class BayesGraphBuilder extends Vue {
   created() {
     this.temp_node_name = this.genNewDefaultName();
     this.temp_node_domain = "false,true";
+    this.convertAllDomainsToString();
+  }
+
+  /** if there's Pre-defined problems, convert all domains to strings */
+  convertAllDomainsToString() {
+    this.graph.nodes.forEach(n => {
+      var temp = n.domain.join(",");
+      n.domain = temp.split(",");
+    });
   }
 
   /** Switches to a new mode.
