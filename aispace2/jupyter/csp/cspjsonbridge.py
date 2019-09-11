@@ -170,6 +170,9 @@ def json_to_csp(graph_json, widget_model=None):
         scope = []
         if node['type'] == 'csp:constraint':
             condition_name = node['condition_name']
+            condition_fn = LessThan
+            callable = "condition_fn = " + condition_name
+            exec(callable)
             # Find the links with the target as this constraint
             for link in graph_json['edges']:
                 if link['target'] == node['id']:
@@ -182,7 +185,7 @@ def json_to_csp(graph_json, widget_model=None):
                     scope.append(source_node['name'])
 
             if scope:
-                c = Constraint(tuple(scope), LessThan)
+                c = Constraint(tuple(scope), condition_fn)
                 c.condition_name = condition_name
                 constraints.append(c)
 
