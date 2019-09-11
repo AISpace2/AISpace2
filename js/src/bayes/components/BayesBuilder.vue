@@ -1,5 +1,5 @@
 <template>
-  <div class="bayes_builder">
+  <div class="bayes_builder" v-on:keyup.enter="getEnterKeyEvent()">
     <GraphVisualizerBase
       :graph="graph"
       :transitions="true"
@@ -61,7 +61,7 @@
       <div v-if="mode == 'create'">
         <p class="builder_output">
           <strong>To create variable:</strong> Set the name and the domain of the variable below,
-          <br />      and then double click at a position on the canvas where you want the new node to be created.
+          <br />and then double click at a position on the canvas where you want the new node to be created.
           <br />
           <span>
             <label>
@@ -93,9 +93,14 @@
           <br />
           <strong>To create edge:</strong> Click on the start node, then click on the end node.
           <br />
-          <span v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')">
+          <span
+            v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')"
+          >
             Start node:
-            <span class="nodeText">{{first.name}}</span>. Click on the end node to create an edge, or click on <span class="nodeText">{{first.name}}</span> again to unselect it.
+            <span class="nodeText">{{first.name}}</span>. Click on the end node to create an edge, or click on
+            <span
+              class="nodeText"
+            >{{first.name}}</span> again to unselect it.
           </span>
           <span>
             <span class="warningText">{{edge_warning_message}}</span>
@@ -106,7 +111,7 @@
     </div>
 
     <div>
-      <div v-if="mode =='select'" v-on:keyup.enter="$refs.btn_select_submit.click()">
+      <div v-if="mode =='select'">
         <p class="builder_output">
           Set the name and the domain of a node by cliking on it.
           <br />
@@ -154,13 +159,17 @@
         <p class="builder_output">
           Click on a node or an edge to delete.
           <br />
-          <br />
+        </p>
+        <p v-show="to_delete">
+          <strong>Confirm Deletion?</strong>
+          <button ref="delete_yes" @click="deleteSelection()">Yes</button>
+          <button ref="delete_no" @click="selection = null, to_delete = false">No</button>
         </p>
         <p class="successText">{{succeed_message}}</p>
       </div>
     </div>
     <div>
-      <div v-if="mode == 'set_prob'" v-on:keyup.enter="$refs.btn_prob_submit.click()">
+      <div v-if="mode == 'set_prob'">
         <p class="builder_output">
           Click on a node to modifiy its probability table.
           <br />
@@ -341,18 +350,36 @@ export default class BayesGraphBuilder extends Vue {
   MAX_DIGITS: number = 10000000000;
   ROUND: number = 10;
 
+  /** Detect whether the user clicked an node/edge in delet mode */
+  to_delete: boolean = false;
+
   created() {
     this.temp_node_name = this.genNewDefaultName();
     this.temp_node_domain = "false,true";
     this.convertAllDomainsToString();
   }
 
-  /** if there's Pre-defined problems, convert all domains to strings */
+  /** if there's Pre-defined problems */
   convertAllDomainsToString() {
     this.graph.nodes.forEach(n => {
       var temp = n.domain.join(",");
       n.domain = temp.split(",");
     });
+  }
+
+  /** Determine what to do when the user press Enter key at the builder. */
+  getEnterKeyEvent() {
+    if (this.mode === "delete") {
+      if (this.to_delete) {
+        this.$refs.delete_yes.click();
+      }
+    }
+    if (this.mode === "select" && this.selection) {
+      this.$refs.btn_select_submit.click();
+    }
+    if (this.mode === "set_prob" && this.selection) {
+      this.$refs.btn_prob_submit.click();
+    }
   }
 
   /** Switches to a new mode.
@@ -420,7 +447,17 @@ export default class BayesGraphBuilder extends Vue {
       this.warning_message = "Domain contains duplicated values.";
       this.succeed_message = "";
     } else {
+      var oldname = this.selection.name.slice(0);
       this.selection!.name = name.trimLeft().trimRight();
+      var newname = this.selection.name.slice(0);
+
+      // Update children's parents list
+      this.graph.edges.forEach(e => {
+        if (e.source === this.selection) {
+          e.target.parents[e.target.parents.indexOf(oldname)] = newname;
+        }
+      });
+
       var newdomain = this.handleDomain(domain);
 
       if (this.selection!.domain.join(",") !== newdomain.join(",")) {
@@ -1004,6 +1041,7 @@ export default class BayesGraphBuilder extends Vue {
         this.succeed_message = "Node deleted.";
       }
       this.selection = null;
+      this.to_delete = false;
     }
   }
 
@@ -1234,17 +1272,26 @@ export default class BayesGraphBuilder extends Vue {
   }
 
   isInvalidInputeBox(index: number, val: number | string) {
-    return val > 1 || val < 0 || (Number.isNaN(parseFloat(val)) && val !== "." && val !== "" && val !== null) ||
-      this.calSumOfSameLineInputBox(index) !== this.MAX_DIGITS;
+    return (
+      val > 1 ||
+      val < 0 ||
+      (Number.isNaN(parseFloat(val)) &&
+        val !== "." &&
+        val !== "" &&
+        val !== null) ||
+      this.calSumOfSameLineInputBox(index) !== this.MAX_DIGITS
+    );
   }
 
   /** This is to prevent non-numeric input in Safari since type="number" doesn't work in Safari */
   handleInputValue(val: string, pni: number, di: number) {
-    if ( val.length === 0 ||
+    if (
+      val.length === 0 ||
       val === null ||
       val === "." ||
       val.match(/^\.[0-9]*$/) ||
-      val.match(/^[0-9]*\.$/) ) {
+      val.match(/^[0-9]*\.$/)
+    ) {
       this.temp_node_evidences.forEach((e, index) => {
         if (e === null || e === ".") {
           this.temp_node_evidences[index] = 0;
@@ -1259,7 +1306,10 @@ export default class BayesGraphBuilder extends Vue {
       if (!result.match(/^[0-9]*\.?[0-9]*$/)) {
         var indexofdot = result.indexOf(".");
         var result_removed_dot = result.replace(/\./g, "");
-        result = result_removed_dot.slice(0, indexofdot) + "." + result_removed_dot.slice(indexofdot, result_removed_dot.length);
+        result =
+          result_removed_dot.slice(0, indexofdot) +
+          "." +
+          result_removed_dot.slice(indexofdot, result_removed_dot.length);
       }
       this.$refs[this.findInputboxRef(pni, di)][0].value = result;
     } else {
@@ -1271,7 +1321,9 @@ export default class BayesGraphBuilder extends Vue {
   /** Update the color of the inputbox when the box has been emptied */
   handleEmptyOrDotInput(val: string, pni: number, di: number) {
     if (val.match(/^\.[0-9]*$/) || val.match(/^[0-9]*\.$/)) {
-      val === "." ? this.fillLastInputbox("0", pni, di) : this.fillLastInputbox(val, pni, di);
+      val === "."
+        ? this.fillLastInputbox("0", pni, di)
+        : this.fillLastInputbox(val, pni, di);
       this.$forceUpdate();
       this.temp_node_evidences[pni * this.selection.domain.length + di] = val;
     } else if (val === "" || val === null) {
@@ -1425,8 +1477,14 @@ export default class BayesGraphBuilder extends Vue {
     } else if (this.mode === "select" && this.selection) {
       this.temp_node_name = this.selection.name!;
       this.temp_node_domain = `${this.selection.domain!.join(", ")}`;
-    } else if (this.mode === "delete" && this.selection) {
-      this.deleteSelection();
+    } else if (this.mode === "delete") {
+      if (this.selection) {
+        this.warning_message = "";
+        this.succeed_message = "";
+        this.to_delete = true;
+      } else {
+        this.to_delete = false;
+      }
     } else if (this.mode === "set_prob" && this.selection) {
       this.temp_node_evidences = this.selection.evidences.slice(0);
     } else {
@@ -1444,6 +1502,7 @@ export default class BayesGraphBuilder extends Vue {
     this.edge_warning_message = "";
     this.temp_node_evidences = [];
     this.first = null;
+    this.to_delete = false;
 
     // Remain selection unchanged if the previous mode is select and current mode is set_prob
     if (this.mode !== "set_prob") {
