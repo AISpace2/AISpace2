@@ -130,6 +130,9 @@ def json_to_csp(graph_json, widget_model=None):
     if not graph_json:
         return None
 
+    true = True
+    false = False
+
     domains = {
         node['name']: set(node['domain'])
         for node in graph_json['nodes'] if node['type'] == 'csp:variable'

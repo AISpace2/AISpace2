@@ -1174,6 +1174,12 @@ export default class CSPGraphBuilder extends Vue {
         var type = this.checkDomainType(n.domain);
         if (type === "string") {
           single_c.push(vars[index] + " == '" + c[n.name] + "'");
+        } else if (type === "boolean") {
+          if (c[n.name] === "true") {
+            single_c.push(vars[index] + " == " + "True");
+          } else if (c[n.name] === "false") {
+            single_c.push(vars[index] + " == " + "False");
+          }
         } else {
           single_c.push(vars[index] + " == " + c[n.name]);
         }
