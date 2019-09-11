@@ -1,8 +1,8 @@
-from aipython.probGraphicalModels import Belief_network
-from aipython.probFactors import Prob
-from aipython.probVariables import Variable
-
 from string import Template
+
+from aipython.probFactors import Prob
+from aipython.probGraphicalModels import Belief_network
+from aipython.probVariables import Variable
 
 
 def bayes_problem_to_json(bayesNet, widget_model=None):
@@ -58,7 +58,7 @@ def bayes_problem_to_json(bayesNet, widget_model=None):
                     # 'name': prob.child.name,
                     'source': str(hash(parent.name)),
                     'target': str(hash(prob.child.name)),
-                    'id': str(hash(parent.name+prob.child.name))
+                    'id': str(hash(parent.name + prob.child.name))
                 }
                 edges.append(edge)
 
@@ -148,16 +148,16 @@ def bayes_problem_to_python_code(problem, need_positions=False):
 
     positions = problem.positions if need_positions else {}
 
-    template = """from aipython.probGraphicalModels.Belief_network import Belief_network
+    template = """from aipython.probGraphicalModels import Belief_network
 from aipython.probVariables import Variable
-from aipython.probFactors import Prob\n
+from aipython.probFactors import Prob
 
-$vars\n
+$vars
 
-$probs\n
+$probs
 
 bayes_problem = Belief_network(
-    vars=[$vars_names]
+    vars=[$vars_names],
     factors=[$probs_names],
     positions=$positions)"""
 
