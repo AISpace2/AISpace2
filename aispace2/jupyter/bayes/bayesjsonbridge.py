@@ -77,8 +77,6 @@ def json_to_bayes_problem(json, widget_model=None):
     if not json:
         return None
 
-    true = True
-    false = False
     listOfVars = [Variable(var["name"], var["domain"])
                   for var in json["nodes"]]
 
