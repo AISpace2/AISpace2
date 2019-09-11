@@ -24,7 +24,7 @@ class Constraint(object):
     def __init__(self, scope, condition):
         self.scope = scope
         self.condition = condition
-        self.constraintName = ""
+        self.condition_name = ""
         if self.condition.__name__ == "<lambda>":
             self.condition.__name__ = "Custom"
         self.repr = self.condition.__name__ + str(self.scope)

@@ -468,7 +468,7 @@ export default class CSPGraphBuilder extends Vue {
         name: this.temp_c_name,
         x,
         y,
-        constraintName: "",
+        condition_name: "",
         combinations_for_true: [],
         type: "csp:constraint"
       });
@@ -1114,25 +1114,25 @@ export default class CSPGraphBuilder extends Vue {
     }
 
     // Used for AddConstraintNameToAllNodes()
-    var constraintName = this.select_constraint_type.slice(0);
+    var condition_name = this.select_constraint_type.slice(0);
     var regex = /val|num/;
     if (
-      constraintName === "Equals(val)" &&
+      condition_name === "Equals(val)" &&
       this.checkEqualsType(node) === "string"
     ) {
-      node.constraintName = constraintName.replace(
+      node.condition_name = condition_name.replace(
         regex,
         "'" + this.value_in_parentheses! + "'"
       );
     } else {
-      node.constraintName = constraintName.replace(
+      node.condition_name = condition_name.replace(
         regex,
         this.value_in_parentheses!
       );
     }
 
-    if (constraintName === "Custom") {
-      node.constraintName = this.trueCombinations(
+    if (condition_name === "Custom") {
+      node.condition_name = this.trueCombinations(
         connected_variables,
         node.combinations_for_true
       );
@@ -1158,7 +1158,7 @@ export default class CSPGraphBuilder extends Vue {
   }
 
   /** If the constraint node has a type of custom,
-   * change the constraintName field to the python code of
+   * change the condition_name field to the python code of
    * all true combinations.*/
   trueCombinations(nodes: ICSPGraphNode[], combinations: Object[]) {
     var acc: string[] = [];
@@ -1884,9 +1884,9 @@ export default class CSPGraphBuilder extends Vue {
       node.name = prefix + "(" + list.join(", ") + ")";
     }
 
-    node.constraintName = prefix;
-    if (node.constraintName === "Custom") {
-      node.constraintName = this.trueCombinations(
+    node.condition_name = prefix;
+    if (node.condition_name === "Custom") {
+      node.condition_name = this.trueCombinations(
         connected_v,
         node.combinations_for_true
       );
@@ -1948,7 +1948,7 @@ export default class CSPGraphBuilder extends Vue {
 
     node.combinations_for_true = combinations_for_true;
     if (this.select_constraint_type === "Custom") {
-      node.constraintName = this.trueCombinations(
+      node.condition_name = this.trueCombinations(
         connected_v,
         node.combinations_for_true
       );

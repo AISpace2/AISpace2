@@ -5,7 +5,9 @@ and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 
 from string import Template
 
-from aipython.cspProblem import CSP, Constraint, meet_at, TRUE, FALSE, LessThan, Equals, GreaterThan, IsTrue, IsFalse, AND, OR, IMPLIES, XOR, NOT
+from aipython.cspProblem import (AND, CSP, FALSE, IMPLIES, NOT, OR, TRUE, XOR,
+                                 Constraint, Equals, GreaterThan, IsFalse,
+                                 IsTrue, LessThan, meet_at)
 
 
 def csp_to_json(csp, widget_model=None):
@@ -142,9 +144,8 @@ def json_to_csp(graph_json, widget_model=None):
 
     for node in graph_json['nodes']:
         scope = []
-        constraintName = ''
         if node['type'] == 'csp:constraint':
-            constraintName = node['constraintName']
+            condition_name = node['condition_name']
             # Find the links with the target as this constraint
             for link in graph_json['edges']:
                 if link['target'] == node['id']:
@@ -158,7 +159,7 @@ def json_to_csp(graph_json, widget_model=None):
 
             if scope:
                 c = Constraint(tuple(scope), LessThan)
-                c.constraintName = constraintName
+                c.condition_name = condition_name
                 constraints.append(c)
 
     positions = {node['name']: (int(node['x']), int(node['y']))
@@ -187,7 +188,7 @@ def csp_to_python_code(csp, need_positions=False):
     constraint_strings = []
     for constraint in csp.constraints:
         scope = constraint.scope
-        name = constraint.constraintName
+        name = constraint.condition_name
         constraint_strings.append("Constraint({}, {})".format(scope, name))
     positions = csp.positions if need_positions else {}
 
