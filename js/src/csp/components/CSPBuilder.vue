@@ -1,5 +1,5 @@
 <template>
-  <div class="csp_builder">
+  <div class="csp_builder" v-on:keyup.enter="getEnterKeyEvent()">
     <GraphVisualizerBase
       :graph="graph"
       :transitions="true"
@@ -140,11 +140,7 @@
     </div>
 
     <div v-if="mode == 'select'">
-      <div
-        id="select_variable"
-        v-if="selection && selection.type == 'csp:variable'"
-        v-on:keyup.enter="$refs.btn_select_submit.click()"
-      >
+      <div id="select_variable" v-if="selection && selection.type == 'csp:variable'">
         <p class="builder_output">
           You selected variable node
           <span class="nodeText">{{selection.name}}</span>.
@@ -182,11 +178,7 @@
           <span class="successText">{{succeed_message}}</span>
         </p>
       </div>
-      <div
-        id="select_constraint"
-        v-if="selection && selection.type == 'csp:constraint'"
-        v-on:keyup.enter="inputbox_focused ? $refs.show_new_table_btn.click() : $refs.btn_table_change.click()"
-      >
+      <div id="select_constraint" v-if="selection && selection.type == 'csp:constraint'">
         <div v-if="findVariablesConnected(selection).length == 0">
           <span>Can only set the properties of the constraint after connected to variable(s).</span>
         </div>
@@ -284,6 +276,15 @@
     </div>
 
     <div v-if="mode == 'delete'">
+      <p class="builder_output">
+        Click on a node or an edge to delete.
+        <br />
+      </p>
+      <p v-show="to_delete">
+        <strong>Confirm Deletion?</strong>
+        <button ref="delete_yes" @click="deleteSelection()">Yes</button>
+        <button ref="delete_no" @click="selection = null, to_delete = false">No</button>
+      </p>
       <span class="successText">{{succeed_message}}</span>
     </div>
   </div>
@@ -368,7 +369,15 @@ export default class CSPGraphBuilder extends Vue {
    */
   initially_in_ACT: boolean = false;
 
+  /** Check whether when in select mode and a constraint is selected,
+   * whether the user is focused on an inputbox, if so,
+   * pressing enter key will adapt the new value to the temp table,
+   * else pressing enter key will comfirm the update of the table.
+   */
   inputbox_focused: boolean = false;
+
+  /** Detect whether the user clicked an node/edge in delet mode */
+  to_delete: boolean = false;
 
   /** Switches to a new mode. */
   created() {
@@ -386,6 +395,28 @@ export default class CSPGraphBuilder extends Vue {
     this.value_in_parentheses = null;
     this.value_in_parentheses_temp = null;
     this.select_constraint_type = "";
+  }
+
+  /** Determine what to do when the user press Enter key at the builder. */
+  getEnterKeyEvent() {
+    if (this.mode === "select" && this.selection) {
+      if (this.selection.type === "csp:variable") {
+        this.$refs.btn_select_submit.click();
+      }
+      if (this.selection.type === "csp:constraint") {
+        if (this.inputbox_focused) {
+          this.$refs.show_new_table_btn.click();
+        } else {
+          this.$refs.btn_table_change.click();
+        }
+      }
+    }
+
+    if (this.mode === "delete" && this.selection) {
+      if (this.to_delete) {
+        this.$refs.delete_yes.click();
+      }
+    }
   }
 
   setMode(mode: Mode) {
@@ -522,7 +553,7 @@ export default class CSPGraphBuilder extends Vue {
       return;
     }
 
-    if (this.NameExists(name)) {
+    if (this.NameExists(name) && name !== this.selection.name) {
       this.warning_message = "Name already exists.";
       this.succeed_message = "";
       return;
@@ -539,10 +570,54 @@ export default class CSPGraphBuilder extends Vue {
       this.succeed_message = "";
       return;
     }
-
+    var oldname = this.selection!.name.slice(0);
     this.selection!.name = name.trimLeft().trimRight();
     var newdomain = this.handleDomain(domain);
+
+    var domain_changed = false;
+    if (this.selection!.domain.join(",") !== newdomain.join(",")) {
+      domain_changed = true;
+    }
     this.selection!.domain = newdomain;
+
+    // if domain changed reset constraint type to default
+    // if only name changed, not change constraint type.
+    if (domain_changed) {
+      this.graph.edges.forEach(e => {
+        if (e.source === this.selection && e.target.type === "csp:constraint") {
+          this.nameChangeOnDeletionOrAddition(e.target as ICSPGraphNode);
+        } else if (
+          e.target === this.selection &&
+          e.source.type === "csp:constraint"
+        ) {
+          this.nameChangeOnDeletionOrAddition(e.source as ICSPGraphNode);
+        }
+      });
+    } else {
+      this.graph.edges.forEach(e => {
+        if (e.source === this.selection && e.target.type === "csp:constraint") {
+          var cn_name = e.target.name.slice(0);
+          var newname = this.selection.name.slice(0);
+          var new_cn_name = cn_name.replace(
+            "'" + oldname + "'",
+            "'" + newname + "'"
+          );
+          e.target.name = new_cn_name;
+        } else if (
+          e.target === this.selection &&
+          e.source.type === "csp:constraint"
+        ) {
+          var cn_name = e.source.name.slice(0);
+          var newname = this.selection.name.slice(0);
+          var new_cn_name = cn_name.replace(
+            "'" + oldname + "'",
+            "'" + newname + "'"
+          );
+          e.source.name = new_cn_name;
+        }
+      });
+    }
+
     this.warning_message = "";
     this.succeed_message = "Node updated.";
   }
@@ -773,6 +848,7 @@ export default class CSPGraphBuilder extends Vue {
         this.succeed_message = "Node removed.";
       }
       this.selection = null;
+      this.to_delete = false;
     }
   }
 
@@ -1979,6 +2055,7 @@ export default class CSPGraphBuilder extends Vue {
   @Watch("selection")
   onSelectionChanged() {
     this.value_in_parentheses_temp = null;
+    this.inputbox_focused = false;
 
     if (this.mode === "create") {
       this.warning_message = "";
@@ -2032,7 +2109,11 @@ export default class CSPGraphBuilder extends Vue {
     }
     if (this.mode === "delete") {
       if (this.selection) {
-        this.deleteSelection();
+        this.warning_message = "";
+        this.succeed_message = "";
+        this.to_delete = true;
+      } else {
+        this.to_delete = false;
       }
       return;
     }
@@ -2049,12 +2130,158 @@ export default class CSPGraphBuilder extends Vue {
     this.edge_warning_message = "";
     this.first = null;
     this.selection = null;
+    this.inputbox_focused = false;
+    this.to_delete = false;
 
     if (this.mode === "create") {
       this.temp_v_name = this.genNewDefaultNameV();
       this.temp_v_domain = "1, 2, 3";
       this.temp_c_name = this.genNewDefaultNameC();
     }
+  }
+
+  @Watch("isDomainBool")
+  onIsDomainBoolChange() {
+    this.temp_c_name = this.genNewDefaultNameC();
+  }
+
+  @Watch("create_sub_mode")
+  onCSMChange() {
+    this.temp_v_name = this.genNewDefaultNameV();
+    this.temp_v_domain = "1, 2, 3";
+    this.temp_c_name = this.genNewDefaultNameC();
+    this.succeed_message = "";
+    this.warning_message = "";
+    this.edge_succeed_message = "";
+    this.edge_warning_message = "";
+  }
+
+  @Watch("show_negation")
+  OnShowNegationChange() {
+    this.inputbox_focused = false;
+    var allconstraints = [
+      "TRUE",
+      "FALSE",
+      "Equals(val)",
+      "LessThan(num)",
+      "GreaterThan(num)",
+      "IsTrue",
+      "IsFalse",
+      "AND",
+      "OR",
+      "IMPLIES",
+      "XOR",
+      "LessThan",
+      "Equals",
+      "GreaterThan"
+    ];
+    if (this.show_negation) {
+      if (
+        this.select_constraint_type.substring(0, 3) !== "NOT" &&
+        allconstraints.includes(this.select_constraint_type)
+      ) {
+        this.select_constraint_type = `NOT(${this.select_constraint_type})`;
+      }
+    } else {
+      if (this.select_constraint_type.substring(0, 3) === "NOT") {
+        this.select_constraint_type = this.select_constraint_type.substring(
+          4,
+          this.select_constraint_type.length - 1
+        );
+      }
+    }
+  }
+
+  @Watch("select_constraint_type")
+  OnTypeChange() {
+    this.value_in_parentheses_temp = null;
+    this.InitialTempTableAssign(this.selection as ICSPGraphNode);
+    if (
+      this.select_constraint_type === "Custom" &&
+      this.selection.name.substring(0, 6) !== "Custom" &&
+      !this.selection.name.match(/^Empty Constraint\d*$/) &&
+      this.checkPredefined(this.selection)
+    ) {
+      this.initially_in_ACT = false;
+    } else {
+      this.initially_in_ACT = true;
+    }
+  }
+}
+</script>
+
+<style scoped>
+text.domain {
+  font-size: 12px;
+}
+
+.text_input_box_noUserInput {
+  background-color: lightgray;
+}
+
+.table_container {
+  display: inline-block;
+  background-color: white;
+  white-space: nowrap;
+  max-height: 300px;
+  max-width: 700px;
+  border: 2px solid #4caf50;
+  overflow: scroll;
+  padding-bottom: 20px;
+}
+
+.table_header {
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.header_cell {
+  text-align: center;
+  font-weight: bold;
+  display: inline-block;
+  background-color: white;
+  width: 125px;
+  height: 20px;
+  overflow-x: hidden;
+  padding-top: 10px;
+}
+
+.header_cell:hover {
+  overflow-x: scroll;
+}
+
+.table_row {
+  float: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0;
+  height: 20px;
+  border-bottom: 1px solid lightgray;
+}
+
+.table_body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.table_cell {
+  text-align: center;
+  display: inline-block;
+  background-color: white;
+  width: 125px;
+  height: 20px;
+  overflow-x: hidden;
+}
+
+.table_cell:hover {
+  overflow-x: scroll;
+}
+</style>
   }
 
   @Watch("isDomainBool")
