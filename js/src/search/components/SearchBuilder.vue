@@ -1,5 +1,5 @@
 <template>
-  <div tabindex="0" @keydown.stop class="search_builder">
+  <div class="search_builder" v-on:keyup.enter="to_delete ? deleteSelection() : null">
     <GraphVisualizerBase
       :graph="graph"
       :transitions="true"
@@ -111,14 +111,6 @@
           <br />
           <strong>To create edge:</strong> Set the properties below, then click on the start node, then click on the end node.
           <br />
-          <br />
-          <label>Edge Name:</label>
-          <input
-            type="text"
-            :value="temp_e_name"
-            @focus="$event.target.select()"
-            @input="temp_e_name = $event.target.value"
-          />
           <label>Edge Cost:</label>
           <input
             type="text"
@@ -129,10 +121,15 @@
             @input="trimNonNumeric($event.target.value),temp_e_cost = $event.target.value"
           />
           <br />
-          <span v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')">
+          <span
+            v-if="(graph.nodes.indexOf(first) >= 0) && (selection == first || selection == null || selection.type == 'edge')"
+          >
             Source node:
             <span class="nodeText">{{first.name}}</span>. Select an end
-            node to create an edge, or click on <span class="nodeText">{{first.name}}</span> again to unselect it.
+            node to create an edge, or click on
+            <span
+              class="nodeText"
+            >{{first.name}}</span> again to unselect it.
           </span>
           <span>
             <span class="warningText">{{edge_warning_message}}</span>
@@ -152,15 +149,33 @@
             <span>
               <strong>Node type:</strong>
               <span class="radioInputGroup">
-                <input type="radio" id="nt_r" value="search:regular" v-model="node_type" />
+                <input
+                  type="radio"
+                  id="nt_r"
+                  value="search:regular"
+                  v-model="node_type"
+                  v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
+                />
                 <label for="nt_r">Regular</label>
               </span>
               <span class="radioInputGroup">
-                <input type="radio" id="nt_s" value="search:start" v-model="node_type" />
+                <input
+                  type="radio"
+                  id="nt_s"
+                  value="search:start"
+                  v-model="node_type"
+                  v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
+                />
                 <label for="nt_s">Start</label>
               </span>
               <span class="radioInputGroup">
-                <input type="radio" id="nt_g" value="search:goal" v-model="node_type" />
+                <input
+                  type="radio"
+                  id="nt_g"
+                  value="search:goal"
+                  v-model="node_type"
+                  v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
+                />
                 <label for="nt_g">Goal</label>
               </span>
             </span>
@@ -173,6 +188,7 @@
               :value="temp_v_name"
               @focus="$event.target.select()"
               @input="temp_v_name = $event.target.value"
+              v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
             />
             <label>
               <strong>Node Heuristic:</strong>
@@ -183,24 +199,18 @@
               :value="temp_heuristic"
               @focus="$event.target.select()"
               @input="trimNonInt($event.target.value),temp_heuristic = $event.target.value"
+              v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
             />
-            <button id="node_submit" @click="UpdateVariable(temp_v_name, temp_heuristic)">Submit</button>
+            <button ref="node_submit" @click="UpdateVariable(temp_v_name, temp_heuristic)">Submit</button>
             <br />
           </div>
 
           <div v-else>
             You selected edge
-            <span class="nodeText">{{selection.name}}</span>.
+            <span
+              class="nodeText"
+            >{{selection.source.name}} --> {{selection.target.name}}</span>.
             <br />
-            <label>
-              <strong>Edge Name:</strong>
-            </label>
-            <input
-              type="text"
-              :value="temp_e_name"
-              @focus="$event.target.select()"
-              @input="temp_e_name = $event.target.value"
-            />
             <label>
               <strong>Edge Cost:</strong>
             </label>
@@ -210,8 +220,9 @@
               :value="temp_e_cost"
               @focus="$event.target.select()"
               @input="trimNonNumeric($event.target.value),temp_e_cost = $event.target.value"
+              v-on:keyup.enter="UpdateEdge(temp_e_cost)"
             />
-            <button id="edge_submit" @click="UpdateEdge(temp_e_name, temp_e_cost)">Submit</button>
+            <button ref="edge_submit" @click="UpdateEdge(temp_e_cost)">Submit</button>
           </div>
 
           <span>
@@ -221,7 +232,16 @@
         </div>
       </div>
 
-      <div v-if="mode == 'delete'">
+      <div v-if="mode == 'delete'" v-on:keyup.enter="deleteSelection()">
+        <p class="builder_output">
+          Click on a node or an edge to delete.
+          <br />
+        </p>
+        <p v-show="to_delete">
+          <strong>Confirm Deletion?</strong>
+          <button ref="delete_yes" @click="deleteSelection()">Yes</button>
+          <button ref="delete_no" @click="selection = null, to_delete = false">No</button>
+        </p>
         <span>
           <span class="warningText">{{warning_message}}</span>
           <span class="successText">{{succeed_message}}</span>
@@ -286,7 +306,6 @@ export default class SearchGraphBuilder extends Vue {
   temp_v_name: string = "";
   temp_heuristic: string = "0";
 
-  temp_e_name: string = "";
   temp_e_cost: string = "1";
 
   warning_message: string = "";
@@ -294,11 +313,15 @@ export default class SearchGraphBuilder extends Vue {
   edge_succeed_message: string = "";
   edge_warning_message: string = "";
 
+  /** Detect whether the user clicked an node/edge in delet mode */
+  to_delete: boolean = false;
+
   /** The current node or edge being selected. */
   selection: ISearchGraphNode | ISearchGraphEdge | null = null;
 
   created() {
     this.temp_v_name = this.genNewDefaultName();
+    this.temp_heuristic = "0";
   }
 
   setMode(mode: Mode) {
@@ -394,7 +417,7 @@ export default class SearchGraphBuilder extends Vue {
       return false;
     }
 
-    if (this.NameExists(name)) {
+    if (this.NameExists(name) && this.selection.name !== temp_name) {
       this.warning_message = "Name already exists.";
       this.succeed_message = "";
       return false;
@@ -432,7 +455,7 @@ export default class SearchGraphBuilder extends Vue {
         id: shortid.generate(),
         source: this.first.id,
         target: this.selection.id,
-        name: this.handleEdgeName(this.temp_e_name),
+        name: "edge1",
         cost: parseFloat(this.temp_e_cost),
         type: "edge"
       });
@@ -455,13 +478,6 @@ export default class SearchGraphBuilder extends Vue {
     return exist;
   }
 
-  handleEdgeName(tempname: string) {
-    if (tempname === null || tempname === "") {
-      return "";
-    }
-    return tempname.trimLeft().trimRight();
-  }
-
   UpdateVariable(temp_name: string, temp_heuristic: string) {
     if (this.IsTempVariable(temp_name, parseInt(temp_heuristic))) {
       this.selection.name = temp_name.trimLeft().trimRight();
@@ -471,8 +487,7 @@ export default class SearchGraphBuilder extends Vue {
     }
   }
 
-  UpdateEdge(temp_name: string, temp_cost: string) {
-    this.selection.name = this.handleEdgeName(temp_name);
+  UpdateEdge(temp_cost: string) {
     this.selection.cost = parseFloat(temp_cost);
     this.succeed_message = "Edge updated.";
   }
@@ -572,6 +587,8 @@ export default class SearchGraphBuilder extends Vue {
         this.graph.removeNode(this.selection);
         this.succeed_message = "Node deleted.";
       }
+      this.selection = null;
+      this.to_delete = false;
     }
   }
 
@@ -677,11 +694,6 @@ export default class SearchGraphBuilder extends Vue {
 
       if (this.selection.type === "edge") {
         this.temp_e_cost = this.selection.cost;
-        if (this.selection.name) {
-          this.temp_e_name = this.selection.name;
-        } else {
-          this.temp_e_name = "";
-        }
       } else {
         this.node_type = this.selection.type;
         this.temp_v_name = this.selection.name;
@@ -692,7 +704,11 @@ export default class SearchGraphBuilder extends Vue {
 
     if (this.mode === "delete") {
       if (this.selection) {
-        this.deleteSelection();
+        this.warning_message = "";
+        this.succeed_message = "";
+        this.to_delete = true;
+      } else {
+        this.to_delete = false;
       }
       return;
     }
@@ -704,19 +720,18 @@ export default class SearchGraphBuilder extends Vue {
     this.first = null;
     this.temp_v_name = "";
     this.temp_heuristic = "0";
-    this.temp_e_name = "";
     this.temp_e_cost = "1";
     this.node_type = "search:regular";
     this.warning_message = "";
     this.succeed_message = "";
     this.edge_succeed_message = "";
     this.edge_warning_message = "";
+    this.to_delete = false;
 
     if (this.mode === "create") {
       this.temp_v_name = this.genNewDefaultName();
       this.node_type = "search:regular";
       this.temp_heuristic = "0";
-      this.temp_e_name = "";
       this.temp_e_cost = "1";
     }
   }
