@@ -1,5 +1,5 @@
 <template>
-  <div class="csp_builder" v-on:keyup.enter="getEnterKeyEvent()">
+  <div class="csp_builder">
     <GraphVisualizerBase
       :graph="graph"
       :transitions="true"
@@ -153,7 +153,8 @@
               type="text"
               :value="temp_v_name"
               @focus="$event.target.select()"
-              @input="temp_v_name = $event.target.value"
+              @input="temp_v_name = $event.target.value, cleanMessages()"
+              v-on:keyup.enter="isValidModify(temp_v_name, temp_v_domain)"
             />
             <label>
               <strong>Domain:</strong>
@@ -163,7 +164,8 @@
               style="width: 150px;"
               @focus="$event.target.select()"
               :value="temp_v_domain"
-              @input="temp_v_domain = $event.target.value"
+              @input="temp_v_domain = $event.target.value, cleanMessages()"
+              v-on:keyup.enter="isValidModify(temp_v_name, temp_v_domain)"
             />
             (use comma to separate values)
             <button
@@ -189,7 +191,15 @@
             </label>
             <span>
               <label for="show_negation">Show Negation</label>
-              <input type="checkbox" id="show_negation" v-model="show_negation" />
+              <input
+                type="checkbox"
+                id="show_negation"
+                ref="show_negation_checkbox"
+                v-model="show_negation"
+                @input="cleanMessages()"
+                @keydown="$event.keyCode == 13 ? $event.preventDefault() : false"
+                v-on:keyup.enter="UpdateConstraintNode(selection)"
+              />
             </span>
             <select v-if="!show_negation" v-model="select_constraint_type">
               <option v-for="option of getACT(selection)" :key="option">{{option}}</option>
@@ -206,6 +216,7 @@
                 @focus="$event.target.select(), inputbox_focused = true"
                 @blur="inputbox_focused = false"
                 @input="value_in_parentheses_temp = $event.target.value"
+                v-on:keyup.enter="InitialTempTableAssign(selection)"
               />
               <input
                 v-if="select_constraint_type !== 'Equals(val)' && select_constraint_type !== 'NOT(Equals(val))'"
@@ -216,10 +227,13 @@
                 @focus="$event.target.select(), inputbox_focused = true"
                 @blur="inputbox_focused = false"
                 @input="trimNonNumeric($event.target.value),value_in_parentheses_temp = $event.target.value"
+                v-on:keyup.enter="InitialTempTableAssign(selection)"
               />
               <button
                 ref="show_new_table_btn"
-                @click="InitialTempTableAssign(selection)"
+                @click="InitialTempTableAssign(selection), cleanMessages()"
+                @keydown="$event.keyCode == 13 ? $event.preventDefault() : false"
+                v-on:keyup.enter="UpdateConstraintNode(selection)"
               >Use New Value</button>
             </span>
           </span>
@@ -228,9 +242,12 @@
             <span class="nodeText">
               <strong>{{NegateConstraintToReadableText(selection)}}</strong>
               <button
+                type="button"
                 v-if="findVariablesConnected(selection).length === 2"
                 id="reverse_order"
                 @click="reverseOrder(selection)"
+                @keydown="$event.keyCode == 13 ? $event.preventDefault() : false"
+                v-on:keyup.enter="UpdateConstraintNode(selection)"
               >Reverse Order</button>
             </span>
           </p>
@@ -252,7 +269,9 @@
                   <input
                     type="checkbox"
                     v-model="temp_table[index_c]"
-                    @input="select_constraint_type = 'Custom', initially_in_ACT = true"
+                    @input="select_constraint_type = 'Custom', initially_in_ACT = true, cleanMessages()"
+                    @keydown="$event.keyCode == 13 ? $event.preventDefault() : false"
+                    v-on:keyup.enter="UpdateConstraintNode(selection)"
                   />
                 </div>
               </div>
@@ -260,11 +279,11 @@
           </div>
           <div>
             <p>
+              <button ref="btn_table_change" @click="UpdateConstraintNode(selection)">Submit</button>
               <button
-                ref="btn_table_change"
-                @click="UpdateConstraintNode(selection), reversed = false, reversed_constraint_without_submission = null"
-              >Submit</button>
-              <button @click="resetTable()">Cancel</button>
+                @click="resetTable()"
+                @keydown="$event.keyCode == 13 ? $event.preventDefault() : false"
+              >Cancel</button>
             </p>
           </div>
           <p>
@@ -280,11 +299,11 @@
         Click on a node or an edge to delete.
         <br />
       </p>
-      <p v-show="to_delete">
+      <div :class="getDeletionConfirmationClass(to_delete)">
         <strong>Confirm Deletion?</strong>
         <button ref="delete_yes" @click="deleteSelection()">Yes</button>
         <button ref="delete_no" @click="selection = null, to_delete = false">No</button>
-      </p>
+      </div>
       <span class="successText">{{succeed_message}}</span>
     </div>
   </div>
@@ -397,26 +416,11 @@ export default class CSPGraphBuilder extends Vue {
     this.select_constraint_type = "";
   }
 
-  /** Determine what to do when the user press Enter key at the builder. */
-  getEnterKeyEvent() {
-    if (this.mode === "select" && this.selection) {
-      if (this.selection.type === "csp:variable") {
-        this.$refs.btn_select_submit.click();
-      }
-      if (this.selection.type === "csp:constraint") {
-        if (this.inputbox_focused) {
-          this.$refs.show_new_table_btn.click();
-        } else {
-          this.$refs.btn_table_change.click();
-        }
-      }
-    }
-
-    if (this.mode === "delete" && this.selection) {
-      if (this.to_delete) {
-        this.$refs.delete_yes.click();
-      }
-    }
+  cleanMessages() {
+    this.warning_message = "";
+    this.succeed_message = "";
+    this.edge_succeed_message = "";
+    this.edge_warning_message = "";
   }
 
   setMode(mode: Mode) {
@@ -438,6 +442,20 @@ export default class CSPGraphBuilder extends Vue {
       return "constraint node";
     } else if (node.type === "csp:constraint") {
       return "variable node";
+    }
+  }
+
+  /** If use v-show, when the component is hidden,
+   * there's no input value (e.g. inputbox, buttons, etc.) focused,
+   * This will cause a problem that after click "No" button,
+   * Enter key won't work on the builder since the builder is not focused.
+   * Therefore, the deletion confirmation must always show,
+   * So when it is not needed, make it transparent. */
+  getDeletionConfirmationClass(to_delete: boolean) {
+    if (to_delete) {
+      return "show_deletion_confirmation";
+    } else {
+      return "hide_deletion_confirmation";
     }
   }
 
@@ -603,6 +621,7 @@ export default class CSPGraphBuilder extends Vue {
             "'" + newname + "'"
           );
           e.target.name = new_cn_name;
+          this.genNewCBNTsForTrue(e.target as ICSPGraphNode, newname, oldname);
         } else if (
           e.target === this.selection &&
           e.source.type === "csp:constraint"
@@ -614,12 +633,34 @@ export default class CSPGraphBuilder extends Vue {
             "'" + newname + "'"
           );
           e.source.name = new_cn_name;
+          this.genNewCBNTsForTrue(e.source as ICSPGraphNode, newname, oldname);
         }
       });
     }
 
     this.warning_message = "";
     this.succeed_message = "Node updated.";
+  }
+
+  genNewCBNTsForTrue(node: ICSPGraphNode, newname: string, oldname: string) {
+    // Update constraint node's combinations_for_true field.
+    var new_cbnts_for_true: Object[] = [];
+    var connected_v = this.findVariablesConnected(node!);
+    var connected_v_names = connected_v.map(v => v.name);
+    var connected_v_names_old = connected_v_names.slice(0);
+    connected_v_names_old.forEach((n, index) => {
+      if (n === newname) {
+        connected_v_names_old[index] = oldname;
+      }
+    });
+
+    connected_v_names_old.forEach((n_old, index) => {
+      var element: Object = {};
+      element[connected_v_names[index]] = node.combinations_for_true[n_old];
+      new_cbnts_for_true.push(element);
+    });
+
+    node.combinations_for_true = new_cbnts_for_true;
   }
 
   /** Check whether the given node name exists */
@@ -1919,6 +1960,7 @@ export default class CSPGraphBuilder extends Vue {
     } else {
       this.reversed_constraint_without_submission = null;
     }
+    this.cleanMessages();
   }
 
   /** Handle Constraint node name, node.combinations_for_true while the user submits the modified table */
@@ -2050,6 +2092,10 @@ export default class CSPGraphBuilder extends Vue {
     }
     this.nameChange(node);
     this.dicTempTable(node);
+    this.warning_message = "";
+    this.succeed_message = "Constraint node updated.";
+    this.reversed = false;
+    this.reversed_constraint_without_submission = null;
   }
 
   @Watch("selection")
@@ -2070,8 +2116,6 @@ export default class CSPGraphBuilder extends Vue {
 
       if (this.first == null) {
         this.first = this.selection as ICSPGraphNode;
-        this.edge_succeed_message = "";
-        this.edge_warning_message = "";
       } else {
         this.createEdge();
       }
@@ -2112,6 +2156,7 @@ export default class CSPGraphBuilder extends Vue {
         this.warning_message = "";
         this.succeed_message = "";
         this.to_delete = true;
+        this.$refs.delete_yes.focus();
       } else {
         this.to_delete = false;
       }
@@ -2196,6 +2241,8 @@ export default class CSPGraphBuilder extends Vue {
   OnTypeChange() {
     this.value_in_parentheses_temp = null;
     this.InitialTempTableAssign(this.selection as ICSPGraphNode);
+    this.cleanMessages();
+    this.$refs.show_negation_checkbox.focus();
     if (
       this.select_constraint_type === "Custom" &&
       this.selection.name.substring(0, 6) !== "Custom" &&
@@ -2281,147 +2328,12 @@ text.domain {
 .table_cell:hover {
   overflow-x: scroll;
 }
-</style>
-  }
 
-  @Watch("isDomainBool")
-  onIsDomainBoolChange() {
-    this.temp_c_name = this.genNewDefaultNameC();
-  }
-
-  @Watch("create_sub_mode")
-  onCSMChange() {
-    this.temp_v_name = this.genNewDefaultNameV();
-    this.temp_v_domain = "1, 2, 3";
-    this.temp_c_name = this.genNewDefaultNameC();
-    this.succeed_message = "";
-    this.warning_message = "";
-    this.edge_succeed_message = "";
-    this.edge_warning_message = "";
-  }
-
-  @Watch("show_negation")
-  OnShowNegationChange() {
-    var allconstraints = [
-      "TRUE",
-      "FALSE",
-      "Equals(val)",
-      "LessThan(num)",
-      "GreaterThan(num)",
-      "IsTrue",
-      "IsFalse",
-      "AND",
-      "OR",
-      "IMPLIES",
-      "XOR",
-      "LessThan",
-      "Equals",
-      "GreaterThan"
-    ];
-    if (this.show_negation) {
-      if (
-        this.select_constraint_type.substring(0, 3) !== "NOT" &&
-        allconstraints.includes(this.select_constraint_type)
-      ) {
-        this.select_constraint_type = `NOT(${this.select_constraint_type})`;
-      }
-    } else {
-      if (this.select_constraint_type.substring(0, 3) === "NOT") {
-        this.select_constraint_type = this.select_constraint_type.substring(
-          4,
-          this.select_constraint_type.length - 1
-        );
-      }
-    }
-  }
-
-  @Watch("select_constraint_type")
-  OnTypeChange() {
-    this.value_in_parentheses_temp = null;
-    this.InitialTempTableAssign(this.selection as ICSPGraphNode);
-    if (
-      this.select_constraint_type === "Custom" &&
-      this.selection.name.substring(0, 6) !== "Custom" &&
-      !this.selection.name.match(/^Empty Constraint\d*$/) &&
-      this.checkPredefined(this.selection)
-    ) {
-      this.initially_in_ACT = false;
-    } else {
-      this.initially_in_ACT = true;
-    }
-  }
-}
-</script>
-
-<style scoped>
-text.domain {
-  font-size: 12px;
+.show_deletion_confirmation {
+  opacity: 1;
 }
 
-.text_input_box_noUserInput {
-  background-color: lightgray;
-}
-
-.table_container {
-  display: inline-block;
-  background-color: white;
-  white-space: nowrap;
-  max-height: 300px;
-  max-width: 700px;
-  border: 2px solid #4caf50;
-  overflow: scroll;
-  padding-bottom: 20px;
-}
-
-.table_header {
-  background-color: white;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
-
-.header_cell {
-  text-align: center;
-  font-weight: bold;
-  display: inline-block;
-  background-color: white;
-  width: 125px;
-  height: 20px;
-  overflow-x: hidden;
-  padding-top: 10px;
-}
-
-.header_cell:hover {
-  overflow-x: scroll;
-}
-
-.table_row {
-  float: left;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 0;
-  height: 20px;
-  border-bottom: 1px solid lightgray;
-}
-
-.table_body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.table_cell {
-  text-align: center;
-  display: inline-block;
-  background-color: white;
-  width: 125px;
-  height: 20px;
-  overflow-x: hidden;
-}
-
-.table_cell:hover {
-  overflow-x: scroll;
+.hide_deletion_confirmation {
+  opacity: 0;
 }
 </style>
