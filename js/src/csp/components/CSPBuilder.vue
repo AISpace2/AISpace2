@@ -92,7 +92,12 @@
             </label>
             <span>
               <label for="is_domain_bool">Boolean</label>
-              <input type="checkbox" id="is_domain_bool" v-model="isDomainBool" @input="cleanMessages()" />
+              <input
+                type="checkbox"
+                id="is_domain_bool"
+                v-model="isDomainBool"
+                @input="cleanMessages()"
+              />
             </span>
             <span>
               <input
@@ -1356,6 +1361,8 @@ export default class CSPGraphBuilder extends Vue {
     var val: string = "";
     if (val_origin[0] === "-") {
       val = val_origin.substring(1, val_origin.length);
+    } else {
+      val = val_origin;
     }
     if (val.match(/^.*[^0-9\.].*$/) || !val.match(/^[0-9]*\.?[0-9]*$/)) {
       var result = val.replace(/[^\d.]/g, "");
