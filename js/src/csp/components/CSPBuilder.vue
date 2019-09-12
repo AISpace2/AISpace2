@@ -85,14 +85,14 @@
               type="text"
               :value="temp_v_name"
               @focus="$event.target.select()"
-              @input="temp_v_name = $event.target.value"
+              @input="temp_v_name = $event.target.value, cleanMessages()"
             />
             <label>
               <strong>Domain:</strong>
             </label>
             <span>
               <label for="is_domain_bool">Boolean</label>
-              <input type="checkbox" id="is_domain_bool" v-model="isDomainBool" />
+              <input type="checkbox" id="is_domain_bool" v-model="isDomainBool" @input="cleanMessages()" />
             </span>
             <span>
               <input
@@ -100,7 +100,7 @@
                 type="text"
                 :value="temp_v_domain"
                 @focus="$event.target.select()"
-                @input="temp_v_domain = $event.target.value"
+                @input="temp_v_domain = $event.target.value, cleanMessages()"
               />
               <input
                 v-else
