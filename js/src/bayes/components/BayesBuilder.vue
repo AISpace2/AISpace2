@@ -1,5 +1,5 @@
 <template>
-  <div class="bayes_builder" v-on:keyup.enter="getEnterKeyEvent()">
+  <div class="bayes_builder" v-on:keyup.enter="to_delete ? deleteSelection() : null">
     <GraphVisualizerBase
       :graph="graph"
       :transitions="true"
@@ -130,6 +130,7 @@
                 :value="selection ? temp_node_name : null"
                 @focus="$event.target.select()"
                 @input="temp_node_name = $event.target.value"
+                v-on:keyup.enter="isValidModify(temp_node_name, temp_node_domain)"
               />
               <label>
                 <strong>Domain:</strong>
@@ -140,6 +141,7 @@
                 @focus="$event.target.select()"
                 :value="selection ? temp_node_domain : null"
                 @input="temp_node_domain = $event.target.value"
+                v-on:keyup.enter="isValidModify(temp_node_name, temp_node_domain)"
               />
               (use comma to separate values)
               <button
@@ -217,6 +219,7 @@
                       :value="temp_node_evidences[index_p1 * selection.domain.length + index_snn2]"
                       @input="handleInputValue($event.target.value, index_p1, index_snn2)"
                       @blur="onBlurRest($event.target.value, index_p1, index_snn2)"
+                      v-on:keyup.enter="isEvidenceValid()"
                     />
                   </div>
                 </div>
@@ -256,6 +259,7 @@
                       @keyup="($event.target.value === null || $event.target.value === '' || $event.target.value.match(/^\.[0-9]*$/) || $event.target.value.match(/^[0-9]*\.$/)) ? handleEmptyOrDotInput($event.target.value, 0, index) : null"
                       @input="handleInputValue($event.target.value, 0, index)"
                       @blur="onBlurRest($event.target.value, 0, index)"
+                      v-on:keyup.enter="isEvidenceValid()"
                     />
                   </div>
                 </div>
@@ -365,21 +369,6 @@ export default class BayesGraphBuilder extends Vue {
       var temp = n.domain.join(",");
       n.domain = temp.split(",");
     });
-  }
-
-  /** Determine what to do when the user press Enter key at the builder. */
-  getEnterKeyEvent() {
-    if (this.mode === "delete") {
-      if (this.to_delete) {
-        this.$refs.delete_yes.click();
-      }
-    }
-    if (this.mode === "select" && this.selection) {
-      this.$refs.btn_select_submit.click();
-    }
-    if (this.mode === "set_prob" && this.selection) {
-      this.$refs.btn_prob_submit.click();
-    }
   }
 
   /** Switches to a new mode.
