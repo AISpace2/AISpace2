@@ -163,8 +163,21 @@
           <br />
         </p>
         <div :class="getDeletionConfirmationClass(to_delete)">
-          <strong>Confirm Deletion?</strong>
-          <button ref="delete_yes" @click="deleteSelection()" @blur="selection = null">Yes</button>
+          <p v-if="selection">
+            <span v-if="selection.type == 'edge'">
+            <strong>
+              Delete
+              <span class="nodeText">{{selection.source.name}} -- {{selection.target.name}}</span>?
+            </strong>
+          </span>
+          <span v-else>
+            <strong>
+              Delete
+              <span class="nodeText">{{selection.name}}</span>?
+            </strong>
+          </span>
+          </p>
+          <button ref="delete_yes" @click="deleteSelection()">Yes</button>
           <button ref="delete_no" @click="selection = null, to_delete = false">No</button>
         </div>
         <p class="successText">{{succeed_message}}</p>
@@ -876,6 +889,7 @@ export default class BayesGraphBuilder extends Vue {
         id: shortid.generate(),
         source: this.first.id,
         target: this.selection.id,
+        type: "edge",
         name: "edge1"
       });
 
