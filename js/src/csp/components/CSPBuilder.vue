@@ -7,6 +7,7 @@
       @dblclick="createNode"
       @click:edge="updateSelection"
       @click:node="updateSelection"
+      @click.native="to_delete ? $refs.delete_yes.focus() : null"
     >
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode
