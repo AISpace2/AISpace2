@@ -309,7 +309,7 @@
           <span v-if="selection.type == 'edge'">
           <strong>
             Delete
-            <span class="nodeText">{{selection.source.name}} --> {{selection.target.name}}</span>?
+            <span class="nodeText">{{selection.source.name}}---{{selection.target.name}}</span>?
           </strong>
         </span>
         <span v-else>
