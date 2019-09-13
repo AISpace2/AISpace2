@@ -230,7 +230,7 @@
             You selected edge
             <span
               class="nodeText"
-            >{{selection.source.name}} --> {{selection.target.name}}</span>.
+            >{{selection.source.name}}-->{{selection.target.name}}</span>.
             <br />
             <label>
               <strong>Edge Cost:</strong>
@@ -263,7 +263,7 @@
             <span v-if="selection.type == 'edge'">
               <strong>
                 Delete
-                <span class="nodeText">{{selection.source.name}} --> {{selection.target.name}}</span>?
+                <span class="nodeText">{{selection.source.name}}-->{{selection.target.name}}</span>?
               </strong>
             </span>
             <span v-else>
