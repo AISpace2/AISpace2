@@ -51,7 +51,7 @@ class Inference_method(Displayable):
 
 bn_empty = Belief_network([], [])
 
-boolean = [True, False]
+boolean = ["True", "False"]
 A = Variable("A", boolean)
 B = Variable("B", boolean)
 C = Variable("C", boolean)
