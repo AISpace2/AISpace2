@@ -1,5 +1,5 @@
 <template>
-  <div class="search_builder" v-on:keyup.enter="to_delete ? deleteSelection() : null">
+  <div class="search_builder">
     <GraphVisualizerBase
       :graph="graph"
       :transitions="true"
@@ -74,15 +74,33 @@
           <span>
             Node type:
             <span class="radioInputGroup">
-              <input type="radio" id="nt_r" value="search:regular" v-model="node_type" />
+              <input
+                type="radio"
+                id="nt_r"
+                value="search:regular"
+                v-model="node_type"
+                @input="cleanMessages()"
+              />
               <label for="nt_r">Regular</label>
             </span>
             <span class="radioInputGroup">
-              <input type="radio" id="nt_s" value="search:start" v-model="node_type" />
+              <input
+                type="radio"
+                id="nt_s"
+                value="search:start"
+                v-model="node_type"
+                @input="cleanMessages()"
+              />
               <label for="nt_s">Start</label>
             </span>
             <span class="radioInputGroup">
-              <input type="radio" id="nt_g" value="search:goal" v-model="node_type" />
+              <input
+                type="radio"
+                id="nt_g"
+                value="search:goal"
+                v-model="node_type"
+                @input="cleanMessages()"
+              />
               <label for="nt_g">Goal</label>
             </span>
           </span>
@@ -92,7 +110,7 @@
             type="text"
             :value="temp_v_name"
             @focus="$event.target.select()"
-            @input="temp_v_name = $event.target.value"
+            @input="temp_v_name = $event.target.value, cleanMessages()"
           />
           <label>Node Heuristic:</label>
           <input
@@ -101,7 +119,7 @@
             :value="temp_heuristic"
             @focus="$event.target.select()"
             @blur="resetInputbox_heu($event.target.value)"
-            @input="trimNonInt($event.target.value),temp_heuristic = $event.target.value"
+            @input="trimNonInt($event.target.value),temp_heuristic = $event.target.value, cleanMessages()"
           />
           <br />
           <span>
@@ -118,7 +136,7 @@
             :value="temp_e_cost"
             @focus="$event.target.select()"
             @blur="resetInputbox_cost($event.target.value)"
-            @input="trimNonNumeric($event.target.value),temp_e_cost = $event.target.value"
+            @input="trimNonNumeric($event.target.value),temp_e_cost = $event.target.value, cleanMessages()"
           />
           <br />
           <span
@@ -154,6 +172,7 @@
                   id="nt_r"
                   value="search:regular"
                   v-model="node_type"
+                  @input="cleanMessages()"
                   v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
                 />
                 <label for="nt_r">Regular</label>
@@ -164,6 +183,7 @@
                   id="nt_s"
                   value="search:start"
                   v-model="node_type"
+                  @input="cleanMessages()"
                   v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
                 />
                 <label for="nt_s">Start</label>
@@ -174,6 +194,7 @@
                   id="nt_g"
                   value="search:goal"
                   v-model="node_type"
+                  @input="cleanMessages()"
                   v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
                 />
                 <label for="nt_g">Goal</label>
@@ -187,7 +208,7 @@
               type="text"
               :value="temp_v_name"
               @focus="$event.target.select()"
-              @input="temp_v_name = $event.target.value"
+              @input="temp_v_name = $event.target.value, cleanMessages()"
               v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
             />
             <label>
@@ -198,7 +219,7 @@
               ref="Intonlyinput"
               :value="temp_heuristic"
               @focus="$event.target.select()"
-              @input="trimNonInt($event.target.value),temp_heuristic = $event.target.value"
+              @input="trimNonInt($event.target.value),temp_heuristic = $event.target.value, cleanMessages()"
               v-on:keyup.enter="UpdateVariable(temp_v_name, temp_heuristic)"
             />
             <button ref="node_submit" @click="UpdateVariable(temp_v_name, temp_heuristic)">Submit</button>
@@ -219,7 +240,7 @@
               ref="numberonlyinput"
               :value="temp_e_cost"
               @focus="$event.target.select()"
-              @input="trimNonNumeric($event.target.value),temp_e_cost = $event.target.value"
+              @input="trimNonNumeric($event.target.value),temp_e_cost = $event.target.value, cleanMessages()"
               v-on:keyup.enter="UpdateEdge(temp_e_cost)"
             />
             <button ref="edge_submit" @click="UpdateEdge(temp_e_cost)">Submit</button>
@@ -232,16 +253,16 @@
         </div>
       </div>
 
-      <div v-if="mode == 'delete'" v-on:keyup.enter="deleteSelection()">
+      <div v-if="mode == 'delete'">
         <p class="builder_output">
           Click on a node or an edge to delete.
           <br />
         </p>
-        <p v-show="to_delete">
+        <div :class="getDeletionConfirmationClass(to_delete)">
           <strong>Confirm Deletion?</strong>
-          <button ref="delete_yes" @click="deleteSelection()">Yes</button>
+          <button ref="delete_yes" @click="deleteSelection()" @blur="selection = null">Yes</button>
           <button ref="delete_no" @click="selection = null, to_delete = false">No</button>
-        </p>
+        </div>
         <span>
           <span class="warningText">{{warning_message}}</span>
           <span class="successText">{{succeed_message}}</span>
@@ -330,6 +351,27 @@ export default class SearchGraphBuilder extends Vue {
     this.first = null;
   }
 
+  /** If use v-show, when the component is hidden,
+   * there's no input value (e.g. inputbox, buttons, etc.) focused,
+   * This will cause a problem that after click "No" button,
+   * Enter key won't work on the builder since the builder is not focused.
+   * Therefore, the deletion confirmation must always show,
+   * So when it is not needed, make it transparent. */
+  getDeletionConfirmationClass(to_delete: boolean) {
+    if (to_delete) {
+      return "show_deletion_confirmation";
+    } else {
+      return "hide_deletion_confirmation";
+    }
+  }
+
+  cleanMessages() {
+    this.warning_message = "";
+    this.succeed_message = "";
+    this.edge_succeed_message = "";
+    this.edge_warning_message = "";
+  }
+
   genNewDefaultName() {
     var n_of_nodes = this.graph.nodes.length;
     var new_name = `Node${n_of_nodes}`;
@@ -366,6 +408,8 @@ export default class SearchGraphBuilder extends Vue {
     var val: string = "";
     if (val_origin[0] === "-") {
       val = val_origin.substring(1, val_origin.length);
+    } else {
+      val = val_origin;
     }
     if (val.match(/^.*[^0-9\.].*$/) || !val.match(/^[0-9]*\.?[0-9]*$/)) {
       var result = val.replace(/[^\d.]/g, "");
@@ -707,6 +751,7 @@ export default class SearchGraphBuilder extends Vue {
         this.warning_message = "";
         this.succeed_message = "";
         this.to_delete = true;
+        this.$refs.delete_yes.focus();
       } else {
         this.to_delete = false;
       }
@@ -737,3 +782,13 @@ export default class SearchGraphBuilder extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.show_deletion_confirmation {
+  opacity: 1;
+}
+
+.hide_deletion_confirmation {
+  opacity: 0;
+}
+</style>
