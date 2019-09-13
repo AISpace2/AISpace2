@@ -889,6 +889,7 @@ export default class BayesGraphBuilder extends Vue {
         id: shortid.generate(),
         source: this.first.id,
         target: this.selection.id,
+        type: "edge",
         name: "edge1"
       });
 
