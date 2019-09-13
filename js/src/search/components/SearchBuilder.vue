@@ -10,6 +10,7 @@
       :legendColor="legendColor"
       :legendText="legendText"
       :textSize="textSize"
+      @click.native="to_delete ? $refs.delete_yes.focus() : null"
     >
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode
