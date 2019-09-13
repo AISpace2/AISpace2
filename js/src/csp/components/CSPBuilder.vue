@@ -306,7 +306,7 @@
       </p>
       <div :class="getDeletionConfirmationClass(to_delete)">
         <strong>Confirm Deletion?</strong>
-        <button ref="delete_yes" @click="deleteSelection()">Yes</button>
+        <button ref="delete_yes" @click="deleteSelection()" @blur="selection = null">Yes</button>
         <button ref="delete_no" @click="selection = null, to_delete = false">No</button>
       </div>
       <span class="successText">{{succeed_message}}</span>
