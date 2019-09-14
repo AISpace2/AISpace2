@@ -9,7 +9,7 @@
         </polygon>
 
         <!-- The white background for the text. There is no way to colour the background of text in SVG. -->
-        <!-- rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect -->
+        <rect class="text-background" v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect>
         <g :transform="`translate(${textX}, ${textY})
             rotate(${angleText})`">
             <!-- Text x/y are not animated, so we wrap it in a group. -->
@@ -117,9 +117,7 @@
 
     /** The x-coordinate that is the midpoint between the source and target of the adjusted path. */
     get centerX() {
-      if(this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2){
-        return this.adjustedX1 + 60;
-      } else return this.adjustedX1 + (this.adjustedX2 - this.adjustedX1) / 2;
+      return this.adjustedX1 + (this.adjustedX2 - this.adjustedX1) / 2;
     }
 
     get textX() {
@@ -128,9 +126,7 @@
 
     /** The y-coordinate that is the midpoint between the source and target of the adjusted path. */
     get centerY() {
-      if(this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2){
-        return this.adjustedY1;
-      } else return this.adjustedY1 + (this.adjustedY2 - this.adjustedY1) / 2;
+      return this.adjustedY1 + (this.adjustedY2 - this.adjustedY1) / 2;
     }
 
     get textY() {
@@ -177,37 +173,7 @@
 
     /** The computed path of the line between the source and target. */
     get path() {
-      if (this.adjustedX1 === this.adjustedX2 && this.adjustedY1 === this.adjustedY2)
-      {
-        return (
-        "M" +
-        this.adjustedX1 +
-        "," +
-        this.adjustedY1 +
-        "L" +
-        String(this.adjustedX1 + 60) +
-        "," +
-        String(this.adjustedY1 + 60) +
-
-        "M" +
-        this.adjustedX1 +
-        "," +
-        this.adjustedY1 +
-        "L" +
-        String(this.adjustedX1 + 60) +
-        "," +
-        String(this.adjustedY1 - 60) +
-
-        "M" +
-        String(this.adjustedX1 + 60) +
-        "," +
-        String(this.adjustedY1 + 60) +
-        "L" +
-        String(this.adjustedX1 + 60) +
-        "," +
-        String(this.adjustedY1 - 60)
-      );
-      } else return (
+      return (
         "M" +
         this.adjustedX1 +
         "," +
@@ -242,6 +208,10 @@
                     0    1px 0 black,
                    -1px  1px 0 black,
                    -1px  0   0 black;
+     
+    }
 
+    .text-background{
+      opacity: 0;
     }
 </style>
