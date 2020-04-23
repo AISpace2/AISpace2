@@ -3,10 +3,13 @@ Utilities for converting to and from a Python CSP (aipython.cspProblem.CSP)
 and a Graph<ICSPGraphNode, IGraphEdge> in JavaScript.
 """
 
-from operator import lt  # should be deleted after fixing
 from string import Template
 
-from aipython.cspProblem import CSP, Constraint
+from aipython.cspProblem import (AND, CSP, FALSE, IMPLIES, NOT, OR, TRUE, XOR,
+                                 Constraint, Equals, GreaterThan, IsFalse,
+                                 IsTrue, LessThan, meet_at)
+
+import re
 
 
 def csp_to_json(csp, widget_model=None):
@@ -114,6 +117,28 @@ def generate_csp_graph_mappings(csp):
     return (node_map, edge_map)
 
 
+def find_used_condition_func(constraintType):
+    conditions_used = []
+    conditions = ["Equals", "LessThan", "GreaterThan",
+                  "TRUE", "FALSE", "IsTrue", "IsFalse",
+                  "AND", "OR", "XOR", "IMPLIES"]
+
+    if constraintType in conditions:
+        conditions_used.append(constraintType)
+
+    if re.match(r'Equals\(.*\)', constraintType):
+        conditions_used.append("Equals")
+    if re.match(r'LessThan\(.*\)', constraintType):
+        conditions_used.append("LessThan")
+    if re.match(r'GreaterThan\(.*\)', constraintType):
+        conditions_used.append("GreaterThan")
+
+    if (constraintType[4:len(constraintType)-1] in conditions) and (constraintType[0:4] == "NOT("):
+        conditions_used.append("NOT")
+
+    return conditions_used
+
+
 def json_to_csp(graph_json, widget_model=None):
     """Converts a CSP represented by a JSON dictionary into a Python CSP instance.
 
@@ -131,6 +156,9 @@ def json_to_csp(graph_json, widget_model=None):
     if not graph_json:
         return None
 
+    true = True
+    false = False
+
     domains = {
         node['name']: set(node['domain'])
         for node in graph_json['nodes'] if node['type'] == 'csp:variable'
@@ -141,6 +169,10 @@ def json_to_csp(graph_json, widget_model=None):
     for node in graph_json['nodes']:
         scope = []
         if node['type'] == 'csp:constraint':
+            condition_name = node['condition_name']
+            condition_fn = LessThan
+            callable = "condition_fn = " + condition_name
+            exec(callable)
             # Find the links with the target as this constraint
             for link in graph_json['edges']:
                 if link['target'] == node['id']:
@@ -153,9 +185,12 @@ def json_to_csp(graph_json, widget_model=None):
                     scope.append(source_node['name'])
 
             if scope:
-                constraints.append(Constraint(tuple(scope), lt))
+                c = Constraint(tuple(scope), condition_fn)
+                c.condition_name = condition_name
+                constraints.append(c)
 
-    positions = {node['name']: (int(node['x']), int(node['y'])) for node in graph_json['nodes']}
+    positions = {node['name']: (int(node['x']), int(node['y']))
+                 for node in graph_json['nodes']}
 
     return CSP(domains, constraints, positions)
 
@@ -176,21 +211,26 @@ def csp_to_python_code(csp, need_positions=False):
         (string):
             A string containing Python code. Executing this string will cause a CSP to be created.
     """
+    conditions_used = []
+
     domains = csp.domains
     constraint_strings = []
     for constraint in csp.constraints:
         scope = constraint.scope
-        name = constraint.condition.__name__
+        name = constraint.condition_name
+        conditions_used = conditions_used + find_used_condition_func(name)
         constraint_strings.append("Constraint({}, {})".format(scope, name))
     positions = csp.positions if need_positions else {}
+    conditions_used = list(dict.fromkeys(conditions_used))
 
-    template = """from aipython.cspProblem import CSP, Constraint\n
+    template = """from aipython.cspProblem import CSP, Constraint, $conditions_used\n
 csp = CSP(
     domains=$domains,
     constraints=[$constraints],
     positions=$positions)"""
 
     return Template(template).substitute(
+        conditions_used=', '.join(conditions_used),
         domains=domains,
         constraints=', '.join(constraint_strings),
         positions=positions)
