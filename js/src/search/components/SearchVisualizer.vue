@@ -12,7 +12,7 @@
       </template>
       <template slot="edge" slot-scope="props">
         <DirectedRectEdge :id="props.edge.id" :x1="updateOverlappedEdege(props.edge).styles.x1" :x2="updateOverlappedEdege(props.edge).styles.x2" :y1="updateOverlappedEdege(props.edge).styles.y1" :y2="updateOverlappedEdege(props.edge).styles.y2" :stroke="props.edge.styles.stroke"
-                          :strokeWidth="props.edge.styles.strokeWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name"
+                          :strokeWidth="lineWidth" :text="edgeText(props.edge)" :nodeName="props.edge.target.name"
                           :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
       </template>
@@ -112,6 +112,7 @@
     detailLevel: number;
     legendText: string[];
     legendColor: string[];
+    lineWidth: number;
 
     chooseClass(sub: string) {
       var solution: boolean = false;

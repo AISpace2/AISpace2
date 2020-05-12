@@ -71,6 +71,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           preSolution: "",
           positions: null,
           textSize: this.model.textSize,
+          lineWidth: this.model.lineWidth,
           detailLevel: this.model.detailLevel,
           legendText: searchLabelText,
           legendColor: searchLabelColor,

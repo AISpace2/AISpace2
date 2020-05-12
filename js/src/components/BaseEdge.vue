@@ -42,7 +42,7 @@
     @Prop({ default: "black" })
     stroke: string;
     /** The width, in pixels, of the line. */
-    @Prop({ default: 4 })
+    @Prop({ default: 1 })
     strokeWidth: number;
     /** The text displayed on the middle of the line. */
     @Prop({ type: [String, Number], required: false })

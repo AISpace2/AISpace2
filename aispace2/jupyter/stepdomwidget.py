@@ -46,7 +46,7 @@ class StepDOMWidget(DOMWidget):
 
     """
 
-    line_width = Float(4.0).tag(sync=True)
+    line_width = Float(1.0).tag(sync=True)
     text_size = Integer(12).tag(sync=True)
     show_full_domain = Bool(False).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
