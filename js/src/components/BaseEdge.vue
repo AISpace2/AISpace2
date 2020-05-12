@@ -9,11 +9,11 @@
         </polygon>
 
         <!-- The white background for the text. There is no way to colour the background of text in SVG. -->
-        <!-- rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="white"></rect -->
+        <!-- rect v-if="text" :x="rectX" :y="rectY" :width="rectWidth" :height="rectHeight" fill="blue"></rect -->
         <g :transform="`translate(${textX}, ${textY})
             rotate(${angleText})`">
             <!-- Text x/y are not animated, so we wrap it in a group. -->
-            <text class = "textstroke" v-if="text" ref="text" text-anchor="middle" fill="white" dominant-baseline="central">{{text}}</text>
+            <text class = "textstroke" v-if="text" ref="text" text-anchor="middle" fill="blue" dominant-baseline="central">{{text}}</text>
         </g>
     </g>
 </template>
@@ -100,16 +100,16 @@
       let angle = 0;
       var dx = this.adjustedX2 - this.adjustedX1;
       var dy = this.adjustedY2 - this.adjustedY1;
-      if (dx > 0 && dy > 0) {
+      if (dx >= 0 && dy >= 0) {
         angle = this.angle;
       }
       if (dx < 0 && dy < 0) {
         angle = this.angle -180;
       }
-      if (dx < 0 && dy > 0) {
+      if (dx < 0 && dy >= 0) {
         angle = this.angle - 180;
       }
-      if (dx > 0 && dy < 0) {
+      if (dx >= 0 && dy < 0) {
         angle = this.angle;
       }
       return angle;

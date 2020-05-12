@@ -38,6 +38,8 @@
     computedSubtextWidth = 0;
     /** The total height, in pixels, that the text and subtext (if available) take up. */
     computedTotalHeight = 0;
+    /** The total width, in pixels, that the text and subtext (if available) take up. */
+    computedTotalWidth = 0;    
     /** The subtext, truncated to `maxWidth`. This text is displayed in the node, if subtext is provided. */
     truncatedSubtext = "";
     $refs: {
@@ -65,9 +67,9 @@
     }
 
     /** The maximum of `computedTextWidth` and `computedSubtextWidth`. */
-    get computedTotalWidth() {
-      return Math.max(this.computedTextWidth, this.computedSubtextWidth);
-    }
+    // get computedTotalWidth() {
+    //   return Math.max(this.computedTextWidth, this.computedSubtextWidth);
+    // }
     get displaySubText() {
       let text = this.showFullTextFlag() ? this.subtext : this.truncatedSubtext;
       return this.format(text);
