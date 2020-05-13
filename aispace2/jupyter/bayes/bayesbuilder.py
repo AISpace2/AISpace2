@@ -1,5 +1,5 @@
 from ipywidgets import DOMWidget, register
-from traitlets import Bool, Dict, Instance, Integer, Unicode
+from traitlets import Bool, Dict, Instance, Integer, Unicode, Float
 
 from aipython.probGraphicalModels import Belief_network
 
@@ -25,6 +25,7 @@ class BayesBuilder(DOMWidget):
     graph = Instance(klass=Belief_network, allow_none=True).tag(
         sync=True, from_json=json_to_bayes_problem, to_json=bayes_problem_to_json)
     text_size = Integer(12).tag(sync=True)
+    line_width = Float(1.0).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
     decimal_place = Integer(2).tag(sync=True)
 

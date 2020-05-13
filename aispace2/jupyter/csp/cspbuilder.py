@@ -1,5 +1,5 @@
 from ipywidgets import DOMWidget, register
-from traitlets import Dict, Instance, Integer, Unicode
+from traitlets import Dict, Instance, Integer, Unicode, Float
 
 from aipython.cspProblem import CSP
 
@@ -32,6 +32,7 @@ class CSPBuilder(DOMWidget):
     # The CSP that is synced as a graph to the frontend.
     graph = Instance(klass=CSP, allow_none=True).tag(sync=True, from_json=json_to_csp, to_json=csp_to_json)
     text_size = Integer(12).tag(sync=True)
+    line_width = Float(1.0).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
 
     def __init__(self, csp=None):

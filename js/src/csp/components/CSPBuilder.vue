@@ -13,7 +13,14 @@
         </RectangleGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
-        <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y" :stroke="strokeColour(props.edge)"></UndirectedEdge>
+        <UndirectedEdge 
+        :x1="props.edge.source.x" 
+        :x2="props.edge.target.x" 
+        :y1="props.edge.source.y" 
+        :y2="props.edge.target.y" 
+        :stroke="strokeColour(props.edge)"
+        :strokeWidth="lineWidth"
+        ></UndirectedEdge>
       </template>
       <template slot="visualization" slot-scope="props">
         <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
@@ -106,6 +113,7 @@ export default class CSPGraphBuilder extends Vue {
   /** During edge creation, tracks the source node of the edge to be formed. */
   first: ICSPGraphNode | null = null;
   textSize: number;
+  lineWidth: number;
   detailLevel: number;
 
   /** Switches to a new mode. */

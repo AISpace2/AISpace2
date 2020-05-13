@@ -1,5 +1,5 @@
 from ipywidgets import DOMWidget, register
-from traitlets import Bool, Dict, Instance, Integer, Unicode, observe
+from traitlets import Bool, Dict, Instance, Integer, Unicode, observe, Float
 
 from aipython.searchProblem import Search_problem_from_explicit_graph
 
@@ -29,6 +29,7 @@ class SearchBuilder(DOMWidget):
     # True if a node's heuristic value should be shown.
     show_node_heuristics = Bool(False).tag(sync=True)
     text_size = Integer(12).tag(sync=True)
+    line_width = Float(1.0).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
 
     def __init__(self, search_problem=None):

@@ -353,6 +353,7 @@ export default class BayesGraphBuilder extends Vue {
   /** During edge creation, tracks the source node of the edge to be formed. */
   first: IBayesGraphNode | IGraphEdge | null = null;
   textSize: number;
+  lineWidth: number;
   detailLevel: number;
   temp_node_name: string = "";
   temp_node_domain: string = "";
@@ -1024,7 +1025,7 @@ export default class BayesGraphBuilder extends Vue {
       return edge.styles.strokeWidth + hoverWidth;
     }
 
-    return 4 + hoverWidth;
+    return this.lineWidth + hoverWidth;
   }
 
   domainText(node: IBayesGraphNode) {

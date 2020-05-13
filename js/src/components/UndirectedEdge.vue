@@ -29,7 +29,7 @@ export default class UndirectedEdge extends Vue {
   @Prop({ default: "black" })
   stroke: string;
   /** The width of the edge, in pixels. */
-  @Prop({ default: 4 })
+  @Prop({ default: 1 })
   strokeWidth: number;
 
   get path() {

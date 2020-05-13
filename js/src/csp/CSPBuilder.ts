@@ -29,6 +29,7 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
         data: {
           graph: initialGraph,
           textSize: this.model.textSize,
+          lineWidth: this.model.lineWidth,
           layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
           detailLevel: this.model.detailLevel
         },

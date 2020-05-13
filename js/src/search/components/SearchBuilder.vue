@@ -17,7 +17,7 @@
                       :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
                       :stroke="strokeColour(props.edge)"
-                      :strokeWidth="props.edge.styles.strokeWidth"
+                      :strokeWidth="lineWidth"
                       :text="showEdgeCosts ? props.edge.cost : undefined" :textSize="textSize" :hover="props.hover">
         </DirectedRectEdge>
       </template>
@@ -86,6 +86,7 @@ export default class SearchGraphBuilder extends Vue {
   detailLevel: number;
   legendText: string[];
   legendColor: string[];
+  lineWidth: number;
 
   /** The current node or edge being selected. */
   selection: ISearchGraphNode | ISearchGraphEdge | null = null;

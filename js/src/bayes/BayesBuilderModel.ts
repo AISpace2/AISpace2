@@ -64,6 +64,11 @@ export default class BayesBuilderModel extends widgets.DOMWidgetModel {
     return this.get("text_size");
   }
 
+  // The line width of the edges in the graph.
+  get lineWidth(): number {
+    return this.get("line_width");
+  }
+
   get detailLevel(): number {
     return this.get("detail_level");
   }

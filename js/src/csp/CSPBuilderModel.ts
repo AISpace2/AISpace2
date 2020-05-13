@@ -66,4 +66,9 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
   get textSize(): number {
     return this.get("text_size");
   }
+
+  // The line width of the edges in the graph.
+  get lineWidth(): number {
+    return this.get("line_width");
+  }
 }
