@@ -18,7 +18,7 @@
       <template slot="edge" slot-scope="props">
         <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                         :stroke="stroke(props.edge)"
-                        :stroke-width="strokeWidth(props.hover)"></UndirectedEdge>
+                        :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
       </template>
       <template slot="visualization" slot-scope="props">
         <a @click="props.toggleLegend">Toggle Legend</a>
@@ -232,8 +232,13 @@ export default class CSPGraphInteractor extends Vue {
     return undefined;
   }
 
-  strokeWidth(isHovering: boolean) {
+  strokeWidth(edge: IGraphEdge, isHovering: boolean) {
     const hoverWidth = isHovering ? 3 : 0;
+
+    if (edge.styles && edge.styles.strokeWidth) {
+      return edge.styles.strokeWidth + hoverWidth;
+    }
+
     return this.lineWidth + hoverWidth;
   }
 

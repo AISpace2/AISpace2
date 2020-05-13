@@ -21,10 +21,6 @@ class Displayable(StepDOMWidget):
     graph = Instance(klass=Belief_network, allow_none=True)\
         .tag(sync=True, from_json=json_to_bayes_problem, to_json=bayes_problem_to_json)
 
-    line_width = Float(4.0).tag(sync=True)
-    text_size = Integer(12).tag(sync=True)
-    show_full_domain = Bool(False).tag(sync=True)
-    detail_level = Integer(2).tag(sync=True)
     decimal_place = Integer(2).tag(sync=True)
 
     probCalculator = VE()

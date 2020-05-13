@@ -152,8 +152,13 @@
       }
     }
 
-    strokeWidth(isHovering: boolean) {
+    strokeWidth(edge: IGraphEdge, isHovering: boolean) {
     const hoverWidth = isHovering ? 3 : 0;
+
+    if (edge.styles && edge.styles.strokeWidth) {
+        return edge.styles.strokeWidth + hoverWidth;
+      }
+      
     return this.lineWidth + hoverWidth;
   }
 
