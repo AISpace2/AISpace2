@@ -79,6 +79,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           preSolution: "",
           positions: null,
           textSize: this.model.textSize,
+          lineWidth: this.model.lineWidth,
           detailLevel: this.model.detailLevel,
           legendText: cspLabelText,
           legendColor: cspLabelColor,

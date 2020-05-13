@@ -112,6 +112,7 @@
     detailLevel: number;
     legendText: string[];
     legendColor: string[];
+    // The line width of the edges in the graph
     lineWidth: number;
 
     chooseClass(sub: string) {

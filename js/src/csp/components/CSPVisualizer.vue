@@ -18,7 +18,7 @@
       <template slot="edge" slot-scope="props">
         <UndirectedEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                         :stroke="stroke(props.edge)"
-                        :stroke-width="strokeWidth(props.edge, props.hover)"></UndirectedEdge>
+                        :stroke-width="strokeWidth(props.hover)"></UndirectedEdge>
       </template>
       <template slot="visualization" slot-scope="props">
         <a @click="props.toggleLegend">Toggle Legend</a>
@@ -143,6 +143,9 @@ export default class CSPGraphInteractor extends Vue {
   ind: number;
   // the indent spacing between shown in domain spliting history
   indent: number;
+  // The line width of the edges in the graph
+  lineWidth: number;
+
 
   data() {
     return {
@@ -229,14 +232,9 @@ export default class CSPGraphInteractor extends Vue {
     return undefined;
   }
 
-  strokeWidth(edge: IGraphEdge, isHovering: boolean) {
+  strokeWidth(isHovering: boolean) {
     const hoverWidth = isHovering ? 3 : 0;
-
-    if (edge.styles && edge.styles.strokeWidth) {
-      return edge.styles.strokeWidth + hoverWidth;
-    }
-
-    return 4 + hoverWidth;
+    return this.lineWidth + hoverWidth;
   }
 
   domainText(node: ICSPGraphNode) {

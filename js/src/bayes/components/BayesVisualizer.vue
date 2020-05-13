@@ -118,6 +118,9 @@
     isQuerying: boolean;
     // the number of decimal places to show for the node's probability
     decimalPlace: number;
+    // The line width of the edges in the graph
+    lineWidth: number;
+
     // the checkboxs of node
     data() {
       return {
@@ -149,15 +152,10 @@
       }
     }
 
-    strokeWidth(edge: IGraphEdge, isHovering: boolean) {
-      const hoverWidth = isHovering ? 3 : 0;
-
-      if (edge.styles && edge.styles.strokeWidth) {
-        return edge.styles.strokeWidth + hoverWidth;
-      }
-
-      return 4 + hoverWidth;
-    }
+    strokeWidth(isHovering: boolean) {
+    const hoverWidth = isHovering ? 3 : 0;
+    return this.lineWidth + hoverWidth;
+  }
 
     /** Properties for text button for visualization */
     get textBtnProp() {

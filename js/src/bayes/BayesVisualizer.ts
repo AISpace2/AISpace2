@@ -50,6 +50,7 @@ export default class BayesVisualizer extends DOMWidgetView {
           // Layout object that controls where nodes are drawn
           layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
           textSize: this.model.textSize,
+          lineWidth: this.model.lineWidth,
           detailLevel: this.model.detailLevel,
           isQuerying: false,
           decimalPlace: this.model.decimalPlace
