@@ -35,7 +35,6 @@ export default class BayesBuilderModel extends widgets.DOMWidgetModel {
       _view_module: "aispace2",
       _view_module_version: EXTENSION_SPEC_VERSION,
       _view_name: "BayesBuilder",
-      decimal_place: 2
     };
   }
 
@@ -64,7 +63,7 @@ export default class BayesBuilderModel extends widgets.DOMWidgetModel {
     return this.get("text_size");
   }
 
-  // The line width of the edges in the graph.
+  // The base line width of the edges to draw. Bold arcs will be several pixels thicker than this.
   get lineWidth(): number {
     return this.get("line_width");
   }

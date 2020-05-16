@@ -34,6 +34,7 @@ class CSPBuilder(DOMWidget):
     text_size = Integer(12).tag(sync=True)
     line_width = Float(1.0).tag(sync=True)
     detail_level = Integer(2).tag(sync=True)
+    decimal_place = Integer(2).tag(sync=True)
 
     def __init__(self, csp=None):
         super().__init__()

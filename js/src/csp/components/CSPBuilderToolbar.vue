@@ -8,6 +8,8 @@
         <label for="two">Constraint</label>
         <input type="radio" id="three" value="edge" v-model="picked">
         <label for="three">Edge</label>
+        <input type="radio" id="four" value="delete" v-model="picked">
+        <label for="four">Delete</label>
     </span>
 </template>
 
@@ -16,7 +18,7 @@ import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 
-type Mode = "select" | "variable" | "constraint" | "edge";
+type Mode = "select" | "variable" | "constraint" | "edge" | "delete";
 
 /**
  * Toolbar to switch between modes while creating a CSP.

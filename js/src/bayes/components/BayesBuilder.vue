@@ -163,6 +163,7 @@
           Click on a node or an edge to delete.
           <br />
         </p>
+        <p class="successText">{{succeed_message}}</p>
         <div :class="getDeletionConfirmationClass(to_delete)">
           <p v-if="selection">
             <span v-if="selection.type == 'edge'">
@@ -181,7 +182,6 @@
           <button ref="delete_yes" @click="deleteSelection()">Yes</button>
           <button ref="delete_no" @click="selection = null, to_delete = false">No</button>
         </div>
-        <p class="successText">{{succeed_message}}</p>
       </div>
     </div>
     <div>
@@ -319,7 +319,7 @@ import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
 
 import { Graph, IBayesGraphNode, IGraphEdge, IGraphJSON } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
-import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode";
+import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import { NODATA } from "dns";
 import { IBayesObserveEvent } from "../BayesVisualizerEvents";
 import { parse } from "path";
@@ -372,7 +372,7 @@ export default class BayesGraphBuilder extends Vue {
   MAX_DIGITS: number = 10000000000;
   ROUND: number = 10;
 
-  /** Detect whether the user clicked an node/edge in delet mode */
+  /** Detect whether the user clicked an node/edge in delete mode */
   to_delete: boolean = false;
 
   created() {

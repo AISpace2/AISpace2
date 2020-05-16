@@ -71,4 +71,9 @@ export default class CSPBuilderModel extends widgets.DOMWidgetModel {
   get lineWidth(): number {
     return this.get("line_width");
   }
+
+  // return the decimal place in the query result
+  get decimalPlace(): number {
+    return this.get("decimal_place");
+  }
 }
