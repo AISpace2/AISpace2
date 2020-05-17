@@ -52,7 +52,7 @@ export type SearchNodeTypes = "search:start" | "search:goal" | "search:normal";
 export interface ISearchGraphNode extends IGraphNode {
   type: SearchNodeTypes;
   /** The node's heuristic value. Zero by default. Should be non-negative. */
-  h: number;
+  heuristic: number;
 }
 
 export interface ISearchGraphEdge extends IGraphEdge {

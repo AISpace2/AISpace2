@@ -31,7 +31,7 @@ def search_problem_to_json(problem, widget_model=None):
         if node in problem.hmap:
             h = problem.hmap[node]
 
-        node_to_add = {'name': str(node), 'id': node_map[str(node)], 'h': h}
+        node_to_add = {'name': str(node), 'id': node_map[str(node)], 'heuristic': h}
         if node == problem.start:
             node_to_add['type'] = 'search:start'
         elif node in problem.goals:
@@ -149,8 +149,8 @@ def json_to_search_problem(json, widget_model=None):
         elif node['type'] == 'search:goal':
             goals.add(node['name'])
 
-        if node['h'] != 0:
-            hmap[node['name']] = node['h']
+        if node['heuristic'] != 0:
+            hmap[node['name']] = node['heuristic']
 
         positions[node['name']] = (int(node['x']), int(node['y']))
 
