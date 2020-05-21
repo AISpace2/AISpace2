@@ -18,7 +18,8 @@
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
                       :stroke="strokeColour(props.edge)"
                       :strokeWidth="lineWidth"
-                      :text="showEdgeCosts ? props.edge.cost : undefined" :textSize="textSize" :hover="props.hover">
+                      :text="showEdgeCosts ? props.edge.cost : undefined" :textSize="textSize" :hover="props.hover"
+                      :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
@@ -39,7 +40,7 @@
       <SearchToolbar @modechanged="setMode"></SearchToolbar>
       <div v-if="mode == 'create'">
         <p class="builder_output">
-          <strong>To create variable:</strong> Set the name and the domain of the variable below,
+          <strong>To create variable:</strong> Set the name and the heuristic value of the note below,
           <br />and then double click at a position on the canvas where you want the new node to be created.
           <br />
           <span>
@@ -99,7 +100,7 @@
     <div>
       <div v-if="mode =='select'">
         <p class="builder_output">
-          Set the name and the domain of a node by cliking on it.
+          Set the name and the heuristic value of a node by cliking on it.
           <br />
         </p>
         <div v-if="selection && selection.type !== 'edge'">
@@ -140,7 +141,7 @@
                 </select>
                 <button
                   ref="btn_select_submit"
-                  @click="isValidModifyNode(temp_node_name), isValidModifyHeuristic(temp_node_heuristic)"
+                  @click="isValidModifyName(temp_node_name), isValidModifyHeuristic(temp_node_heuristic)"
                 >Submit</button>
               </span>
               <br />
@@ -326,9 +327,23 @@ export default class SearchGraphBuilder extends Vue {
     }
   }
 
+  // updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
+  //   node.styles.width = bounds.width;
+  //   node.styles.height = bounds.height;
+  // }
+
+  /**
+    * Whenever a node reports it has resized, update it's style so that it redraws.
+    */
   updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
     node.styles.width = bounds.width;
     node.styles.height = bounds.height;
+      this.graph.edges
+      .filter(edge => edge.target.id === node.id)
+      .forEach(edge => {
+        this.$set(edge.styles, "targetWidth", bounds.width);
+        this.$set(edge.styles, "targetHeight", bounds.height);
+      });
   }
 
 
@@ -461,13 +476,13 @@ export default class SearchGraphBuilder extends Vue {
           this.succeed_message = "";
           return;
         }
-        if (e.source === this.selection && e.target === this.first) {
-          this.first = null;
-          this.selection = null;
-          this.warning_message = "Edge already exists.";
-          this.succeed_message = "";
-          return;
-        }
+        // if (e.source === this.selection && e.target === this.first) {
+        //   this.first = null;
+        //   this.selection = null;
+        //   this.warning_message = "Edge already exists.";
+        //   this.succeed_message = "";
+        //   return;
+        // }
       });
 
 

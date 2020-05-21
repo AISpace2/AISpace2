@@ -9,8 +9,8 @@
    */
   @Component
   export default class DirectedRectEdge extends BaseEdge {
-    @Prop() graph_node_width: number;
-    @Prop() graph_node_height: number;
+    @Prop({default: 0}) graph_node_width: number;
+    @Prop({default: 0}) graph_node_height: number;
     @Prop({default: 15}) textSize: number;
     // Minimum text width so that the node doesn't become too small when the text is short
     minTextWidth = 50;
@@ -27,16 +27,16 @@
 
     /** The x-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
     get adjustedX2() {
-      // let point = this.intersectPoint();
-      // return point ? point.x : this.x2;
-      return this.x2;
+      let point = this.intersectPoint();
+      return point ? point.x : this.x2;
+      // return this.x2;
     }
 
     /** The y-coordinate to place the end of the path. It is adjusted to be on the edge of the node. */
     get adjustedY2() {
-      // let point = this.intersectPoint();
-      // return point ? point.y : this.y2;
-      return this.y2;
+      let point = this.intersectPoint();
+      return point ? point.y : this.y2;
+      // return this.y2;
     }
 
     /* Slope of the edge */
