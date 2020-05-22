@@ -73,11 +73,11 @@
             </select>
           </span>
           <br />
-          <span>
+          <!-- <span>
             <span class="warningText">{{warning_message}}</span>
             <span class="successText">{{succeed_message}}</span>
           </span>
-          <br />
+          <br /> -->
           <strong>To create edge:</strong> Click on the start node, then click on the end node.
           <br />
           <span
@@ -88,7 +88,19 @@
             <span
               class="nodeText"
             >{{first.name}}</span> again to unselect it.
+            <br />
           </span>
+          <label>
+            <strong>Cost:</strong>
+          </label>
+            <input
+            type="number"
+            style="width: 150px;"
+            :value="temp_edge_cost"
+            @focus="$event.target.select()"
+            @input="temp_edge_cost = $event.target.value, cleanMessages()"
+          />
+          <br />
           <span>
             <span class="warningText">{{warning_message}}</span>
             <span class="successText">{{succeed_message}}</span>
@@ -436,7 +448,7 @@ export default class SearchGraphBuilder extends Vue {
 
   /** Adds a node to the graph at position (x, y). */
   createNode(x: number, y: number) {
-    if (this.mode === "create") {
+    if (this.mode === "create" && this.isTempNode(this.temp_node_name, this.temp_node_heuristic)) {
       this.graph.addNode({
         id: shortid.generate(),
         name: this.temp_node_name,
@@ -451,8 +463,38 @@ export default class SearchGraphBuilder extends Vue {
     }
     this.first = null;
     this.selection = null;
-    this.cleanMessages();
   }
+  
+  /** Returns whether name and heuristic for a new node to be created are valid */
+  isTempNode(name_raw: string, heuristic: number) {
+    var name = name_raw.trimLeft().trimRight();
+    var node_to_be_drawn = true;
+    if (name === null || name.match(/^\s*$/)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Name not valid.";
+      this.succeed_message = "";
+    } else if (this.NameExists(name)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Name already exists.";
+      this.succeed_message = "";
+    } else if (heuristic < 0) {
+      node_to_be_drawn = false;
+      this.warning_message = "Heuristic can't be negative.";
+      this.succeed_message = "";
+    } else if ( heuristic === null ) {
+      node_to_be_drawn = false;
+      this.warning_message = "Heuristic not valid.";
+      this.succeed_message = "";
+    } else {
+      this.warning_message = "";
+      this.succeed_message = "Node created.";
+    }
+    return node_to_be_drawn;
+  }
+
+
+
+
 
   /** Adds a new edge to the graph. */
   createEdge() {
@@ -476,13 +518,6 @@ export default class SearchGraphBuilder extends Vue {
           this.succeed_message = "";
           return;
         }
-        // if (e.source === this.selection && e.target === this.first) {
-        //   this.first = null;
-        //   this.selection = null;
-        //   this.warning_message = "Edge already exists.";
-        //   this.succeed_message = "";
-        //   return;
-        // }
       });
 
 
@@ -491,12 +526,15 @@ export default class SearchGraphBuilder extends Vue {
         source: this.first.id,
         target: this.selection.id,
         name: "edge1",
-        cost: null
+        cost: this.temp_edge_cost
       });
 
 
       this.first = null;
       this.selection = null;
+      
+      this.temp_edge_cost = 0;
+      
       this.warning_message = "";
       this.succeed_message = "Edge created.";
 
@@ -601,6 +639,7 @@ export default class SearchGraphBuilder extends Vue {
     if (this.mode === "create") {
       this.temp_node_name = this.genNewDefaultName();
       this.temp_node_heuristic = 0;
+      this.temp_edge_cost = 0;
       this.selection = null;
     }
 
