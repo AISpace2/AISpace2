@@ -436,7 +436,7 @@ export default class SearchGraphBuilder extends Vue {
 
   /** This is to avoid generate an existing node name if some node was deleted */
   genNewDefaultName() {
-    var new_name = `Node${this.graph.nodes.length}`;
+    var new_name = `Node${this.graph.nodes.length + 1}`;
     var acc = 0;
     while (this.NameExists(new_name)) {
       acc += 1;

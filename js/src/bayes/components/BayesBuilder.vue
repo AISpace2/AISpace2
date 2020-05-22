@@ -346,8 +346,8 @@ export default class BayesGraphBuilder extends Vue {
   layout: GraphLayout;
 
   /** The mode of the editor. */
-  mode: Mode = "create";
-  prev_mode: Mode = "create";
+  mode: Mode = "select";
+  prev_mode: Mode = "select";
   /** The currently selected node or edge. Actions are preformed on the selection. */
   selection: IBayesGraphNode | IGraphEdge | null = null;
   /** During edge creation, tracks the source node of the edge to be formed. */
@@ -375,19 +375,19 @@ export default class BayesGraphBuilder extends Vue {
   /** Detect whether the user clicked an node/edge in delete mode */
   to_delete: boolean = false;
 
-  created() {
-    this.temp_node_name = this.genNewDefaultName();
-    this.temp_node_domain = "false,true";
-    this.convertAllDomainsToString();
-  }
+  // created() {
+  //   this.temp_node_name = this.genNewDefaultName();
+  //   this.temp_node_domain = "false,true";
+  //   this.convertAllDomainsToString();
+  // }
 
-  /** if there's Pre-defined problems */
-  convertAllDomainsToString() {
-    this.graph.nodes.forEach(n => {
-      var temp = n.domain.join(",");
-      n.domain = temp.split(",");
-    });
-  }
+  // /** if there's Pre-defined problems */
+  // convertAllDomainsToString() {
+  //   this.graph.nodes.forEach(n => {
+  //     var temp = n.domain.join(",");
+  //     n.domain = temp.split(",");
+  //   });
+  // }
 
   /** Switches to a new mode.
    * - Selection will remain unchanged if switch between "select" and "set_prob" mode.
@@ -838,7 +838,7 @@ export default class BayesGraphBuilder extends Vue {
 
   /** This is to avoid generate an existing node name if some node was deleted */
   genNewDefaultName() {
-    var new_name = `Node${this.graph.nodes.length}`;
+    var new_name = `Node${this.graph.nodes.length + 1}`;
     var acc = 0;
     while (this.NameExists(new_name)) {
       acc += 1;

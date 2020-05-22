@@ -46,12 +46,46 @@
         <b>Mode: </b>
       </span>
       <CSPToolbar @modechanged="setMode"></CSPToolbar>
-      <div v-if="mode == 'variable' || mode == 'constraint' ">
+      <div v-if="mode == 'constraint' ">
         <span>Double click on the graph to create a new {{mode}}.</span>
       </div>
     </div>
 
     <div>
+      <div v-if="mode == 'variable' ">
+        <p class="builder_output">
+          <strong>To create variable:</strong> Set the name and the domain of the variable below,
+          <br />and then double click at a position on the canvas where you want the new node to be created.
+          <br />
+          <span>
+            <label>
+              <strong>Name:</strong>
+            </label>
+            <input
+              type="text"
+              :value="temp_node_name"
+              @focus="$event.target.select()"
+              @input="temp_node_name = $event.target.value, cleanMessages()"
+            />
+            <label>
+              <strong>Domain:</strong>
+            </label>
+            <input
+              type="text"
+              style="width: 150px;"
+              :value="temp_node_domain"
+              @focus="$event.target.select()"
+              @input="temp_node_domain = $event.target.value, cleanMessages()"
+            />
+            (use comma to separate values)
+          </span>
+          <br />
+          <span>
+            <span class="warningText">{{warning_message}}</span>
+            <span class="successText">{{succeed_message}}</span>
+          </span>
+        </p>
+      </div>
       <div v-if="mode == 'select'">
         <p class="builder_output">
           Set the name and the domain of a node by cliking on it.
@@ -231,16 +265,23 @@ export default class CSPGraphBuilder extends Vue {
   /** Adds a node to the graph at position (x, y). */
   createNode(x: number, y: number) {
     var emptyconstraintParents: string[] = [];
+    var domainval = this.handleDomain(this.temp_node_domain);
 
-    if (this.mode === "variable") {
+    if (this.mode === "variable" && this.isTempNode(this.temp_node_name, this.temp_node_domain)) {
       this.graph.addNode({
         id: shortid.generate(),
-        name: "Variable",
+        name: this.temp_node_name,
         x,
         y,
         type: "csp:variable",
-        domain: []
-      });
+        domain: domainval
+      } as ICSPGraphNode);
+      
+      this.temp_node_name = this.genNewDefaultName();
+      this.temp_node_domain = "1,2,3";
+      this.warning_message = "";
+
+
     } else if (this.mode === "constraint") {
       this.graph.addNode({
         id: shortid.generate(),
@@ -250,8 +291,54 @@ export default class CSPGraphBuilder extends Vue {
         type: "csp:constraint",
         constraint: "gt",
         constraintParents: emptyconstraintParents
-      });
+      } as ICSPGraphNode);
     }
+
+    this.first = null;
+    this.selection = null;
+
+  }
+
+    /** This is to avoid generate an existing node name if some node was deleted */
+  genNewDefaultName() {
+    var new_name = `Node${this.graph.nodes.length + 1}`;
+    var acc = 0;
+    while (this.NameExists(new_name)) {
+      acc += 1;
+      new_name = `Node${this.graph.nodes.length + acc}`;
+    }
+    return new_name;
+  }
+
+  /** Returns whether name and domain for a new node to be created are valid */
+  isTempNode(name_raw: string, domain: string) {
+    var name = name_raw.trimLeft().trimRight();
+    var node_to_be_drawn = true;
+    if (name === null || name.match(/^\s*$/)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Name not valid.";
+      this.succeed_message = "";
+    } else if (this.NameExists(name)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Name already exists.";
+      this.succeed_message = "";
+    } else if (
+      domain === null ||
+      domain === "" ||
+      !domain.match(/^.+(,(\s)*.*)*$/)
+    ) {
+      node_to_be_drawn = false;
+      this.warning_message = "Domain not valid.";
+      this.succeed_message = "";
+    } else if (this.checkDomainDuplicates(domain)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Domain contains duplicated values.";
+      this.succeed_message = "";
+    } else {
+      this.warning_message = "";
+      this.succeed_message = "Variable created.";
+    }
+    return node_to_be_drawn;
   }
 
   /** Adds a new edge to the graph. */
@@ -516,6 +603,8 @@ export default class CSPGraphBuilder extends Vue {
         this.createEdge();
       }
     } else if (this.mode === "variable" || this.mode === "constraint" ) {
+      this.temp_node_name = this.genNewDefaultName();
+      this.temp_node_domain = "1,2,3";
       this.selection = null;
     } else if (this.mode === "delete"){
       if (this.selection) {
@@ -542,6 +631,13 @@ export default class CSPGraphBuilder extends Vue {
     this.succeed_message = "";
     this.first = null;
     this.to_delete = false;
+
+    if (this.mode === "variable" || this.mode === "constraint" ) {
+      this.temp_node_name = this.genNewDefaultName();
+      this.temp_node_domain = "1,2,3";
+      this.selection = null;
+    }
+
   }
 
   @Watch("first")

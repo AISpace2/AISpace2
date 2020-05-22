@@ -1,12 +1,12 @@
 <template>
   <span>
     <span class="radioInputGroup">
-      <input type="radio" id="one" value="create" v-model="picked" />
-      <label for="one">Create</label>
-    </span>
-    <span class="radioInputGroup">
       <input type="radio" id="zero" value="select" v-model="picked" />
       <label for="zero">Select</label>
+    </span>
+    <span class="radioInputGroup">
+      <input type="radio" id="one" value="create" v-model="picked" />
+      <label for="one">Create</label>
     </span>
     <span class="radioInputGroup">
       <input type="radio" id="three" value="set_prob" v-model="picked" />
@@ -31,7 +31,7 @@ type Mode = "select" | "create" | "delete" | "set_prob";
  */
 @Component
 export default class BayesToolbar extends Vue {
-  picked: Mode = "create";
+  picked: Mode = "select";
 
   @Watch("picked")
   onPickedChanged() {
