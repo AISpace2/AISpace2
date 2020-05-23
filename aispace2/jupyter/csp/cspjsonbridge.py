@@ -48,13 +48,14 @@ def csp_to_json(csp, widget_model=None):
 
     for (i, constraint) in enumerate(csp.constraints):
         constraint_id = str(hash(constraint))
-        constraint_name = constraint.__repr__()
+        constraint_name = constraint.__name__()
         csp_json['nodes'].append({
             'id': constraint_id,
             'name': constraint_name,
             'type': 'csp:constraint',
             'idx': i,
-            'combinations_for_true': csp.get_combinations_for_true(constraint)
+            'combinations_for_true': csp.get_combinations_for_true(constraint),
+            'constraintParents': list(constraint.scope)
         })
         if constraint_name in csp.positions:
             csp_json['nodes'][-1]['x'] = csp.positions[constraint_name][0]
@@ -142,18 +143,25 @@ def json_to_csp(graph_json, widget_model=None):
         scope = []
         if node['type'] == 'csp:constraint':
             # Find the links with the target as this constraint
-            for link in graph_json['edges']:
-                if link['target'] == node['id']:
-                    source_node = next(n for n in graph_json['nodes']
-                                       if n['id'] == link['source'])
-                    scope.append(source_node['name'])
-                elif link['source'] == node['id']:
-                    source_node = next(n for n in graph_json['nodes']
-                                       if n['id'] == link['target'])
-                    scope.append(source_node['name'])
+            # for link in graph_json['edges']:
+            #     if link['target'] == node['id']:
+            #         source_node = next(n for n in graph_json['nodes']
+            #                            if n['id'] == link['source'])
+            #         scope.append(source_node['name'])
+            #     elif link['source'] == node['id']:
+            #         source_node = next(n for n in graph_json['nodes']
+            #                            if n['id'] == link['target'])
+            #         scope.append(source_node['name'])
 
+            scope = node['constraintParents']
+
+            # meanningless boolean function, just used to pass constraint's name without breaking other code
+            def custom():
+                return True
+            custom.__name__ = node['name']
+                            
             if scope:
-                constraints.append(Constraint(tuple(scope), lt))
+                constraints.append(Constraint(tuple(scope), custom))
 
     positions = {node['name']: (int(node['x']), int(node['y'])) for node in graph_json['nodes']}
 

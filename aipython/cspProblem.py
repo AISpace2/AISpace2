@@ -27,9 +27,13 @@ class Constraint(object):
         if self.condition.__name__ == "<lambda>":
             self.condition.__name__ = "Custom"
         self.repr = self.condition.__name__ + str(self.scope)
+        self.name = self.condition.__name__
 
     def __repr__(self):
         return self.repr
+
+    def __name__(self):
+        return self.name
 
     def holds(self, assignment):
         """returns the value of Constraint con evaluated in assignment.

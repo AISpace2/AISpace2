@@ -289,7 +289,6 @@ export default class CSPGraphBuilder extends Vue {
         x,
         y,
         type: "csp:constraint",
-        constraint: "gt",
         constraintParents: emptyconstraintParents
       } as ICSPGraphNode);
     }
@@ -580,6 +579,15 @@ export default class CSPGraphBuilder extends Vue {
         this.succeed_message = "Edge deleted.";
       }
       if (this.graph.nodes.indexOf(this.selection as ICSPGraphNode) > -1) {
+        if (this.selection.type === "csp:variable") {
+          this.graph.edges.forEach(edge => {
+            if (edge.source === this.selection) {
+              edge.target.constraintParents.splice(edge.target.constraintParents.indexOf(edge.source.name), 1);
+            } else if (edge.target === this.selection){
+              edge.source.constraintParents.splice(edge.source.constraintParents.indexOf(edge.source.name), 1);
+            }
+          });
+        }
         this.graph.removeNode(this.selection as ICSPGraphNode);
         this.succeed_message = "Node deleted.";
       }

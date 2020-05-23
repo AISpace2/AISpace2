@@ -43,7 +43,6 @@ export interface IBayesGraphNode extends IGraphNode {
 export type CSPNodeTypes = "csp:variable" | "csp:constraint";
 export interface ICSPGraphNode extends IGraphNode {
   type: CSPNodeTypes;
-  constraint?: string;
   constraintParents?: string[];
   domain?: number[] | string[] | boolean[];
 }

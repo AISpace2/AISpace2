@@ -7,18 +7,15 @@ export function domainText(node: ICSPGraphNode) {
 
 /** Returns a formatted string representing the constraint of a constraint node. */
 export function constraintText(node: ICSPGraphNode) {
-  if (node.constraint != null) {
+  if (node.name != null) {
     if (node.constraintParents?.length != null && node.constraintParents?.length !== 0) {
       var cp = node.constraintParents.join(", ");
       
-      return `${node.constraint} (${cp})`;
+      return `${node.name} (${cp})`;
     }
-    return `${node.constraint} (?)`;
+    return `${node.name} (?)`;
   }
 
-  if (node.name != null) {
-    return node.name;
-  }
 
   return "N/A";
 }
