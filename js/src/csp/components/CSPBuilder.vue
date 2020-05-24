@@ -43,6 +43,13 @@
 
     <div>
       <span>
+        <b>Domain Type: </b>
+      </span>
+      <CSPDomainbar @domainTypechanged="setDomainType"></CSPDomainbar>
+    </div>
+
+    <div>
+      <span>
         <b>Mode: </b>
       </span>
       <CSPToolbar @modechanged="setMode"></CSPToolbar>
@@ -199,6 +206,7 @@ import { Prop, Watch } from "vue-property-decorator";
 import * as shortid from "shortid";
 
 import CSPToolbar from "./CSPBuilderToolbar.vue";
+import CSPDomainbar from "./CSPBuilderDomainbar.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 import RectangleGraphNode from "../../components/RectangleGraphNode.vue";
 import UndirectedEdge from "../../components/UndirectedEdge.vue";
@@ -210,6 +218,8 @@ import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNod
 
 type Mode = "select" | "variable" | "constraint" | "edge" | "delete";
 
+type DomainType = "number" | "string" | "boolean";
+
 /**
  * Component to visually construct a CSP graph.
  *
@@ -218,6 +228,7 @@ type Mode = "select" | "variable" | "constraint" | "edge" | "delete";
 @Component({
   components: {
     RoundedRectangleGraphNode,
+    CSPDomainbar,
     CSPToolbar,
     GraphVisualizerBase,
     RectangleGraphNode,
@@ -229,6 +240,8 @@ export default class CSPGraphBuilder extends Vue {
   graph: Graph<ICSPGraphNode>;
   /** Layout object that controls where nodes are drawn. */
   layout: GraphLayout;
+  /** The type of the domain. */
+  domainType: DomainType = "number";
 
   /** The mode of the editor. */
   mode: Mode = "select";
@@ -255,6 +268,11 @@ export default class CSPGraphBuilder extends Vue {
     this.mode = mode;
     this.selection = null;
     this.first = null;
+  }
+
+    /** Switches to a new mode. */
+  setDomainType(domainType: DomainType) {
+    this.domainType = domainType;
   }
 
   cleanMessages() {
@@ -512,13 +530,33 @@ export default class CSPGraphBuilder extends Vue {
       .trimRight()
       .split(/,\s*/)
       .filter(x => x !== "");
-    var domain: string[] = [];
-    domain_temp.forEach(d => {
-      var temp = d.trimLeft().trimRight();
-      domain.push(temp);
-    });
+    
 
-    return domain;
+    if(this.domainType === "number"){
+      let domain: number[] = [];
+      domain_temp.forEach(d => {          
+        var temp = d.trimLeft().trimRight();
+        domain.push(Number(temp));
+      });
+      return domain;
+    } else if (this.domainType === "string"){
+      let domain: string[] = [];
+      domain_temp.forEach(d => {
+        var temp = d.trimLeft().trimRight();
+        domain.push(temp);
+      });
+      return domain;
+    } else if (this.domainType === "boolean"){
+      let domain: boolean[] = [];
+      domain_temp.forEach(d => {
+        var temp = d.trimLeft().trimRight();
+        domain.push(Boolean(temp));
+      });
+      return domain;
+    }
+      
+    return null;
+     
   }
 
   checkDomainDuplicates(domain_raw: string) {
@@ -653,6 +691,35 @@ export default class CSPGraphBuilder extends Vue {
     if (this.selection) {
       this.cleanMessages();
     }
+  }
+
+  @Watch("domainType")
+  onDomainTypeChanged(){
+    if(this.domainType === "number"){
+      this.graph.nodes.forEach(node => {
+        let domain: number[] = [];
+        node.domain.forEach(d => {
+          domain.push(Number(d));
+        });
+        node.domain = domain;
+        })
+    } else if (this.domainType === "string"){
+      this.graph.nodes.forEach(node => {
+        let domain: string[] = [];
+        node.domain.forEach(d => {
+          domain.push(String(d));
+        });
+        node.domain = domain;
+      })
+    } else if (this.domainType === "boolean"){
+      this.graph.nodes.forEach(node => {
+        let domain: boolean[] = [];
+        node.domain.forEach(d => {
+          domain.push(Boolean(d));
+        });
+        node.domain = domain;
+      })
+    }  
   }
 
 }
