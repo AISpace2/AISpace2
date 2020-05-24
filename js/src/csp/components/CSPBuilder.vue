@@ -296,7 +296,13 @@ export default class CSPGraphBuilder extends Vue {
       } as ICSPGraphNode);
       
       this.temp_node_name = this.genNewDefaultName();
-      this.temp_node_domain = "1,2,3";
+      if(this.domainType === "number"){
+        this.temp_node_domain = "1, 2, 3";
+      } else if (this.domainType === "string"){
+        this.temp_node_domain = "a, b, c";
+      } else if (this.domainType === "boolean"){
+        this.temp_node_domain = "True, False";
+      }  
       this.warning_message = "";
 
 
@@ -495,7 +501,7 @@ export default class CSPGraphBuilder extends Vue {
         if (e.source === this.selection) {
           e.target.constraintParents[e.target.constraintParents.indexOf(oldname)] = newname;
         } else if (e.target === this.selection) {
-          e.source.constraintParents[e.target.constraintParents.indexOf(oldname)] = newname;
+          e.source.constraintParents[e.source.constraintParents.indexOf(oldname)] = newname;
         }
 
       });
@@ -650,7 +656,13 @@ export default class CSPGraphBuilder extends Vue {
       }
     } else if (this.mode === "variable" || this.mode === "constraint" ) {
       this.temp_node_name = this.genNewDefaultName();
-      this.temp_node_domain = "1,2,3";
+      if(this.domainType === "number"){
+        this.temp_node_domain = "1, 2, 3";
+      } else if (this.domainType === "string"){
+        this.temp_node_domain = "a, b, c";
+      } else if (this.domainType === "boolean"){
+        this.temp_node_domain = "True, False";
+      }  
       this.selection = null;
     } else if (this.mode === "delete"){
       if (this.selection) {
@@ -680,7 +692,14 @@ export default class CSPGraphBuilder extends Vue {
 
     if (this.mode === "variable" || this.mode === "constraint" ) {
       this.temp_node_name = this.genNewDefaultName();
-      this.temp_node_domain = "1,2,3";
+      if(this.domainType === "number"){
+        this.temp_node_domain = "1, 2, 3";
+      } else if (this.domainType === "string"){
+        this.temp_node_domain = "a, b, c";
+      } else if (this.domainType === "boolean"){
+        this.temp_node_domain = "True, False";
+      }  
+      
       this.selection = null;
     }
 
@@ -695,29 +714,45 @@ export default class CSPGraphBuilder extends Vue {
 
   @Watch("domainType")
   onDomainTypeChanged(){
+    if (this.mode === "variable" || this.mode === "constraint" ) {
+      if(this.domainType === "number"){
+        this.temp_node_domain = "1, 2, 3";
+      } else if (this.domainType === "string"){
+        this.temp_node_domain = "a, b, c";
+      } else if (this.domainType === "boolean"){
+        this.temp_node_domain = "True, False";
+      }  
+    }  
+
     if(this.domainType === "number"){
       this.graph.nodes.forEach(node => {
-        let domain: number[] = [];
-        node.domain.forEach(d => {
-          domain.push(Number(d));
-        });
-        node.domain = domain;
-        })
+        if(node.type === "csp:variable"){
+          let domain: number[] = [];
+          node.domain.forEach(d => {
+            domain.push(Number(d));
+          });
+          node.domain = domain;
+        }
+      })
     } else if (this.domainType === "string"){
       this.graph.nodes.forEach(node => {
-        let domain: string[] = [];
-        node.domain.forEach(d => {
-          domain.push(String(d));
-        });
-        node.domain = domain;
+        if(node.type === "csp:variable"){
+          let domain: string[] = [];
+          node.domain.forEach(d => {
+            domain.push(String(d));
+          });
+          node.domain = domain;
+        }
       })
     } else if (this.domainType === "boolean"){
       this.graph.nodes.forEach(node => {
-        let domain: boolean[] = [];
-        node.domain.forEach(d => {
-          domain.push(Boolean(d));
-        });
-        node.domain = domain;
+        if(node.type === "csp:variable"){
+          let domain: boolean[] = [];
+          node.domain.forEach(d => {
+            domain.push(Boolean(d));
+          });
+          node.domain = domain;
+        }
       })
     }  
   }
