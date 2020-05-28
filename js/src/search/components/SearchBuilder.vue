@@ -7,7 +7,7 @@
         <RoundedRectangleGraphNode :text="props.node.name"
                           :subtext="nodeHText(props.node)"
                           :fill="nodeFillColour(props.node)"
-                          :stroke="strokeColour(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
+                          :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node, props.hover)"
                           @updateBounds="updateNodeBounds(props.node, $event)" :textSize="textSize" :hover="props.hover"
         :detailLevel="detailLevel">
         </RoundedRectangleGraphNode>
@@ -16,8 +16,8 @@
         <DirectedRectEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
                       :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
                       :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
-                      :stroke="strokeColour(props.edge)"
-                      :strokeWidth="lineWidth"
+                      :stroke="edgeStrokeColour(props.edge, props.hover)"
+                      :strokeWidth="edgeStrokeWidth(props.edge, props.hover)"
                       :text="showEdgeCosts ? props.edge.cost : undefined" :textSize="textSize" :hover="props.hover"
                       :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
@@ -159,16 +159,6 @@
               <br />
             </p>
           </div>
-          <!-- <label for="node-name">Name</label>
-          <input type="text" v-model="selection.name" />
-          <label for="node-h">Heuristic Value</label>
-          <input type="number" step="0.1" min="0" v-model="selection.heuristic" />
-          <label for="node-type">Type</label>
-          <select id="node-type" v-model="selection.type">
-            <option value="search:start">Start</option>
-            <option value="search:regular">Regular</option>
-            <option value="search:goal">Goal</option>
-          </select> -->
         </div>
         <div v-if="selection && selection.type === 'edge'">
           <label>
@@ -186,8 +176,6 @@
             ref="btn_select_submit"
             @click="isValidModifyCost(temp_edge_cost)"
           >Submit</button>
-          <!-- <label for="edge-cost">Edge Cost</label>
-          <input type="number" v-model.number="selection.cost"> -->
         </div>
         <p>
           <span class="warningText">{{warning_message}}</span>
@@ -341,21 +329,43 @@ export default class SearchGraphBuilder extends Vue {
 
   // =========================================================
   // canvas-related functions 
-
-  strokeColour(selection: ISearchGraphNode | ISearchGraphEdge) {
-    if (this.selection === selection) {
-      return "blue";
+  nodeStrokeColour(selection: ISearchGraphNode, isHovering: boolean ) {
+    if (selection === this.selection || isHovering ) {
+      return "pink";
     }
 
     return "black";
   }
 
-  nodeStrokeWidth(node: ISearchGraphNode) {
-    if (this.selection === node) {
+
+  edgeStrokeColour(selection: ISearchGraphEdge, isHovering: boolean) {
+    if ((selection === this.selection || isHovering) && (this.mode == "select" || this.mode == "delete")) {
+      return "pink";
+    }
+
+    return "black";
+  }
+
+
+
+  nodeStrokeWidth(node: ISearchGraphNode, isHovering: boolean ) {
+    if (this.selection === node || isHovering ) {
       return 3;
     }
 
     return 1;
+  }
+  
+  /** stroke width of an edge while hovered or not */
+  edgeStrokeWidth(edge: ISearchGraphEdge, isHovering: boolean) {
+    const isHighlight = isHovering && (this.mode == "select" || this.mode == "delete");
+    const hoverWidth = isHighlight ? 3 : 0;
+
+    if (edge.styles && edge.styles.strokeWidth) {
+      return edge.styles.strokeWidth + hoverWidth;
+    }
+
+    return this.lineWidth + hoverWidth;
   }
 
   nodeFillColour(node: ISearchGraphNode) {

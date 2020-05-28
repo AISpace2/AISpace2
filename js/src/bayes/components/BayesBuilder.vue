@@ -732,7 +732,7 @@ export default class BayesGraphBuilder extends Vue {
   }
 
   nodeBackground(node: IBayesGraphNode, isHovering: boolean) {
-    if ((this.selection === node || isHovering) && this.mode !== "variable") {
+    if (this.selection === node || isHovering) {
       return "pink";
     }
     return "white";

@@ -12,11 +12,11 @@
     >
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode v-if="props.node.type === 'csp:variable'" :text="props.node.name" :subtext="domainText(props.node)"
-                                   :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover"
+                                   :fill="nodeBackground(props.node, props.hover)" :textSize="textSize" :hover="props.hover"
                                    :detailLevel="detailLevel">
         </RoundedRectangleGraphNode>
         <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)"
-                            :fill="props.node === selection ? 'pink' : 'white'" :textSize="textSize" :hover="props.hover"
+                            :fill="nodeBackground(props.node, props.hover)" :textSize="textSize" :hover="props.hover"
                             :detailLevel="detailLevel">
         </RectangleGraphNode>
       </template>
@@ -26,8 +26,8 @@
         :x2="props.edge.target.x" 
         :y1="props.edge.source.y" 
         :y2="props.edge.target.y" 
-        :stroke="strokeColour(props.edge)"
-        :strokeWidth="lineWidth"
+        :stroke="edgeStrokeColour(props.edge, props.hover)"
+        :strokeWidth="edgeStrokeWidth(props.edge, props.hover)"
         ></UndirectedEdge>
       </template>
       <template slot="visualization" slot-scope="props">
@@ -280,6 +280,183 @@ export default class CSPGraphBuilder extends Vue {
     this.succeed_message = "";
   }
 
+
+
+
+
+  /** Updates the user selection. If the selection was previously selected, unselects it. */
+  updateSelection(selection: ICSPGraphNode | IGraphEdge) {
+    if (this.selection === selection) {
+      this.selection = null;
+      this.first = null;
+    } else {
+      this.selection = selection;
+    }
+  }
+
+  
+  /** Check whether the given node name exists */
+  NameExists(name: string) {
+    var nameExists = false;
+    this.graph.nodes.forEach(function(node) {
+      if (node.name === name) {
+        nameExists = true;
+      }
+    });
+    return nameExists;
+  }
+
+  /** This will handle domain:
+   * - If domain has duplicated value, send a warning message
+   * - If domain has white-spaces at the beginning or the end, trim the domain
+   * - Remove any empty string
+   * - If domain only contains "true" or "false", convert to boolean list
+   */
+  handleDomain(domain_raw: string) {
+    var domain_temp = domain_raw
+      .trimLeft()
+      .trimRight()
+      .split(/,\s*/)
+      .filter(x => x !== "");
+    
+
+    if(this.domainType === "number"){
+      let domain: number[] = [];
+      domain_temp.forEach(d => {          
+        var temp = d.trimLeft().trimRight();
+        domain.push(Number(temp));
+      });
+      return domain;
+    } else if (this.domainType === "string"){
+      let domain: string[] = [];
+      domain_temp.forEach(d => {
+        var temp = d.trimLeft().trimRight();
+        domain.push(temp);
+      });
+      return domain;
+    } else if (this.domainType === "boolean"){
+      let domain: boolean[] = [];
+      domain_temp.forEach(d => {
+        var temp = d.trimLeft().trimRight();
+        domain.push(Boolean(temp));
+      });
+      return domain;
+    }
+      
+    return null;
+     
+  }
+
+  checkDomainDuplicates(domain_raw: string) {
+    var domain_temp = domain_raw
+      .trimLeft()
+      .trimRight()
+      .split(/,\s*/)
+      .filter(x => x !== "");
+    var domain: string[] = [];
+    domain_temp.forEach(d => {
+      var temp = d.trimLeft().trimRight();
+      domain.push(temp);
+    });
+
+    if (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // =========================================================
+  // canvas-related functions 
+
+  nodeBackground(node: ICSPGraphNode, isHovering: boolean) {
+    if ((this.selection === node || isHovering) && this.mode !== "constraint" && this.mode !== "variable") {
+      return "pink";
+    }
+    return "white";
+  }
+
+  edgeStrokeColour(selection: IGraphEdge, isHovering: boolean) {
+    if ((selection === this.selection || isHovering) && this.mode == "delete") {
+      return "pink";
+    }
+
+    return "black";
+  }
+  
+  /** stroke width of an edge while hovered or not */
+  edgeStrokeWidth(edge: IGraphEdge, isHovering: boolean) {
+    const isHighlight = isHovering && this.mode == "delete";
+    const hoverWidth = isHighlight ? 3 : 0;
+
+    if (edge.styles && edge.styles.strokeWidth) {
+      return edge.styles.strokeWidth + hoverWidth;
+    }
+
+    return this.lineWidth + hoverWidth;
+  }
+
+  domainText(node: ICSPGraphNode) {
+    return CSPUtils.domainText(node);
+  }
+
+  constraintText(node: ICSPGraphNode) {
+    return CSPUtils.constraintText(node);
+  }
+
+
+  // =========================================================
+  // select-related functions 
+
+
+  /** Returns whether the modified node name and domain are valid,
+   * if valid, update the values */
+  isValidModify(name: string, domain: string) {
+    if (name === null || name.match(/^\s*$/)) {
+      this.warning_message = "Name not valid.";
+      this.succeed_message = "";
+    } else if (this.NameExists(name) && this.selection.name !== name) {
+      this.warning_message = "Name already exists.";
+      this.succeed_message = "";
+    } else if (
+      domain === null ||
+      domain === "" ||
+      !domain.match(/^.+(,(\s)*.*)*$/)
+    ) {
+      this.warning_message = "Domain not valid.";
+      this.succeed_message = "";
+    } else if (this.checkDomainDuplicates(domain)) {
+      this.warning_message = "Domain contains duplicated values.";
+      this.succeed_message = "";
+    } else {
+      var oldname = this.selection.name.slice(0);
+      this.selection!.name = name.trimLeft().trimRight();
+      var newname = this.selection.name.slice(0);
+
+      // Update related constraints' variable name
+      this.graph.edges.forEach(e => {
+        if (e.source === this.selection) {
+          e.target.constraintParents[e.target.constraintParents.indexOf(oldname)] = newname;
+        } else if (e.target === this.selection) {
+          e.source.constraintParents[e.source.constraintParents.indexOf(oldname)] = newname;
+        }
+
+      });
+
+      this.selection!.domain = this.handleDomain(domain);
+
+      this.warning_message = "";
+      this.succeed_message = "Node updated.";
+    }
+  }
+
+
+
+
+
+  // =========================================================
+  // create-related functions 
+
   /** Adds a node to the graph at position (x, y). */
   createNode(x: number, y: number) {
     var emptyconstraintParents: string[] = [];
@@ -364,6 +541,8 @@ export default class CSPGraphBuilder extends Vue {
     return node_to_be_drawn;
   }
 
+
+  
   /** Adds a new edge to the graph. */
   createEdge() {
     if (this.mode === "edge" && this.selection != null && this.first != null) {
@@ -446,143 +625,6 @@ export default class CSPGraphBuilder extends Vue {
     }
   }
 
-  strokeColour(edge: IGraphEdge) {
-    if (edge === this.selection) {
-      return "pink";
-    }
-
-    return "black";
-  }
-
-  domainText(node: ICSPGraphNode) {
-    return CSPUtils.domainText(node);
-  }
-
-  constraintText(node: ICSPGraphNode) {
-    return CSPUtils.constraintText(node);
-  }
-
-  /** Updates the user selection. If the selection was previously selected, unselects it. */
-  updateSelection(selection: ICSPGraphNode | IGraphEdge) {
-    if (this.selection === selection) {
-      this.selection = null;
-      this.first = null;
-    } else {
-      this.selection = selection;
-    }
-  }
-
-  /** Returns whether the modified node name and domain are valid,
-   * if valid, update the values */
-  isValidModify(name: string, domain: string) {
-    if (name === null || name.match(/^\s*$/)) {
-      this.warning_message = "Name not valid.";
-      this.succeed_message = "";
-    } else if (this.NameExists(name) && this.selection.name !== name) {
-      this.warning_message = "Name already exists.";
-      this.succeed_message = "";
-    } else if (
-      domain === null ||
-      domain === "" ||
-      !domain.match(/^.+(,(\s)*.*)*$/)
-    ) {
-      this.warning_message = "Domain not valid.";
-      this.succeed_message = "";
-    } else if (this.checkDomainDuplicates(domain)) {
-      this.warning_message = "Domain contains duplicated values.";
-      this.succeed_message = "";
-    } else {
-      var oldname = this.selection.name.slice(0);
-      this.selection!.name = name.trimLeft().trimRight();
-      var newname = this.selection.name.slice(0);
-
-      // Update related constraints' variable name
-      this.graph.edges.forEach(e => {
-        if (e.source === this.selection) {
-          e.target.constraintParents[e.target.constraintParents.indexOf(oldname)] = newname;
-        } else if (e.target === this.selection) {
-          e.source.constraintParents[e.source.constraintParents.indexOf(oldname)] = newname;
-        }
-
-      });
-
-      this.selection!.domain = this.handleDomain(domain);
-
-      this.warning_message = "";
-      this.succeed_message = "Node updated.";
-    }
-  }
-
-  /** Check whether the given node name exists */
-  NameExists(name: string) {
-    var nameExists = false;
-    this.graph.nodes.forEach(function(node) {
-      if (node.name === name) {
-        nameExists = true;
-      }
-    });
-    return nameExists;
-  }
-
-  /** This will handle domain:
-   * - If domain has duplicated value, send a warning message
-   * - If domain has white-spaces at the beginning or the end, trim the domain
-   * - Remove any empty string
-   * - If domain only contains "true" or "false", convert to boolean list
-   */
-  handleDomain(domain_raw: string) {
-    var domain_temp = domain_raw
-      .trimLeft()
-      .trimRight()
-      .split(/,\s*/)
-      .filter(x => x !== "");
-    
-
-    if(this.domainType === "number"){
-      let domain: number[] = [];
-      domain_temp.forEach(d => {          
-        var temp = d.trimLeft().trimRight();
-        domain.push(Number(temp));
-      });
-      return domain;
-    } else if (this.domainType === "string"){
-      let domain: string[] = [];
-      domain_temp.forEach(d => {
-        var temp = d.trimLeft().trimRight();
-        domain.push(temp);
-      });
-      return domain;
-    } else if (this.domainType === "boolean"){
-      let domain: boolean[] = [];
-      domain_temp.forEach(d => {
-        var temp = d.trimLeft().trimRight();
-        domain.push(Boolean(temp));
-      });
-      return domain;
-    }
-      
-    return null;
-     
-  }
-
-  checkDomainDuplicates(domain_raw: string) {
-    var domain_temp = domain_raw
-      .trimLeft()
-      .trimRight()
-      .split(/,\s*/)
-      .filter(x => x !== "");
-    var domain: string[] = [];
-    domain_temp.forEach(d => {
-      var temp = d.trimLeft().trimRight();
-      domain.push(temp);
-    });
-
-    if (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
 
 
