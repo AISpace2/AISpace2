@@ -410,51 +410,353 @@ export default class BayesGraphBuilder extends Vue {
     this.edge_warning_message = "";
   }
 
-  /** If use v-show, when the component is hidden,
-   * there's no input value (e.g. inputbox, buttons, etc.) focused,
-   * This will cause a problem that after click "No" button,
-   * Enter key won't work on the builder since the builder is not focused.
-   * Therefore, the deletion confirmation must always show,
-   * So when it is not needed, make it transparent. */
-  getDeletionConfirmationClass(to_delete: boolean) {
-    if (to_delete) {
-      return "show_deletion_confirmation";
+
+
+  /** This will handle domain:
+   * - If domain has duplicated value, send a warning message
+   * - If domain has white-spaces at the beginning or the end, trim the domain
+   * - Remove any empty string
+   * - If domain only contains "true" or "false", convert to boolean list
+   */
+  handleDomain(domain_raw: string) {
+    var domain_temp = domain_raw
+      .trimLeft()
+      .trimRight()
+      .split(/,\s*/)
+      .filter(x => x !== "");
+    var domain: string[] = [];
+    domain_temp.forEach(d => {
+      var temp = d.trimLeft().trimRight();
+      domain.push(temp);
+    });
+
+    return domain;
+  }
+
+  checkDomainDuplicates(domain_raw: string) {
+    var domain_temp = domain_raw
+      .trimLeft()
+      .trimRight()
+      .split(/,\s*/)
+      .filter(x => x !== "");
+    var domain: string[] = [];
+    domain_temp.forEach(d => {
+      var temp = d.trimLeft().trimRight();
+      domain.push(temp);
+    });
+
+    if (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
+      return true;
     } else {
-      return "hide_deletion_confirmation";
+      return false;
     }
   }
 
-  /** Returns whether name and domain for a new node to be created are valid */
-  isTempNode(name_raw: string, domain: string) {
-    var name = name_raw.trimLeft().trimRight();
-    var node_to_be_drawn = true;
-    if (name === null || name.match(/^\s*$/)) {
-      node_to_be_drawn = false;
-      this.warning_message = "Name not valid.";
-      this.succeed_message = "";
-    } else if (this.NameExists(name)) {
-      node_to_be_drawn = false;
-      this.warning_message = "Name already exists.";
-      this.succeed_message = "";
-    } else if (
-      domain === null ||
-      domain === "" ||
-      !domain.match(/^.+(,(\s)*.*)*$/)
-    ) {
-      node_to_be_drawn = false;
-      this.warning_message = "Domain not valid.";
-      this.succeed_message = "";
-    } else if (this.checkDomainDuplicates(domain)) {
-      node_to_be_drawn = false;
-      this.warning_message = "Domain contains duplicated values.";
-      this.succeed_message = "";
+  /** create a dictionary for evidences */
+  dicEvidences(node: IBayesGraphNode) {
+    var result = {};
+    if (node.parents.length > 0) {
+      var allprobNames = this.allComb(this.probList_with_parents_name(node));
+      for (var i = 0; i < allprobNames.length; i++) {
+        var key = allprobNames[i];
+        result[key] = {};
+        node.domain.forEach(d_0 => {
+          var d: string = d_0.toString();
+          if (node.evidences.length > 0) {
+            result[key][d] =
+              node.evidences[i * node.domain.length + node.domain.indexOf(d_0)];
+          } else {
+            result[key][d] = "no value";
+          }
+        });
+      }
     } else {
-      this.warning_message = "";
-      this.succeed_message = "Variable created.";
+      node.domain.forEach(d_0 => {
+        var d: string = d_0.toString();
+        if (node.evidences.length > 0) {
+          result[d] = node.evidences[node.domain.indexOf(d_0)];
+        } else {
+          result[d] = "no value";
+        }
+      });
     }
-    return node_to_be_drawn;
+    return result;
   }
 
+  /** Generate evidence list from evidence dictionary */
+  disdicEvidence(dicEvidences: Object, node: IBayesGraphNode) {
+    var result: any[] = [];
+    if (node.parents.length > 0) {
+      var allprobNames = this.allComb(this.probList_with_parents_name(node));
+      allprobNames.forEach(pn => {
+        node.domain.forEach(d_0 => {
+          var d = d_0.toString();
+          result.push(dicEvidences[pn][d]);
+        });
+      });
+    } else {
+      node.domain.forEach(d_0 => {
+        var d = d_0.toString();
+        result.push(dicEvidences[d]);
+      });
+    }
+    return result;
+  }
+
+  
+
+  /**
+   * Find all combinations of parents.
+   * e.g. parents = {name: "Node1", domain: ["true", "false"]}, {name: "Node2", domain: ["a", "b"]}
+   * => returns [["Node1 = true", "Node1 = false"], ["Node2 = a", "Node2 = b"]]
+   */
+  probList_with_parents_name(node: IBayesGraphNode) {
+    if (node.parents.length === 0 || node.parents === null) {
+      return [];
+    }
+    var probNameList: string[][] = [];
+    node.parents.forEach(p => {
+      var domains = this.domainToString(
+        this.graph.nodes.find(n => n.name === p)!
+      );
+      var probNameList_curr_p: string[] = [];
+      domains.forEach(d => {
+        probNameList_curr_p.push(p + "=" + d);
+      });
+      probNameList.push(probNameList_curr_p);
+    });
+    return probNameList;
+  }
+
+  /** Generate evidences for a newly created node */
+  initialEvidences(domain: string[] | boolean[]) {
+    var evidences: number[] = [];
+    var curr_sum = 0;
+    for (var i = 0; i < domain.length; i++) {
+      if (i !== domain.length - 1) {
+        var temp = parseFloat((1 / domain.length).toFixed(this.ROUND));
+        evidences.push(temp);
+        curr_sum += temp;
+      } else {
+        evidences.push(parseFloat((1 - curr_sum).toFixed(this.ROUND)));
+      }
+    }
+    return evidences;
+  }
+
+  
+
+  /** Check whether the given node name exists */
+  NameExists(name: string) {
+    var nameExists = false;
+    this.graph.nodes.forEach(function(node) {
+      if (node.name === name) {
+        nameExists = true;
+      }
+    });
+    return nameExists;
+  }
+
+
+ 
+  cleanEdgeMessage() {
+    if (this.mode === "create") {
+      this.edge_warning_message = "";
+      this.edge_succeed_message = "";
+    }
+  }
+
+
+
+  domainText(node: IBayesGraphNode) {
+    return `{${node.domain!.join(", ")}}`;
+  }
+
+  /** Updates the user selection. If the selection was previously selected, unselects it. */
+  updateSelection(selection: IBayesGraphNode | IGraphEdge) {
+    if (this.selection === selection) {
+      this.selection = null;
+      this.first = null;
+    } else {
+      this.selection = selection;
+    }
+  }
+
+  
+
+  /**
+   * Find all combinations of parents.
+   * e.g. parents = {name: "Node1", domain: ["true", "false"]}, {name: "Node2", domain: ["a", "b"]}
+   * => returns [["true", "false"], ["a", "b"]]
+   */
+  probList(node: IBayesGraphNode) {
+    if (node.parents.length === 0 || node.parents === null) {
+      return [];
+    }
+    var probNameList: string[][] = [];
+    node.parents.forEach(p => {
+      var domains = this.domainToString(
+        this.graph.nodes.find(n => n.name === p)!
+      );
+      var probNameList_curr_p: string[] = [];
+      domains.forEach(d => {
+        probNameList_curr_p.push(d);
+      });
+      probNameList.push(probNameList_curr_p);
+    });
+    return probNameList;
+  }
+
+  /** This function is to add a white block at the end of the last of the header of the prob table
+   */
+
+  domainToString(node: IBayesGraphNode) {
+    return node.domain!.join(",").split(",");
+  }
+
+  /**
+   * Find all possible combinations of node parents domains.
+   * e.g.
+   * arr = [["Node1 = true", "Node1 = false"]],
+   *      => returns ["Node1 = true", "Node1 = false"].
+   * arr = [["Node1 = true", "Node2 = false"], ["Node2 = a", Node2 = "b"]],
+   *      => returns ["Node1 = true,Node2 = a", "Node1 = true,Node2 = b",
+   *                  "Node1 = false,Node2 =a", "Node1 = false,Node2 = b"].
+   */
+  allComb(arr: string[][]) {
+    if (arr.length === 0) {
+      return [];
+    }
+    if (arr.length === 1) {
+      return arr[0];
+    }
+    const output = arr.reduce((acc, cu) => {
+      let ret: string[] = [];
+      acc.map(obj => {
+        cu.map(obj_1 => {
+          ret.push(obj + "," + obj_1);
+        });
+      });
+      return ret;
+    });
+    return output;
+  }
+
+  /** For each line of prob inputboxes generate its reference
+   * the format is: Parent1Name-Parent2Name_SelectedNodeName
+   * and for each prob inputbox in this line, the reference won't be generate here,
+   * but the format is:
+   * Parent1Name-Parent2Name_SelectedNodeName[index of row]_[index of domain of selected]
+   */
+  generateRef(node: IBayesGraphNode) {
+    if (node) {
+      var temp = node.parents.slice(0);
+      var str = temp.join("-");
+      var result = str + "_" + node.name;
+      return result;
+    } else {
+      return "";
+    }
+  }
+
+
+  cancelProbSet() {
+    this.temp_node_evidences = this.selection.evidences.slice(0);
+    this.warning_message = "";
+    this.succeed_message = "";
+    this.$forceUpdate();
+  }
+
+
+  
+  /** When user cursor leaves current input box,
+   * - if the value is "", "." or null, reset them to 0
+   * - if the value is, for example, "4.", set it to "4"
+   * - if the value is, for example, ".4", set it to "0.4"*/
+  onBlurRest(val: string, pni: number, di: number) {
+    if (val === "" || val === null || val === ".") {
+      this.temp_node_evidences[pni * this.selection.domain.length + di] = 0;
+      this.$refs[this.findInputboxRef(pni, di)][0].value = "0";
+    } else if (val.match(/^\.[0-9]*$/) || val.match(/^[0-9]*\.$/)) {
+      this.temp_node_evidences[
+        pni * this.selection.domain.length + di
+      ] = parseFloat(val);
+      this.$refs[this.findInputboxRef(pni, di)][0].value = parseFloat(val);
+    }
+  }
+
+
+  /** Find the reference of the inputbox */
+  findInputboxRef(prob_name_index: number, domain_index: number) {
+    var ref_prefix = this.generateRef(this.selection);
+    if (this.selection.parents.length > 0) {
+      return ref_prefix + prob_name_index + "_" + domain_index;
+    } else {
+      return ref_prefix + domain_index;
+    }
+  }
+
+
+  // Whenever a node reports it has resized, update it's style so that it redraws.
+  updateNodeBounds(
+    node: IBayesGraphNode,
+    bounds: { width: number; height: number }
+  ) {
+    node.styles.width = bounds.width;
+    node.styles.height = bounds.height;
+    this.graph.edges
+      .filter(edge => edge.target.id === node.id)
+      .forEach(edge => {
+        this.$set(edge.styles, "targetWidth", bounds.width);
+        this.$set(edge.styles, "targetHeight", bounds.height);
+      });
+  }
+
+  // =========================================================
+  // canvas-related functions 
+    
+  strokeColour(edge: IGraphEdge, isHovering: boolean) {
+    if ((edge === this.selection || isHovering) && this.mode == "delete") {
+      return "pink";
+    }
+
+    return "black";
+  }
+
+  nodeStrokeWidth(node: IBayesGraphNode) {
+    if (node.styles && node.styles.strokeWidth) {
+      return node.styles.strokeWidth;
+    }
+
+    return undefined;
+  }
+
+  nodeBackground(node: IBayesGraphNode, isHovering: boolean) {
+    if ((this.selection === node || isHovering) && this.mode !== "variable") {
+      return "pink";
+    }
+    return "white";
+  }
+
+  /** stroke width of an edge while hovered or not */
+  strokeWidth(edge: IGraphEdge, isHovering: boolean) {
+    const isHighlight = isHovering && this.mode === "delete";
+    const hoverWidth = isHighlight ? 3 : 0;
+
+    if (edge.styles && edge.styles.strokeWidth) {
+      return edge.styles.strokeWidth + hoverWidth;
+    }
+
+    return this.lineWidth + hoverWidth;
+  }
+
+
+
+
+  // =========================================================
+  // select-related functions 
+
+  
   /** Returns whether the modified node name and domain are valid,
    * if valid, update the values */
   isValidModify(name: string, domain: string) {
@@ -546,97 +848,6 @@ export default class BayesGraphBuilder extends Vue {
       this.warning_message = "";
       this.succeed_message = "Node updated.";
     }
-  }
-
-  /** This will handle domain:
-   * - If domain has duplicated value, send a warning message
-   * - If domain has white-spaces at the beginning or the end, trim the domain
-   * - Remove any empty string
-   * - If domain only contains "true" or "false", convert to boolean list
-   */
-  handleDomain(domain_raw: string) {
-    var domain_temp = domain_raw
-      .trimLeft()
-      .trimRight()
-      .split(/,\s*/)
-      .filter(x => x !== "");
-    var domain: string[] = [];
-    domain_temp.forEach(d => {
-      var temp = d.trimLeft().trimRight();
-      domain.push(temp);
-    });
-
-    return domain;
-  }
-
-  checkDomainDuplicates(domain_raw: string) {
-    var domain_temp = domain_raw
-      .trimLeft()
-      .trimRight()
-      .split(/,\s*/)
-      .filter(x => x !== "");
-    var domain: string[] = [];
-    domain_temp.forEach(d => {
-      var temp = d.trimLeft().trimRight();
-      domain.push(temp);
-    });
-
-    if (domain.find(x => domain.indexOf(x, domain.indexOf(x) + 1) !== -1)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  /** create a dictionary for evidences */
-  dicEvidences(node: IBayesGraphNode) {
-    var result = {};
-    if (node.parents.length > 0) {
-      var allprobNames = this.allComb(this.probList_with_parents_name(node));
-      for (var i = 0; i < allprobNames.length; i++) {
-        var key = allprobNames[i];
-        result[key] = {};
-        node.domain.forEach(d_0 => {
-          var d: string = d_0.toString();
-          if (node.evidences.length > 0) {
-            result[key][d] =
-              node.evidences[i * node.domain.length + node.domain.indexOf(d_0)];
-          } else {
-            result[key][d] = "no value";
-          }
-        });
-      }
-    } else {
-      node.domain.forEach(d_0 => {
-        var d: string = d_0.toString();
-        if (node.evidences.length > 0) {
-          result[d] = node.evidences[node.domain.indexOf(d_0)];
-        } else {
-          result[d] = "no value";
-        }
-      });
-    }
-    return result;
-  }
-
-  /** Generate evidence list from evidence dictionary */
-  disdicEvidence(dicEvidences: Object, node: IBayesGraphNode) {
-    var result: any[] = [];
-    if (node.parents.length > 0) {
-      var allprobNames = this.allComb(this.probList_with_parents_name(node));
-      allprobNames.forEach(pn => {
-        node.domain.forEach(d_0 => {
-          var d = d_0.toString();
-          result.push(dicEvidences[pn][d]);
-        });
-      });
-    } else {
-      node.domain.forEach(d_0 => {
-        var d = d_0.toString();
-        result.push(dicEvidences[d]);
-      });
-    }
-    return result;
   }
 
   /** Modify evidences on  node's domain changed
@@ -751,91 +962,235 @@ export default class BayesGraphBuilder extends Vue {
     }
   }
 
-  /**
-   * Find all combinations of parents.
-   * e.g. parents = {name: "Node1", domain: ["true", "false"]}, {name: "Node2", domain: ["a", "b"]}
-   * => returns [["Node1 = true", "Node1 = false"], ["Node2 = a", "Node2 = b"]]
+  /** Check whether modified temp_node_evidences is valid, and
+   * Update selection.evidences if modification is valid
    */
-  probList_with_parents_name(node: IBayesGraphNode) {
-    if (node.parents.length === 0 || node.parents === null) {
-      return [];
-    }
-    var probNameList: string[][] = [];
-    node.parents.forEach(p => {
-      var domains = this.domainToString(
-        this.graph.nodes.find(n => n.name === p)!
-      );
-      var probNameList_curr_p: string[] = [];
-      domains.forEach(d => {
-        probNameList_curr_p.push(p + "=" + d);
-      });
-      probNameList.push(probNameList_curr_p);
-    });
-    return probNameList;
-  }
+  isEvidenceValid() {
+    this.warning_message = "";
+    this.succeed_message = "";
+    var isvalid: boolean = true;
 
-  /** Generate evidences for a newly created node */
-  initialEvidences(domain: string[] | boolean[]) {
-    var evidences: number[] = [];
-    var curr_sum = 0;
-    for (var i = 0; i < domain.length; i++) {
-      if (i !== domain.length - 1) {
-        var temp = parseFloat((1 / domain.length).toFixed(this.ROUND));
-        evidences.push(temp);
-        curr_sum += temp;
+    this.temp_node_evidences.forEach((ev, index) => {
+      if (ev === null || ev === undefined || Number.isNaN(ev) || ev === ".") {
+        this.temp_node_evidences[index] = 0;
+      }
+    });
+
+    if (this.temp_node_evidences.findIndex(e => e > 1 || e < 0) > -1) {
+      this.warning_message = "The hightlighted values are invalid.";
+      isvalid = false;
+    }
+
+    if (
+      this.calAllSumOfSameLineInputBox(this.temp_node_evidences).find(
+        x => x / this.MAX_DIGITS !== 1
+      )
+    ) {
+      if (this.warning_message !== "") {
+        this.warning_message =
+          "The highlighted values are invalid. The hightlighted line doesn't sum up to 1.";
       } else {
-        evidences.push(parseFloat((1 - curr_sum).toFixed(this.ROUND)));
+        this.warning_message = "The highlighted line doesn't sum up to 1.";
       }
+      isvalid = false;
     }
-    return evidences;
+
+    if (isvalid) {
+      this.selection.evidences = this.temp_node_evidences.slice(0);
+      this.succeed_message = "Probabilities updated.";
+    }
+
+    this.$forceUpdate();
   }
 
-  uniformAllRows() {
-    var temp = this.initialEvidences(this.selection!.domain);
-    if (this.selection!.parents.length > 0) {
-      var number_of_rows = Math.round(
-        this.selection!.evidences.length / this.selection!.domain.length
-      );
-      var temp2: number[] = [];
-      for (var i = 0; i < number_of_rows; i++) {
-        temp.forEach(t => {
-          temp2.push(t);
-        });
-      }
-      this.temp_node_evidences = temp2;
+
+  isInvalidInputeBox(index: number, val: number | string) {
+    return (
+      val > 1 ||
+      val < 0 ||
+      (Number.isNaN(parseFloat(val)) &&
+        val !== "." &&
+        val !== "" &&
+        val !== null) ||
+      this.calSumOfSameLineInputBox(index) !== this.MAX_DIGITS
+    );
+  }
+
+  calSumOfSameLineInputBox(index: number) {
+    if (this.selection.parents.length > 0) {
+      return this.calAllSumOfSameLineInputBox(this.temp_node_evidences)[index];
     } else {
-      var temp = this.initialEvidences(this.selection!.domain);
-      this.temp_node_evidences = temp;
+      return this.calAllSumOfSameLineInputBox(this.temp_node_evidences)[0];
     }
-    this.$forceUpdate();
-    this.cleanMessages();
-    // focus on submit button so that enter-key submission can work
-    this.$refs.btn_prob_submit.focus();
   }
 
-  uniformThisRow(index_of_row: number) {
-    var row_length = this.selection!.domain.length;
-    var temp = this.initialEvidences(this.selection!.domain);
-    for (var i = 0; i < row_length; i++) {
-      this.temp_node_evidences[index_of_row * row_length + i] = temp[i];
+  /** Returns a list of sums of all rows of prob inputbox */
+  calAllSumOfSameLineInputBox(evidences: []) {
+    // first slice the node's evidences
+    var linesums: number[] = [];
+    var sliced = [];
+    var chunksize = this.selection.domain.length;
+    for (var i = 0; i < evidences.length; i += chunksize) {
+      sliced.push(evidences.slice(i, i + chunksize));
     }
-    this.$forceUpdate();
-    this.cleanMessages();
-    // focus on submit button so that enter-key submission can work
-    this.$refs.btn_prob_submit.focus();
-  }
-
-  /** Check whether the given node name exists */
-  NameExists(name: string) {
-    var nameExists = false;
-    this.graph.nodes.forEach(function(node) {
-      if (node.name === name) {
-        nameExists = true;
-      }
+    sliced.forEach(s => {
+      s.forEach((se, index) => {
+        if (se === "." || se === null) {
+          s[index] = 0;
+        } else if (typeof se === "string") {
+          if (
+            se !== "." &&
+            (se.match(/^\.[0-9]*$/) || se.match(/^[0-9]*\.$/))
+          ) {
+            s[index] = parseFloat(se);
+          }
+        }
+      });
+      var s_ = s.map(x => x * this.MAX_DIGITS);
+      linesums.push(s_.reduce((a, b) => a + b, 0));
     });
-    return nameExists;
+
+    return linesums;
   }
 
+  /** This is to prevent non-numeric input in Safari since type="number" doesn't work in Safari */
+  handleInputValue(val: string, pni: number, di: number) {
+    if (
+      val.length === 0 ||
+      val === null ||
+      val === "." ||
+      val.match(/^\.[0-9]*$/) ||
+      val.match(/^[0-9]*\.$/)
+    ) {
+      this.temp_node_evidences.forEach((e, index) => {
+        if (e === null || e === ".") {
+          this.temp_node_evidences[index] = 0;
+        } else if (typeof e === "string") {
+          if (e.match(/^\.[0-9]*$/) || e.match(/^[0-9]*\.$/)) {
+            this.temp_node_evidences[index] = parseFloat(e);
+          }
+        }
+      });
+    } else if (val.match(/^.*[^0-9\.].*$/) || !val.match(/^[0-9]*\.?[0-9]*$/)) {
+      var result = val.replace(/[^\d.]/g, "");
+      if (!result.match(/^[0-9]*\.?[0-9]*$/)) {
+        var indexofdot = result.indexOf(".");
+        var result_removed_dot = result.replace(/\./g, "");
+        result =
+          result_removed_dot.slice(0, indexofdot) +
+          "." +
+          result_removed_dot.slice(indexofdot, result_removed_dot.length);
+      }
+      this.$refs[this.findInputboxRef(pni, di)][0].value = result;
+    } else {
+      this.fillLastInputbox(val, pni, di);
+      this.updateInputBox(val, pni, di);
+    }
+  }
+
+  
+  /** Avoid issue that the user can't input 0s after "0."
+   * since the inputbox is checking values immediately */
+  updateInputBox(value: string, pni: number, di: number) {
+    if (!value.match(/^[0-9]+\.$/)) {
+      if (
+        value.match(/^[0-9]*\.?([0-9]*[1-9]+)*$/) ||
+        value.match(/^([0-9\.]*[^0-9\.]+[0-9\.]*)+$/)
+      ) {
+        this.$forceUpdate();
+      }
+    }
+  }
+
+  /** Update the color of the inputbox when the box has been emptied */
+  handleEmptyOrDotInput(val: string, pni: number, di: number) {
+    if (val.match(/^\.[0-9]*$/) || val.match(/^[0-9]*\.$/)) {
+      val === "."
+        ? this.fillLastInputbox("0", pni, di)
+        : this.fillLastInputbox(val, pni, di);
+      this.$forceUpdate();
+      this.temp_node_evidences[pni * this.selection.domain.length + di] = val;
+    } else if (val === "" || val === null) {
+      this.fillLastInputbox("0", pni, di);
+      this.$forceUpdate();
+      this.temp_node_evidences[pni * this.selection.domain.length + di] = null;
+    }
+  }
+
+  
+  /** Autofill last input box in a row to keep sum of this row = 1 */
+  fillLastInputbox(val: string, pni: number, di: number) {
+    if (this.selection.parents.length > 0) {
+      this.temp_node_evidences[
+        pni * this.selection.domain.length + di
+      ] = parseFloat(val);
+      if (di !== this.selection.domain.length - 1) {
+        var lastboxval = this.CalLastBoxValue(this.getSameLineInputBoxVal(pni));
+        this.$refs[this.findLastInputboxRef(pni)][0].value = lastboxval;
+        this.temp_node_evidences[
+          pni * this.selection.domain.length + this.selection.domain.length - 1
+        ] = lastboxval;
+      }
+    } else {
+      this.temp_node_evidences[di] = parseFloat(val);
+      if (di !== this.selection.domain.length - 1) {
+        var lastboxval = this.CalLastBoxValue(this.getSameLineInputBoxVal(di));
+        this.$refs[this.findLastInputboxRef(di)][0].value = lastboxval;
+        this.temp_node_evidences[this.selection.domain.length - 1] = lastboxval;
+      }
+    }
+  }
+
+  
+  /** Calculate the value presented in the last prob inputbox when other boxes are changed.
+   */
+  CalLastBoxValue(vals: number[]) {
+    var result = this.MAX_DIGITS - vals.reduce((a, b) => a + b, 0);
+    return result / this.MAX_DIGITS;
+  }
+
+  /** Find the reference of the last inputbox of a row */
+  findLastInputboxRef(prob_name_index: number) {
+    var l = this.selection.domain.length;
+    var ref_prefix = this.generateRef(this.selection);
+    if (this.selection.parents.length > 0) {
+      return ref_prefix + prob_name_index + "_" + (l - 1).toString();
+    } else {
+      return ref_prefix + (l - 1).toString();
+    }
+  }
+
+  
+  /** Get values for all prob inputboxes in the same row except for the last
+   * for some reason this.refs doesn't work here
+   * values are from temp_node_evidences.
+   */
+  getSameLineInputBoxVal(index: number) {
+    var sameRowProbVals: number[] = [];
+    if (this.selection) {
+      var number_of_domain = this.selection.domain.length;
+      var sameRowProbIndexes: number[] = [];
+      for (var i = 0; i < number_of_domain - 1; i++) {
+        if (this.selection.parents.length > 0) {
+          sameRowProbIndexes.push(number_of_domain * index + i);
+        } else {
+          sameRowProbIndexes.push(i);
+        }
+      }
+      sameRowProbIndexes.forEach(index_ => {
+        sameRowProbVals.push(
+          Math.round(this.temp_node_evidences[index_] * this.MAX_DIGITS)
+        );
+      });
+    }
+
+    return sameRowProbVals;
+  }
+
+
+  // =========================================================
+  // create-related functions 
+  
   /** This is to avoid generate an existing node name if some node was deleted */
   genNewDefaultName() {
     var new_name = `Node${this.graph.nodes.length + 1}`;
@@ -846,6 +1201,7 @@ export default class BayesGraphBuilder extends Vue {
     }
     return new_name;
   }
+
 
   /** Adds a node to the graph at position (x, y). */
   createNode(x: number, y: number) {
@@ -875,6 +1231,38 @@ export default class BayesGraphBuilder extends Vue {
     this.selection = null;
     this.cleanEdgeMessage();
   }
+
+  /** Returns whether name and domain for a new node to be created are valid */
+  isTempNode(name_raw: string, domain: string) {
+    var name = name_raw.trimLeft().trimRight();
+    var node_to_be_drawn = true;
+    if (name === null || name.match(/^\s*$/)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Name not valid.";
+      this.succeed_message = "";
+    } else if (this.NameExists(name)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Name already exists.";
+      this.succeed_message = "";
+    } else if (
+      domain === null ||
+      domain === "" ||
+      !domain.match(/^.+(,(\s)*.*)*$/)
+    ) {
+      node_to_be_drawn = false;
+      this.warning_message = "Domain not valid.";
+      this.succeed_message = "";
+    } else if (this.checkDomainDuplicates(domain)) {
+      node_to_be_drawn = false;
+      this.warning_message = "Domain contains duplicated values.";
+      this.succeed_message = "";
+    } else {
+      this.warning_message = "";
+      this.succeed_message = "Variable created.";
+    }
+    return node_to_be_drawn;
+  }
+
 
   /** Adds a new edge to the graph. */
   createEdge() {
@@ -917,6 +1305,40 @@ export default class BayesGraphBuilder extends Vue {
     this.succeed_message = "";
   }
 
+  /** Handle the children @param node's evidences when a parent is added
+   * params:
+   * @param dicOriginal is the dictionary of @param node's evidences before a parent is added,
+   * @param dicAfter is the dictionary of @param node's evidences after a parent is added.
+   *
+   * - this function copy orginal line in prob table for each assignment of the new parent.
+   */
+  handleEvidencesOnParentAdded(
+    dicOriginal: Object,
+    dicAfter: Object,
+    node: IBayesGraphNode
+  ) {
+    var listOfkeys = Object.keys(dicAfter);
+    if (node.parents.length === 1) {
+      listOfkeys.forEach(k => {
+        node.domain.forEach(d_0 => {
+          var d = d_0.toString();
+          dicAfter[k][d] = dicOriginal[d];
+        });
+      });
+    } else {
+      listOfkeys.forEach(k => {
+        // first generate the old key which can help with getting value from dicOriginal
+        var temp = k.split(",");
+        temp.pop();
+        var oldkey = temp.join(",");
+        node.domain.forEach(d_0 => {
+          var d = d_0.toString();
+          dicAfter[k][d] = dicOriginal[oldkey][d];
+        });
+      });
+    }
+  }
+
   /** Check whether the edge can be created */
   canEdgeBeAdded(source: IBayesGraphNode, target: IBayesGraphNode) {
     var canEdgeBeAdded = true;
@@ -952,95 +1374,25 @@ export default class BayesGraphBuilder extends Vue {
     return canEdgeBeAdded;
   }
 
-  cleanEdgeMessage() {
-    if (this.mode === "create") {
-      this.edge_warning_message = "";
-      this.edge_succeed_message = "";
-    }
-  }
+  
+  // =========================================================
+  // delete-related functions 
 
-  /** Handle the children @param node's evidences when a parent is added
-   * params:
-   * @param dicOriginal is the dictionary of @param node's evidences before a parent is added,
-   * @param dicAfter is the dictionary of @param node's evidences after a parent is added.
-   *
-   * - this function copy orginal line in prob table for each assignment of the new parent.
-   */
-  handleEvidencesOnParentAdded(
-    dicOriginal: Object,
-    dicAfter: Object,
-    node: IBayesGraphNode
-  ) {
-    var listOfkeys = Object.keys(dicAfter);
-    if (node.parents.length === 1) {
-      listOfkeys.forEach(k => {
-        node.domain.forEach(d_0 => {
-          var d = d_0.toString();
-          dicAfter[k][d] = dicOriginal[d];
-        });
-      });
+
+  /** If use v-show, when the component is hidden,
+   * there's no input value (e.g. inputbox, buttons, etc.) focused,
+   * This will cause a problem that after click "No" button,
+   * Enter key won't work on the builder since the builder is not focused.
+   * Therefore, the deletion confirmation must always show,
+   * So when it is not needed, make it transparent. */
+  getDeletionConfirmationClass(to_delete: boolean) {
+    if (to_delete) {
+      return "show_deletion_confirmation";
     } else {
-      listOfkeys.forEach(k => {
-        // first generate the old key which can help with getting value from dicOriginal
-        var temp = k.split(",");
-        temp.pop();
-        var oldkey = temp.join(",");
-        node.domain.forEach(d_0 => {
-          var d = d_0.toString();
-          dicAfter[k][d] = dicOriginal[oldkey][d];
-        });
-      });
+      return "hide_deletion_confirmation";
     }
   }
 
-  strokeColour(edge: IGraphEdge, isHovering: boolean) {
-    if ((edge === this.selection || isHovering) && this.mode == "delete") {
-      return "pink";
-    }
-
-    return "black";
-  }
-
-  nodeStrokeWidth(node: IBayesGraphNode) {
-    if (node.styles && node.styles.strokeWidth) {
-      return node.styles.strokeWidth;
-    }
-
-    return undefined;
-  }
-
-  nodeBackground(node: IBayesGraphNode, isHovering: boolean) {
-    if ((this.selection === node || isHovering) && this.mode !== "variable") {
-      return "pink";
-    }
-    return "white";
-  }
-
-  /** stroke width of an edge while hovered or not */
-  strokeWidth(edge: IGraphEdge, isHovering: boolean) {
-    const isHighlight = isHovering && this.mode === "delete";
-    const hoverWidth = isHighlight ? 3 : 0;
-
-    if (edge.styles && edge.styles.strokeWidth) {
-      return edge.styles.strokeWidth + hoverWidth;
-    }
-
-    return this.lineWidth + hoverWidth;
-  }
-
-  domainText(node: IBayesGraphNode) {
-    return `{${node.domain!.join(", ")}}`;
-  }
-
-  /** Updates the user selection. If the selection was previously selected, unselects it. */
-  updateSelection(selection: IBayesGraphNode | IGraphEdge) {
-    if (this.selection === selection) {
-      this.selection = null;
-      this.first = null;
-    } else {
-      this.selection = selection;
-    }
-  }
 
   /** Remove the current selection from the graph. */
   deleteSelection() {
@@ -1146,348 +1498,45 @@ export default class BayesGraphBuilder extends Vue {
     }
   }
 
-  /**
-   * Find all combinations of parents.
-   * e.g. parents = {name: "Node1", domain: ["true", "false"]}, {name: "Node2", domain: ["a", "b"]}
-   * => returns [["true", "false"], ["a", "b"]]
-   */
-  probList(node: IBayesGraphNode) {
-    if (node.parents.length === 0 || node.parents === null) {
-      return [];
-    }
-    var probNameList: string[][] = [];
-    node.parents.forEach(p => {
-      var domains = this.domainToString(
-        this.graph.nodes.find(n => n.name === p)!
+
+  // =========================================================
+  // set_prob-related functions 
+
+  uniformAllRows() {
+    var temp = this.initialEvidences(this.selection!.domain);
+    if (this.selection!.parents.length > 0) {
+      var number_of_rows = Math.round(
+        this.selection!.evidences.length / this.selection!.domain.length
       );
-      var probNameList_curr_p: string[] = [];
-      domains.forEach(d => {
-        probNameList_curr_p.push(d);
-      });
-      probNameList.push(probNameList_curr_p);
-    });
-    return probNameList;
-  }
-
-  /** This function is to add a white block at the end of the last of the header of the prob table
-   */
-
-  domainToString(node: IBayesGraphNode) {
-    return node.domain!.join(",").split(",");
-  }
-
-  /**
-   * Find all possible combinations of node parents domains.
-   * e.g.
-   * arr = [["Node1 = true", "Node1 = false"]],
-   *      => returns ["Node1 = true", "Node1 = false"].
-   * arr = [["Node1 = true", "Node2 = false"], ["Node2 = a", Node2 = "b"]],
-   *      => returns ["Node1 = true,Node2 = a", "Node1 = true,Node2 = b",
-   *                  "Node1 = false,Node2 =a", "Node1 = false,Node2 = b"].
-   */
-  allComb(arr: string[][]) {
-    if (arr.length === 0) {
-      return [];
-    }
-    if (arr.length === 1) {
-      return arr[0];
-    }
-    const output = arr.reduce((acc, cu) => {
-      let ret: string[] = [];
-      acc.map(obj => {
-        cu.map(obj_1 => {
-          ret.push(obj + "," + obj_1);
+      var temp2: number[] = [];
+      for (var i = 0; i < number_of_rows; i++) {
+        temp.forEach(t => {
+          temp2.push(t);
         });
-      });
-      return ret;
-    });
-    return output;
-  }
-
-  /** For each line of prob inputboxes generate its reference
-   * the format is: Parent1Name-Parent2Name_SelectedNodeName
-   * and for each prob inputbox in this line, the reference won't be generate here,
-   * but the format is:
-   * Parent1Name-Parent2Name_SelectedNodeName[index of row]_[index of domain of selected]
-   */
-  generateRef(node: IBayesGraphNode) {
-    if (node) {
-      var temp = node.parents.slice(0);
-      var str = temp.join("-");
-      var result = str + "_" + node.name;
-      return result;
+      }
+      this.temp_node_evidences = temp2;
     } else {
-      return "";
+      var temp = this.initialEvidences(this.selection!.domain);
+      this.temp_node_evidences = temp;
     }
-  }
-
-  /** Check whether modified temp_node_evidences is valid, and
-   * Update selection.evidences if modification is valid
-   */
-  isEvidenceValid() {
-    this.warning_message = "";
-    this.succeed_message = "";
-    var isvalid: boolean = true;
-
-    this.temp_node_evidences.forEach((ev, index) => {
-      if (ev === null || ev === undefined || Number.isNaN(ev) || ev === ".") {
-        this.temp_node_evidences[index] = 0;
-      }
-    });
-
-    if (this.temp_node_evidences.findIndex(e => e > 1 || e < 0) > -1) {
-      this.warning_message = "The hightlighted values are invalid.";
-      isvalid = false;
-    }
-
-    if (
-      this.calAllSumOfSameLineInputBox(this.temp_node_evidences).find(
-        x => x / this.MAX_DIGITS !== 1
-      )
-    ) {
-      if (this.warning_message !== "") {
-        this.warning_message =
-          "The highlighted values are invalid. The hightlighted line doesn't sum up to 1.";
-      } else {
-        this.warning_message = "The highlighted line doesn't sum up to 1.";
-      }
-      isvalid = false;
-    }
-
-    if (isvalid) {
-      this.selection.evidences = this.temp_node_evidences.slice(0);
-      this.succeed_message = "Probabilities updated.";
-    }
-
     this.$forceUpdate();
+    this.cleanMessages();
+    // focus on submit button so that enter-key submission can work
+    this.$refs.btn_prob_submit.focus();
   }
 
-  /** Returns a list of sums of all rows of prob inputbox */
-  calAllSumOfSameLineInputBox(evidences: []) {
-    // first slice the node's evidences
-    var linesums: number[] = [];
-    var sliced = [];
-    var chunksize = this.selection.domain.length;
-    for (var i = 0; i < evidences.length; i += chunksize) {
-      sliced.push(evidences.slice(i, i + chunksize));
+  uniformThisRow(index_of_row: number) {
+    var row_length = this.selection!.domain.length;
+    var temp = this.initialEvidences(this.selection!.domain);
+    for (var i = 0; i < row_length; i++) {
+      this.temp_node_evidences[index_of_row * row_length + i] = temp[i];
     }
-    sliced.forEach(s => {
-      s.forEach((se, index) => {
-        if (se === "." || se === null) {
-          s[index] = 0;
-        } else if (typeof se === "string") {
-          if (
-            se !== "." &&
-            (se.match(/^\.[0-9]*$/) || se.match(/^[0-9]*\.$/))
-          ) {
-            s[index] = parseFloat(se);
-          }
-        }
-      });
-      var s_ = s.map(x => x * this.MAX_DIGITS);
-      linesums.push(s_.reduce((a, b) => a + b, 0));
-    });
-
-    return linesums;
-  }
-
-  calSumOfSameLineInputBox(index: number) {
-    if (this.selection.parents.length > 0) {
-      return this.calAllSumOfSameLineInputBox(this.temp_node_evidences)[index];
-    } else {
-      return this.calAllSumOfSameLineInputBox(this.temp_node_evidences)[0];
-    }
-  }
-
-  cancelProbSet() {
-    this.temp_node_evidences = this.selection.evidences.slice(0);
-    this.warning_message = "";
-    this.succeed_message = "";
     this.$forceUpdate();
+    this.cleanMessages();
+    // focus on submit button so that enter-key submission can work
+    this.$refs.btn_prob_submit.focus();
   }
 
-  isInvalidInputeBox(index: number, val: number | string) {
-    return (
-      val > 1 ||
-      val < 0 ||
-      (Number.isNaN(parseFloat(val)) &&
-        val !== "." &&
-        val !== "" &&
-        val !== null) ||
-      this.calSumOfSameLineInputBox(index) !== this.MAX_DIGITS
-    );
-  }
-
-  /** This is to prevent non-numeric input in Safari since type="number" doesn't work in Safari */
-  handleInputValue(val: string, pni: number, di: number) {
-    if (
-      val.length === 0 ||
-      val === null ||
-      val === "." ||
-      val.match(/^\.[0-9]*$/) ||
-      val.match(/^[0-9]*\.$/)
-    ) {
-      this.temp_node_evidences.forEach((e, index) => {
-        if (e === null || e === ".") {
-          this.temp_node_evidences[index] = 0;
-        } else if (typeof e === "string") {
-          if (e.match(/^\.[0-9]*$/) || e.match(/^[0-9]*\.$/)) {
-            this.temp_node_evidences[index] = parseFloat(e);
-          }
-        }
-      });
-    } else if (val.match(/^.*[^0-9\.].*$/) || !val.match(/^[0-9]*\.?[0-9]*$/)) {
-      var result = val.replace(/[^\d.]/g, "");
-      if (!result.match(/^[0-9]*\.?[0-9]*$/)) {
-        var indexofdot = result.indexOf(".");
-        var result_removed_dot = result.replace(/\./g, "");
-        result =
-          result_removed_dot.slice(0, indexofdot) +
-          "." +
-          result_removed_dot.slice(indexofdot, result_removed_dot.length);
-      }
-      this.$refs[this.findInputboxRef(pni, di)][0].value = result;
-    } else {
-      this.fillLastInputbox(val, pni, di);
-      this.updateInputBox(val, pni, di);
-    }
-  }
-
-  /** Update the color of the inputbox when the box has been emptied */
-  handleEmptyOrDotInput(val: string, pni: number, di: number) {
-    if (val.match(/^\.[0-9]*$/) || val.match(/^[0-9]*\.$/)) {
-      val === "."
-        ? this.fillLastInputbox("0", pni, di)
-        : this.fillLastInputbox(val, pni, di);
-      this.$forceUpdate();
-      this.temp_node_evidences[pni * this.selection.domain.length + di] = val;
-    } else if (val === "" || val === null) {
-      this.fillLastInputbox("0", pni, di);
-      this.$forceUpdate();
-      this.temp_node_evidences[pni * this.selection.domain.length + di] = null;
-    }
-  }
-
-  /** When user cursor leaves current input box,
-   * - if the value is "", "." or null, reset them to 0
-   * - if the value is, for example, "4.", set it to "4"
-   * - if the value is, for example, ".4", set it to "0.4"*/
-  onBlurRest(val: string, pni: number, di: number) {
-    if (val === "" || val === null || val === ".") {
-      this.temp_node_evidences[pni * this.selection.domain.length + di] = 0;
-      this.$refs[this.findInputboxRef(pni, di)][0].value = "0";
-    } else if (val.match(/^\.[0-9]*$/) || val.match(/^[0-9]*\.$/)) {
-      this.temp_node_evidences[
-        pni * this.selection.domain.length + di
-      ] = parseFloat(val);
-      this.$refs[this.findInputboxRef(pni, di)][0].value = parseFloat(val);
-    }
-  }
-
-  /** Autofill last input box in a row to keep sum of this row = 1 */
-  fillLastInputbox(val: string, pni: number, di: number) {
-    if (this.selection.parents.length > 0) {
-      this.temp_node_evidences[
-        pni * this.selection.domain.length + di
-      ] = parseFloat(val);
-      if (di !== this.selection.domain.length - 1) {
-        var lastboxval = this.CalLastBoxValue(this.getSameLineInputBoxVal(pni));
-        this.$refs[this.findLastInputboxRef(pni)][0].value = lastboxval;
-        this.temp_node_evidences[
-          pni * this.selection.domain.length + this.selection.domain.length - 1
-        ] = lastboxval;
-      }
-    } else {
-      this.temp_node_evidences[di] = parseFloat(val);
-      if (di !== this.selection.domain.length - 1) {
-        var lastboxval = this.CalLastBoxValue(this.getSameLineInputBoxVal(di));
-        this.$refs[this.findLastInputboxRef(di)][0].value = lastboxval;
-        this.temp_node_evidences[this.selection.domain.length - 1] = lastboxval;
-      }
-    }
-  }
-
-  /** Get values for all prob inputboxes in the same row except for the last
-   * for some reason this.refs doesn't work here
-   * values are from temp_node_evidences.
-   */
-  getSameLineInputBoxVal(index: number) {
-    var sameRowProbVals: number[] = [];
-    if (this.selection) {
-      var number_of_domain = this.selection.domain.length;
-      var sameRowProbIndexes: number[] = [];
-      for (var i = 0; i < number_of_domain - 1; i++) {
-        if (this.selection.parents.length > 0) {
-          sameRowProbIndexes.push(number_of_domain * index + i);
-        } else {
-          sameRowProbIndexes.push(i);
-        }
-      }
-      sameRowProbIndexes.forEach(index_ => {
-        sameRowProbVals.push(
-          Math.round(this.temp_node_evidences[index_] * this.MAX_DIGITS)
-        );
-      });
-    }
-
-    return sameRowProbVals;
-  }
-
-  /** Calculate the value presented in the last prob inputbox when other boxes are changed.
-   */
-  CalLastBoxValue(vals: number[]) {
-    var result = this.MAX_DIGITS - vals.reduce((a, b) => a + b, 0);
-    return result / this.MAX_DIGITS;
-  }
-
-  /** Find the reference of the last inputbox of a row */
-  findLastInputboxRef(prob_name_index: number) {
-    var l = this.selection.domain.length;
-    var ref_prefix = this.generateRef(this.selection);
-    if (this.selection.parents.length > 0) {
-      return ref_prefix + prob_name_index + "_" + (l - 1).toString();
-    } else {
-      return ref_prefix + (l - 1).toString();
-    }
-  }
-
-  /** Find the reference of the inputbox */
-  findInputboxRef(prob_name_index: number, domain_index: number) {
-    var ref_prefix = this.generateRef(this.selection);
-    if (this.selection.parents.length > 0) {
-      return ref_prefix + prob_name_index + "_" + domain_index;
-    } else {
-      return ref_prefix + domain_index;
-    }
-  }
-
-  /** Avoid issue that the user can't input 0s after "0."
-   * since the inputbox is checking values immediately */
-  updateInputBox(value: string, pni: number, di: number) {
-    if (!value.match(/^[0-9]+\.$/)) {
-      if (
-        value.match(/^[0-9]*\.?([0-9]*[1-9]+)*$/) ||
-        value.match(/^([0-9\.]*[^0-9\.]+[0-9\.]*)+$/)
-      ) {
-        this.$forceUpdate();
-      }
-    }
-  }
-
-  // Whenever a node reports it has resized, update it's style so that it redraws.
-  updateNodeBounds(
-    node: IBayesGraphNode,
-    bounds: { width: number; height: number }
-  ) {
-    node.styles.width = bounds.width;
-    node.styles.height = bounds.height;
-    this.graph.edges
-      .filter(edge => edge.target.id === node.id)
-      .forEach(edge => {
-        this.$set(edge.styles, "targetWidth", bounds.width);
-        this.$set(edge.styles, "targetHeight", bounds.height);
-      });
-  }
 
   @Watch("selection")
   onSelectionChanged() {

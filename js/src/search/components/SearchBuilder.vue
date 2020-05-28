@@ -301,6 +301,47 @@ export default class SearchGraphBuilder extends Vue {
     this.succeed_message = "";
   }
 
+
+  /** Updates the user selection. If the selection was previously selected, unselects it. */
+  updateSelection(selection: ISearchGraphNode | ISearchGraphEdge) {
+    if (this.selection === selection) {
+      this.selection = null;
+      this.first = null;
+    } else {
+      this.selection = selection;
+    }
+  }
+
+
+  /**
+    * Whenever a node reports it has resized, update it's style so that it redraws.
+    */
+  updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
+    node.styles.width = bounds.width;
+    node.styles.height = bounds.height;
+      this.graph.edges
+      .filter(edge => edge.target.id === node.id)
+      .forEach(edge => {
+        this.$set(edge.styles, "targetWidth", bounds.width);
+        this.$set(edge.styles, "targetHeight", bounds.height);
+      });
+  }
+
+  
+  /** Check whether the given node name exists */
+  NameExists(name: string) {
+    var nameExists = false;
+    this.graph.nodes.forEach(function(node) {
+      if (node.name === name) {
+        nameExists = true;
+      }
+    });
+    return nameExists;
+  }
+
+  // =========================================================
+  // canvas-related functions 
+
   strokeColour(selection: ISearchGraphNode | ISearchGraphEdge) {
     if (this.selection === selection) {
       return "blue";
@@ -329,35 +370,6 @@ export default class SearchGraphBuilder extends Vue {
     return nodeHText(node);
   }
 
-  /** Updates the user selection. If the selection was previously selected, unselects it. */
-  updateSelection(selection: ISearchGraphNode | ISearchGraphEdge) {
-    if (this.selection === selection) {
-      this.selection = null;
-      this.first = null;
-    } else {
-      this.selection = selection;
-    }
-  }
-
-  // updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
-  //   node.styles.width = bounds.width;
-  //   node.styles.height = bounds.height;
-  // }
-
-  /**
-    * Whenever a node reports it has resized, update it's style so that it redraws.
-    */
-  updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
-    node.styles.width = bounds.width;
-    node.styles.height = bounds.height;
-      this.graph.edges
-      .filter(edge => edge.target.id === node.id)
-      .forEach(edge => {
-        this.$set(edge.styles, "targetWidth", bounds.width);
-        this.$set(edge.styles, "targetHeight", bounds.height);
-      });
-  }
-
 
   // =========================================================
   // select-related functions 
@@ -380,16 +392,6 @@ export default class SearchGraphBuilder extends Vue {
     }
   }
 
-  /** Check whether the given node name exists */
-  NameExists(name: string) {
-    var nameExists = false;
-    this.graph.nodes.forEach(function(node) {
-      if (node.name === name) {
-        nameExists = true;
-      }
-    });
-    return nameExists;
-  }
 
   /** Returns whether the modified node heuristic is valid,
    * if valid, update the values */
@@ -665,6 +667,7 @@ export default class SearchGraphBuilder extends Vue {
 
 </script>
 
+<style scoped>
 .show_deletion_confirmation {
   opacity: 1;
 }
@@ -672,4 +675,5 @@ export default class SearchGraphBuilder extends Vue {
 .hide_deletion_confirmation {
   opacity: 0;
 }
+
 </style>
