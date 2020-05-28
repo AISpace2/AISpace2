@@ -545,7 +545,8 @@ export default class CSPGraphBuilder extends Vue {
   
   /** Adds a new edge to the graph. */
   createEdge() {
-    if (this.mode === "edge" && this.selection != null && this.first != null) {
+    if (this.mode === "edge" && this.selection != null && this.first != null && 
+    (this.graph.nodes.indexOf(this.first as ICSPGraphNode) > -1) && (this.graph.nodes.indexOf(this.selection as ICSPGraphNode) > -1)) {
 
       this.cleanMessages();
 

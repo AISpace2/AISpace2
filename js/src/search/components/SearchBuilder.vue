@@ -510,7 +510,8 @@ export default class SearchGraphBuilder extends Vue {
 
   /** Adds a new edge to the graph. */
   createEdge() {
-    if (this.mode === "create" && this.selection != null && this.first != null) {
+    if (this.mode === "create" && this.selection != null && this.first != null &&
+    (this.graph.nodes.indexOf(this.first as ISearchGraphNode) > -1) && (this.graph.nodes.indexOf(this.selection as ISearchGraphNode) > -1)) {
 
       this.cleanMessages();
 
