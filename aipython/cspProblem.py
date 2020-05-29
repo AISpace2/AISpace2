@@ -24,20 +24,16 @@ class Constraint(object):
     def __init__(self, scope, condition):
         self.scope = scope
         self.condition = condition
+        self.condition_name = ""
         if self.condition.__name__ == "<lambda>":
             self.condition.__name__ = "Custom"
         self.repr = self.condition.__name__ + str(self.scope)
-        self.name = self.condition.__name__
 
     def __repr__(self):
         return self.repr
 
-    def __name__(self):
-        return self.name
-
     def holds(self, assignment):
         """returns the value of Constraint con evaluated in assignment.
-
         precondition: all variables are assigned in assignment
         """
         return self.condition(*tuple(assignment[v] for v in self.scope))
@@ -69,12 +65,7 @@ class CSP(Displayable):
             if occurence > 1:
                 for j in range(occurence):
                     # start numbering
-                    old_repr = self.constraints[i + j].repr
                     self.constraints[i + j].repr += str(j)
-                    if old_repr in self.positions:
-                        self.positions[self.constraints[i +
-                                                        j].repr] = self.positions[old_repr]
-                        del self.positions[old_repr]
             i += occurence
 
     def __str__(self):
