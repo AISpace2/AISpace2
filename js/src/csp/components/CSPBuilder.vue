@@ -146,6 +146,10 @@
     </div>
 
     <div v-if="mode == 'select'">
+      <p class="builder_output">
+        Set the name and the domain of a variable node or the constraint table of a constraint node by cliking on it.
+        <br />
+      </p>
       <div id="select_variable" v-if="selection && selection.type == 'csp:variable'">
         <p class="builder_output">
           You selected variable node
@@ -165,15 +169,34 @@
             <label>
               <strong>Domain:</strong>
             </label>
-            <input
-              type="text"
-              style="width: 150px;"
-              @focus="$event.target.select()"
-              :value="temp_v_domain"
-              @input="temp_v_domain = $event.target.value, cleanMessages()"
-              v-on:keyup.enter="isValidModify(temp_v_name, temp_v_domain)"
-            />
-            (use comma to separate values)
+            <span>
+              <label for="is_domain_bool">Boolean</label>
+              <input
+                type="checkbox"
+                id="is_domain_bool"
+                v-model="isDomainBool"
+                @input="cleanMessages()"
+              />
+            </span>
+            <span>
+              <input
+                v-if="!isDomainBool"
+                type="text"
+                @focus="$event.target.select()"
+                :value="temp_v_domain"
+                @input="temp_v_domain = $event.target.value, cleanMessages()"
+                v-on:keyup.enter="isValidModify(temp_v_name, temp_v_domain)"
+              />
+              <input
+                v-else
+                class="text_input_box_noUserInput"
+                readonly="readonly"
+                type="text"
+                @focus="$event.target.select()"
+                :value="'true, false'"
+                v-on:keyup.enter="isValidModify(temp_v_name, temp_v_domain)"
+              /> (use comma to separate values)
+            </span>
             <button
               ref="btn_select_submit"
               @click="isValidModify(temp_v_name, temp_v_domain)"
@@ -257,32 +280,62 @@
               >Reverse Order</button>
             </span>
           </p>
-          <div class="table_container" ref="table_container">
-            <div class="table_header">
-              <div class="header_cell" v-for="v of findVariablesConnected(selection)" :key="v">
-                <span class="nodeText">{{v.name}}</span>
+          <div v-if="select_constraint_type === 'Custom' ">
+            <div class="table_container" ref="table_container">
+              <div class="table_header">
+                <div class="header_cell" v-for="v of findVariablesConnected(selection)" :key="v">
+                  <span class="nodeText">{{v.name}}</span>
+                </div>
+                <div class="header_cell">True</div>
               </div>
-              <div class="header_cell">True</div>
-            </div>
-            <div class="table_body">
-              <div
-                class="table_row"
-                v-for="(c, index_c) of AllComb(getDomainList(findVariablesConnected(selection)))"
-                :key="c"
-              >
-                <div class="table_cell" v-for="d of c.split(',')" :key="d">{{d}}</div>
-                <div class="table_cell">
-                  <input
-                    type="checkbox"
-                    v-model="temp_table[index_c]"
-                    @input="select_constraint_type = 'Custom', initially_in_ACT = true, cleanMessages()"
-                    @keydown="$event.keyCode == 13 ? $event.preventDefault() : false"
-                    v-on:keyup.enter="UpdateConstraintNode(selection)"
-                  />
+              <div class="table_body">
+                <div
+                  class="table_row"
+                  v-for="(c, index_c) of AllComb(getDomainList(findVariablesConnected(selection)))"
+                  :key="c"
+                >
+                  <div class="table_cell" v-for="d of c.split(',')" :key="d">{{d}}</div>
+                  <div class="table_cell">
+                    <input
+                      type="checkbox"
+                      v-model="temp_table[index_c]"
+                      @input="select_constraint_type = 'Custom', initially_in_ACT = true, cleanMessages()"
+                      @keydown="$event.keyCode == 13 ? $event.preventDefault() : false"
+                      v-on:keyup.enter="UpdateConstraintNode(selection)"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div v-else>
+            <div class="table_container" ref="table_container">
+              <div class="table_header">
+                <div class="header_cell" v-for="v of findVariablesConnected(selection)" :key="v">
+                  <span class="nodeText">{{v.name}}</span>
+                </div>
+                <div class="header_cell">True</div>
+              </div>
+              <div class="table_body">
+                <div
+                  class="table_row"
+                  v-for="(c, index_c) of AllComb(getDomainList(findVariablesConnected(selection)))"
+                  :key="c"
+                >
+                  <div class="table_cell" v-for="d of c.split(',')" :key="d">{{d}}</div>
+                  <div class="table_cell">
+                    <input
+                      type="checkbox"
+                      v-model="temp_table[index_c]"
+                      @input="select_constraint_type = 'Custom', initially_in_ACT = true, cleanMessages()"
+                      @keydown="$event.keyCode == 13 ? $event.preventDefault() : false"
+                      onclick="this.checked=!this.checked;"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>  
           <div>
             <p>
               <button ref="btn_table_change" @click="UpdateConstraintNode(selection)">Submit</button>
@@ -584,6 +637,10 @@ export default class CSPGraphBuilder extends Vue {
   /** Returns whether the modified node name and domain are valid,
    * if valid, update the values */
   isValidModify(name: string, domain: string) {
+    if (this.isDomainBool) {
+        domain = "true, false";
+      }
+
     if (name === null || name.match(/^\s*$/)) {
       this.warning_message = "Name not valid.";
       this.succeed_message = "";
@@ -742,10 +799,10 @@ export default class CSPGraphBuilder extends Vue {
         this.first.type === "csp:variable" &&
         this.selection.type === "csp:variable"
       ) {
-        this.first = null;
-        this.selection = null;
         this.edge_warning_message =
           "Can't create an edge between two variables";
+        this.first = null;
+        this.selection = null;
         return;
       }
 
@@ -753,15 +810,17 @@ export default class CSPGraphBuilder extends Vue {
         this.first.type === "csp:constraint" &&
         this.selection.type === "csp:constraint"
       ) {
-        this.first = null;
-        this.selection = null;
         this.edge_warning_message =
           "Can't create an edge between two constraints.";
+        this.first = null;
+        this.selection = null;
         return;
       }
 
-      if (this.edgeExist(this.first, this.selection)) {
+      if (this.edgeExist(this.first as ICSPGraphNode, this.selection as ICSPGraphNode)) {
         this.edge_warning_message = "Edge exists.";
+        this.first = null;
+        this.selection = null;
         return;
       }
 
@@ -1871,7 +1930,7 @@ export default class CSPGraphBuilder extends Vue {
 
   resetTable() {
     if (this.reversed) {
-      this.reverseOrder(this.selection);
+      this.reverseOrder(this.selection as ICSPGraphNode);
     }
     this.selectboxDefault(this.selection! as ICSPGraphNode);
     this.InitialTempTableAssign(this.selection as ICSPGraphNode);
@@ -2273,7 +2332,7 @@ export default class CSPGraphBuilder extends Vue {
       this.select_constraint_type === "Custom" &&
       this.selection.name.substring(0, 6) !== "Custom" &&
       !this.selection.name.match(/^Empty Constraint\d*$/) &&
-      this.checkPredefined(this.selection)
+      this.checkPredefined(this.selection as ICSPGraphNode)
     ) {
       this.initially_in_ACT = false;
     } else {
@@ -2322,7 +2381,7 @@ text.domain {
 }
 
 .header_cell:hover {
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 
 .table_row {
@@ -2352,7 +2411,7 @@ text.domain {
 }
 
 .table_cell:hover {
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 
 .show_deletion_confirmation {
