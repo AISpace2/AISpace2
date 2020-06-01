@@ -669,12 +669,12 @@ export default class CSPGraphBuilder extends Vue {
       
 
       //update new domain
-      var newdomain = this.handleDomain(domain);
-      if (this.selection!.domain.join(",") !== newdomain.join(",")) {
+      
+      if (typeof this.selection!.domain[0] !== "boolean") {
         domain_changed = true;
-      }      
-      var domainB: boolean[] = [true, false];
-      this.selection!.domain = domainB;
+        var domainB: boolean[] = [true, false];      
+        this.selection!.domain = domainB;
+      }
 
     }else{
       if (domain === null || domain === "" || !domain.match(/^.+(,(\s)*.*)*$/)) {
@@ -695,19 +695,20 @@ export default class CSPGraphBuilder extends Vue {
 
       //update new domain
       var newdomain = this.handleDomain(domain);
-      if (this.selection!.domain.join(",") !== newdomain.join(",")) {
+      if ((typeof this.selection!.domain[0] !== typeof newdomain[0]) || (this.selection!.domain.join(",") !== newdomain.join(","))) {
         domain_changed = true;
+        if (this.checkDomainType(newdomain) === "number") {
+          var domainN: number[] = [];
+          newdomain.forEach(d => {
+            domainN.push(Number(d));
+          });
+          this.selection!.domain = domainN;
+        } else {
+          this.selection!.domain = newdomain;
+        }
       }
 
-      if (this.checkDomainType(newdomain) === "number") {
-        var domainN: number[] = [];
-        newdomain.forEach(d => {
-          domainN.push(Number(d));
-        });
-        this.selection!.domain = domainN;
-      }else{
-        this.selection!.domain = newdomain;
-      }
+      
 
     }
 
@@ -947,10 +948,6 @@ export default class CSPGraphBuilder extends Vue {
 
   domainText(node: ICSPGraphNode) {
     return CSPUtils.domainText(node);
-  }
-
-  constraintText(node: ICSPGraphNode) {
-    return CSPUtils.constraintText(node);
   }
 
   /** Updates the user selection. If the selection was previously selected, unselects it. */
