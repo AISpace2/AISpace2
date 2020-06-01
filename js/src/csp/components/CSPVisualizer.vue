@@ -9,7 +9,7 @@
                          :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                           :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel">
         </RoundedRectangleGraphNode>
-        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="constraintText(props.node)" :textSize="textSize"
+        <RectangleGraphNode v-if="props.node.type === 'csp:constraint'" :text="props.node.name" :textSize="textSize"
                            :stroke="nodeStrokeColour(props.node, props.hover)" :stroke-width="nodeStrokeWidth(props.node)"
                            :textColour="props.hover ? 'white' : 'black'" :fill="props.hover ? 'black' : 'white'"
                             :hover="props.hover" :id="props.node.id" :detailLevel="detailLevel">
@@ -244,10 +244,6 @@ export default class CSPGraphInteractor extends Vue {
 
   domainText(node: ICSPGraphNode) {
     return CSPUtils.domainText(node);
-  }
-
-  constraintText(node: ICSPGraphNode) {
-    return CSPUtils.constraintText(node);
   }
 
   get textBtnProp() {
