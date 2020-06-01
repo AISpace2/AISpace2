@@ -531,10 +531,10 @@ export default class CSPGraphBuilder extends Vue {
     }
   }
 
-  /** This is to avoid generate an existing node name if some node was deleted */
+  /** This is to avoid generate an existing variable name if some node was deleted */
   genNewDefaultNameV() {
     var vnodes = this.graph.nodes.filter(x => x.type === "csp:variable");
-    var new_name = `Var${vnodes.length}`;
+    var new_name = `Var${vnodes.length + 1}`;
     var acc = 0;
     while (this.NameExists(new_name)) {
       acc += 1;
@@ -543,9 +543,10 @@ export default class CSPGraphBuilder extends Vue {
     return new_name;
   }
 
+  /** This is to avoid generate an existing constraint name if some node was deleted */
   genNewDefaultNameC() {
     var cnodes = this.graph.nodes.filter(x => x.name === "Empty Constraint");
-    var new_name = `Empty Constraint${cnodes.length}`;
+    var new_name = `Empty Constraint${cnodes.length + 1}`;
     var acc = 0;
     while (this.NameExists(new_name)) {
       acc += 1;
@@ -561,11 +562,20 @@ export default class CSPGraphBuilder extends Vue {
       this.create_sub_mode === "variable" &&
       this.IsTempVariable(this.temp_v_name, this.temp_v_domain)
     ) {
-      var domainval: string[] | boolean[] = [];
+      var domainval: string[] | boolean[] | number[] = [];
       if (this.isDomainBool) {
         domainval = [true, false];
       } else {
         domainval = this.handleDomain(this.temp_v_domain);
+
+        if (this.checkDomainType(domainval) === "number") {
+          var domainN: number[] = [];
+          domainval.forEach(d => {
+            domainN.push(Number(d));
+          });
+          domainval = domainN;
+        }
+
       }
       this.graph.addNode({
         id: shortid.generate(),
@@ -637,9 +647,6 @@ export default class CSPGraphBuilder extends Vue {
   /** Returns whether the modified node name and domain are valid,
    * if valid, update the values */
   isValidModify(name: string, domain: string) {
-    if (this.isDomainBool) {
-        domain = "true, false";
-      }
 
     if (name === null || name.match(/^\s*$/)) {
       this.warning_message = "Name not valid.";
@@ -653,26 +660,56 @@ export default class CSPGraphBuilder extends Vue {
       return;
     }
 
-    if (domain === null || domain === "" || !domain.match(/^.+(,(\s)*.*)*$/)) {
-      this.warning_message = "Domain not valid.";
-      this.succeed_message = "";
-      return;
-    }
-
-    if (this.checkDomainDuplicates(domain)) {
-      this.warning_message = "Domain contains duplicated values.";
-      this.succeed_message = "";
-      return;
-    }
-    var oldname = this.selection!.name.slice(0);
-    this.selection!.name = name.trimLeft().trimRight();
-    var newdomain = this.handleDomain(domain);
-
     var domain_changed = false;
-    if (this.selection!.domain.join(",") !== newdomain.join(",")) {
-      domain_changed = true;
+
+    if (this.isDomainBool) {
+      //update new name
+      var oldname = this.selection!.name.slice(0);
+      this.selection!.name = name.trimLeft().trimRight();
+      
+
+      //update new domain
+      var newdomain = this.handleDomain(domain);
+      if (this.selection!.domain.join(",") !== newdomain.join(",")) {
+        domain_changed = true;
+      }      
+      var domainB: boolean[] = [true, false];
+      this.selection!.domain = domainB;
+
+    }else{
+      if (domain === null || domain === "" || !domain.match(/^.+(,(\s)*.*)*$/)) {
+        this.warning_message = "Domain not valid.";
+        this.succeed_message = "";
+        return;
+      }
+
+      if (this.checkDomainDuplicates(domain)) {
+        this.warning_message = "Domain contains duplicated values.";
+        this.succeed_message = "";
+        return;
+      }
+      //update new name
+      var oldname = this.selection!.name.slice(0);
+      this.selection!.name = name.trimLeft().trimRight();
+      
+
+      //update new domain
+      var newdomain = this.handleDomain(domain);
+      if (this.selection!.domain.join(",") !== newdomain.join(",")) {
+        domain_changed = true;
+      }
+
+      if (this.checkDomainType(newdomain) === "number") {
+        var domainN: number[] = [];
+        newdomain.forEach(d => {
+          domainN.push(Number(d));
+        });
+        this.selection!.domain = domainN;
+      }else{
+        this.selection!.domain = newdomain;
+      }
+
     }
-    this.selection!.domain = newdomain;
 
     // if domain changed reset constraint type to default
     // if only name changed, not change constraint type.
@@ -1393,6 +1430,7 @@ export default class CSPGraphBuilder extends Vue {
 
   /** Check the type of domain:
    * if domain is boolean[] return "boolean"
+   * if domain is number[] return "number"
    * if domain is string[]:
    *    - if all strings are numeric, return "number";
    *    - else return "string";
@@ -1400,12 +1438,14 @@ export default class CSPGraphBuilder extends Vue {
   checkDomainType(domain: any[]) {
     if (typeof domain[0] === "boolean") {
       return "boolean";
+    } else if (typeof domain[0] === "number") {
+      return "number";
     } else {
-      // some imported csp problem have domain value type that is otehr than string or boolean,
-      // first convert them into string
-      domain.forEach((d, index) => {
-        domain[index] = d.toString();
-      });
+      // // some imported csp problem have domain value type that is otehr than string or boolean,
+      // // first convert them into string
+      // domain.forEach((d, index) => {
+      //   domain[index] = d.toString();
+      // });
       var type = "number";
       domain.forEach(d => {
         if (isNaN(d)) {

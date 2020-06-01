@@ -127,7 +127,7 @@ def FALSE(*args, **kwargs):
 def LessThan(num1, num2=None):
     if num2 is None:
         def toReturn(x):
-            return x < str1
+            return x < num1
         toReturn.__name__ = "LessThan(" + str(num1) + ")"
         return toReturn
     return num1 < num2  # binary constraint
