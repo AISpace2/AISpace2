@@ -99,7 +99,7 @@
     /** The node being hovered over. */
     nodeHovered: IGraphNode | null = null;
     /** Tracks the pageX of the previous MouseEvent. Used to compute the delta mouse position. */
-    prevPageX = 0;
+    prevPageX: number | null = 0;
     /** Tracks the pageY of the previous MouseEvent. Used to compute the delta mouse position. */
     prevPageY: number | null = 0;
     /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
@@ -107,7 +107,6 @@
     /** The width of the SVG. Automatically set to width of container. */
     width = 0;
     /** The height of the SVG. Automatically set to height of container. */
-
     height = 0;
 
     $refs: {
@@ -171,7 +170,6 @@
 
     /** Re-layout the graph using the current width/height of the SVG. */
     handleResize() {
-      this.width = this.$el.getBoundingClientRect().width;
       this.layout.relayout(this.graph, {
         width: this.width,
         height: this.height

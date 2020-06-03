@@ -234,14 +234,14 @@
         cursor: default;
     }
     .textstroke{
-      text-shadow: -1px -1px 0 black,
-                    0   -1px 0 black,
-                    1px -1px 0 black,
-                    1px  0   0 black,
-                    1px  1px 0 black,
-                    0    1px 0 black,
-                   -1px  1px 0 black,
-                   -1px  0   0 black;
+      text-shadow: -1px -1px 0 white,
+                    0   -1px 0 white,
+                    1px -1px 0 white,
+                    1px  0   0 white,
+                    1px  1px 0 white,
+                    0    1px 0 white,
+                   -1px  1px 0 white,
+                   -1px  0   0 white;
 
     }
 </style>
