@@ -6,7 +6,9 @@ export function domainText(node: ICSPGraphNode) {
     return `string: ${node.domain!.join(", ")}`;
   } else if(typeof node.domain![0] === "number"){
     return `number: ${node.domain!.join(", ")}`;
-  } else {
+  } else if(typeof node.domain![0] === "boolean"){
     return `boolean: ${node.domain!.join(", ")}`
+  } else {
+    return `${node.domain!.join(", ")}
   }
 }
