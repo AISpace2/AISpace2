@@ -13,13 +13,22 @@
         </RoundedRectangleGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
-        <DirectedRectEdge :x1="props.edge.source.x" :x2="props.edge.target.x" :y1="props.edge.source.y" :y2="props.edge.target.y"
-                      :sourceRx="props.edge.source.styles.rx" :sourceRy="props.edge.source.styles.ry"
-                      :targetRx="props.edge.target.styles.rx" :targetRy="props.edge.target.styles.ry"
-                      :stroke="edgeStrokeColour(props.edge, props.hover)"
-                      :strokeWidth="edgeStrokeWidth(props.edge, props.hover)"
-                      :text="showEdgeCosts ? props.edge.cost : undefined" :textSize="textSize" :hover="props.hover"
-                      :graph_node_width="props.edge.styles.targetWidth" :graph_node_height="props.edge.styles.targetHeight">
+        <DirectedRectEdge 
+          :x1="updateOverlappedEdege(props.edge).styles.x1"
+          :x2="updateOverlappedEdege(props.edge).styles.x2"
+          :y1="updateOverlappedEdege(props.edge).styles.y1"
+          :y2="updateOverlappedEdege(props.edge).styles.y2"
+          :sourceRx="props.edge.source.styles.rx" 
+          :sourceRy="props.edge.source.styles.ry"
+          :targetRx="props.edge.target.styles.rx" 
+          :targetRy="props.edge.target.styles.ry"
+          :stroke="edgeStrokeColour(props.edge, props.hover)"
+          :strokeWidth="edgeStrokeWidth(props.edge, props.hover)"
+          :text="showEdgeCosts ? props.edge.cost : undefined" 
+          :textSize="textSize" 
+          :hover="props.hover"
+          :graph_node_width="props.edge.styles.targetWidth" 
+          :graph_node_height="props.edge.styles.targetHeight">
         </DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
@@ -380,6 +389,78 @@ export default class SearchGraphBuilder extends Vue {
     return nodeHText(node);
   }
 
+  /**
+   * Separates overlapped edges.
+   * Whenever a node involved in two overlapped edges is moved, update the fake node position
+   * to make sure the two overlapped edges are splitted and move with node.
+   */
+  updateOverlappedEdege(edge: ISearchGraphEdge) {
+    this.graph.edges.forEach(edge => {
+      edge.x1 = edge.source.x;
+      edge.x2 = edge.target.x;
+      edge.y1 = edge.source.y;
+      edge.y2 = edge.target.y;
+    });
+
+    this.graph.edges.forEach(e1 => {
+      this.graph.edges.forEach(e2 => {
+        if (
+          e1.source === e2.target &&
+          e1.target === e2.source &&
+          e1.styles.x1 === e2.styles.x2 &&
+          e1.styles.x2 === e2.styles.x1
+        ) {
+          e1.styles.overlapped = true;
+          e2.styles.overlapped = true;
+          const xa = e1.source.x;
+          const ya = e1.source.y;
+          const xb = e1.target.x;
+          const yb = e1.target.y;
+          const radius = 5;
+          const cos: number =
+            (yb! - ya!) /
+            Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+          const sin: number =
+            (xb! - xa!) /
+            Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+          // Move both of the two overlapped edge from the original position
+          e2.styles.x1 = cos * radius + xb!;
+          e2.styles.x2 = cos * radius + xa!;
+          e2.styles.y1 = yb! - sin * radius;
+          e2.styles.y2 = ya! - sin * radius;
+          e1.styles.x1 = xa! - cos * radius;
+          e1.styles.x2 = xb! - cos * radius;
+          e1.styles.y1 = sin * radius + ya!;
+          e1.styles.y2 = sin * radius + yb!;
+        }
+      });
+    });
+
+    if (edge.styles.overlapped === true) {
+      const xa = edge.source.x;
+      const ya = edge.source.y;
+      const xb = edge.target.x;
+      const yb = edge.target.y;
+      const radius = 5;
+      const cos: number =
+        (yb! - ya!) /
+        Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+      const sin: number =
+        (xb! - xa!) /
+        Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+      edge.styles.x1 = xa! - cos * radius;
+      edge.styles.x2 = xb! - cos * radius;
+      edge.styles.y1 = sin * radius + ya!;
+      edge.styles.y2 = sin * radius + yb!;
+    } else {
+      edge.styles.x1 = edge.source.x;
+      edge.styles.x2 = edge.target.x;
+      edge.styles.y1 = edge.source.y;
+      edge.styles.y2 = edge.target.y;
+    }
+    return edge;
+  }
+
 
   // =========================================================
   // select-related functions 
@@ -475,6 +556,9 @@ export default class SearchGraphBuilder extends Vue {
     }
     this.first = null;
     this.selection = null;
+    
+    this.warning_message = "";
+    this.succeed_message = "Node created.";
   }
   
   /** Returns whether name and heuristic for a new node to be created are valid */
@@ -498,10 +582,8 @@ export default class SearchGraphBuilder extends Vue {
       this.warning_message = "Heuristic not valid.";
       this.succeed_message = "";
     } else {
-      this.warning_message = "";
-      this.succeed_message = "Node created.";
+      return node_to_be_drawn;
     }
-    return node_to_be_drawn;
   }
 
 
@@ -511,7 +593,8 @@ export default class SearchGraphBuilder extends Vue {
   /** Adds a new edge to the graph. */
   createEdge() {
     if (this.mode === "create" && this.selection != null && this.first != null &&
-    (this.graph.nodes.indexOf(this.first as ISearchGraphNode) > -1) && (this.graph.nodes.indexOf(this.selection as ISearchGraphNode) > -1)) {
+    (this.graph.nodes.indexOf(this.first as ISearchGraphNode) > -1) && (this.graph.nodes.indexOf(this.selection as ISearchGraphNode) > -1)
+    && this.isTempEdge(this.temp_edge_cost)){
 
       this.cleanMessages();
 
@@ -546,13 +629,28 @@ export default class SearchGraphBuilder extends Vue {
       this.first = null;
       this.selection = null;
       
-      this.temp_edge_cost = 0;
+      this.temp_edge_cost = 1;
       
       this.warning_message = "";
       this.succeed_message = "Edge created.";
 
 
 
+    }
+  }
+
+  /** Returns whether cost for a new edge to be created is valid */
+  isTempEdge(cost: number) {
+    if (cost < 0) {
+      this.warning_message = "Cost can't be negative.";
+      this.succeed_message = "";
+      return false;
+    } else if ( cost === null ) {
+      this.warning_message = "Cost not valid.";
+      this.succeed_message = "";
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -652,7 +750,7 @@ export default class SearchGraphBuilder extends Vue {
     if (this.mode === "create") {
       this.temp_node_name = this.genNewDefaultName();
       this.temp_node_heuristic = 0;
-      this.temp_edge_cost = 0;
+      this.temp_edge_cost = 1;
       this.selection = null;
     }
 
