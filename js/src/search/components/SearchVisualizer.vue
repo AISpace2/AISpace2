@@ -186,31 +186,93 @@
       return node.styles.radius * 2;
     }
 
-    /**
-     * Whenever a node involved in two overlapped edges is moved, update the fake node position
-     * to make sure the two overlapped edges are splitted and move with node.
-     */
-    updateOverlappedEdege(edge: ISearchGraphEdge) {
-      if (edge.styles.overlapped === true) {
-            const xa = edge.source.x;
-            const ya = edge.source.y;
-            const xb = edge.target.x;
-            const yb = edge.target.y;
-            const radius = 5;
-            const cos: number = (yb! - ya!) / Math.sqrt(Math.pow((yb! - ya!), 2) + Math.pow((xb! - xa!), 2));
-            const sin: number = (xb! - xa!) / Math.sqrt(Math.pow((yb! - ya!), 2) + Math.pow((xb! - xa!), 2));
-            edge.styles.x1 = xa! - cos * radius;
-            edge.styles.x2 = xb! - cos * radius;
-            edge.styles.y1 = sin * radius + ya!;
-            edge.styles.y2 = sin * radius + yb!;
-          } else {
-            edge.styles.x1 = edge.source.x;
-            edge.styles.x2 = edge.target.x;
-            edge.styles.y1 = edge.source.y;
-            edge.styles.y2 = edge.target.y;
-          }
-          return edge;
+  /**
+   * Whenever a node involved in two overlapped edges is moved, update the fake node position
+   * to make sure the two overlapped edges are splitted and move with node.
+   */
+  updateOverlappedEdege(edge: ISearchGraphEdge) {
+    if (edge.styles.overlapped === true) {
+      const xa = edge.source.x;
+      const ya = edge.source.y;
+      const xb = edge.target.x;
+      const yb = edge.target.y;
+      const radius = 5;
+      const cos: number =
+        (yb! - ya!) /
+        Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+      const sin: number =
+        (xb! - xa!) /
+        Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+      edge.styles.x1 = xa! - cos * radius;
+      edge.styles.x2 = xb! - cos * radius;
+      edge.styles.y1 = sin * radius + ya!;
+      edge.styles.y2 = sin * radius + yb!;
+    } else {
+      edge.styles.x1 = edge.source.x;
+      edge.styles.x2 = edge.target.x;
+      edge.styles.y1 = edge.source.y;
+      edge.styles.y2 = edge.target.y;
     }
+
+    this.graph.edges.forEach(e1 => {
+      this.graph.edges.forEach(e2 => {
+        if (
+          e1.source === e2.target &&
+          e1.target === e2.source &&
+          e1.styles.x1 === e2.styles.x2 &&
+          e1.styles.x2 === e2.styles.x1
+        ) {
+          e1.styles.overlapped = true;
+          e2.styles.overlapped = true;
+          const xa = e1.source.x;
+          const ya = e1.source.y;
+          const xb = e1.target.x;
+          const yb = e1.target.y;
+          const radius = 5;
+          const cos: number =
+            (yb! - ya!) /
+            Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+          const sin: number =
+            (xb! - xa!) /
+            Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+          // Move both of the two overlapped edge from the original position
+          e2.styles.x1 = cos * radius + xb!;
+          e2.styles.x2 = cos * radius + xa!;
+          e2.styles.y1 = yb! - sin * radius;
+          e2.styles.y2 = ya! - sin * radius;
+          e1.styles.x1 = xa! - cos * radius;
+          e1.styles.x2 = xb! - cos * radius;
+          e1.styles.y1 = sin * radius + ya!;
+          e1.styles.y2 = sin * radius + yb!;
+        }
+      });
+    });
+
+    if (edge.styles.overlapped === true) {
+      const xa = edge.source.x;
+      const ya = edge.source.y;
+      const xb = edge.target.x;
+      const yb = edge.target.y;
+      const radius = 5;
+      const cos: number =
+        (yb! - ya!) /
+        Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+      const sin: number =
+        (xb! - xa!) /
+        Math.sqrt(Math.pow(yb! - ya!, 2) + Math.pow(xb! - xa!, 2));
+      edge.styles.x1 = xa! - cos * radius;
+      edge.styles.x2 = xb! - cos * radius;
+      edge.styles.y1 = sin * radius + ya!;
+      edge.styles.y2 = sin * radius + yb!;
+    } else {
+      edge.styles.x1 = edge.source.x;
+      edge.styles.x2 = edge.target.x;
+      edge.styles.y1 = edge.source.y;
+      edge.styles.y2 = edge.target.y;
+    }
+
+    return edge;
+  }
 
     /**
      * Whenever a node reports it has resized, update it's style so that it redraws.
