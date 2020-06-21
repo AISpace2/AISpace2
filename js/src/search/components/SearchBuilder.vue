@@ -75,7 +75,7 @@
             <label>
               <strong>Type:</strong>
             </label>
-            <select id="node-type">
+            <select id="node-type" v-model="temp_node_type">
               <option value="search:start">Start</option>
               <option value="search:regular">Regular</option>
               <option value="search:goal">Goal</option>
@@ -139,7 +139,7 @@
                   :value="selection ? temp_node_name : null"
                   @focus="$event.target.select()"
                   @input="temp_node_name = $event.target.value, cleanMessages()"
-                  v-on:keyup.enter="isValidModifyName(temp_node_name), isValidModifyHeuristic(temp_node_heuristic)"
+                  v-on:keyup.enter="isValidModifyName(temp_node_name), isValidModifyHeuristic(temp_node_heuristic), isValidModifyType(temp_node_type)"
                 />
                 <label>
                   <strong>Heuristic Value:</strong>
@@ -150,19 +150,19 @@
                   style="width: 150px;"
                   @focus="$event.target.select()"
                   @input="cleanMessages()"
-                  v-on:keyup.enter="isValidModifyName(temp_node_name), isValidModifyHeuristic(temp_node_heuristic)"
+                  v-on:keyup.enter="isValidModifyName(temp_node_name), isValidModifyHeuristic(temp_node_heuristic), isValidModifyType(temp_node_type)"
                 />
                 <label>
                   <strong>Type:</strong>
                 </label>
-                <select id="node-type" v-model="selection.type">
+                <select id="node-type" v-model="temp_node_type">
                   <option value="search:start">Start</option>
                   <option value="search:regular">Regular</option>
                   <option value="search:goal">Goal</option>
                 </select>
                 <button
                   ref="btn_select_submit"
-                  @click="isValidModifyName(temp_node_name), isValidModifyHeuristic(temp_node_heuristic)"
+                  @click="isValidModifyName(temp_node_name), isValidModifyHeuristic(temp_node_heuristic), isValidModifyType(temp_node_type)"
                 >Submit</button>
               </span>
               <br />
@@ -231,7 +231,7 @@ import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
 import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
 import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
 
-import { Graph, ISearchGraphNode, ISearchGraphEdge } from "../../Graph";
+import { Graph, ISearchGraphNode, SearchNodeTypes, ISearchGraphEdge } from "../../Graph";
 import { GraphLayout } from "../../GraphLayout";
 import { nodeFillColour, nodeHText } from "../SearchUtils";
 
@@ -271,6 +271,7 @@ export default class SearchGraphBuilder extends Vue {
 
   temp_node_name: string = "";
   temp_node_heuristic: number;
+  temp_node_type: string = "search:regular";
   temp_edge_cost: number;
 
   /** The current node or edge being selected. */
@@ -497,9 +498,27 @@ export default class SearchGraphBuilder extends Vue {
 
       this.selection!.heuristic = heuristic;
 
-      this.warning_message = "";
-      this.succeed_message = "Node updated.";
+      // this.warning_message = "";
+      // this.succeed_message = "Node updated.";
     }
+  }
+
+  /** Update node type */
+  isValidModifyType(type: SearchNodeTypes) {
+    
+    //remove other start node
+    if (type === "search:start"){
+      this.graph.nodes.forEach(e => {
+        if (e.type === "search:start"){
+          e.type = "search:normal";
+        }
+      });
+    }
+    
+    this.selection!.type = type;
+
+    this.warning_message = "";
+    this.succeed_message = "Node updated.";
   }
 
   /** Returns whether the modified edge cost is valid,
@@ -542,12 +561,23 @@ export default class SearchGraphBuilder extends Vue {
   /** Adds a node to the graph at position (x, y). */
   createNode(x: number, y: number) {
     if (this.mode === "create" && this.isTempNode(this.temp_node_name, this.temp_node_heuristic)) {
+
+      //remove other start node
+      if (this.temp_node_type === "search:start"){
+        this.graph.nodes.forEach(e => {
+          if (e.type === "search:start"){
+            e.type = "search:normal";
+          }
+        });
+      }
+
       this.graph.addNode({
         id: shortid.generate(),
         name: this.temp_node_name,
         x,
         y,
-        heuristic: this.temp_node_heuristic
+        heuristic: this.temp_node_heuristic,
+        type: this.temp_node_type
       } as ISearchGraphNode);
 
       this.temp_node_name = this.genNewDefaultName();
@@ -721,15 +751,13 @@ export default class SearchGraphBuilder extends Vue {
 
       // selected an edge 
       if (this.graph.edges.indexOf(this.selection as ISearchGraphEdge) > -1) {
-
-        console.log(this.temp_edge_cost);
-        console.log(this.selection.cost!);
         this.temp_edge_cost = this.selection.cost!;    
       }
       // selected a node
       if (this.graph.nodes.indexOf(this.selection as ISearchGraphNode) > -1) {
         this.temp_node_name = this.selection.name!;
         this.temp_node_heuristic = this.selection.heuristic;
+        this.temp_node_type = this.selection.type;
       }
 
     } else {
@@ -750,6 +778,7 @@ export default class SearchGraphBuilder extends Vue {
     if (this.mode === "create") {
       this.temp_node_name = this.genNewDefaultName();
       this.temp_node_heuristic = 0;
+      this.temp_node_type = "search:regular";
       this.temp_edge_cost = 1;
       this.selection = null;
     }
