@@ -59,16 +59,24 @@
     <ol>
       <li>
         You need to have <a href="https://www.python.org/downloads/" target="_blank">Python 3</a> and <a href="https://nodejs.org/en/download/" target="_blank">Node.js</a> for AISpace2,
-        you can check whether you have them by running
+        <p>When Installing Python on <strong>Windows</strong>, make sure you select <strong>"Add Python to Path"</strong>. This is very important!</p>
+        <figure>
+          <img src="assets/images/windows-python-install.png" alt="Installing Python on Windows" />
+          <figcaption>
+            Installing Python on Windows
+          </figcaption>
+        </figure>
+        <p>you can check whether you have Python 3 and Node.js by running
         <pre>python --version
-node --version</pre>
-        If it does not output a version number, that means you don't have the corresponding package installed. Note that you need to have your Python version at least 3.3 and Node.js version at least 10.0.0.
+node --version</pre></p>
+        <p>If it does not output a version number, that means you don't have the corresponding package installed. </p>
+        <p>Note that you need to have your Python version at least 3.3 and Node.js version at least 10.0.0.
         If your Node.js version is less than 10, you can use Node.js 10 by installing <a href="https://github.com/nvm-sh/nvm" target="_blank">nvm</a> for <strong>Mac/Linux</strong> or <a href="https://github.com/coreybutler/nvm-windows" target="_blank">nvm-windows</a> for <strong>Windows</strong> and running
         <pre>nvm install 10
-nvm use 10</pre> in the same folder as where you will be installing the extension.
+nvm use 10</pre></p>
       </li>
       <!-- Do not change the line below manually. Change it by runnning /updateVersion.py in master branch -->
-      <li>Download <a href="./assets/AISpace2-0.8.2.zip" download>AISpace2</a> and unzip the file in the directory where you want to store it.</li>
+      <li>Download <a href="./assets/AISpace2-0.8.2.zip" download>AISpace2</a> and unzip the file in the folder where you want to store it.</li>
       <li>
         <ul>
           <li>
@@ -82,8 +90,12 @@ nvm use 10</pre> in the same folder as where you will be installing the extensio
         </ul>
       </li>
     </ol>
+
+    <h2 id="launch" class="linkify0op"><a href="#launch">Launch</a></h2>
     <p>
-      After the installation the JupyterLab will automatically open and you can select the notebooks (<code>*.ipynb</code> files) inside <code>/notebooks/</code> to run.
+      After the installation the JupyterLab will automatically open.
+    </p>
+    <p>
       In the future if you want to run AISpace2, simply run the following command line:
     </p>
     <pre>jupyter lab</pre>
@@ -94,10 +106,24 @@ nvm use 10</pre> in the same folder as where you will be installing the extensio
       (Or, for <strong>Windows</strong>, simply right click on the run-AISpace2 scripts <code>runAISpace2ScriptsWindows.bat</code> inside the <code>/installScripts/</code> directory
       and choose <strong>Run as administrator</strong>.)
     </p>
+    <p>
+      You can find the file browser in the left sidebar Files tab. 
+      <figure>
+        <img src="assets/images/jupyter-file-menu-left.png" alt="left sidebar Files tab" />
+        <figcaption>
+          left sidebar Files tab
+        </figcaption>
+      </figure>
+      Double-click on the <code>/notebooks/</code> directory, you will find all the <a href="https://aispace2.github.io/AISpace2/index.html#the-notebooks" target="_blank">notebooks</a> (<code>*.ipynb</code> files). 
+      To enter any sub-directory or open any file, just double-click on its name in the file browser.
+    </p>
+    <p>
+      Please check <a href="https://aispace2.github.io/AISpace2/tutorial.html" target="_blank">Tutorial</a> for more Notebook-relate questions.
+    </p>
 
     <h2 id="browser-compatibility" class="linkify"><a href="#browser-compatibility">Browser Compatibility</a></h2>
     <p>
-      <a href="https://github.com/jupyter/notebook/blob/master/docs/source/notebook.rst#browser-compatibility" target="_blank">Click here to check browser compatibility for the Jupyter Notebook.</a>
+      <a href="https://github.com/jupyterlab/jupyterlab#prerequisites-and-supported-browsers" target="_blank">Click here to check browser compatibility for the Jupyter Notebook.</a>
     </p>
 
     <h2 id="jupyterhub" class="linkify"><a href="#jupyterhub">JupyterHub</a></h2>
