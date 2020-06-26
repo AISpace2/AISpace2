@@ -428,6 +428,7 @@ export default class CSPGraphBuilder extends Vue {
   /** During edge creation, tracks the source node of the edge to be formed. */
   first: ICSPGraphNode | null = null;
   textSize: number;
+  lineWidth: number;
   detailLevel: number;
   /** The sub-mode of the create mode. */
   create_sub_mode: CreateSubMode = "variable";
@@ -913,7 +914,7 @@ export default class CSPGraphBuilder extends Vue {
       return edge.styles.strokeWidth + hoverWidth;
     }
 
-    return 4 + hoverWidth;
+    return this.lineWidth + hoverWidth;
   }
 
   nodeBackground(node: ICSPGraphNode, isHovering: boolean) {
