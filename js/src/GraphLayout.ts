@@ -366,7 +366,7 @@ function scaleNodePositions(
     minY = Math.min(node.y, minY);
   }
 
-  const edgePadding = 60;
+  const edgePadding = 150;
 
   for (const node of nodes) {
     // Scale node positions to fit new width/height, plus some edge padding
@@ -383,4 +383,68 @@ function scaleNodePositions(
         (maxY - minY) +
       edgePadding;
   }
+}
+
+export function d3ForcePlusRelativeLayout() {
+  return (graph: IGraph, layoutParams: IGraphLayoutParams) => {
+    /**
+     * We will work with a copy of the graph to prevent D3 from adding
+     * various additional properties, such as `vx` and `fy`, to our nodes.
+     * Later, we'll copy over only the final x and y properties that we're interested in.
+     */
+    const graphCopy: IGraph = JSON.parse(JSON.stringify(graph));
+    const forceSimulation = d3
+      .forceSimulation(graphCopy.nodes)
+      .force(
+        "link",
+        d3
+          .forceLink()
+          .id(node => (node as any).id)
+          .links(graphCopy.edges)
+      )
+      .force("charge", d3.forceManyBody().strength(-35))
+      .force(
+        "center",
+        d3.forceCenter(layoutParams.width / 2, layoutParams.height / 2)
+      )
+      .force("collision", d3.forceCollide(60))
+      .stop();
+
+    const edgePadding = 50;
+
+    return new Promise<void>((resolve, reject) => {
+      // Run simulation synchronously the default number of times (300)
+      for (let i = 0, ticksToSimulate = 300; i < ticksToSimulate; i++) {
+        forceSimulation.tick();
+
+        // Bound nodes to SVG
+        graphCopy.nodes.forEach(node => {
+          node.x = Math.max(
+            edgePadding,
+            Math.min(layoutParams.width - edgePadding, node.x!)
+          );
+          node.y = Math.max(
+            edgePadding,
+            Math.min(layoutParams.height - edgePadding, node.y!)
+          );
+        });
+      }
+
+      scaleNodePositions(layoutParams, graph.nodes);
+      // Copy over x and y positions onto original graph once simulation is finished
+      // if the node did not already have an x, y position
+      graphCopy.nodes.forEach((node, i) => {
+        if (!graph.nodes[i].x) {
+          graph.nodes[i].x = node.x;
+        }
+        if (!graph.nodes[i].y) {
+          graph.nodes[i].y = node.y;
+        }
+      });
+      // recalculate node positions so that nodes occupy the whole canvas
+      scaleNodePositions(layoutParams, graph.nodes);
+      resolve();
+    });
+  };
+
 }

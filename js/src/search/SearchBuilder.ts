@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph, ISearchGraphEdge, ISearchGraphNode } from "../Graph";
-import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
+import { d3ForceLayout, GraphLayout, relativeLayout, d3ForcePlusRelativeLayout } from "../GraphLayout";
 import { searchLabelText, searchLabelColor } from "../labelDictionary";
 import SearchGraphBuilder from "./components/SearchBuilder.vue";
 import SearchBuilderModel from "./SearchBuilderModel";
@@ -34,7 +34,7 @@ export default class SearchBuilder extends widgets.DOMWidgetView {
           detailLevel: this.model.detailLevel,
           showEdgeCosts: this.model.showEdgeCosts,
           showNodeHeuristics: this.model.showNodeHeuristics,
-          layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
+          layout: new GraphLayout(d3ForcePlusRelativeLayout(), relativeLayout()),
           legendText: searchLabelText.slice(0, 2), // only use legend for Start node and Goal node
           legendColor: searchLabelColor.slice(0, 2) // only use legend for Start node and Goal node
         },

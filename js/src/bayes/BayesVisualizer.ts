@@ -8,7 +8,7 @@ import { IObservation, ObservationManager } from "./Observation";
 import { cloneDeep } from "lodash";
 import * as Analytics from "../Analytics";
 import { IBayesGraphNode } from "../Graph";
-import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
+import { d3ForcePlusRelativeLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import * as labelDict from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 
@@ -48,7 +48,7 @@ export default class BayesVisualizer extends DOMWidgetView {
           warningMessage: null,
           positions: null,
           // Layout object that controls where nodes are drawn
-          layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
+          layout: new GraphLayout(d3ForcePlusRelativeLayout(), relativeLayout()),
           textSize: this.model.textSize,
           lineWidth: this.model.lineWidth,
           detailLevel: this.model.detailLevel,

@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import Vue from "vue";
 import { IEvent } from "../Events";
 import { Graph, ICSPGraphNode } from "../Graph";
-import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
+import { d3ForcePlusRelativeLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import CSPGraphBuilder from "./components/CSPBuilder.vue";
 import CSPBuilderModel from "./CSPBuilderModel";
 declare let Jupyter: any;
@@ -30,7 +30,7 @@ export default class CSPBuilder extends widgets.DOMWidgetView {
           graph: initialGraph,
           textSize: this.model.textSize,
           lineWidth: this.model.lineWidth,
-          layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
+          layout: new GraphLayout(d3ForcePlusRelativeLayout(), relativeLayout()),
           detailLevel: this.model.detailLevel,
           decimalPlace: this.model.decimalPlace
         },

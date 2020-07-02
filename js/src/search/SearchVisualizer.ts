@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import { cloneDeep } from "lodash";
 import { without } from "underscore";
 import * as Analytics from "../Analytics";
-import { d3ForceLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
+import { d3ForcePlusRelativeLayout, d3TreeLayout, GraphLayout } from "../GraphLayout";
 import { searchLabelText, searchLabelColor } from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import SearchVisualizer from "./components/SearchVisualizer.vue";
@@ -217,7 +217,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
         );
       case "force":
       default:
-        return new GraphLayout(d3ForceLayout());
+        return new GraphLayout(d3ForcePlusRelativeLayout());
     }
   }
 

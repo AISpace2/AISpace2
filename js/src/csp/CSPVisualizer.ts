@@ -3,7 +3,7 @@ import { timeout } from "d3";
 import { cloneDeep } from "lodash";
 import * as Analytics from "../Analytics";
 import { ICSPGraphNode, IGraphEdge } from "../Graph";
-import { d3ForceLayout, GraphLayout, relativeLayout } from "../GraphLayout";
+import { d3ForcePlusRelativeLayout, GraphLayout, relativeLayout } from "../GraphLayout";
 import { cspLegend, cspLabelText, cspLabelColor } from "../labelDictionary";
 import * as StepEvents from "../StepEvents";
 import CSPGraphVisualizer from "./components/CSPVisualizer.vue";
@@ -71,7 +71,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         data: {
           graph: this.model.graph,
           iniGraph: cloneDeep(this.model.graph),
-          layout: new GraphLayout(d3ForceLayout(), relativeLayout()),
+          layout: new GraphLayout(d3ForcePlusRelativeLayout(), relativeLayout()),
           width: 0,
           height: 0,
           output: null,
