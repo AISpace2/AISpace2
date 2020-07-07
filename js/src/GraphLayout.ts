@@ -366,7 +366,8 @@ function scaleNodePositions(
     minY = Math.min(node.y, minY);
   }
 
-  const edgePadding = 150;
+  const edgePaddingX = 150;
+  const edgePaddingY = 80;
 
   for (const node of nodes) {
     // Scale node positions to fit new width/height, plus some edge padding
@@ -374,14 +375,25 @@ function scaleNodePositions(
       continue;
     }
 
-    node.x =
-      ((layoutParams.width - edgePadding * 2) * (node.x! - minX)) /
-        (maxX - minX) +
-      edgePadding;
-    node.y =
-      ((layoutParams.height - edgePadding * 2) * (node.y! - minY)) /
-        (maxY - minY) +
-      edgePadding;
+    if(maxX == minX){
+      node.x = layoutParams.width/2;
+    } else {
+      node.x =
+        ((layoutParams.width - edgePaddingX * 2) * (node.x! - minX)) /
+          (maxX - minX) +
+        edgePaddingX;
+    }
+
+    if(maxY == minY){
+      node.y = layoutParams.height/2;
+    } else {
+      node.y =
+        ((layoutParams.height - edgePaddingY * 2) * (node.y! - minY)) /
+          (maxY - minY) +
+        edgePaddingY;
+    }
+
+
   }
 }
 
@@ -411,6 +423,7 @@ export function d3ForcePlusRelativeLayout() {
       .stop();
 
     const edgePadding = 50;
+    
 
     return new Promise<void>((resolve, reject) => {
       // Run simulation synchronously the default number of times (300)
