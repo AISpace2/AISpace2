@@ -1,33 +1,39 @@
 <template xmlns:html="http://www.w3.org/1999/xhtml">
   <div class="graph-container">
-    <svg tabindex="0" ref="svg" :width="width" :height="height"
-         @mousemove="dragNode"
-         @mouseleave="dragNodeEnd"
-         @keydown.delete="$emit('delete')"
-         @dblclick="onDblClick">
-      <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
-                     :transitions="transitionsAllowed && transitions"
-                     @mouseover="edgeMouseOver(edge)"
-                     @mouseout="edgeMouseOut(edge)"
-                     @click="$emit('click:edge', edge)">
-        <slot name="edge" :edge="edge" :hover="edge === edgeHovered"></slot>
-      </EdgeContainer>
-      <GraphNodeContainer v-for="node in nodes" :key="node.id"
+    <svg ref="zoom" width="100%" :height="height">
+      <rect width="100%" height="100%" fill="aliceblue" />
+      <g :transform="`scale(${scaleFactor}) translate(${scaleX},${scaleY})`">
+        <svg tabindex="0" ref="svg" width="100%" :height="height"
+            @mousemove="dragNode"
+            @mouseleave="dragNodeEnd"
+            @keydown.delete="$emit('delete')"
+            @dblclick="onDblClick">
+          <rect width="100%" height="100%" fill="white" />          
+          <EdgeContainer v-for="edge in graph.edges" :key="edge.id"
+                    :transitions="transitionsAllowed && transitions"
+                    @mouseover="edgeMouseOver(edge)"
+                    @mouseout="edgeMouseOut(edge)"
+                    @click="$emit('click:edge', edge)">
+            <slot name="edge" :edge="edge" :hover="edge === edgeHovered"></slot>
+          </EdgeContainer>
+          <GraphNodeContainer v-for="node in nodes" :key="node.id"
                           :x="node.x" :y="node.y"
                           :transitions="transitionsAllowed && transitions"
                           @click="$emit('click:node', node)"
                           @dragstart="dragNodeStart(node, $event)" @dragend="dragNodeEnd"
                           @mouseover="nodeMouseOver(node)" @mouseout="nodeMouseOut(node)"
                           @canTransition="toggleTransition">
-        <slot name="node" :node="node" :hover="node === nodeHovered"></slot>
-      </GraphNodeContainer>
-      <foreignObject class="dropdown noselect" :x="btnProp(width).x" :y="btnProp().y" width="112px">
-        <button class="dropbtn">Visualization Options</button>
-        <div class="dropdown-content">
-          <slot name="visualization" :toggleLegend="toggleLegendVisibility"></slot>
-        </div>
-      </foreignObject>
+            <slot name="node" :node="node" :hover="node === nodeHovered"></slot>
+          </GraphNodeContainer>
+        </svg>
+      </g>
     </svg>
+    <foreignObject class="dropdown noselect" width="112px" height="70px">
+      <button class="dropbtn" >Visualization Options</button>
+      <div class="dropdown-content">
+        <slot name="visualization" :toggleLegend="toggleLegendVisibility"></slot>
+      </div>
+    </foreignObject>
     <!-- Resize handle -->
     <div class="handle" ref="handle"></div>
   </div>
@@ -109,11 +115,22 @@
     /** The height of the SVG. Automatically set to height of container. */
     height = 0;
 
+    /** The scale of the SVG.*/
+    scaleFactor = 1;
+    scaleX = 0;
+    scaleY = 0;
+    zoomMove: boolean = false;
+    zoomStartX: number | null = 0;
+    zoomStartY: number | null = 0;
+
+
     $refs: {
       /** The SVG element that the graph is drawn in. */
       svg: SVGSVGElement;
       /** The div element representing a resize handle. */
       handle: HTMLDivElement;
+      /** The SVG element for zooming. */
+      zoom: SVGSVGElement;
     };
 
     created() {
@@ -161,6 +178,49 @@
         this.prevPageY = null;
       };
 
+      this.$refs.zoom.addEventListener("wheel", e => {
+        e.preventDefault();
+        this.scaleFactor = this.scaleFactor * Math.pow((1/0.95), -e.deltaY / 120)
+        console.log(this.scaleFactor)
+
+        if(this.scaleFactor <= 1){
+          this.scaleX = (this.$refs.zoom.getBoundingClientRect().width/2 - 
+            this.$refs.svg.getBoundingClientRect().width/2 * Math.pow((1/0.95), -e.deltaY / 120))/this.scaleFactor
+          this.scaleY = (this.$refs.zoom.getBoundingClientRect().height/2 - 
+            this.$refs.svg.getBoundingClientRect().height/2 * Math.pow((1/0.95), -e.deltaY / 120))/this.scaleFactor
+        } else {
+          this.scaleX = ((e.clientX - this.$refs.zoom.getBoundingClientRect().left) - 
+            (e.clientX - this.$refs.svg.getBoundingClientRect().left) * Math.pow((1/0.95), -e.deltaY / 120))/this.scaleFactor
+          this.scaleY = ((e.clientY - this.$refs.zoom.getBoundingClientRect().top) - 
+            (e.clientY - this.$refs.svg.getBoundingClientRect().top) * Math.pow((1/0.95), -e.deltaY / 120))/this.scaleFactor
+        }
+
+        return;
+      });
+
+      this.$refs.zoom.addEventListener("mousedown", e => {
+        this.zoomMove = true
+        this.zoomStartX = e.pageX;
+        this.zoomStartY = e.pageY;
+        return;        
+      });
+
+      this.$refs.zoom.addEventListener("mousemove", e => {
+        if(this.zoomMove && !this.dragTarget){
+          this.scaleX += (e.pageX - this.zoomStartX)/this.scaleFactor;
+          this.scaleY += (e.pageY - this.zoomStartY)/this.scaleFactor;
+
+          this.zoomStartX = e.pageX;
+          this.zoomStartY = e.pageY;
+        }
+        
+      });
+
+      this.$refs.zoom.addEventListener("mouseup", e => {
+        this.zoomMove = false;
+        return
+      });
+
       this.addLegend();
     }
 
@@ -201,8 +261,8 @@
         // this.dragTarget.x += e.movementX;
         // this.dragTarget.y += e.movementY;
         // if we don't want to support IE11.
-        this.dragTarget.x += this.prevPageX ? e.pageX - this.prevPageX : 0;
-        this.dragTarget.y += this.prevPageY ? e.pageY - this.prevPageY : 0;
+        this.dragTarget.x += this.prevPageX ? (e.pageX - this.prevPageX)/this.scaleFactor : 0;
+        this.dragTarget.y += this.prevPageY ? (e.pageY - this.prevPageY)/this.scaleFactor : 0;
 
         this.prevPageX = e.pageX;
         this.prevPageY = e.pageY;
@@ -276,7 +336,7 @@
         .domain(this.legendText)
         .range(this.legendColor);
 
-      let legend = d3.select(this.$refs.svg)
+      let legend = d3.select(this.$refs.zoom)
         .append("g").attr("class", "legend_group")
         .selectAll("g")
         .data(color.domain())
@@ -303,7 +363,7 @@
 
     /** Toggle button functionality for displaying and hiding legend box */
     toggleLegendVisibility() {
-      let lg = d3.select(this.$refs.svg).select(".legend_group");
+      let lg = d3.select(this.$refs.zoom).select(".legend_group");
 
       if (lg.style("visibility") === "hidden") {
         lg.attr("visibility", "visible");
@@ -394,7 +454,9 @@
   }
 
   .dropdown {
-    position: relative;
+    position: absolute;
+    right: 0;
+    top: 0;
     display: inline-block;
   }
 

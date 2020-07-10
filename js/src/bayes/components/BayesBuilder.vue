@@ -38,7 +38,7 @@
         >></DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
-        <a
+        <!-- <a
           class="inline-btn-group"
           @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel"
         >&#8249;</a>
@@ -50,7 +50,7 @@
 
         <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
         <label class="inline-btn-group">{{textSize}}</label>
-        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
+        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a> -->
       </template>
     </GraphVisualizerBase>
 

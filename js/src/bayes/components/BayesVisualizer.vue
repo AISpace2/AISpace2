@@ -1,5 +1,5 @@
 <template>
-  <div tabindex="0" @keydown.stop class="csp_visualizer">
+  <div tabindex="0" @keydown.stop class="bayes_visualizer">
     <GraphVisualizerBase :graph="graph" @click:node="nodeClicked" @click:edge="edgeClicked" :layout="layout" :transitions="true" :textSize="textSize">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :text="props.node.name" :textSize="textSize" :subtext= "probGraph(props.node)"
@@ -15,7 +15,7 @@
         </DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
-        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
+        <!-- <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
         <label class="inline-btn-group">Detail: {{detailLevel}}</label>
         <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
 
@@ -25,7 +25,7 @@
 
         <a class="inline-btn-group" @click="decimalPlace = decimalPlace - 1">-</a>
         <label class="inline-btn-group">Decimal: {{decimalPlace}}</label>
-        <a class="inline-btn-group" @click="decimalPlace = decimalPlace + 1">+</a>
+        <a class="inline-btn-group" @click="decimalPlace = decimalPlace + 1">+</a> -->
       </template>
     </GraphVisualizerBase>
     <div>
