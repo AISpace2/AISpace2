@@ -1,9 +1,9 @@
 <template xmlns:html="http://www.w3.org/1999/xhtml">
   <div class="graph-container">
-    <svg ref="zoom" width="100%" :height="height">
+    <svg ref="zoom" width="100%" :height="graphContainerHeight">
       <rect width="100%" height="100%" fill="aliceblue" />
       <g :transform="`scale(${scaleFactor}) translate(${scaleX},${scaleY})`">
-        <svg tabindex="0" ref="svg" width="100%" :height="height"
+        <svg tabindex="0" ref="svg" :width="width" :height="height"
             @mousemove="dragNode"
             @mouseleave="dragNodeEnd"
             @keydown.delete="$emit('delete')"
@@ -109,11 +109,13 @@
     /** Tracks the pageY of the previous MouseEvent. Used to compute the delta mouse position. */
     prevPageY: number | null = 0;
     /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
-    transitionsAllowed = true;
+    transitionsAllowed = false;
     /** The width of the SVG. Automatically set to width of container. */
     width = 0;
     /** The height of the SVG. Automatically set to height of container. */
     height = 0;
+
+    graphContainerHeight = 0;
 
     /** The scale of the SVG.*/
     scaleFactor = 1;
@@ -140,14 +142,15 @@
 
     mounted() {
       this.width = this.$el.getBoundingClientRect().width;
+      this.graphContainerHeight = this.width / 1.8;
       this.height = this.width / 1.8;
       this.layout.setup(this.graph, { width: this.width, height: this.height });
 
       // Disable animations for the first draw, because otherwise they fly in from (0, 0) and it looks weird
-      this.transitionsAllowed = false;
-      Vue.nextTick(() => (this.transitionsAllowed = true));
+      // this.transitionsAllowed = false;
+      // Vue.nextTick(() => (this.transitionsAllowed = true));
 
-      window.addEventListener("resize", this.handleResize);
+      window.addEventListener("resize", this.updateHeight);
 
       // Custom resize handling. In the future, we could switch to using CSS resize.
       // However, it is not support in IE/Edge right now, and Safari does not emit any resize events,
@@ -167,9 +170,9 @@
         // this.width.x += e.movementX;
         // this.height.y += e.movementY;
         // if we don't want to support IE11.
-        this.height += this.prevPageY ? e.pageY - this.prevPageY : 0;
+        this.graphContainerHeight += this.prevPageY ? e.pageY - this.prevPageY : 0;
         this.prevPageY = e.pageY;
-        this.handleResize();
+        this.updateHeight();
       };
 
       let stopResizing = (e: MouseEvent) => {
@@ -180,20 +183,21 @@
 
       this.$refs.zoom.addEventListener("wheel", e => {
         e.preventDefault();
-        this.scaleFactor = this.scaleFactor * Math.pow((1/0.95), -e.deltaY / 120)
-        console.log(this.scaleFactor)
+        var zoomRect = this.$refs.zoom.getBoundingClientRect()
+        var svgRect = this.$refs.svg.getBoundingClientRect()
+        var updateScaleFactor = Math.pow((1/0.95), -e.deltaY / 120)
+        this.scaleFactor = this.scaleFactor * updateScaleFactor
+        console.log("this.scaleFactor: " + this.scaleFactor)
 
-        if(this.scaleFactor <= 1){
-          this.scaleX = (this.$refs.zoom.getBoundingClientRect().width/2 - 
-            this.$refs.svg.getBoundingClientRect().width/2 * Math.pow((1/0.95), -e.deltaY / 120))/this.scaleFactor
-          this.scaleY = (this.$refs.zoom.getBoundingClientRect().height/2 - 
-            this.$refs.svg.getBoundingClientRect().height/2 * Math.pow((1/0.95), -e.deltaY / 120))/this.scaleFactor
-        } else {
-          this.scaleX = ((e.clientX - this.$refs.zoom.getBoundingClientRect().left) - 
-            (e.clientX - this.$refs.svg.getBoundingClientRect().left) * Math.pow((1/0.95), -e.deltaY / 120))/this.scaleFactor
-          this.scaleY = ((e.clientY - this.$refs.zoom.getBoundingClientRect().top) - 
-            (e.clientY - this.$refs.svg.getBoundingClientRect().top) * Math.pow((1/0.95), -e.deltaY / 120))/this.scaleFactor
-        }
+        var transX = ((zoomRect.width*(1-updateScaleFactor))/zoomRect.width * (e.clientX - zoomRect.left))/this.scaleFactor
+        this.layout.translation(this.graph, transX, 0);
+        this.width = this.width / updateScaleFactor
+
+
+        var transY = ((zoomRect.height*(1-updateScaleFactor))/zoomRect.height * (e.clientY - zoomRect.top))/this.scaleFactor
+        this.layout.translation(this.graph, 0, transY);
+        this.height = this.height / updateScaleFactor
+
 
         return;
       });
@@ -207,8 +211,7 @@
 
       this.$refs.zoom.addEventListener("mousemove", e => {
         if(this.zoomMove && !this.dragTarget){
-          this.scaleX += (e.pageX - this.zoomStartX)/this.scaleFactor;
-          this.scaleY += (e.pageY - this.zoomStartY)/this.scaleFactor;
+          this.layout.translation(this.graph, (e.pageX - this.zoomStartX)/this.scaleFactor, (e.pageY - this.zoomStartY)/this.scaleFactor);
 
           this.zoomStartX = e.pageX;
           this.zoomStartY = e.pageY;
@@ -221,11 +224,20 @@
         return
       });
 
-      this.addLegend();
+      if(this.legendText){
+        this.addLegend();
+      }
+
     }
 
     beforeDestroy() {
-      window.removeEventListener("resize", this.handleResize);
+      window.removeEventListener("resize", this.updateHeight);
+    }
+
+    /** Update the height of the SVG. */
+    updateHeight(){
+      this.height = this.$refs.zoom.getBoundingClientRect().height / this.scaleFactor
+
     }
 
     /** Re-layout the graph using the current width/height of the SVG. */
@@ -271,7 +283,7 @@
 
     dragNodeEnd() {
       this.dragTarget = null;
-      this.transitionsAllowed = true;
+      // this.transitionsAllowed = true;
       this.prevPageX = 0;
       this.prevPageY = 0;
     }
@@ -299,8 +311,8 @@
      */
     onDblClick(e: MouseEvent) {
       var svgBounds = this.$refs.svg.getBoundingClientRect();
-      var x = e.pageX - svgBounds.left;
-      var y = e.pageY - svgBounds.top;
+      var x = (e.pageX - svgBounds.left)/this.scaleFactor;
+      var y = (e.pageY - svgBounds.top)/this.scaleFactor;
       this.$emit("dblclick", x, y, e);
     }
 

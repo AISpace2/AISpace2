@@ -79,7 +79,7 @@ export default class GraphNodeContainer extends Vue {
 
     this.mouseDown = false;
     this.moved = false;
-    this.$emit("canTransition", true);
+    this.$emit("canTransition", false);
   }
 }
 

@@ -82,6 +82,17 @@ export class GraphLayout {
   public relayout(graph: Graph, layoutParams: IGraphLayoutParams) {
     return this.relayoutLayoutFunction(graph, layoutParams);
   }
+
+  public translation(graph: Graph, x: number, y: number){
+    console.log("translating nodes...")
+    for (const node of graph.nodes) {
+      if (!node.x || !node.y) {
+        continue;
+      }
+      node.x += x;
+      node.y += y;
+    }
+  }
 }
 
 /**

@@ -103,7 +103,7 @@ class Displayable(StepDOMWidget):
             user_sleep_time = getattr(self, 'sleep_time', None)
             super().__init__()
             self.sleep_time = user_sleep_time
-            self.graph = None
+            # self.graph = None
             self._implicit_neighbours_added = set()
             if not isinstance(self.problem, Search_problem_from_explicit_graph):
                 self.graph = implicit_to_explicit_search_problem(self.problem)

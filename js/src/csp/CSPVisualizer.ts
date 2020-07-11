@@ -370,6 +370,15 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /** Reset frontend variables and replace current graph with copyed initialzed graph and restart backend algorithm*/
   private resetFrontEnd() {
     this.vue.graph.should_relayout = false;
+    // update node positions(don't reset position)
+    this.vue.graph.nodes.forEach((node: { id: string; x: number; y: number; }) => {
+      this.vue.iniGraph.nodes.forEach((iNode: { id: string; x: number; y: number; }) => {
+        if(node.id === iNode.id){
+          iNode.x = node.x
+          iNode.y = node.y
+        }
+      });
+    });
     this.model.graph = cloneDeep(this.vue.iniGraph);
     this.vue.graph = this.model.graph;
     this.vue.output = null;
