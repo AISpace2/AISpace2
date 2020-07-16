@@ -86,7 +86,7 @@ export class GraphLayout {
   public translation(graph: Graph, x: number, y: number){
     console.log("translating nodes...")
     for (const node of graph.nodes) {
-      if (!node.x || !node.y) {
+      if (typeof node.x !== 'number' || typeof node.y !== 'number') {
         continue;
       }
       node.x += x;
@@ -147,10 +147,10 @@ export function d3ForceLayout(): LayoutFunction {
       // Copy over x and y positions onto original graph once simulation is finished
       // if the node did not already have an x, y position
       graphCopy.nodes.forEach((node, i) => {
-        if (!graph.nodes[i].x) {
+        if (typeof graph.nodes[i].x !== 'number') {
           graph.nodes[i].x = node.x;
         }
-        if (!graph.nodes[i].y) {
+        if (typeof graph.nodes[i].y !== 'number') {
           graph.nodes[i].y = node.y;
         }
       });
@@ -367,7 +367,7 @@ function scaleNodePositions(
   let maxY = Number.MIN_SAFE_INTEGER;
 
   for (const node of nodes) {
-    if (!node.x || !node.y) {
+    if (typeof node.x !== 'number' || typeof node.y !== 'number') {
       continue;
     }
 
@@ -382,7 +382,7 @@ function scaleNodePositions(
 
   for (const node of nodes) {
     // Scale node positions to fit new width/height, plus some edge padding
-    if (!node.x || !node.y) {
+    if (typeof node.x !== 'number' || typeof node.y !== 'number') {
       continue;
     }
 
@@ -458,10 +458,10 @@ export function d3ForcePlusRelativeLayout() {
       // Copy over x and y positions onto original graph once simulation is finished
       // if the node did not already have an x, y position
       graphCopy.nodes.forEach((node, i) => {
-        if (!graph.nodes[i].x) {
+        if (typeof graph.nodes[i].x !== 'number') {
           graph.nodes[i].x = node.x;
         }
-        if (!graph.nodes[i].y) {
+        if (typeof graph.nodes[i].y !== 'number') {
           graph.nodes[i].y = node.y;
         }
       });

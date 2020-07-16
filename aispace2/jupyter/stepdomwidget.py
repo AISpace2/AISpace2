@@ -137,11 +137,63 @@ class StepDOMWidget(DOMWidget):
             text = text[:-1] + "}"
             self.send({'action': 'showPositions', 'positions': text})
 
+        def print_relative_positions(nodes):
+            text = "positions={"
+
+            minX = nodes[0]['x']
+            minX2 = None
+            minY = nodes[0]['y']
+            minY2 = None
+            for node in nodes:
+                if node['x'] < minX:
+                    minX2 = minX
+                    minX = node['x']
+                elif node['x'] != minX and (minX2 == None or minX2 > node['x']):
+                    minX2 = node['x']
+
+                if node['y'] < minY:
+                    minY2 = minY
+                    minY = node['y']
+                elif node['y'] != minY and (minY2 == None or minY2 > node['y']):
+                    minY2 = node['y']
+
+            if(minX2 == None):
+                diffX = 1
+            else:
+                diffX = minX2-minX
+            if(minY2 == None):
+                diffY = 1
+            else:
+                diffY = minY2-minY  
+
+            relative = True
+            for node in nodes:
+                if ((node['x']-minX)/diffX) % 1 > 0.01 and ((node['x']-minX)/diffX) % 1 < 0.99:
+                    relative = False
+                    break
+                elif ((node['y']-minY)/diffY) % 1 > 0.01 and ((node['y']-minY)/diffY) % 1 < 0.99:
+                    relative = False
+                    break
+            
+            if relative:
+                for node in nodes:
+                    text += "\n\"{}\": ({},{}),".format(
+                        node['name'], int((node['x']-minX)/diffX+1), int((node['y']-minY)/diffY+1))
+                text = text[:-1] + "}"
+                self.send({'action': 'showPositions', 'positions': text})
+            else:
+                for node in nodes:
+                    text += "\n\"{}\": ({},{}),".format(
+                        node['name'], int(node['x']), int(node['y']))
+                text = text[:-1] + "}"
+                self.send({'action': 'showPositions', 'positions': text})
+
         self._fine_step = step_through_to_level(4)
         self._step = step_through_to_level(2)
         self._auto_solve = step_through_to_level(1)
         self._pause = pause
-        self._print_positions = print_positions
+        # self._print_positions = print_positions
+        self._print_positions = print_relative_positions
         self._auto_arc_consistency = step_through_to_level(0)
 
     def before_step(self):

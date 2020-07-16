@@ -33,6 +33,9 @@ def bayes_problem_to_json(bayesNet, widget_model=None):
             if var.name in bayesNet.positions:
                 nodes[-1]['x'] = bayesNet.positions[var.name][0]
                 nodes[-1]['y'] = bayesNet.positions[var.name][1]
+            else:
+                nodes[-1]['x'] = 'undefined'
+                nodes[-1]['y'] = 'undefined'
 
         nodesMap = {node["name"]: index for index, node in enumerate(nodes)}
 
