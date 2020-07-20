@@ -5,9 +5,13 @@ export interface IGraphNode {
   name: string;
   /** A custom string used to track this node's type. */
   type: string;
-  /** The x position of the node. */
+  /** The raw x given position of the node. */
+  rawX?: number;
+  /** The raw y given position of the node. */
+  rawY?: number;
+  /** The x pixel position of the node on canvas. */
   x?: number;
-  /** The y position of the node. */
+  /** The y pixel position of the node on canvas. */
   y?: number;
   /** An object that can contain arbitrary properties to influence it's rendering. */
   styles: { [key: string]: any };

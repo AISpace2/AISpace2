@@ -367,14 +367,14 @@ function scaleNodePositions(
   let maxY = Number.MIN_SAFE_INTEGER;
 
   for (const node of nodes) {
-    if (typeof node.x !== 'number' || typeof node.y !== 'number') {
+    if (typeof node.rawX !== 'number' || typeof node.rawY !== 'number') {
       continue;
     }
 
-    maxX = Math.max(node.x, maxX);
-    maxY = Math.max(node.y, maxY);
-    minX = Math.min(node.x, minX);
-    minY = Math.min(node.y, minY);
+    maxX = Math.max(node.rawX, maxX);
+    maxY = Math.max(node.rawY, maxY);
+    minX = Math.min(node.rawX, minX);
+    minY = Math.min(node.rawY, minY);
   }
 
   const edgePaddingX = 150;
@@ -382,7 +382,7 @@ function scaleNodePositions(
 
   for (const node of nodes) {
     // Scale node positions to fit new width/height, plus some edge padding
-    if (typeof node.x !== 'number' || typeof node.y !== 'number') {
+    if (typeof node.rawX !== 'number' || typeof node.rawY !== 'number') {
       continue;
     }
 
@@ -390,7 +390,7 @@ function scaleNodePositions(
       node.x = layoutParams.width/2;
     } else {
       node.x =
-        ((layoutParams.width - edgePaddingX * 2) * (node.x! - minX)) /
+        ((layoutParams.width - edgePaddingX * 2) * (node.rawX! - minX)) /
           (maxX - minX) +
         edgePaddingX;
     }
@@ -399,7 +399,7 @@ function scaleNodePositions(
       node.y = layoutParams.height/2;
     } else {
       node.y =
-        ((layoutParams.height - edgePaddingY * 2) * (node.y! - minY)) /
+        ((layoutParams.height - edgePaddingY * 2) * (node.rawY! - minY)) /
           (maxY - minY) +
         edgePaddingY;
     }
@@ -458,11 +458,11 @@ export function d3ForcePlusRelativeLayout() {
       // Copy over x and y positions onto original graph once simulation is finished
       // if the node did not already have an x, y position
       graphCopy.nodes.forEach((node, i) => {
-        if (typeof graph.nodes[i].x !== 'number') {
-          graph.nodes[i].x = node.x;
+        if (typeof graph.nodes[i].rawX !== 'number') {
+          graph.nodes[i].rawX = node.x;
         }
-        if (typeof graph.nodes[i].y !== 'number') {
-          graph.nodes[i].y = node.y;
+        if (typeof graph.nodes[i].rawY !== 'number') {
+          graph.nodes[i].rawY = node.y;
         }
       });
       // recalculate node positions so that nodes occupy the whole canvas

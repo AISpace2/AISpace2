@@ -187,13 +187,22 @@ class StepDOMWidget(DOMWidget):
                         node['name'], int(node['x']), int(node['y']))
                 text = text[:-1] + "}"
                 self.send({'action': 'showPositions', 'positions': text})
+        
+        def print_raw_positions(nodes):
+            text = "positions={"
+            for node in nodes:
+                text += "\n\"{}\": ({},{}),".format(
+                    node['name'], round(node['rawX']), round(node['rawY']))
+            text = text[:-1] + "}"
+            self.send({'action': 'showPositions', 'positions': text})
 
         self._fine_step = step_through_to_level(4)
         self._step = step_through_to_level(2)
         self._auto_solve = step_through_to_level(1)
         self._pause = pause
         # self._print_positions = print_positions
-        self._print_positions = print_relative_positions
+        # self._print_positions = print_relative_positions
+        self._print_positions = print_raw_positions
         self._auto_arc_consistency = step_through_to_level(0)
 
     def before_step(self):

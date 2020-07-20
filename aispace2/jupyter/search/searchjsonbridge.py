@@ -41,11 +41,11 @@ def search_problem_to_json(problem, widget_model=None):
 
         if str(node) in problem.positions:
             position = problem.positions[str(node)]
-            node_to_add['x'] = position[0]
-            node_to_add['y'] = position[1]
+            node_to_add['rawX'] = position[0]
+            node_to_add['rawY'] = position[1]
         else:
-            node_to_add['x'] = 'undefined'
-            node_to_add['y'] = 'undefined'
+            node_to_add['rawX'] = 'undefined'
+            node_to_add['rawY'] = 'undefined'
 
         nodes.append(node_to_add)
 

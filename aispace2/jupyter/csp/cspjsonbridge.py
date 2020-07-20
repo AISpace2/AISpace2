@@ -44,11 +44,11 @@ def csp_to_json(csp, widget_model=None):
             'domain': list(value)
         })
         if var in csp.positions:
-            csp_json['nodes'][-1]['x'] = csp.positions[var][0]
-            csp_json['nodes'][-1]['y'] = csp.positions[var][1]
+            csp_json['nodes'][-1]['rawX'] = csp.positions[var][0]
+            csp_json['nodes'][-1]['rawY'] = csp.positions[var][1]
         else:
-            csp_json['nodes'][-1]['x'] = 'undefined'
-            csp_json['nodes'][-1]['y'] = 'undefined'
+            csp_json['nodes'][-1]['rawX'] = 'undefined'
+            csp_json['nodes'][-1]['rawY'] = 'undefined'
 
     for (i, constraint) in enumerate(csp.constraints):
         constraint_id = str(hash(constraint))
@@ -61,11 +61,11 @@ def csp_to_json(csp, widget_model=None):
             'combinations_for_true': csp.get_combinations_for_true(constraint)
         })
         if constraint_name in csp.positions:
-            csp_json['nodes'][-1]['x'] = csp.positions[constraint_name][0]
-            csp_json['nodes'][-1]['y'] = csp.positions[constraint_name][1]
+            csp_json['nodes'][-1]['rawX'] = csp.positions[constraint_name][0]
+            csp_json['nodes'][-1]['rawY'] = csp.positions[constraint_name][1]
         else:
-            csp_json['nodes'][-1]['x'] = 'undefined'
-            csp_json['nodes'][-1]['y'] = 'undefined'
+            csp_json['nodes'][-1]['rawX'] = 'undefined'
+            csp_json['nodes'][-1]['rawY'] = 'undefined'
 
         # Create a link from the constraint to each variable in its scope
         for var in constraint.scope:

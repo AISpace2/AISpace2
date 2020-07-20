@@ -100,6 +100,10 @@
 
     /** The node or edge currently being dragged. */
     dragTarget: IGraphNode | IGraphEdge | null = null;
+    rawXSlope: number
+    rawXIntercept: number
+    rawYSlope: number
+    rawYIntercept: number
     /** The edge being hovered over. */
     edgeHovered: IGraphEdge | null = null;
     /** The node being hovered over. */
@@ -263,6 +267,33 @@
 
     dragNodeStart(node: IGraphNode) {
       this.dragTarget = node;
+      var tempNodes: IGraphNode[] = []
+
+      for (let i = 0; i < this.graph.nodes.length; i++) {
+        if(i == 0){
+          tempNodes.push(this.graph.nodes[i])
+        }else if(this.graph.nodes[i].x !== tempNodes[0].x && this.graph.nodes[i].y !== tempNodes[0].y){
+          tempNodes.push(this.graph.nodes[i])
+          break;
+        }else if(i == this.graph.nodes.length - 1){
+          tempNodes.push(this.graph.nodes[i])
+        }
+      }
+
+      this.rawXSlope = (tempNodes[0].rawX-tempNodes[1].rawX)/(tempNodes[0].x-tempNodes[1].x)
+
+      this.rawYSlope = (tempNodes[0].rawY-tempNodes[1].rawY)/(tempNodes[0].y-tempNodes[1].y)
+      if(isNaN(this.rawXSlope && this.rawYSlope)){      
+      this.rawXSlope = (tempNodes[0].rawX)/(tempNodes[0].x)
+      this.rawYSlope = (tempNodes[0].rawY)/(tempNodes[0].y)
+      }else if(isNaN(this.rawXSlope)){
+        this.rawXSlope = this.rawYSlope
+      }else if(isNaN(this.rawYSlope)){
+        this.rawYSlope = this.rawXSlope
+      }
+      this.rawXIntercept = tempNodes[0].rawX - this.rawXSlope*tempNodes[0].x
+      this.rawYIntercept = tempNodes[0].rawY - this.rawYSlope*tempNodes[0].y
+
     }
 
     dragNode(e: MouseEvent) {
@@ -282,6 +313,8 @@
     }
 
     dragNodeEnd() {
+      this.dragTarget.rawX = this.dragTarget.x * this.rawXSlope + this.rawXIntercept
+      this.dragTarget.rawY = this.dragTarget.y * this.rawYSlope + this.rawYIntercept
       this.dragTarget = null;
       // this.transitionsAllowed = true;
       this.prevPageX = 0;
