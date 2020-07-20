@@ -187,13 +187,26 @@
               if (node.observed !== undefined) {
                   text += "Observation: " + node.observed + '\n';
               }
-              text += "_".repeat(30) + '\n';
-              var prob = "|";
-              var width = 20;
+              var prob = "|"; //symbol simulates probability
+              var probWidth = 10; //default width showing probability symbol (including spaces)
+              var textWidth = 10; // default width showing text of node domain (including spaces)
+
+              //Based on the node name and exact probability number, extend the displaying width
               for (var key in node.prob) {
-                  var number = node.prob[key];
-                  var namel  = key.length;
-                  text += key + " ".repeat(width - 10 - namel) + number.toFixed(this.decimalPlace) + ":" + " ".repeat(5) + prob.repeat(number*20) + " ".repeat(width-number*20) + '\n';
+                  textWidth = Math.max(textWidth, key.length + 2); //reserving 2 spaces as padding
+                  probWidth = Math.max(probWidth, Math.floor(node.prob[key] * 20) + 2) //reserving 2 spaces as padding
+              }
+
+              //Adding underlines to seperate node name and node domain
+              text += "_".repeat(textWidth + probWidth + 4) + '\n';
+
+              //Adding text simulates probability graph 
+              for (var key in node.prob) {
+                  var number = node.prob[key]; //probability number
+                  var namel  = key.length; //length of node domain 
+                  
+                  //displaying line as "domain: prob", inserting spaces to keep format consistent 
+                  text += key + " ".repeat(Math.max(textWidth - namel,0)) + number.toFixed(this.decimalPlace) + ":" + " " + prob.repeat(Math.floor(number*20)) + " ".repeat(probWidth-Math.floor(number * 20)) + '\n';
               }
               return text;
           }
