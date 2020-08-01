@@ -11,6 +11,7 @@
 import itertools
 
 from aipython.utilities import Displayable, dict_union
+from operator import *
 
 
 class Constraint(object):
@@ -18,19 +19,23 @@ class Constraint(object):
     * name: the unique name of this constraint
     * scope: a tuple of variables
     * condition: a function that can applied to a tuple of values
+    * string: a string for printing the constraints. All of the strings must be unique.
     for the variables
     """
 
-    def __init__(self, scope, condition):
+    def __init__(self, scope, condition, string=None):
         self.scope = scope
         self.condition = condition
-        self.condition_name = ""
         if self.condition.__name__ == "<lambda>":
             self.condition.__name__ = "Custom"
-        self.repr = self.condition.__name__ + str(self.scope)
+        self.condition_name = self.condition.__name__
+        if string is None:
+            self.string = self.condition.__name__ + str(self.scope)
+        else:
+            self.string = string
 
     def __repr__(self):
-        return self.repr
+        return repr(self.string)
 
     def holds(self, assignment):
         """returns the value of Constraint con evaluated in assignment.
@@ -55,18 +60,6 @@ class CSP(Displayable):
             for var in con.scope:
                 self.var_to_const[var].add(con)
         self.positions = positions
-
-        # Numbering the conditions with the same names:
-        constraint_strings = list(
-            map(lambda con: con.__repr__(), self.constraints))
-        i = 0
-        while i < len(constraint_strings):
-            occurence = constraint_strings.count(constraint_strings[i])
-            if occurence > 1:
-                for j in range(occurence):
-                    # start numbering
-                    self.constraints[i + j].repr += str(j)
-            i += occurence
 
     def __str__(self):
         """string representation of CSP"""
@@ -103,115 +96,101 @@ class CSP(Displayable):
 # Constraint Functions:
 
 # Negate the input function
+# def NOT(fn):
+#     def toReturn(*args, **kwargs):
+#         return not fn(*args, **kwargs)
+#     toReturn.__name__ = "NOT(" + fn.__name__ + ")"
+#     return toReturn
 
-
-def NOT(fn):
-    def toReturn(*args, **kwargs):
-        return not fn(*args, **kwargs)
-    toReturn.__name__ = "NOT(" + fn.__name__ + ")"
-    return toReturn
-
-# Basic constraints:
-
-
-def TRUE(*args, **kwargs):
-    return True
-
-
-def FALSE(*args, **kwargs):
-    return False
-
-# Uniary constraints
-
-
-def LessThan(num1, num2=None):
-    if num2 is None:
-        def toReturn(x):
-            return x < num1
-        toReturn.__name__ = "LessThan(" + str(num1) + ")"
-        return toReturn
-    return num1 < num2  # binary constraint
-
-
-def Equals(val1, val2=None):
-    if val2 is None:
-        def toReturn(x):
-            return str(x) == str(val1)
-        toReturn.__name__ = "Equals(" + str(val1) + ")"
-        return toReturn
-    return val1 == val2  # binary constraint
-
-
-def GreaterThan(num1, num2=None):
-    if num2 is None:
-        def toReturn(x):
-            return x > num1
-        toReturn.__name__ = "GreaterThan(" + str(num1) + ")"
-        return toReturn
-    return num1 > num2  # binary constraint
-
-
-def IsTrue(bool):
-    return bool
-
-
-def IsFalse(bool):
-    return not bool
-
-# Binary constraints
-
-
-def AND(bool1, bool2):
-    return bool1 and bool2
-
-
-def OR(bool1, bool2):
-    return bool1 or bool2
-
-
-def IMPLIES(bool1, bool2):
+def implies(bool1, bool2):
     return (not bool1) or bool2
 
+def ne_(val):
+    """not equal value"""
+    # nev = lambda x: x != val   # alternative definition
+    # nev = partial(neq,val)     # another alternative definition
+    def nev(x):
+        return val != x
+    nev.__name__ = "ne_(" + str(val) + ")"      # name of the function 
+    return nev
 
-def XOR(bool1, bool2):
-    return (bool1 and (not bool2)) or ((not bool1) and bool2)
+def eq_(val):
+    """equal value"""
+    # eqv = lambda x: x == val   # alternative definition
+    # eqv = partial(eq,val)      # another alternative definition
+    def eqv(x):
+        return val == x
+    eqv.__name__ = "eq_(" + str(val) + ")"
+    return eqv
 
+def lt_(val):
+    # ltv = lambda x: x < val   # alternative definition
+    # ltv = partial(lt,val)      # another alternative definition
+    def ltv(x):
+        return val > x
+    ltv.__name__ = "lt_(" + str(val) + ")"
+    return ltv
+
+def gt_(val):
+    # gtv = lambda x: x > val   # alternative definition
+    # gtv = partial(gt,val)      # another alternative definition
+    def gtv(x):
+        return val < x
+    gtv.__name__ = "gt_(" + str(val) + ")"
+    return gtv
+
+def le_(val):
+    # lev = lambda x: x < val   # alternative definition
+    # lev = partial(le,val)      # another alternative definition
+    def lev(x):
+        return val > x
+    lev.__name__ = "le_(" + str(val) + ")"
+    return lev
+
+def ge_(val):
+    # gev = lambda x: x > val   # alternative definition
+    # gev = partial(ge,val)      # another alternative definition
+    def gev(x):
+        return val < x
+    gev.__name__ = "ge_(" + str(val) + ")"
+    return gev
 
 csp_empty = CSP({}, [])
 
 csp_simple1 = CSP({'A': {1, 2, 3}, 'B': {1, 2, 3}, 'C': {1, 2, 3}},
-                  [Constraint(('A', 'B'), LessThan),
-                   Constraint(('B', 'C'), LessThan)])
+                  [Constraint(('A', 'B'), lt, "A < B"),
+                   Constraint(('B', 'C'), lt, "B < C")])
 
-csp_simple2 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
-                  [Constraint(('A', 'B'), LessThan),
-                   Constraint(('B',), NOT(Equals(2))),
-                   Constraint(('B', 'C'), LessThan)],
-                  positions={"A": (374, 351),
-                             "B": (481, 168),
-                             "C": (591, 345),
-                             "LessThan('A', 'B')": (379, 231),
-                             "LessThan('B', 'C')": (586, 225),
-                             "NOT(Equals(2))('B',)": (484, 288)})
+C0 = Constraint(('A','B'), lt, "A < B")
+C1 = Constraint(('B',), ne_(2), "B != 2")
+C2 = Constraint(('B','C'), lt, "B < C")
+csp_simple2 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}},
+                [C0, C1, C2],
+                positions={"A": (1, 0),
+                            "B": (3, 0),
+                            "C": (5, 0),
+                            "A < B": (2, 1),
+                            "B < C": (4, 1),
+                            "B != 2": (3, 2)})
 
 csp_simple3 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4}},
-                  [Constraint(('A', 'B'), Equals),
-                   Constraint(('B', 'C'), Equals),
-                   Constraint(('A', 'C'), NOT(Equals))])
+                  [Constraint(('A', 'B'), eq, "A = B"),
+                   Constraint(('B', 'C'), eq, "B = C"),
+                   Constraint(('A', 'C'), ne, "A != C")])
 
-csp_extended1 = CSP({'A': {1, 2, 3, 4}, 'B': {1, 2, 3, 4}, 'C': {1, 2, 3, 4},
-                     'D': {1, 2, 3, 4}, 'E': {1, 2, 3, 4}},
-                    [Constraint(('B',), NOT(Equals(3))),
-                     Constraint(('C',), NOT(Equals(2))),
-                     Constraint(('A', 'B'), NOT(Equals)),
-                     Constraint(('B', 'C'), NOT(Equals)),
-                     Constraint(('C', 'D'), LessThan),
-                     Constraint(('A', 'D'), Equals),
-                     Constraint(('A', 'E'), GreaterThan),
-                     Constraint(('B', 'E'), GreaterThan),
-                     Constraint(('C', 'E'), GreaterThan),
-                     Constraint(('D', 'E'), GreaterThan),
-                     Constraint(('B', 'D'), NOT(Equals))])
+csp_extended1 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}, 
+                    'D':{1,2,3,4}, 'E':{1,2,3,4}},
+                    [ Constraint(('B',), ne_(3), "B != 3"),
+                    Constraint(('C',), ne_(2), "C != 2"),
+                    Constraint(('A','B'), ne, "A != B"),
+                    Constraint(('B','C'), ne, "A != C"),
+                    Constraint(('C','D'), lt, "C < D"),
+                    Constraint(('A','D'), eq, "A = D"),
+                    Constraint(('A','E'), gt, "A > E"),
+                    Constraint(('B','E'), gt, "B > E"),
+                    Constraint(('C','E'), gt, "C > E"),
+                    Constraint(('D','E'), gt, "D > E"),
+                    Constraint(('B','D'), ne, "B != D")])
 
 
 csp_extended2 = CSP({'A': {1, 2, 3, 4},
@@ -219,28 +198,25 @@ csp_extended2 = CSP({'A': {1, 2, 3, 4},
                      'C': {1, 3, 4},
                      'D': {1, 2, 3, 4},
                      'E': {1, 2, 3, 4}, },
-                    [Constraint(('A', 'B'), NOT(Equals)),
-                     Constraint(('A', 'D'), Equals),
-                     Constraint(('B', 'D'), NOT(Equals)),
-                     Constraint(('B', 'C'), NOT(Equals)),
-                     Constraint(('C', 'D'), LessThan),
-                     Constraint(('E', 'A'), LessThan),
-                     Constraint(('E', 'D'), LessThan),
-                     Constraint(('E', 'C'), LessThan),
-                     Constraint(('E', 'B'), LessThan)])
+                    [Constraint(('A', 'B'), ne, "A != B"),
+                     Constraint(('A', 'D'), eq, "A = D"),
+                     Constraint(('B', 'D'), ne, "B != D"),
+                     Constraint(('B', 'C'), ne, "B != C"),
+                     Constraint(('C', 'D'), lt, "C < D"),
+                     Constraint(('E', 'A'), lt, "E < A"),
+                     Constraint(('E', 'D'), lt, "E < D"),
+                     Constraint(('E', 'C'), lt, "E < C"),
+                     Constraint(('E', 'B'), lt, "E < B")])
 
-csp_extended3 = CSP({'A': {1, 2, 3, 4},
-                     'B': {1, 2, 3, 4},
-                     'C': {1, 2, 3, 4},
-                     'D': {1, 2, 3, 4},
-                     'E': {1, 2, 3, 4}, },
-                    [Constraint(('A', 'B'), NOT(Equals)),
-                     Constraint(('A', 'D'), LessThan),
-                     Constraint(('D', 'C'), LessThan),
-                     Constraint(('E', 'D'), NOT(Equals)),
-                     Constraint(('E', 'C'),  NOT(Equals)),
-                     Constraint(('E', 'B'), GreaterThan),
-                     Constraint(('E', 'A'), lambda x, y: (x, y) in [(1, 2), (1, 4), (2, 1), (2, 3), (3, 2), (3, 4), (4, 1), (4, 3)])])
+csp_extended3 = CSP({'A':{1,2,3,4},'B':{1,2,3,4}, 'C':{1,2,3,4}, 
+                    'D':{1,2,3,4}, 'E':{1,2,3,4}},
+                    [Constraint(('A','B'), ne, "A != B"),
+                    Constraint(('A','D'), lt, "A < D"),
+                    Constraint(('A','E'), lambda a,e: (a-e)%2 == 1, "A-E is odd"), # A-E is odd
+                    Constraint(('B','E'), lt, "B < E"),
+                    Constraint(('D','C'), lt, "D < C"),
+                    Constraint(('C','E'), ne, "C != E"),
+                    Constraint(('D','E'), ne, "D != E")])
 
 
 def meet_at(p1, p2):

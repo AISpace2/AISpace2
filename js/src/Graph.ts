@@ -48,6 +48,7 @@ export type CSPNodeTypes = "csp:variable" | "csp:constraint";
 export interface ICSPGraphNode extends IGraphNode {
   type: CSPNodeTypes;
   domain?: number[] | string[] | boolean[];
+  condition_name?: string;
 }
 
 export type SearchNodeTypes = "search:start" | "search:goal" | "search:normal";
