@@ -40,14 +40,16 @@
     computedTotalHeight = 0;
     /** The total width, in pixels, that the text and subtext (if available) take up. */
     computedTotalWidth = 0;    
-    /** The subtext, truncated to `maxWidth`. This text is displayed in the node, if subtext is provided. */
+    /** The subtext, truncated to `maxTextWidth`. This text is displayed in the node, if subtext is provided. */
     truncatedSubtext = "";
+
     $refs: {
       /** A reference to the primary text element where the text is drawn. */
       text: SVGTextElement;
       /** A reference to the secondary text element where the subtext is drawn, if subtext is provided. */
       subtext: SVGTextElement;
     };
+
     mounted() {
       this.truncatedText = this.text;
       this.fitText();
@@ -63,13 +65,9 @@
       if (this.showNoTextFlag() || this.text === "{}") {
         return this.minHeight;
       }
-      return Math.max(this.computedTotalHeight, this.minHeight) + this.padding.height;
+      return Math.max(this.computedTotalHeight, this.minHeight) + this.padding.heightPadding;
     }
 
-    /** The maximum of `computedTextWidth` and `computedSubtextWidth`. */
-    // get computedTotalWidth() {
-    //   return Math.max(this.computedTextWidth, this.computedSubtextWidth);
-    // }
     get displaySubText() {
       let text = this.showFullTextFlag() ? this.subtext : this.truncatedSubtext;
       return this.format(text);
@@ -98,21 +96,19 @@
 
       if (this.$refs.text === null || this.$refs.text === undefined) {
         textHeight = 0;
-      } else if (this.cache.height != -1) {
-        textHeight = this.cache.height;
+        textWidth = 0;
       } else {
-        textHeight = this.$refs.text.getBoundingClientRect().height;
+        textHeight = this.$refs.text.getBBox().height;
+        textWidth = this.$refs.text.getBBox().width;
       }
-
-      textWidth = this.measureTextWidth(this.text);
 
       if (this.$refs.subtext === null || this.$refs.subtext === undefined) {
         subtextHeight = 0;
+        subtextWidth = 0;
       } else {
-        subtextHeight = this.$refs.subtext.getBoundingClientRect().height;
-        }
-
-      subtextWidth = this.measureTextWidth(this.subtext);
+        subtextHeight = this.$refs.subtext.getBBox().height;
+        subtextWidth = this.$refs.subtext.getBBox().width;
+      }
 
       this.computedTextWidth = textWidth;
       this.computedSubtextWidth = subtextWidth;
@@ -121,7 +117,7 @@
     }
 
     /**
-     * Truncates subtext until it is less than `maxWidth`.
+     * Truncates subtext until it is less than `maxTextWidth`.
      *
      * This function uses binary search to speed up the truncation.
      */
@@ -131,26 +127,29 @@
       this.truncatedSubtext = `${this.subtext.substr(0, mid + 1)}…`;
       // Vue doesn't update DOM (and thus box sizes) until next tick
       Vue.nextTick(() => {
-        if (this.$refs.subtext.getBoundingClientRect().width + this.padding.subtext > this.maxWidth) {
+        if (this.$refs.subtext.getBBox().width + this.padding.subtext > this.maxTextWidth) {
           this._truncateSubtext(lowerBound, mid - 1);
         } else {
           this._truncateSubtext(mid + 1, upperBound);
         }
       });
     }
+    
     /**
      * Trims subtext to fit inside the node as necessary.
      */
     fitSubtext() {
       Vue.nextTick(() => {
-        if(this.$refs.subtext === undefined) return;
         if (this.showNoTextFlag()) {
           this.truncatedSubtext = "";
-        } else {
+        } else if (this.showTruncatedTextFlag){
           this.computeWidthAndHeight();
-          if (this.$refs.subtext.getBoundingClientRect().width + this.padding.subtext > this.maxWidth) {
+          if (this.$refs.subtext.getBBox().width + this.padding.subtext > this.maxTextWidth) {
             this._truncateSubtext();
-          }}
+          }
+        } else if (this.showFullTextFlag()){
+          this.computeWidthAndHeight();
+        }
       });
     }
 
@@ -160,7 +159,6 @@
 
     @Watch("subtext")
     onSubtextChanged() {
-      this.cache.subHeight = -1;
       this.truncatedSubtext = this.subtext;
       this.fitSubtext();
       this.updateText();
@@ -168,8 +166,6 @@
 
     @Watch("textSize")
     onTextSizeChange() {
-      this.measureTextHeight(this.text, this.flag.TEXT);
-      this.measureTextHeight(this.subtext, this.flag.SUBTEXT);
       this.updateText();
     }
 

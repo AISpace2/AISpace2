@@ -28,10 +28,16 @@
         </svg>
       </g>
     </svg>
-    <foreignObject class="dropdown noselect" width="112px" height="70px">
+    <foreignObject class="dropdown noselect">
       <button class="dropbtn" >Visualization Options</button>
       <div class="dropdown-content">
-        <slot name="visualization" :toggleLegend="toggleLegendVisibility"></slot>
+        <slot name="visualization" :toggleLegend="toggleLegendVisibility" 
+                                   :showLegend="showLegend"
+                                   :zoomModePlus="zoomModePlus" :zoomModeMinus="zoomModeMinus"
+                                   :zoomMode="zoomMode"
+                                   :toggleWheelZoom="toggleWheelZoom" 
+                                   :wheelZoom="wheelZoom"
+                                   :zoomIn="zoomIn" :zoomOut="zoomOut"></slot>
       </div>
     </foreignObject>
     <!-- Resize handle -->
@@ -128,7 +134,10 @@
     zoomMove: boolean = false;
     zoomStartX: number | null = 0;
     zoomStartY: number | null = 0;
-
+    
+    showLegend: "on" | "off" = "on";
+    zoomMode: number = 1;
+    wheelZoom:  "on" | "off" = "off";
 
     $refs: {
       /** The SVG element that the graph is drawn in. */
@@ -186,24 +195,40 @@
       };
 
       this.$refs.zoom.addEventListener("wheel", e => {
-        e.preventDefault();
-        var zoomRect = this.$refs.zoom.getBoundingClientRect()
-        var svgRect = this.$refs.svg.getBoundingClientRect()
-        var updateScaleFactor = Math.pow((1/0.95), -e.deltaY / 120)
-        this.scaleFactor = this.scaleFactor * updateScaleFactor
-        console.log("this.scaleFactor: " + this.scaleFactor)
+        if(this.wheelZoom === "off"){
+          return;
+        }
+        if(this.zoomMode === 1){
+          e.preventDefault();
 
-        var transX = ((zoomRect.width*(1-updateScaleFactor))/zoomRect.width * (e.clientX - zoomRect.left))/this.scaleFactor
-        this.layout.translation(this.graph, transX, 0);
-        this.width = this.width / updateScaleFactor
+          var zoomRect = this.$refs.zoom.getBoundingClientRect()
+          var updateScaleFactor = Math.pow((1/0.95), -e.deltaY / 120)
+          this.scaleFactor = this.scaleFactor * updateScaleFactor
+          console.log("this.scaleFactor: " + this.scaleFactor)
 
+          var transX = ((zoomRect.width*(1-updateScaleFactor))/zoomRect.width * (e.clientX - zoomRect.left))/this.scaleFactor
+          this.layout.translation(this.graph, transX, 0);
+          this.width = this.width / updateScaleFactor
 
-        var transY = ((zoomRect.height*(1-updateScaleFactor))/zoomRect.height * (e.clientY - zoomRect.top))/this.scaleFactor
-        this.layout.translation(this.graph, 0, transY);
-        this.height = this.height / updateScaleFactor
+          var transY = ((zoomRect.height*(1-updateScaleFactor))/zoomRect.height * (e.clientY - zoomRect.top))/this.scaleFactor
+          this.layout.translation(this.graph, 0, transY);
+          this.height = this.height / updateScaleFactor
 
+          return;
+        }else if(this.zoomMode === 2){
+          e.preventDefault();
 
-        return;
+          var zoomRect = this.$refs.zoom.getBoundingClientRect()
+          var updateScaleFactor = Math.pow((1/0.95), -e.deltaY / 120)
+          this.graph.nodes.forEach(node => {
+            console.log(node.id + node.name)
+            var nodeRect = document.getElementById(node.id).getBoundingClientRect()
+            node.x += ((e.clientX - (nodeRect.left + nodeRect.width / 2)) * (1-updateScaleFactor)) * this.scaleFactor
+            node.y += ((e.clientY - (nodeRect.top + nodeRect.height / 2)) * (1-updateScaleFactor)) * this.scaleFactor
+          });
+
+          return;
+        }
       });
 
       this.$refs.zoom.addEventListener("mousedown", e => {
@@ -408,12 +433,77 @@
 
     /** Toggle button functionality for displaying and hiding legend box */
     toggleLegendVisibility() {
+      console.log("toggleLegendVisibility")
       let lg = d3.select(this.$refs.zoom).select(".legend_group");
 
       if (lg.style("visibility") === "hidden") {
+        this.showLegend = "on"
         lg.attr("visibility", "visible");
       } else {
+        this.showLegend = "off"
         lg.attr("visibility", "hidden");
+      }
+    }
+
+    zoomModePlus(){
+      if(this.zoomMode < 2){
+        this.toggleZoomMode(1);
+      }
+    }
+
+    zoomModeMinus(){
+      if(this.zoomMode > 1){
+        this.toggleZoomMode(-1);
+      }
+    }
+
+    /** Toggle button functionality for zoom mode */
+    toggleZoomMode(factor: number) {
+      console.log("toggleZoomMode")
+      this.zoomMode += factor
+      console.log(this.zoomMode)
+    }
+
+    toggleWheelZoom() {
+      console.log("togglewheelzoom")
+      if(this.wheelZoom === "on"){
+        this.wheelZoom = "off";
+      }else{
+        this.wheelZoom = "on";
+      }
+      console.log(this.wheelZoom)
+    }
+
+    zoomIn(){
+      this.zoomClicked(1);
+    }
+
+    zoomOut(){
+      this.zoomClicked(-1);
+    }
+
+    zoomClicked(factor: number){
+      if(this.zoomMode === 1){
+        var zoomRect = this.$refs.zoom.getBoundingClientRect()
+        var updateScaleFactor = Math.pow((1/0.95), factor)
+        this.scaleFactor = this.scaleFactor * updateScaleFactor
+        console.log("this.scaleFactor: " + this.scaleFactor)
+
+        var transX = ((zoomRect.width*(1-updateScaleFactor))/2)/this.scaleFactor
+        this.layout.translation(this.graph, transX, 0);
+        this.width = this.width / updateScaleFactor
+
+        var transY = ((zoomRect.height*(1-updateScaleFactor))/2)/this.scaleFactor
+        this.layout.translation(this.graph, 0, transY);
+        this.height = this.height / updateScaleFactor
+      }else if(this.zoomMode === 2){
+        var zoomRect = this.$refs.zoom.getBoundingClientRect()
+        var updateScaleFactor = Math.pow((1/0.95), factor)
+        this.graph.nodes.forEach(node => {
+          var nodeRect = document.getElementById(node.id).getBoundingClientRect()
+          node.x += ((zoomRect.left + zoomRect.width / 2 - (nodeRect.left + nodeRect.width / 2)) * (1-updateScaleFactor)) * this.scaleFactor
+          node.y += ((zoomRect.left + zoomRect.width / 2 - (nodeRect.top + nodeRect.height / 2)) * (1-updateScaleFactor)) * this.scaleFactor
+        });
       }
     }
 
@@ -493,8 +583,8 @@
   .dropbtn {
     background-color: #4CAF50;
     color: white;
-    padding: 1em;
-    font-size: 0.7em;
+    padding: 0.5em 2em;
+    font-size: 0.75em;
     border: none;
   }
 
@@ -507,9 +597,9 @@
 
   .dropdown-content {
     display: none;
-    position: absolute;
+    /* position: absolute; */
     background-color: #f1f1f1;
-    min-width: 8em;
+    max-width: 10em;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
   }
@@ -530,11 +620,13 @@
 
   .dropdown-content a {
     color: black;
-    padding: 1em 1em;
+    padding: 0.5em 0em;
     font-size: 0.75em;
     text-decoration: none;
+    text-align: center;
     display: block;
     border-bottom: 1px solid rgba(0, 0, 255, .1);
+    width: 100%
   }
 
   .dropdown-content a:hover {background-color: #ddd;}
@@ -543,17 +635,18 @@
     color: white;
     font-size: 0.75em;
     text-decoration: none;
+    text-align: center;
     display: inline-block;
     border-bottom: 1px solid rgba(0, 0, 255, .1);
     background-color: darkgrey;
-    width: 10%;
+    width: 17%;
   }
 
   .dropdown-content label.inline-btn-group {
     color: black;
-    padding: 1em 0.5em;
+    padding: 0.5em 0em;
     text-align: center;
-    width: 55%;
+    width: 60%;
     font-size: 0.75em;
     text-decoration: none;
     display: inline-block;

@@ -147,7 +147,7 @@ class Displayable(StepDOMWidget):
             if self._thread:
                 self.stop_thread(self._thread)
 
-        if event == 'initial_render':
+        elif event == 'initial_render':
             self._previously_rendered = True
             queued_func = getattr(self, '_queued_func', None)
 
@@ -158,6 +158,9 @@ class Displayable(StepDOMWidget):
                 self._thread = ReturnableThread(
                     target=func, args=args, kwargs=kwargs)
                 self._thread.start()
+        
+        elif event == 'update_sleep_time':
+            self.sleep_time = content.get('sleepTime')
 
     def display(self, level, *args, **kwargs):
         if args[0] == "Expanding: ":

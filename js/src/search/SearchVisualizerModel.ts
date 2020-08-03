@@ -81,6 +81,11 @@ export default class SearchViewerModel extends widgets.DOMWidgetModel {
   get detailLevel(): number {
     return this.get("detail_level");
   }
+  
+  // The time delay between consecutive display calls
+  get sleepTime(): number {
+    return this.get("sleep_time");
+  }
 
   /** The Graph representing the search problem. */
   get graph(): Graph<ISearchGraphNode, ISearchGraphEdge> {

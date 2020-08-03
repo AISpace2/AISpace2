@@ -73,6 +73,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           textSize: this.model.textSize,
           lineWidth: this.model.lineWidth,
           detailLevel: this.model.detailLevel,
+          sleepTime: this.model.sleepTime,
           legendText: searchLabelText,
           legendColor: searchLabelColor,
           frontier: []
@@ -121,6 +122,13 @@ export default class SearchViewer extends widgets.DOMWidgetView {
           : this.trimGraph();
       });
 
+      this.vue.$on("toggle:sleepTimeUpdate", (sleepTime: number) => {
+        Analytics.trackEvent("Search Visualizer", "Update Sleep Time");
+        this.send({ 
+          event: "update_sleep_time",
+          sleepTime: sleepTime});
+      });
+
       if (!this.model.previouslyRendered) {
         this.send({ event: "initial_render" });
         this.vue.iniGraph = cloneDeep(this.model.graph);
@@ -145,7 +153,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
 
     for (const edge of this.model.graph.edges) {
       this.vue.$set(edge.styles, "stroke", "black");
-      this.vue.$set(edge.styles, "strokeWidth", this.model.lineWidth);
+      this.vue.$set(edge.styles, "strokeWidth", this.vue.lineWidth);
     }
 
     for (const node of this.vue.graph.nodes) {
@@ -155,7 +163,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
 
     for (const edge of this.vue.graph.edges) {
       this.vue.$set(edge.styles, "stroke", "black");
-      this.vue.$set(edge.styles, "strokeWidth", this.model.lineWidth);
+      this.vue.$set(edge.styles, "strokeWidth", this.vue.lineWidth);
     }
   }
 
@@ -193,7 +201,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.vue.$set(
         this.model.graph.idMap[edgeId].styles,
         "strokeWidth",
-        this.model.lineWidth + 3
+        this.vue.lineWidth + 3
       );
       this.vue.$set(
         this.vue.graph.idMap[edgeId].styles,
@@ -203,7 +211,7 @@ export default class SearchViewer extends widgets.DOMWidgetView {
       this.vue.$set(
         this.vue.graph.idMap[edgeId].styles,
         "strokeWidth",
-        this.model.lineWidth + 3
+        this.vue.lineWidth + 3
       );
     }
   }

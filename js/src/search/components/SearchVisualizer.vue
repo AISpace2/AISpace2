@@ -3,7 +3,7 @@
     <GraphVisualizerBase :graph="graph" :transitions="true" :layout="layout" :legendColor="legendColor" :legendText="legendText" :textSize="textSize">
       <template slot="node" slot-scope="props">
         <RoundedRectangleGraphNode :id="props.node.id" :text="props.node.name" :textColour="nodeTextColour(props.node, props.hover)"
-                                   :subtext="showNodeHeuristics ? nodeHText(props.node) : undefined" :detailLevel="detailLevel"
+                                   :subtext="nodeHText(props.node)" :detailLevel="detailLevel"
                                    :fill="nodeFillColour(props.node, props.hover)" :hover="props.hover"
                                    :stroke="nodeStroke(props.node)" :stroke-width="nodeStrokeWidth(props.node)"
                                    :maxWidth="nodemaxWidth(props.node)"
@@ -17,17 +17,39 @@
         </DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
-        <a @click="props.toggleLegend">Toggle Legend</a>
+        <a @click="props.toggleLegend">{{'Legend: ' + props.showLegend}}</a>
         
         <!-- <a @click="$emit('toggle:showFullDomain')">Change Domain</a> -->
 
-        <!-- <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
-        <label class="inline-btn-group">Detail</label>
-        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+        <a class="inline-btn-group" @click="props.zoomModeMinus">&#8249;</a>
+        <label class="inline-btn-group">{{'Zoom Mode: ' + props.zoomMode}}</label>
+        <a class="inline-btn-group" @click="props.zoomModePlus">&#8250;</a>
 
-        <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
-        <label class="inline-btn-group">{{textSize}}</label>
-        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a> -->
+        <a @click="props.toggleWheelZoom">{{'Wheel Zoom: ' + props.wheelZoom}}</a>
+
+        <a class="inline-btn-group" @click="props.zoomOut">-</a>
+        <label class="inline-btn-group">Zoom</label>
+        <a class="inline-btn-group" @click="props.zoomIn">+</a>
+
+        <a class="inline-btn-group" @click="sleepTimeUpdate(-0.1)">-</a>
+        <label class="inline-btn-group">{{'Sleep Time: ' + sleepTime}}</label>
+        <a class="inline-btn-group" @click="sleepTimeUpdate(0.1)">+</a>
+        
+        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">-</a>
+        <label class="inline-btn-group">{{'Detail Level: ' + detailLevel}}</label>
+        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">+</a>
+
+        <a class="inline-btn-group" @click="textSize = textSize > 1 ? textSize - 1 : textSize">-</a>
+        <label class="inline-btn-group">{{'Text Size: ' + textSize}}</label>
+        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
+
+        <a class="inline-btn-group" @click="lineWidth = lineWidth > 1 ? lineWidth - 1 : lineWidth">-</a>
+        <label class="inline-btn-group">{{'Line Width: ' + lineWidth}}</label>
+        <a class="inline-btn-group" @click="lineWidth = lineWidth + 1">+</a>
+
+        <a @click="showEdgeCosts = showEdgeCosts ? false : true">{{'Show Edge Costs: ' + showEdgeCosts}}</a>
+        <a @click="showNodeHeuristics = showNodeHeuristics ? false : true">{{'Show Node Heuristics: ' + showNodeHeuristics}}</a>
+
       </template>
     </GraphVisualizerBase>
     <div class="footer">
@@ -59,6 +81,7 @@
 <script lang="ts">
   import Vue from "vue";
   import Component from "vue-class-component";
+  import { Prop, Watch } from "vue-property-decorator";
   import GraphVisualizerBase from "../../components/GraphVisualizerBase.vue";
   import DirectedRectEdge from "../../components/DirectedRectEdge.vue";
   import RoundedRectangleGraphNode from "../../components/RoundedRectangleGraphNode.vue";
@@ -115,6 +138,17 @@
     legendColor: string[];
     // The line width of the edges in the graph
     lineWidth: number;
+    // The time delay between consecutive display calls
+    sleepTime: number;
+
+    sleepTimeUpdate(factor: number){
+      if((this.sleepTime > 0.1 && factor < 0) || (this.sleepTime < 2 && factor > 0)){
+        this.sleepTime += factor
+        this.sleepTime = Math.round(this.sleepTime*10)/10
+        this.$emit('toggle:sleepTimeUpdate', this.sleepTime)
+        console.log(this.sleepTime)
+      }
+    }
 
     chooseClass(sub: string) {
       var solution: boolean = false;
@@ -275,19 +309,26 @@
     return edge;
   }
 
-    /**
-     * Whenever a node reports it has resized, update it's style so that it redraws.
-     */
-    updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
-      node.styles.width = bounds.width;
-      node.styles.height = bounds.height;
-      this.graph.edges
-        .filter(edge => edge.target.id === node.id)
-        .forEach(edge => {
-          this.$set(edge.styles, "targetWidth", bounds.width);
-          this.$set(edge.styles, "targetHeight", bounds.height);
-        });
-    }
+  /**
+   * Whenever a node reports it has resized, update it's style so that it redraws.
+   */
+  updateNodeBounds(node: ISearchGraphNode, bounds: { width: number; height: number }) {
+    node.styles.width = bounds.width;
+    node.styles.height = bounds.height;
+    this.graph.edges
+      .filter(edge => edge.target.id === node.id)
+      .forEach(edge => {
+        this.$set(edge.styles, "targetWidth", bounds.width);
+        this.$set(edge.styles, "targetHeight", bounds.height);
+      });
   }
+
+  @Watch("lineWidth")
+  onLineWidthChange(){
+    this.graph.edges.forEach(edge => {
+      this.$set(edge.styles, "strokeWidth", this.lineWidth);
+    });
+  }
+}
 
 </script>

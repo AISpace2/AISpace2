@@ -81,6 +81,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
           textSize: this.model.textSize,
           lineWidth: this.model.lineWidth,
           detailLevel: this.model.detailLevel,
+          sleepTime: this.model.sleepTime,
           legendText: cspLabelText,
           legendColor: cspLabelColor,
           needACButton: this.model.needACButton,
@@ -156,13 +157,20 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       });
 
       this.vue.$on("click:submit", () => {
-        Analytics.trackEvent("Bayes Visualizer", "Observe Node");
+        Analytics.trackEvent("CSP Visualizer", "Observe Node");
         this.chooseDomainSplit();
       });
 
       this.vue.$on('reset', () => {
         Analytics.trackEvent("CSP Visualizer", "Reset");
         this.send({ event: CSPViewer.RESET });
+      });
+
+      this.vue.$on("toggle:sleepTimeUpdate", (sleepTime: number) => {
+        Analytics.trackEvent("CSP Visualizer", "Update Sleep Time");
+        this.send({ 
+          event: "update_sleep_time",
+          sleepTime: sleepTime});
       });
 
       // Functions called on the Python backend are queued until first render
@@ -192,7 +200,7 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    */
   private highlightArcs(event: CSPEvents.ICSPHighlightArcsEvent) {
     const strokeWidth =
-      event.style === "bold" ? this.model.lineWidth + 3 : this.model.lineWidth;
+      event.style === "bold" ? this.vue.lineWidth + 3 : this.vue.lineWidth;
 
     if (event.arcIds == null) {
       for (const edge of this.model.graph.edges) {

@@ -52,6 +52,7 @@ export default class BayesVisualizer extends DOMWidgetView {
           textSize: this.model.textSize,
           lineWidth: this.model.lineWidth,
           detailLevel: this.model.detailLevel,
+          sleepTime: this.model.sleepTime,
           isQuerying: false,
           decimalPlace: this.model.decimalPlace
         }
@@ -100,6 +101,13 @@ export default class BayesVisualizer extends DOMWidgetView {
           this.vue.$set(variableNode.styles, "strokeWidth", 0);
           this.vue.FocusNode.domain = [];
         });
+      });
+
+      this.vue.$on("toggle:sleepTimeUpdate", (sleepTime: number) => {
+        Analytics.trackEvent("Bayes Visualizer", "Update Sleep Time");
+        this.send({ 
+          event: "update_sleep_time",
+          sleepTime: sleepTime});
       });
 
       if (!this.model.previouslyRendered) {

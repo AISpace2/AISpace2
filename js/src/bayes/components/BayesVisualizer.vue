@@ -15,17 +15,35 @@
         </DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
-        <!-- <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">&#8249;</a>
-        <label class="inline-btn-group">Detail: {{detailLevel}}</label>
-        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">&#8250;</a>
+        <a class="inline-btn-group" @click="props.zoomModeMinus">&#8249;</a>
+        <label class="inline-btn-group">{{'Zoom Mode: ' + props.zoomMode}}</label>
+        <a class="inline-btn-group" @click="props.zoomModePlus">&#8250;</a>
 
-        <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
-        <label class="inline-btn-group">Size: {{textSize}}</label>
+        <a @click="props.toggleWheelZoom">{{'Wheel Zoom: ' + props.wheelZoom}}</a>
+
+        <a class="inline-btn-group" @click="props.zoomOut">-</a>
+        <label class="inline-btn-group">Zoom</label>
+        <a class="inline-btn-group" @click="props.zoomIn">+</a>
+
+        <a class="inline-btn-group" @click="sleepTimeUpdate(-0.1)">-</a>
+        <label class="inline-btn-group">{{'Sleep Time: ' + sleepTime}}</label>
+        <a class="inline-btn-group" @click="sleepTimeUpdate(0.1)">+</a>
+        
+        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">-</a>
+        <label class="inline-btn-group">{{'Detail Level: ' + detailLevel}}</label>
+        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">+</a>
+
+        <a class="inline-btn-group" @click="textSize = textSize > 1 ? textSize - 1 : textSize">-</a>
+        <label class="inline-btn-group">{{'Text Size: ' + textSize}}</label>
         <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
 
+        <a class="inline-btn-group" @click="lineWidth = lineWidth > 1 ? lineWidth - 1 : lineWidth">-</a>
+        <label class="inline-btn-group">{{'Line Width: ' + lineWidth}}</label>
+        <a class="inline-btn-group" @click="lineWidth = lineWidth + 1">+</a>
+
         <a class="inline-btn-group" @click="decimalPlace = decimalPlace - 1">-</a>
-        <label class="inline-btn-group">Decimal: {{decimalPlace}}</label>
-        <a class="inline-btn-group" @click="decimalPlace = decimalPlace + 1">+</a> -->
+        <label class="inline-btn-group">{{'Decimal Place: ' + decimalPlace}}</label>
+        <a class="inline-btn-group" @click="decimalPlace = decimalPlace + 1">+</a>
       </template>
     </GraphVisualizerBase>
     <div>
@@ -120,6 +138,17 @@
     decimalPlace: number;
     // The line width of the edges in the graph
     lineWidth: number;
+    // The time delay between consecutive display calls
+    sleepTime: number;
+
+    sleepTimeUpdate(factor: number){
+      if((this.sleepTime > 0.1 && factor < 0) || (this.sleepTime < 2 && factor > 0)){
+        this.sleepTime += factor
+        this.sleepTime = Math.round(this.sleepTime*10)/10
+        this.$emit('toggle:sleepTimeUpdate', this.sleepTime)
+        console.log(this.sleepTime)
+      }
+    }
 
     // the checkboxs of node
     data() {
@@ -233,6 +262,13 @@
           this.$set(edge.styles, "targetWidth", bounds.width);
           this.$set(edge.styles, "targetHeight", bounds.height);
         });
+    }
+
+    @Watch("lineWidth")
+    onLineWidthChange(){
+      this.graph.edges.forEach(edge => {
+        this.$set(edge.styles, "strokeWidth", this.lineWidth);
+      });
     }
 
   }

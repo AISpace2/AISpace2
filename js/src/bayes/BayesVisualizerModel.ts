@@ -70,6 +70,11 @@ export default class BayesVisualizerModel extends widgets.DOMWidgetModel {
   get decimalPlace(): number {
     return this.get("decimal_place");
   }
+  
+  // The time delay between consecutive display calls
+  get sleepTime(): number {
+    return this.get("sleep_time");
+  }
 
   /** The Graph representing the search problem. */
   get graph(): Graph {

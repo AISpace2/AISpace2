@@ -29,6 +29,7 @@
           :textSize="textSize"
           :hover="props.hover"
           :detailLevel="detailLevel"
+          :id="props.node.id"
         ></RectangleGraphNode>
       </template>
       <template slot="edge" slot-scope="props">
@@ -42,19 +43,27 @@
         ></UndirectedEdge>
       </template>
       <template slot="visualization" slot-scope="props">
-        <!-- <a
-          class="inline-btn-group"
-          @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel"
-        >&#8249;</a>
-        <label class="inline-btn-group">Detail</label>
-        <a
-          class="inline-btn-group"
-          @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel"
-        >&#8250;</a>
+        <a class="inline-btn-group" @click="props.zoomModeMinus">&#8249;</a>
+        <label class="inline-btn-group">{{'Zoom Mode: ' + props.zoomMode}}</label>
+        <a class="inline-btn-group" @click="props.zoomModePlus">&#8250;</a>
 
-        <a class="inline-btn-group" @click="textSize = textSize - 1">-</a>
-        <label class="inline-btn-group">{{textSize}}</label>
-        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a> -->
+        <a @click="props.toggleWheelZoom">{{'Wheel Zoom: ' + props.wheelZoom}}</a>
+
+        <a class="inline-btn-group" @click="props.zoomOut">-</a>
+        <label class="inline-btn-group">Zoom</label>
+        <a class="inline-btn-group" @click="props.zoomIn">+</a>
+        
+        <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">-</a>
+        <label class="inline-btn-group">{{'Detail Level: ' + detailLevel}}</label>
+        <a class="inline-btn-group" @click="detailLevel = detailLevel < 2 ? detailLevel + 1 : detailLevel">+</a>
+
+        <a class="inline-btn-group" @click="textSize = textSize > 1 ? textSize - 1 : textSize">-</a>
+        <label class="inline-btn-group">{{'Text Size: ' + textSize}}</label>
+        <a class="inline-btn-group" @click="textSize = textSize + 1">+</a>
+
+        <a class="inline-btn-group" @click="lineWidth = lineWidth > 1 ? lineWidth - 1 : lineWidth">-</a>
+        <label class="inline-btn-group">{{'Line Width: ' + lineWidth}}</label>
+        <a class="inline-btn-group" @click="lineWidth = lineWidth + 1">+</a>
       </template>
     </GraphVisualizerBase>
 
@@ -781,30 +790,6 @@ export default class CSPGraphBuilder extends Vue {
     this.warning_message = "";
     this.succeed_message = "Node updated.";
   }
-
-  // /** Returns whether the modified constraint name is valid,
-  //  * if valid, update the values */
-  // updateConstraintName(name: string) {
-
-  //   if (name === null || name.match(/^\s*$/)) {
-  //     this.warning_message = "Name not valid.";
-  //     this.succeed_message = "";
-  //     return;
-  //   }
-    
-  //   if (this.NameExists(name) && name !== this.selection.name) {
-  //     this.warning_message = "Name already exists.";
-  //     this.succeed_message = "";
-  //     return;
-  //   }
-
-  //   //update new name
-  //   var oldname = this.selection!.name.slice(0);
-  //   this.selection!.name = name.trimLeft().trimRight();
-
-  //   this.warning_message = "";
-  //   this.succeed_message = "Constraint node name updated.";
-  // }
 
   genNewCBNTsForTrue(node: ICSPGraphNode, newname: string, oldname: string) {
     // Update constraint node's combinations_for_true field.
@@ -1943,6 +1928,13 @@ export default class CSPGraphBuilder extends Vue {
     } else {
       this.initially_in_ACT = true;
     }
+  }
+
+  @Watch("lineWidth")
+  onLineWidthChange(){
+    this.graph.edges.forEach(edge => {
+      this.$set(edge.styles, "strokeWidth", this.lineWidth);
+    });
   }
 }
 </script>

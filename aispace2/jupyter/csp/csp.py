@@ -274,6 +274,9 @@ class Displayable(StepDOMWidget):
                 self._thread = ReturnableThread(
                     target=func, args=args, kwargs=kwargs)
                 self._thread.start()
+        
+        elif event == 'update_sleep_time':
+            self.sleep_time = content.get('sleepTime')
 
     def display(self, level, *args, **kwargs):
         if self.wait_for_render is False:

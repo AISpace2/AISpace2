@@ -76,6 +76,11 @@ export default class CSPViewerModel extends widgets.DOMWidgetModel {
     return this.get("text_size");
   }
 
+  // The time delay between consecutive display calls
+  get sleepTime(): number {
+    return this.get("sleep_time");
+  }
+
   // The Graph representing the CSP problem
   get graph(): Graph {
     return this.get("graph");

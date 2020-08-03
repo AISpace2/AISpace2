@@ -57,6 +57,9 @@ class Displayable(StepDOMWidget):
                     target=func, args=args, kwargs=kwargs)
                 self._thread.start()
 
+        elif event == 'update_sleep_time':
+            self.sleep_time = content.get('sleepTime')
+
     def _query_node(self, name, evidences):
         name_to_node = {v.name: v for v in self.graph.variables}
         node = name_to_node[name]
