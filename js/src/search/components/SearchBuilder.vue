@@ -32,17 +32,6 @@
         </DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
-        <a @click="props.toggleLegend">{{'Legend: ' + props.showLegend}}</a>
-
-        <a class="inline-btn-group" @click="props.zoomModeMinus">&#8249;</a>
-        <label class="inline-btn-group">{{'Zoom Mode: ' + props.zoomMode}}</label>
-        <a class="inline-btn-group" @click="props.zoomModePlus">&#8250;</a>
-
-        <a @click="props.toggleWheelZoom">{{'Wheel Zoom: ' + props.wheelZoom}}</a>
-
-        <a class="inline-btn-group" @click="props.zoomOut">-</a>
-        <label class="inline-btn-group">Zoom</label>
-        <a class="inline-btn-group" @click="props.zoomIn">+</a>
         
         <a class="inline-btn-group" @click="detailLevel = detailLevel > 0 ? detailLevel - 1 : detailLevel">-</a>
         <label class="inline-btn-group">{{'Detail Level: ' + detailLevel}}</label>
@@ -56,6 +45,8 @@
         <label class="inline-btn-group">{{'Line Width: ' + lineWidth}}</label>
         <a class="inline-btn-group" @click="lineWidth = lineWidth + 1">+</a>
 
+        <a @click="showEdgeCosts = showEdgeCosts ? false : true">{{'Show Edge Costs: ' + showEdgeCosts}}</a>
+        <a @click="showNodeHeuristics = showNodeHeuristics ? false : true">{{'Show Node Heuristics: ' + showNodeHeuristics}}</a>
       </template>
     </GraphVisualizerBase>
 

@@ -2,7 +2,7 @@
   <div class="graph-container">
     <svg ref="zoom" width="100%" :height="graphContainerHeight">
       <rect width="100%" height="100%" fill="aliceblue" />
-      <g :transform="`scale(${scaleFactor}) translate(${scaleX},${scaleY})`">
+      <g :transform="`scale(${scaleFactor}) translate(${translateX},${translateY})`">
         <svg tabindex="0" ref="svg" :width="width" :height="height"
             @mousemove="dragNode"
             @mouseleave="dragNodeEnd"
@@ -31,13 +31,24 @@
     <foreignObject class="dropdown noselect">
       <button class="dropbtn" >Visualization Options</button>
       <div class="dropdown-content">
-        <slot name="visualization" :toggleLegend="toggleLegendVisibility" 
-                                   :showLegend="showLegend"
-                                   :zoomModePlus="zoomModePlus" :zoomModeMinus="zoomModeMinus"
-                                   :zoomMode="zoomMode"
-                                   :toggleWheelZoom="toggleWheelZoom" 
-                                   :wheelZoom="wheelZoom"
-                                   :zoomIn="zoomIn" :zoomOut="zoomOut"></slot>
+        <!-- Legend toggle -->
+        <a v-if="haveLegend" @click="toggleLegendVisibility">{{'Legend: ' + showLegend}}</a>
+
+        <!-- Zoom handle -->
+        <a class="inline-btn-group" @click="zoomModeMinus">&#8249;</a>
+        <label class="inline-btn-group">{{'Zoom Mode: ' + zoomMode}}</label>
+        <a class="inline-btn-group" @click="zoomModePlus">&#8250;</a>
+
+        <a @click="toggleWheelZoom">{{'Wheel Zoom: ' + wheelZoom}}</a>
+
+        <a class="inline-btn-group" @click="zoomOut">-</a>
+        <label class="inline-btn-group">Zoom</label>
+        <a class="inline-btn-group" @click="zoomIn">+</a>
+
+        <a @click="resetZoom">Reset Zoom</a>
+        <!-- Zoom handle end -->
+
+        <slot name="visualization" :toggleLegend="toggleLegendVisibility" :showLegend="showLegend"></slot>
       </div>
     </foreignObject>
     <!-- Resize handle -->
@@ -119,7 +130,7 @@
     /** Tracks the pageY of the previous MouseEvent. Used to compute the delta mouse position. */
     prevPageY: number | null = 0;
     /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
-    transitionsAllowed = false;
+    transitionsAllowed: boolean  = false;
     /** The width of the SVG. Automatically set to width of container. */
     width = 0;
     /** The height of the SVG. Automatically set to height of container. */
@@ -129,12 +140,13 @@
 
     /** The scale of the SVG.*/
     scaleFactor = 1;
-    scaleX = 0;
-    scaleY = 0;
+    translateX = 0;
+    translateY = 0;
     zoomMove: boolean = false;
     zoomStartX: number | null = 0;
     zoomStartY: number | null = 0;
     
+    haveLegend: boolean = false;
     showLegend: "on" | "off" = "on";
     zoomMode: number = 1;
     wheelZoom:  "on" | "off" = "off";
@@ -204,7 +216,6 @@
           var zoomRect = this.$refs.zoom.getBoundingClientRect()
           var updateScaleFactor = Math.pow((1/0.95), -e.deltaY / 120)
           this.scaleFactor = this.scaleFactor * updateScaleFactor
-          console.log("this.scaleFactor: " + this.scaleFactor)
 
           var transX = ((zoomRect.width*(1-updateScaleFactor))/zoomRect.width * (e.clientX - zoomRect.left))/this.scaleFactor
           this.layout.translation(this.graph, transX, 0);
@@ -221,7 +232,6 @@
           var zoomRect = this.$refs.zoom.getBoundingClientRect()
           var updateScaleFactor = Math.pow((1/0.95), -e.deltaY / 120)
           this.graph.nodes.forEach(node => {
-            console.log(node.id + node.name)
             var nodeRect = document.getElementById(node.id).getBoundingClientRect()
             node.x += ((e.clientX - (nodeRect.left + nodeRect.width / 2)) * (1-updateScaleFactor)) * this.scaleFactor
             node.y += ((e.clientY - (nodeRect.top + nodeRect.height / 2)) * (1-updateScaleFactor)) * this.scaleFactor
@@ -254,6 +264,7 @@
       });
 
       if(this.legendText){
+        this.haveLegend = true;
         this.addLegend();
       }
 
@@ -429,11 +440,13 @@
         .attr('y', legendRectSize - legendSpacing)
         .attr('font-size', this.textSize)
         .text(function(d) { return d; });
+
+      // make sure the legend is initally off
+      this.toggleLegendVisibility();
     }
 
     /** Toggle button functionality for displaying and hiding legend box */
     toggleLegendVisibility() {
-      console.log("toggleLegendVisibility")
       let lg = d3.select(this.$refs.zoom).select(".legend_group");
 
       if (lg.style("visibility") === "hidden") {
@@ -459,19 +472,24 @@
 
     /** Toggle button functionality for zoom mode */
     toggleZoomMode(factor: number) {
-      console.log("toggleZoomMode")
       this.zoomMode += factor
-      console.log(this.zoomMode)
     }
 
     toggleWheelZoom() {
-      console.log("togglewheelzoom")
       if(this.wheelZoom === "on"){
         this.wheelZoom = "off";
       }else{
         this.wheelZoom = "on";
       }
-      console.log(this.wheelZoom)
+    }
+
+    resetZoom(){
+      this.scaleFactor = 1;
+      this.translateX = 0;
+      this.translateY = 0;
+      this.width = this.$refs.zoom.getBoundingClientRect().width;
+      this.height = this.$refs.zoom.getBoundingClientRect().height;
+      this.layout.relayout(this.graph, { width: this.width, height: this.height });
     }
 
     zoomIn(){
@@ -487,7 +505,6 @@
         var zoomRect = this.$refs.zoom.getBoundingClientRect()
         var updateScaleFactor = Math.pow((1/0.95), factor)
         this.scaleFactor = this.scaleFactor * updateScaleFactor
-        console.log("this.scaleFactor: " + this.scaleFactor)
 
         var transX = ((zoomRect.width*(1-updateScaleFactor))/2)/this.scaleFactor
         this.layout.translation(this.graph, transX, 0);

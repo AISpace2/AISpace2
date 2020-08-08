@@ -15,16 +15,7 @@
         </DirectedRectEdge>
       </template>
       <template slot="visualization" slot-scope="props">
-        <a class="inline-btn-group" @click="props.zoomModeMinus">&#8249;</a>
-        <label class="inline-btn-group">{{'Zoom Mode: ' + props.zoomMode}}</label>
-        <a class="inline-btn-group" @click="props.zoomModePlus">&#8250;</a>
-
-        <a @click="props.toggleWheelZoom">{{'Wheel Zoom: ' + props.wheelZoom}}</a>
-
-        <a class="inline-btn-group" @click="props.zoomOut">-</a>
-        <label class="inline-btn-group">Zoom</label>
-        <a class="inline-btn-group" @click="props.zoomIn">+</a>
-
+        
         <a class="inline-btn-group" @click="sleepTimeUpdate(-0.1)">-</a>
         <label class="inline-btn-group">{{'Sleep Time: ' + sleepTime}}</label>
         <a class="inline-btn-group" @click="sleepTimeUpdate(0.1)">+</a>
