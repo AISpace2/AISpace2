@@ -52,7 +52,7 @@
       </div>
       <div v-if="output" class="output">
           <div v-for="sub in output.split('\n')" :key ="sub">
-              <span v-bind:class="chooseClass(sub)">{{sub}}</span>
+              <span v-bind:class="chooseClass(sub)" style="white-space: pre-wrap">{{sub}}</span>
           </div>
       </div>
       <div v-if="preSolution" class="output">

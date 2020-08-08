@@ -49,10 +49,10 @@
         <button id="print-positions" class="btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
         <button id="reset" class="btn btn-default" @click="$emit('reset')">Reset</button>
       </div>
-      <div class="output">Frontier: {{frontier}}</div>
+      <div class="output" style="white-space: pre-wrap">Frontier: {{frontier}}</div>
       <div v-if="output" class="output">
           <div v-for="sub in output.split('\n')" :key ="sub">
-              <span v-bind:class="chooseClass(sub)">{{sub}}</span>
+              <span v-bind:class="chooseClass(sub)" style="white-space: pre-wrap">{{sub}}</span>
           </div>
       </div>
       <div v-if="preSolution" class="output">
