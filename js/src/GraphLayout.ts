@@ -350,13 +350,14 @@ export function d3TreeLayout(
 export function relativeLayout() {
   return (graph: Graph, layoutParams: IGraphLayoutParams) => {
     return new Promise<void>((resolve, reject) => {
-      scaleNodePositions(layoutParams, graph.nodes);
+      scaleNodePositionsRelativeLayout(layoutParams, graph.nodes);
       resolve();
     });
   };
 }
-// recalculate node positions so that nodes occupy the whole canvas
-function scaleNodePositions(
+
+// recalculate node positions so that nodes occupy the whole canvas based on x and y
+function scaleNodePositionsRelativeLayout(
   layoutParams: IGraphLayoutParams,
   nodes: IGraphNode[]
 ) {
@@ -367,14 +368,14 @@ function scaleNodePositions(
   let maxY = Number.MIN_SAFE_INTEGER;
 
   for (const node of nodes) {
-    if (typeof node.rawX !== 'number' || typeof node.rawY !== 'number') {
+    if (typeof node.x !== 'number' || typeof node.y !== 'number') {
       continue;
     }
 
-    maxX = Math.max(node.rawX, maxX);
-    maxY = Math.max(node.rawY, maxY);
-    minX = Math.min(node.rawX, minX);
-    minY = Math.min(node.rawY, minY);
+    maxX = Math.max(node.x, maxX);
+    maxY = Math.max(node.y, maxY);
+    minX = Math.min(node.x, minX);
+    minY = Math.min(node.y, minY);
   }
 
   const edgePaddingX = 150;
@@ -382,7 +383,7 @@ function scaleNodePositions(
 
   for (const node of nodes) {
     // Scale node positions to fit new width/height, plus some edge padding
-    if (typeof node.rawX !== 'number' || typeof node.rawY !== 'number') {
+    if (typeof node.x !== 'number' || typeof node.y !== 'number') {
       continue;
     }
 
@@ -390,7 +391,7 @@ function scaleNodePositions(
       node.x = layoutParams.width/2;
     } else {
       node.x =
-        ((layoutParams.width - edgePaddingX * 2) * (node.rawX! - minX)) /
+        ((layoutParams.width - edgePaddingX * 2) * (node.x! - minX)) /
           (maxX - minX) +
         edgePaddingX;
     }
@@ -399,7 +400,7 @@ function scaleNodePositions(
       node.y = layoutParams.height/2;
     } else {
       node.y =
-        ((layoutParams.height - edgePaddingY * 2) * (node.rawY! - minY)) /
+        ((layoutParams.height - edgePaddingY * 2) * (node.y! - minY)) /
           (maxY - minY) +
         edgePaddingY;
     }
@@ -470,5 +471,58 @@ export function d3ForcePlusRelativeLayout() {
       resolve();
     });
   };
+
+  // recalculate node positions so that nodes occupy the whole canvas based on rawX and rawY
+  function scaleNodePositions(
+    layoutParams: IGraphLayoutParams,
+    nodes: IGraphNode[]
+  ) {
+    // Compute min and max X/Y
+    let minX = Number.MAX_SAFE_INTEGER;
+    let minY = Number.MAX_SAFE_INTEGER;
+    let maxX = Number.MIN_SAFE_INTEGER;
+    let maxY = Number.MIN_SAFE_INTEGER;
+
+    for (const node of nodes) {
+      if (typeof node.rawX !== 'number' || typeof node.rawY !== 'number') {
+        continue;
+      }
+
+      maxX = Math.max(node.rawX, maxX);
+      maxY = Math.max(node.rawY, maxY);
+      minX = Math.min(node.rawX, minX);
+      minY = Math.min(node.rawY, minY);
+    }
+
+    const edgePaddingX = 150;
+    const edgePaddingY = 80;
+
+    for (const node of nodes) {
+      // Scale node positions to fit new width/height, plus some edge padding
+      if (typeof node.rawX !== 'number' || typeof node.rawY !== 'number') {
+        continue;
+      }
+
+      if(maxX == minX){
+        node.x = layoutParams.width/2;
+      } else {
+        node.x =
+          ((layoutParams.width - edgePaddingX * 2) * (node.rawX! - minX)) /
+            (maxX - minX) +
+          edgePaddingX;
+      }
+
+      if(maxY == minY){
+        node.y = layoutParams.height/2;
+      } else {
+        node.y =
+          ((layoutParams.height - edgePaddingY * 2) * (node.rawY! - minY)) /
+            (maxY - minY) +
+          edgePaddingY;
+      }
+
+
+    }
+  }
 
 }

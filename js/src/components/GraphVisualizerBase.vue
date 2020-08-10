@@ -42,10 +42,10 @@
         <a @click="toggleWheelZoom">{{'Wheel Zoom: ' + wheelZoom}}</a>
 
         <a class="inline-btn-group" @click="zoomOut">-</a>
-        <label class="inline-btn-group">Zoom</label>
+        <label class="inline-btn-group">Zoom In/Out</label>
         <a class="inline-btn-group" @click="zoomIn">+</a>
 
-        <a @click="resetZoom">Reset Zoom</a>
+        <a @click="resetZoom">Zoom to Fit</a>
         <!-- Zoom handle end -->
 
         <slot name="visualization" :toggleLegend="toggleLegendVisibility" :showLegend="showLegend"></slot>
@@ -131,11 +131,11 @@
     prevPageY: number | null = 0;
     /** True if transitions are allowed. Disable e.g. when nodes are dragged and you don't want transitions. */
     transitionsAllowed: boolean  = false;
-    /** The width of the SVG. Automatically set to width of container. */
+    /** The width of the SVG, which is affected by transform. */
     width = 0;
-    /** The height of the SVG. Automatically set to height of container. */
+    /** The height of the SVG, which is affected by transform. */
     height = 0;
-
+    /** The height of the zoom SVG. Automatically set to height of container. */
     graphContainerHeight = 0;
 
     /** The scale of the SVG.*/
@@ -146,6 +146,7 @@
     zoomStartX: number | null = 0;
     zoomStartY: number | null = 0;
     
+    /**  Visualization Options. */
     haveLegend: boolean = false;
     showLegend: "on" | "off" = "on";
     zoomMode: number = 1;
@@ -168,7 +169,7 @@
     mounted() {
       this.width = this.$el.getBoundingClientRect().width;
       this.graphContainerHeight = this.width / 1.8;
-      this.height = this.width / 1.8;
+      this.height = this.graphContainerHeight;
       this.layout.setup(this.graph, { width: this.width, height: this.height });
 
       // Disable animations for the first draw, because otherwise they fly in from (0, 0) and it looks weird
@@ -206,7 +207,7 @@
         this.prevPageY = null;
       };
 
-      this.$refs.zoom.addEventListener("wheel", e => {
+      this.$refs.svg.addEventListener("wheel", e => {
         if(this.wheelZoom === "off"){
           return;
         }
@@ -241,14 +242,14 @@
         }
       });
 
-      this.$refs.zoom.addEventListener("mousedown", e => {
+      this.$refs.svg.addEventListener("mousedown", e => {
         this.zoomMove = true
         this.zoomStartX = e.pageX;
         this.zoomStartY = e.pageY;
         return;        
       });
 
-      this.$refs.zoom.addEventListener("mousemove", e => {
+      this.$refs.svg.addEventListener("mousemove", e => {
         if(this.zoomMove && !this.dragTarget){
           this.layout.translation(this.graph, (e.pageX - this.zoomStartX)/this.scaleFactor, (e.pageY - this.zoomStartY)/this.scaleFactor);
 
@@ -258,7 +259,12 @@
         
       });
 
-      this.$refs.zoom.addEventListener("mouseup", e => {
+      this.$refs.svg.addEventListener("mouseup", e => {
+        this.zoomMove = false;
+        return
+      });
+
+      this.$refs.svg.addEventListener("mouseleave", e => {
         this.zoomMove = false;
         return
       });
@@ -379,9 +385,9 @@
      * The x and y position within the SVG are calculated and passed to the event.
      */
     onDblClick(e: MouseEvent) {
-      var svgBounds = this.$refs.svg.getBoundingClientRect();
-      var x = (e.pageX - svgBounds.left)/this.scaleFactor;
-      var y = (e.pageY - svgBounds.top)/this.scaleFactor;
+      var zoomBounds = this.$refs.zoom.getBoundingClientRect();
+      var x = (e.pageX - zoomBounds.left)/this.scaleFactor;
+      var y = (e.pageY - zoomBounds.top)/this.scaleFactor;
       this.$emit("dblclick", x, y, e);
     }
 
