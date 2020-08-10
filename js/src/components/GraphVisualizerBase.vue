@@ -525,7 +525,7 @@
         this.graph.nodes.forEach(node => {
           var nodeRect = document.getElementById(node.id).getBoundingClientRect()
           node.x += ((zoomRect.left + zoomRect.width / 2 - (nodeRect.left + nodeRect.width / 2)) * (1-updateScaleFactor)) * this.scaleFactor
-          node.y += ((zoomRect.left + zoomRect.width / 2 - (nodeRect.top + nodeRect.height / 2)) * (1-updateScaleFactor)) * this.scaleFactor
+          node.y += ((zoomRect.top + zoomRect.height / 2 - (nodeRect.top + nodeRect.height / 2)) * (1-updateScaleFactor)) * this.scaleFactor
         });
       }
     }
