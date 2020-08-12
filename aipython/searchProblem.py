@@ -93,7 +93,7 @@ class Frontier(object):
 
     def __repr__(self):
         """string representation of the frontier"""
-        return "\n".join("".join(str(["{} ({})".format(p, n) for (n, c, p) in self.frontierpq])).split("\\n"))
+        return "".join(str(["{} ({})".format(p, n) for (n, c, p) in self.frontierpq]))
 
     def __len__(self):
         return len(self.frontierpq)
@@ -200,7 +200,7 @@ class Path(object):
         if self.arc is None:
             return str(self.initial)
         elif self.arc.action:
-            return (str(self.initial) + "\n   --" + str(self.arc.action)
+            return (str(self.initial) + " --" + str(self.arc.action)
                     + "--> " + str(self.arc.to_node))
         else:
             return str(self.initial) + " --> " + str(self.arc.to_node)

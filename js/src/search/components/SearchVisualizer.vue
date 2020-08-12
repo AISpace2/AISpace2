@@ -58,7 +58,7 @@
       <div v-if="preSolution" class="output">
           <span>Solution history:</span>
           <div v-for="subSol in preSolution.split('\n')" :key ="subSol">
-              <span class="solutionText">{{subSol}}</span>
+              <span class="solutionText" style="white-space: pre-wrap">{{subSol}}</span>
           </div>
       </div>
       <div class="output">{{positions}}</div>
