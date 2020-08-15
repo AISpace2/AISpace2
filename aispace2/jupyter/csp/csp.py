@@ -281,6 +281,9 @@ class Displayable(StepDOMWidget):
     def display(self, level, *args, **kwargs):
         if self.wait_for_render is False:
             return
+        
+        if self._request_backtrack is True:
+            return
 
         should_wait = True
 
@@ -349,13 +352,13 @@ class Displayable(StepDOMWidget):
                 solString += var + "=" + str(args[1][var]) + ", "
             solString = solString[:-2]
             self.send({'action': 'setPreSolution', 'solution': solString})
-            args += ("\nClick Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.", )
+            args += ("\nClick Fine Step, Step, Auto Arc Consistency, Auto Solve to find solutions in other domains.", )
 
         elif args[0] == "Solving new domain with":
             self.send(
                 {'action': 'setSplit', 'domain': args[2], 'var': args[1]})
 
-        elif args[0] == "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.":
+        elif args[0] == "Click Fine Step, Step, Auto Arc Consistency, Auto Solve to find solutions in other domains.":
             if self.max_display_level == 0:
                 self.max_display_level = 2
             self.send({'action': 'noSolution'})

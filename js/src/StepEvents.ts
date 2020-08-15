@@ -3,4 +3,5 @@ export const STEP_CLICK = "click:step";
 export const AUTO_ARC_CONSISTENCY_CLICK = "click:auto-arc-consistency";
 export const AUTO_SOLVE_CLICK = "click:auto-solve";
 export const PAUSE_CLICK = "click:pause";
+export const BACKTRACK_CLICK = "click:backtrack";
 export const PRINT_POSITIONS = "click:print-positions";

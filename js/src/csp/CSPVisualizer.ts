@@ -131,6 +131,14 @@ export default class CSPViewer extends widgets.DOMWidgetView {
         this.send({ event: StepEvents.PAUSE_CLICK });
       });
 
+      this.vue.$on(StepEvents.BACKTRACK_CLICK, () => {
+        Analytics.trackEvent("CSP Visualizer", "Backtrack");
+        this.send({ event: StepEvents.BACKTRACK_CLICK });
+        this.backtrack();
+        Analytics.trackEvent("CSP Visualizer", "Auto Solve");
+        this.send({ event: StepEvents.AUTO_SOLVE_CLICK });
+      });
+
       this.vue.$on(StepEvents.PRINT_POSITIONS, () => {
         this.send({
           event: StepEvents.PRINT_POSITIONS,
@@ -319,12 +327,18 @@ export default class CSPViewer extends widgets.DOMWidgetView {
     if (!this.vue.history[event.var]) {
       this.vue.history[event.var] = {};
     }
-    this.vue.history[event.var][event.domain] = this.vue.doOrder;
-    this.vue.history[event.var][event.other] = this.vue.doOrder;
-    this.vue.spaces = this.vue.origin + this.vue.indent * this.vue.history[event.var][event.domain];
     var lines = this.vue.preSolution.split('\n');
-    var str = " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.domain + "}";
-    var str1 = " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.other + "}";
+    if(this.vue.ind == 0){
+      this.vue.history[event.var][event.domain] = this.vue.doOrder;
+      this.vue.history[event.var][event.other] = this.vue.doOrder;
+      this.vue.spaces = this.vue.origin + this.vue.indent * this.vue.history[event.var][event.domain];
+      var str = " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.domain + "}";
+      var str1 = " ".repeat(this.vue.spaces) + event.var + " in " + "{" + event.other + "}";
+    }else{
+      var spaceNum = lines[this.vue.ind-1].split("    ").length + 1;
+      var str = "    ".repeat(spaceNum) + event.var + " in " + "{" + event.domain + "}";
+      var str1 = "    ".repeat(spaceNum) + event.var + " in " + "{" + event.other + "}";
+    }
     lines.splice(this.vue.ind, 0, str, str1);
     this.vue.preSolution = lines.join('\n');
     this.vue.needSplit = false;
@@ -340,8 +354,9 @@ export default class CSPViewer extends widgets.DOMWidgetView {
    * Set and display the split history of csp, indicating the brach that is currently expanding
    */
   private setPreSolution(event: CSPEvents.ICSPSetPreSolutionEvent) {
-    var lines = this.vue.preSolution.split('\n');
-    var str = " ".repeat(this.vue.spaces) + "Solution: " + event.solution;
+    var lines = this.vue.preSolution.split('\n') as String[];
+    var spaceNum = lines[this.vue.ind-1].split("    ").length + 1;
+    var str = "    ".repeat(spaceNum) + "Solution: " + event.solution;
     lines.splice(this.vue.ind, 0, str);
     this.vue.preSolution = lines.join('\n');
     this.vue.ind += 1;
@@ -350,12 +365,27 @@ export default class CSPViewer extends widgets.DOMWidgetView {
   /**
    * indicating users that no solution found with current domain branch
    */
-  private noSolution(event: CSPEvents.ICSPSetPreSolutionEvent) {
-    var lines = this.vue.preSolution.split('\n');
-    var str = " ".repeat(this.vue.spaces) + "No solution";
+  private noSolution(event: CSPEvents.ICSPNoSolutionEvent) {
+    var lines = this.vue.preSolution.split('\n') as String[];
+    var spaceNum = lines[this.vue.ind-1].split("    ").length + 1;
+    var str = "    ".repeat(spaceNum) + "No solution";
     lines.splice(this.vue.ind, 0, str);
     this.vue.preSolution = lines.join('\n');
     this.vue.ind += 1;
+  }
+
+  /**
+   * indicating users clicked backtrack with current domain branch
+   */
+  private backtrack() {
+    var lines = this.vue.preSolution.split('\n') as String[];
+    if(lines[this.vue.ind-1].includes("in {")){
+      var spaceNum = lines[this.vue.ind-1].split("    ").length + 1;
+      var str = "    ".repeat(spaceNum) + "Unknown";
+      lines.splice(this.vue.ind, 0, str);
+      this.vue.preSolution = lines.join('\n');
+      this.vue.ind += 1;
+    }
   }
 
   /**

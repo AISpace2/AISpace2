@@ -56,11 +56,12 @@ class StepDOMWidget(DOMWidget):
         super().__init__()
         self.on_msg(self.handle_custom_msgs)
 
-        # self.sleep_time = 0.2
-
         # Set to True to pause when the next display call is triggered
         # This does not work e.g. within infinite loops that don't call display
         self._request_pause = False
+
+        # Set to True to backtrack (to jump over certain steps)
+        self._request_backtrack = False
 
         # Blocks the visualization when waited on for user input.
         # You MUST wait() on this event only on a background thread!
@@ -129,6 +130,9 @@ class StepDOMWidget(DOMWidget):
 
         def pause():
             self._request_pause = True
+        
+        def backtrack():
+            self._request_backtrack = True
 
         def print_positions(nodes):
             text = "positions={"
@@ -201,6 +205,7 @@ class StepDOMWidget(DOMWidget):
         self._step = step_through_to_level(2)
         self._auto_solve = step_through_to_level(1)
         self._pause = pause
+        self._backtrack = backtrack
         # self._print_positions = print_positions
         # self._print_positions = print_relative_positions
         self._print_positions = print_raw_positions
@@ -252,6 +257,8 @@ class StepDOMWidget(DOMWidget):
             self._auto_solve()
         elif event == 'click:pause':
             self._pause()
+        elif event == 'click:backtrack':
+            self._backtrack()    
         elif event == 'click:print-positions':
             self._print_positions(content.get('nodes', ''))
         elif event == 'click:auto-arc-consistency':

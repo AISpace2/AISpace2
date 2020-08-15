@@ -47,6 +47,7 @@
         <button v-if="needACButton" id="auto-arc-consistency" class="btn btn-default" @click="$emit('click:auto-arc-consistency')">Auto Arc Consistency</button>
         <button id="auto-solve" class="btn btn-default" @click="$emit('click:auto-solve')">Auto Solve</button>
         <button id="pause" class="btn btn-default" @click="$emit('click:pause')">Pause</button>
+        <button v-if="preSolution" id="backtrack" class="btn btn-default" @click="$emit('click:backtrack')">Backtrack</button>
         <button id="print-positions" class = "btn btn-default" @click="$emit('click:print-positions')">Print Positions</button>
         <button id="reset" class="btn btn-default" @click="$emit('reset')">Reset</button>
       </div>

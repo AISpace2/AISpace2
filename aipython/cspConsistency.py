@@ -92,13 +92,16 @@ class Con_solver(Displayable):
             domains = self.csp.domains
         new_domains = self.make_arc_consistent(domains, to_do)
         if any(len(new_domains[var]) == 0 for var in domains):
-            self.display(1, "Click Step, Auto Arc Consistency or Auto Solve to find solutions in other domains.")
+            self.display(1, "Click Fine Step, Step, Auto Arc Consistency, Auto Solve to find solutions in other domains.")
+            if self._request_backtrack:
+                self._request_backtrack = False
+                self._request_pause = True
             return False
         elif all(len(new_domains[var]) == 1 for var in domains):
             self.display(1, "Solution found:", {var: select(new_domains[var]) for var in new_domains})
             if to_do is None:
                 self.display(4, "No more solutions since no more domains.")
-        else:
+        elif not self._request_backtrack:
             self.display(4, "You can now split domain. Click on a variable whose domain has more than 1 value.")
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
             if var:
@@ -116,6 +119,9 @@ class Con_solver(Displayable):
                 if domains == self.csp.domains:
                     self.display(4, "No more solutions since no more domains.")
                 return
+        if self._request_backtrack:
+            self._request_backtrack = False
+            self._request_pause = True
 
     def split_var(self, iter_vars):
         return self.visualizer.wait_for_var_selection(iter_vars)

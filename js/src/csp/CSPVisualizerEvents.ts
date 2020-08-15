@@ -76,6 +76,10 @@ export interface ICSPNoSolutionEvent extends IEvent {
   action: "noSolution";
 }
 
+export interface ICSPBacktrackEvent extends IEvent {
+  action: "backtrack";
+}
+
 export interface ICSPFrontResetEvent extends IEvent {
   action: "frontReset";
 }
@@ -92,6 +96,7 @@ export type Events =
   | ICSPSetSplitEvent
   | ICSPSetOrderEvent
   | ICSPShowPositionsEvent
+  | ICSPBacktrackEvent
   | ICSPNoSolutionEvent
   | ICSPFrontResetEvent
   | Events;
