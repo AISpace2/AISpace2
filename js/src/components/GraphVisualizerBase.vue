@@ -29,15 +29,13 @@
       </g>
     </svg>
     <foreignObject class="dropdown noselect">
-      <button class="dropbtn" >Visualization Options</button>
+      <button class="dropbtn" >Settings</button>
       <div class="dropdown-content">
         <!-- Legend toggle -->
         <a v-if="haveLegend" @click="toggleLegendVisibility">{{'Legend: ' + showLegend}}</a>
 
         <!-- Zoom handle -->
-        <a class="inline-btn-group" @click="zoomModeMinus">&#8249;</a>
-        <label class="inline-btn-group">{{'Zoom Mode: ' + zoomMode}}</label>
-        <a class="inline-btn-group" @click="zoomModePlus">&#8250;</a>
+        <a @click="toggleZoomMode">{{zoomMode + ' Zoom Mode' }}</a>
 
         <a @click="toggleWheelZoom">{{'Wheel Zoom: ' + wheelZoom}}</a>
 
@@ -149,7 +147,7 @@
     /**  Visualization Options. */
     haveLegend: boolean = false;
     showLegend: "on" | "off" = "on";
-    zoomMode: number = 1;
+    zoomMode: "Fixed Node-Size" | "Free Node-Size" = "Fixed Node-Size";
     wheelZoom:  "on" | "off" = "off";
 
     $refs: {
@@ -211,7 +209,7 @@
         if(this.wheelZoom === "off"){
           return;
         }
-        if(this.zoomMode === 1){
+        if(this.zoomMode === "Free Node-Size"){
           e.preventDefault();
 
           var zoomRect = this.$refs.zoom.getBoundingClientRect()
@@ -227,7 +225,7 @@
           this.height = this.height / updateScaleFactor
 
           return;
-        }else if(this.zoomMode === 2){
+        }else if(this.zoomMode === "Fixed Node-Size"){
           e.preventDefault();
 
           var zoomRect = this.$refs.zoom.getBoundingClientRect()
@@ -464,23 +462,16 @@
       }
     }
 
-    zoomModePlus(){
-      if(this.zoomMode < 2){
-        this.toggleZoomMode(1);
-      }
-    }
-
-    zoomModeMinus(){
-      if(this.zoomMode > 1){
-        this.toggleZoomMode(-1);
-      }
-    }
-
     /** Toggle button functionality for zoom mode */
-    toggleZoomMode(factor: number) {
-      this.zoomMode += factor
+    toggleZoomMode() {
+      if(this.zoomMode == "Free Node-Size"){
+        this.zoomMode = "Fixed Node-Size";
+      }else if(this.zoomMode == "Fixed Node-Size"){
+        this.zoomMode = "Free Node-Size";
+      }
     }
 
+    /** Toggle button functionality for wheel zoom */
     toggleWheelZoom() {
       if(this.wheelZoom === "on"){
         this.wheelZoom = "off";
@@ -507,7 +498,7 @@
     }
 
     zoomClicked(factor: number){
-      if(this.zoomMode === 1){
+      if(this.zoomMode === "Free Node-Size"){
         var zoomRect = this.$refs.zoom.getBoundingClientRect()
         var updateScaleFactor = Math.pow((1/0.95), factor)
         this.scaleFactor = this.scaleFactor * updateScaleFactor
@@ -519,7 +510,7 @@
         var transY = ((zoomRect.height*(1-updateScaleFactor))/2)/this.scaleFactor
         this.layout.translation(this.graph, 0, transY);
         this.height = this.height / updateScaleFactor
-      }else if(this.zoomMode === 2){
+      }else if(this.zoomMode === "Fixed Node-Size"){
         var zoomRect = this.$refs.zoom.getBoundingClientRect()
         var updateScaleFactor = Math.pow((1/0.95), factor)
         this.graph.nodes.forEach(node => {
@@ -606,9 +597,10 @@
   .dropbtn {
     background-color: #4CAF50;
     color: white;
-    padding: 0.5em 2em;
+    padding: 0.5em 0em;
     font-size: 0.75em;
     border: none;
+    width: 150px
   }
 
   .dropdown {
@@ -622,7 +614,7 @@
     display: none;
     /* position: absolute; */
     background-color: #f1f1f1;
-    max-width: 10em;
+    max-width: 150px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
   }
