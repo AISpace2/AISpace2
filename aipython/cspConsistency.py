@@ -104,7 +104,7 @@ class Con_solver(Displayable):
         elif not self._request_backtrack:
             self.display(4, "You can now split domain. Click on a variable whose domain has more than 1 value.")
             var = self.split_var(x for x in self.csp.variables if len(new_domains[x]) > 1)
-            if var:
+            if var and not self._request_backtrack:
                 dom1, dom2 = self.partition_domain(new_domains[var], var)
                 self.display(3, "... splitting", var, "into", dom1, "and", dom2)
                 new_doms1 = copy_with_assign(new_domains, var, dom1)

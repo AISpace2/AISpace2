@@ -132,11 +132,18 @@ export default class CSPViewer extends widgets.DOMWidgetView {
       });
 
       this.vue.$on(StepEvents.BACKTRACK_CLICK, () => {
+        this.vue.needSplit = false;
         Analytics.trackEvent("CSP Visualizer", "Backtrack");
         this.send({ event: StepEvents.BACKTRACK_CLICK });
         this.backtrack();
         Analytics.trackEvent("CSP Visualizer", "Auto Solve");
         this.send({ event: StepEvents.AUTO_SOLVE_CLICK });
+        Analytics.trackEvent("CSP Visualizer", "Step");
+        this.send({ event: StepEvents.STEP_CLICK });
+        if (this.vue.needSplit) {
+          this.randomSelect();
+          this.vue.warningMessage = null;
+        }
       });
 
       this.vue.$on(StepEvents.PRINT_POSITIONS, () => {
