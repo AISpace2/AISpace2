@@ -1,6 +1,6 @@
 {
   "name": "aispace2",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "_comment_about_version_number": "Do not change this manually. Change this by runnning /updateVersion.py",
   "description": "A Jupyter extension for the next-generation of AISpace.",
   "author": "AISpace2",
