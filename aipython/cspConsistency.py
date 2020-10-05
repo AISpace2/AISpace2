@@ -36,7 +36,7 @@ class Con_solver(Displayable):
             to_do = to_do.copy()  # use a copy of to_do
         domains = orig_domains.copy()
         self.display(2, "Performing AC with domains", domains)
-        while to_do:
+        while to_do and all(len(domains[var]) != 0 for var in domains):
             var, const = self.select_arc(to_do)
             self.display(3, "Processing arc (", var, ",", const, ")")
             other_vars = [ov for ov in const.scope if ov != var]

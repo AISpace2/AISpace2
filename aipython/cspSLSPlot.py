@@ -13,7 +13,7 @@ import random
 
 import matplotlib.pyplot as plt
 
-from aipython.cspProblem import CSP, Constraint, test
+from aipython.cspProblem import CSP, Constraint
 from aipython.searchProblem import Arc, Search_problem
 from aipython.utilities import Displayable
 
