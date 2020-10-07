@@ -386,38 +386,47 @@ csp_crossword2d = CSP({'p00': letters, 'p01': letters, 'p02': letters,
                        Constraint(('p01', 'p11', 'p21'), is_word),
                        Constraint(('p02', 'p12', 'p22'), is_word)])
 
+def queens(ri,rj):
+    """ri and rj are different rows, return the condition that the queens cannot take each other"""
+    def no_take(ci,cj):
+        "is true if queen are (ri,ci) cannot take a queen are (rj,cj)"
+        return ci != cj and abs(ri-ci) != abs(rj-cj)
+    return no_take
 
-def Queens(a, b):
-    return a != b
-
+def n_queens(n):
+    """returns a CSP for n-queens"""
+    columns = list(range(n))
+    return CSP(
+               {'R'+str(i):columns for i in range(n)},
+                [Constraint(['R'+str(i),'R'+str(j)], queens(i,j)) for i in range(n) for j in range(n) if i != j])
 
 csp_five_queens = CSP(
     domains={'A': [1, 2, 3, 4, 5], 'B': [1, 2, 3, 4, 5], 'C': [
         1, 2, 3, 4, 5], 'D': [1, 2, 3, 4, 5], 'E': [1, 2, 3, 4, 5]},
-    constraints=[Constraint(('C', 'D'), Queens), Constraint(('A', 'D'), Queens), Constraint(('B', 'D'), Queens), Constraint(('B', 'C'), Queens), Constraint(
-        ('A', 'C'), Queens), Constraint(('A', 'B'), Queens), Constraint(('D', 'E'), Queens), Constraint(('C', 'E'), Queens), Constraint(('B', 'E'), Queens), Constraint(('A', 'E'), Queens)],
+    constraints=[Constraint(('C', 'D'), queens), Constraint(('A', 'D'), queens), Constraint(('B', 'D'), queens), Constraint(('B', 'C'), queens), Constraint(
+        ('A', 'C'), queens), Constraint(('A', 'B'), queens), Constraint(('D', 'E'), queens), Constraint(('C', 'E'), queens), Constraint(('B', 'E'), queens), Constraint(('A', 'E'), queens)],
     positions={
         "B": (213, 179),
-        "Queens('A', 'E')": (550, 99),
-        "Queens('A', 'B')": (285, 112),
+        "queens('A', 'E')": (550, 99),
+        "queens('A', 'B')": (285, 112),
         "C": (288, 406),
-        "Queens('B', 'C')": (195, 304),
+        "queens('B', 'C')": (195, 304),
         "D": (587, 404),
         "E": (618, 172),
-        "Queens('D', 'E')": (672, 313),
-        "Queens('C', 'E')": (520, 314),
-        "Queens('A', 'C')": (333, 227),
-        "Queens('B', 'D')": (365, 312),
-        "Queens('A', 'D')": (536, 229),
-        "Queens('B', 'E')": (425, 163),
+        "queens('D', 'E')": (672, 313),
+        "queens('C', 'E')": (520, 314),
+        "queens('A', 'C')": (333, 227),
+        "queens('B', 'D')": (365, 312),
+        "queens('A', 'D')": (536, 229),
+        "queens('B', 'E')": (425, 163),
         "A": (437, 56),
-        "Queens('C', 'D')": (446, 457)})
+        "queens('C', 'D')": (446, 457)})
 
 csp_eight_queens = CSP(
     domains={'N0': [1, 2, 3, 4, 5, 6, 7, 8], 'N1': [1, 2, 3, 4, 5, 6, 7, 8], 'N2': [1, 2, 3, 4, 5, 6, 7, 8], 'N3': [1, 2, 3, 4, 5, 6, 7, 8], 'N4': [
         1, 2, 3, 4, 5, 6, 7, 8], 'N5': [1, 2, 3, 4, 5, 6, 7, 8], 'N6': [1, 2, 3, 4, 5, 6, 7, 8], 'N7': [1, 2, 3, 4, 5, 6, 7, 8]},
-    constraints=[Constraint(('N0', 'N1'), Queens), Constraint(('N0', 'N2'), Queens), Constraint(('N0', 'N3'), Queens), Constraint(('N0', 'N4'), Queens), Constraint(('N0', 'N5'), Queens), Constraint(('N0', 'N6'), Queens), Constraint(('N0', 'N7'), Queens), Constraint(('N1', 'N2'), Queens), Constraint(('N1', 'N3'), Queens), Constraint(('N1', 'N4'), Queens), Constraint(('N1', 'N5'), Queens), Constraint(('N1', 'N6'), Queens), Constraint(('N1', 'N7'), Queens), Constraint(('N2', 'N3'), Queens), Constraint(
-        ('N2', 'N4'), Queens), Constraint(('N2', 'N5'), Queens), Constraint(('N2', 'N6'), Queens), Constraint(('N2', 'N7'), Queens), Constraint(('N3', 'N4'), Queens), Constraint(('N3', 'N5'), Queens), Constraint(('N3', 'N6'), Queens), Constraint(('N3', 'N7'), Queens), Constraint(('N4', 'N5'), Queens), Constraint(('N4', 'N6'), Queens), Constraint(('N4', 'N7'), Queens), Constraint(('N5', 'N6'), Queens), Constraint(('N5', 'N7'), Queens), Constraint(('N6', 'N7'), Queens)],
+    constraints=[Constraint(('N0', 'N1'), queens), Constraint(('N0', 'N2'), queens), Constraint(('N0', 'N3'), queens), Constraint(('N0', 'N4'), queens), Constraint(('N0', 'N5'), queens), Constraint(('N0', 'N6'), queens), Constraint(('N0', 'N7'), queens), Constraint(('N1', 'N2'), queens), Constraint(('N1', 'N3'), queens), Constraint(('N1', 'N4'), queens), Constraint(('N1', 'N5'), queens), Constraint(('N1', 'N6'), queens), Constraint(('N1', 'N7'), queens), Constraint(('N2', 'N3'), queens), Constraint(
+        ('N2', 'N4'), queens), Constraint(('N2', 'N5'), queens), Constraint(('N2', 'N6'), queens), Constraint(('N2', 'N7'), queens), Constraint(('N3', 'N4'), queens), Constraint(('N3', 'N5'), queens), Constraint(('N3', 'N6'), queens), Constraint(('N3', 'N7'), queens), Constraint(('N4', 'N5'), queens), Constraint(('N4', 'N6'), queens), Constraint(('N4', 'N7'), queens), Constraint(('N5', 'N6'), queens), Constraint(('N5', 'N7'), queens), Constraint(('N6', 'N7'), queens)],
     positions={'N0': (7334.118, 5064.5146), 'N1': (7194.1904, 5117.885), 'N2': (7105.7144, 5235.2134), 'N3': (7200.921, 5347.732), 'N4': (7339.404, 5391.4854), 'N5': (7504.816, 5342.923), 'N6': (7568.2856, 5236.1753), 'N7': (7493.7554, 5108.7524)})
 
 # def test(CSP_solver, csp=csp_simple2, solutions=[{'A': 1, 'B': 3, 'C': 4}, {'A': 2, 'B': 3, 'C': 4}]):
