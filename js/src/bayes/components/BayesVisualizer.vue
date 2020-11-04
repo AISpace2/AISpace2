@@ -61,7 +61,7 @@
       <div v-if="FocusNode.domain.length > 0 && !isQuerying">
         <div>Current variable: <span class="nodeText">{{FocusNode.nodeName}}</span>.</div>
         <div>Choose a value to observe:</div>
-        <div v-for="(key, index) in FocusNode.domain" :key = "key">
+        <div v-for="(key, index) in domainWithNone(FocusNode.domain)" :key = "key">
           <input type="radio" :id="key" :value= "key" v-model="FocusNode.checkedNames" :checked="index==0">
           <label :for="key">{{key}}</label>
         </div>
@@ -253,6 +253,12 @@
           this.$set(edge.styles, "targetWidth", bounds.width);
           this.$set(edge.styles, "targetHeight", bounds.height);
         });
+    }
+
+    domainWithNone(domain){
+      var d = domain.slice()
+      d.push("None")
+      return d
     }
 
     @Watch("lineWidth")

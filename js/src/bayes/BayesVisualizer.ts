@@ -138,8 +138,14 @@ export default class BayesVisualizer extends DOMWidgetView {
     const nodes = this.model.graph.nodes.filter(node => node.name === this.vue.FocusNode.nodeName);
     const variableNode = nodes[0] as IBayesGraphNode;
     let value: null | string = this.vue.FocusNode.checkedNames;
-    this.manager.add(variableNode.name, value);
-    this.vue.$set(variableNode, "observed", value.toString());
+    if(value == "None"){
+      console.log("None")
+      this.manager.remove(variableNode.name);
+      this.vue.$set(variableNode, "observed", undefined);
+    }else{
+      this.manager.add(variableNode.name, value);
+      this.vue.$set(variableNode, "observed", value.toString());
+    }
     this.vue.FocusNode.domain = [];
     this.vue.warningMessage = null;
   }
