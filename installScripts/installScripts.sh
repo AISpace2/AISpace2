@@ -2,9 +2,9 @@ cd "$(dirname "$0")"
 read -n1 -r -p "Make sure you have installed pip and Node.js.`echo $'\nPress any key to continue ...'`"
 cd ..
 echo Installing jupyterlab ...
-pip3 install --upgrade jupyterlab
+pip3 install jupyterlab==2.2.9
 echo Installing ipywidgets ...
-pip3 install --upgrade ipywidgets
+pip3 install ipywidgets==7.5.1
 echo Installing AISpace2 library ...
 cd js
 npm install
