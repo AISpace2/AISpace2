@@ -12,7 +12,7 @@ cd ..
 pip3 install -r requirements-dev.txt
 pip3 install -e .
 echo Installing Jupyter labextension ...
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter labextension install @jupyter-widgets/jupyterlab-manager@2
 cd js
 echo Building AISpace2 frontend ...
 npm run update-lab-extension
