@@ -1,6 +1,7 @@
 # AISpace2
 
-## Obsolete. Please use [aipython.org](https://aipython.org) for pure Python code
+## Obsolete not maintained. Please use [aipython.org](https://aipython.org) for pure Python code
+
 ## About
 AISpace2 is a set of notebooks and an extension for [Jupyter](http://jupyter.org), a web application that combines code, text, and visualizations into a single, rich document. These notebooks teach and demonstrate AI concepts by providing detailed explanations alongside Python code implementations, and the accompanying extension brings these concepts to life by providing interactive visualizations driven directly by the code you see.
 
